@@ -1,4 +1,4 @@
-FROM node:12
+FROM node:12-alpine
 MAINTAINER FG Web (fg-web@samfundet.no)
 
 # Install important dependencies
