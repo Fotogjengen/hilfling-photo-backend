@@ -25,6 +25,8 @@ services:
       - "./postgres/sql:/base-sql"
     ports:
       - "5432:5432"
+    networks:
+      - web
     environment:
       POSTGRES_PASSWORD: example
 networks:
