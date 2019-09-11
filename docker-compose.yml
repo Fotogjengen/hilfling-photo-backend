@@ -13,5 +13,19 @@ services:
       - "8080:8080"
     networks:
       - web
+
+  postgres:
+    container_name: photo-db
+    image: postgres:12
+    restart: always
+    volumes:
+      - "db-data:/var/lib/postgresql/data"
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_PASSWORD: example
 networks:
   web:
+
+volumes:
+  db-data:
