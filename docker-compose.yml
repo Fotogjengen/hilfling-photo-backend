@@ -1,0 +1,17 @@
+version: "3.3"
+
+services:
+  photo-api:
+    container_name: photo-api
+    build:
+      context: .
+      dockerfile: Dockerfile
+    command: npm run start
+    volumes:
+      - ./src:/app
+    ports:
+      - "8080:8080"
+    networks:
+      - web
+networks:
+  web:

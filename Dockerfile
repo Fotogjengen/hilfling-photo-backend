@@ -1,6 +1,10 @@
-FROM node:12
+FROM node:12-alpine
+
+# Install important dependencies
+RUN apk add vim curl
 
 # Create app directory
+RUN mkdir /app
 WORKDIR /app
 
 # Install app dependencies
@@ -13,7 +17,9 @@ RUN npm install
 # RUN npm ci --only=production
 
 # Bundle app source
-COPY . .
+COPY . ./
+RUN ls -la
 
 EXPOSE 8080
-CMD [ "node", "server.js" ]
+CMD [ "nodemon --watch src --ext ts --exec ts-node --ignore '*.test.ts' --delay 3 src/server.ts" ]
+#ENTRYPOINT npm run start

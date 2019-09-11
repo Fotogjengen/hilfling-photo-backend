@@ -4,7 +4,7 @@
   "description": "Backend service for hilfling",
   "main": "index.js",
   "scripts": {
-    "start": "nodemon --watch server --ext ts --exec ts-node --ignore '*.test.ts' --delay 3 src/server.ts",
+    "start": "nodemon --watch src --ext ts --exec ts-node --ignore '*.test.ts' --delay 3 src/server.ts",
     "test": "jest --forceExit --coverage --verbose",
     "lint": "tsc --noEmit && eslint \"**/*.{js,ts}\" --quiet --fix"
   },
