@@ -1,4 +1,5 @@
 FROM node:12-alpine
+MAINTAINER FG Web (fg-web@samfundet.no)
 
 # Install important dependencies
 RUN apk add vim curl
@@ -20,7 +21,7 @@ RUN npm install
 
 RUN ls -la
 
-RUN npm i -g nodemon
+#RUN npm i -g nodemon
 
 EXPOSE 8080
 CMD ["npm", "run", "start"]

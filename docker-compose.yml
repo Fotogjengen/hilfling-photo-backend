@@ -15,11 +15,14 @@ services:
       - web
 
   postgres:
-    container_name: photo-db
-    image: postgres:12
+    container_name: photodb
+    build: 
+      context: .
+      dockerfile: postgres/Dockerfile
     restart: always
     volumes:
       - "db-data:/var/lib/postgresql/data"
+      - "./postgres/sql:/base-sql"
     ports:
       - "5432:5432"
     environment:
