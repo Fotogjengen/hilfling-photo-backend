@@ -19,4 +19,5 @@ app.use(
 //Primary app routes
 app.get("/", testController.index);
 
-export default app;
+//export default app;
+module.exports = app;
