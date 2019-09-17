@@ -38,4 +38,5 @@ app.get("/test", (req: Request, res: Response) => {
     });
 });
 
-export default app;
+//export default app;
+module.exports = app;
