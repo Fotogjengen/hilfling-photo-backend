@@ -1,4 +1,4 @@
-version: "3.3"
+version: "2"
 
 services:
   photo-api:
@@ -16,7 +16,7 @@ services:
 
   postgres:
     container_name: photodb
-    build: 
+    build:
       context: .
       dockerfile: postgres/Dockerfile
     restart: always
