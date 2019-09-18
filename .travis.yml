@@ -2,9 +2,11 @@ language: node
 
 services:
   - docker
+before_script:
+    # Disable default postgres service
+    - sudo service postgresql stop
 
 before_install:
-  - docker-compose down
   - docker-compose up -d --build
 
 script:
