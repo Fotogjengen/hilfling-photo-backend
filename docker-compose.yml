@@ -29,6 +29,33 @@ services:
       - web
     environment:
       POSTGRES_PASSWORD: example
+
+  traefik:
+    image: "traefik:v2.0.0-rc3"
+    container_name: "traefik"
+    command:
+      #- "--log.level=DEBUG"
+      - "--api.insecure=true"
+      - "--providers.docker=true"
+      - "--providers.docker.exposedbydefault=false"
+      - "--entrypoints.web.address=:80"
+    labels:
+      traefik.enable: "true"
+      traefik.backend: "traefik"
+      traefik.frontend.rule: "Host:traefik.localhost:8080"
+    ports:
+      - "80:80"
+      - "8080:8080"
+    volumes:
+      - "/var/run/docker.sock:/var/run/docker.sock:ro"
+      - ./backends.toml:/backends.toml
+    networks:
+            - traefik
+networks:
+        traefik:
+                external: true
+
+
 networks:
   web:
 volumes:
