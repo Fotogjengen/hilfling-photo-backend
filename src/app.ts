@@ -1,7 +1,7 @@
 import express from "express";
 import bodyParser from "body-parser";
 var pgp = require("pg-promise")(/* options */);
-var db = pgp("postgres://postgres:example@postgres:5432/photodb");
+var db = pgp("postgres://postgres:example@postgres:5432/photodb"); // TODO: Changepassword from example to something else
 
 // Create Express server
 const app = express();
@@ -38,5 +38,5 @@ app.get("/test", (req: Request, res: Response) => {
     });
 });
 
-//export default app;
+export default app;
 module.exports = app;
