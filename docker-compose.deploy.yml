@@ -3,11 +3,12 @@ version: "2"
 networks:
   traefik:
     external: true
-    name: traefik
 
 services:
   photo-api:
     labels:
+      - traefik.enable = true
+      - traefik.docker.network = 'traefik'
       - traefik.http.routers.my-container.rule=Host('fg.nikzy.no')
     networks:
       - traefik
