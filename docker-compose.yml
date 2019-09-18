@@ -31,3 +31,5 @@ services:
       POSTGRES_PASSWORD: example
 networks:
   web:
+volumes:
+  db-data:
