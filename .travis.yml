@@ -7,7 +7,7 @@ before_script:
     - sudo service postgresql stop
 
 before_install:
-  - docker-compose -f docker-compose.yml -f docker-compose.deploy.yml up -d --build
+  - docker-compose -f docker-compose.yml up -d --build
 
 script:
   - docker-compose exec photo-api npm run test
