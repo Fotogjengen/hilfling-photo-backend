@@ -11,11 +11,6 @@ services:
       - ./src:/app/src
     ports:
       - "8000:8080"
-    networks:
-      - traefik
-    labels:
-      - traefik.port = 8080
-      - traefik.http.routers.photo-api.rule=Host("fg.nikzy.no")
 
 
   postgres:
@@ -29,8 +24,6 @@ services:
       - "./postgres/sql:/base-sql"
     ports:
       - "5431:5432"
-    networks:
-      - traefik
     environment:
       POSTGRES_PASSWORD: example
 
@@ -41,8 +34,6 @@ networks:
 
 networks:
   web:
-  traefik:
-    external: true
 volumes:
   db-data:
 

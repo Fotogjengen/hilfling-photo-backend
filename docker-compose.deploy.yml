@@ -6,11 +6,12 @@ networks:
 
 services:
   photo-api:
-    labels:
-      - traefik.enable = true
-      - traefik.backend= 'traefik'
-      - traefik.port = 80
-      - traefik.docker.network = 'traefik'
-      - traefik.http.routers.my-container.rule=Host('fg.nikzy.no')
     networks:
       - traefik
+    labels:
+      - traefik.port = 8080
+      - traefik.http.routers.photo-api.rule=Host("fg.nikzy.no")
+
+  postgres:
+    labels:
+      - traefik.enable=false
