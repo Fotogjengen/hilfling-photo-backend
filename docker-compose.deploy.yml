@@ -11,6 +11,7 @@ services:
     labels:
       - traefik.port = 8080
       - traefik.http.routers.photo-api.rule=Host("fg.nikzy.no")
+      - traefik.http.routers.registry.service=photo-api
 
   postgres:
     labels:
