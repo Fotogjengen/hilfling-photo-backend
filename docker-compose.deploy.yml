@@ -10,7 +10,7 @@ services:
       - traefik
     labels:
       - traefik.port = 8080
-      - traefik.http.routers.photo-api.rule=Host("photo-api.fg.carosa.no")
+      - traefik.http.routers.photo-api.rule=Host("api.fg.carosa.no")
       - traefik.http.routers.registry.service=photo-api
 
   postgres:

@@ -1,5 +1,5 @@
 FROM node:12-alpine
-MAINTAINER FG Web (fg-web@samfundet.no)
+LABEL maintainer="FG Web (fg-web@samfundet.no)"
 
 # Install important dependencies
 RUN apk add vim curl

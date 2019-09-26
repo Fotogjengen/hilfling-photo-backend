@@ -1,13 +1,21 @@
 language: node_js
-
+node_js:
+- node
+env:
+- SERVER_IP_ADDRESS=157.245.40.180
 services:
-  - docker
+- docker
 before_script:
-    # Disable default postgres service
-    - sudo service postgresql stop
-
+- sudo service postgresql stop
 before_install:
-  - docker-compose -f docker-compose.yml up -d --build
-
+- openssl aes-256-cbc -K $encrypted_57016c719204_key -iv $encrypted_57016c719204_iv
+  -in id_rsa.enc -out ./id_rsa -d
+- docker-compose -f docker-compose.yml up -d --build
+- eval "$(ssh-agent -s)"
+- chmod 600 ./id_rsa
+- echo -e "Host $SERVER_IP_ADDRESS\n\tStrictHostKeyChecking no\n" >> ~/.ssh/config
+- ssh-add ./id_rsa
 script:
-  - docker-compose exec photo-api npm run test
+- docker-compose exec photo-api npm run test
+after_success:
+- bash scripts/deploy.sh
