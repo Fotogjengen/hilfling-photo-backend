@@ -18,6 +18,7 @@ CREATE TABLE IF NOT EXISTS photographer (
 	name text NOT NULL
 );
 CREATE TABLE IF NOT EXISTS security(
+<<<<<<< HEAD
     id serial PRIMARY KEY,
 	securitytype text NOT NULL
 );
