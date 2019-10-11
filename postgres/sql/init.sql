@@ -5,7 +5,7 @@ CREATE DATABASE photodb;
 CREATE TABLE IF NOT EXISTS album (
     id serial PRIMARY KEY,
 	title text,
-	analog BOOLEAN DEFAULT false,
+	analog BOOLEAN,
 	date_created DATE NOT NULL
 );
 
@@ -19,7 +19,7 @@ CREATE TABLE IF NOT EXISTS photographer (
 );
 CREATE TABLE IF NOT EXISTS security(
     id serial PRIMARY KEY,
-	securitytype text NOT NULL
+	security_type text NOT NULL
 );
 CREATE TABLE IF NOT EXISTS motive (
     id serial PRIMARY KEY,
@@ -30,7 +30,8 @@ CREATE TABLE IF NOT EXISTS motive (
 
 );
 CREATE TABLE IF NOT EXISTS place (
-    id serial PRIMARY KEY
+    id serial PRIMARY KEY,
+	title text NOT NULL
 );
 CREATE TABLE IF NOT EXISTS photo (
     id serial PRIMARY KEY,
@@ -51,16 +52,13 @@ CREATE TABLE IF NOT EXISTS analog (
 ) INHERITS (photo);
 
 CREATE TABLE IF NOT EXISTS tag (
-    id serial PRIMARY KEY
-);
-CREATE TABLE IF NOT EXISTS tag (
     id serial PRIMARY KEY,
 	title text NOT NULL
 );
 CREATE TABLE IF NOT EXISTS tagphoto (
     id serial PRIMARY KEY,
 	tag_id INTEGER REFERENCES tag(id) NOT NULL,
-	photo_ID INTEGER REFERENCES photo(id) NOT NULL
+	photo_id INTEGER REFERENCES photo(id) NOT NULL
 );
 CREATE TABLE IF NOT EXISTS orders(
     id serial PRIMARY KEY,
