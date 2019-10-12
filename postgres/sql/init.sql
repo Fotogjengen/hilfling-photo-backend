@@ -4,8 +4,8 @@ CREATE DATABASE photodb;
 \c photodb
 CREATE TABLE IF NOT EXISTS album (
     id serial PRIMARY KEY,
-	title text,
-	analog BOOLEAN,
+	title text NOT NULL,
+	analog BOOLEAN NOT NULL,
 	date_created DATE NOT NULL
 );
 
@@ -63,14 +63,14 @@ CREATE TABLE IF NOT EXISTS tagphoto (
 CREATE TABLE IF NOT EXISTS orders(
     id serial PRIMARY KEY,
 	name text NOT NULL,
-	email text ,
-	adress text,
-	place text ,
-	zip_code INTEGER,
-	post_or_get text,
+	email text  NOT NULL,
+	adress text NOT NULL,
+	place text  NOT NULL,
+	zip_code INTEGER NOT NULL,
+	post_or_get text NOT NULL,
 	comment text,
-	date_created DATE,
-	order_complete BOOLEAN
+	date_created DATE NOT NULL,
+	order_complete BOOLEAN DEFAULT false
 
 );
 CREATE TABLE IF NOT EXISTS orderphotos(
