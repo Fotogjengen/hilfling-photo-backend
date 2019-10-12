@@ -32,8 +32,6 @@ networks:
     external: true
 
 
-networks:
-  web:
 volumes:
   db-data:
 
