@@ -1,0 +1,33 @@
+version: "2"
+
+services:
+  hilfling-backend:
+    container_name: hilfling-backend
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+
+  postgres:
+    container_name: photodb
+    build:
+      context: .
+      dockerfile: postgres/Dockerfile
+    restart: always
+    volumes:
+      - "db-data:/var/lib/postgresql/data"
+      - "./postgres/sql:/base-sql"
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_PASSWORD: example
+
+networks:
+  traefik:
+    external: true
+
+
+volumes:
+  db-data:
+

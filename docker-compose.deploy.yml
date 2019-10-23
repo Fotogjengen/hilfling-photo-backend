@@ -1,0 +1,18 @@
+version: "2"
+
+networks:
+  traefik:
+    external: true
+
+services:
+  photo-api:
+    networks:
+      - traefik
+    labels:
+      - traefik.port = 8080
+      - traefik.http.routers.photo-api.rule=Host("api.fg.carosa.no")
+      - traefik.http.routers.registry.service=photo-api
+
+  postgres:
+    labels:
+      - traefik.enable=false
