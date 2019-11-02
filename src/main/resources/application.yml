@@ -12,7 +12,8 @@ spring:
     properties:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
-        ddl-auto: create
+        auto-ddl: drop-create
+        ddl-auto: drop-create
         jdbc:
           lob:
             non_contextual_creation: true # Disable creatClob (not implemented, not necessary)
