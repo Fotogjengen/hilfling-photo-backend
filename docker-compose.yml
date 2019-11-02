@@ -10,7 +10,7 @@ services:
       - "8080:8080"
 
   postgres:
-    container_name: photodb
+    container_name: hilflingdb
     build:
       context: .
       dockerfile: postgres/Dockerfile

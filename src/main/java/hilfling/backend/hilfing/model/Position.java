@@ -4,12 +4,18 @@ import lombok.Data;
 
 import javax.persistence.*;
 import javax.validation.constraints.Email;
+import java.io.Serializable;
 
-@Entity
 @Data
+@Entity
 @Table(name = "position")
-public class Position {
+public class Position implements Serializable {
     public Position() {
+    }
+
+    public Position(String title, @Email String email) {
+        this.title = title;
+        this.email = email;
     }
 
     @Id
