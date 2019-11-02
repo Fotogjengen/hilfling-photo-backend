@@ -13,6 +13,13 @@ import java.io.Serializable;
 })
 public class PhotoOnPurchaseOrder implements Serializable {
 
+    public PhotoOnPurchaseOrder(PurchaseOrder purchaseOrder, Photo photo, String size, Integer amount) {
+        this.purchaseOrder = purchaseOrder;
+        this.photo = photo;
+        this.size = size;
+        this.amount = amount;
+    }
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

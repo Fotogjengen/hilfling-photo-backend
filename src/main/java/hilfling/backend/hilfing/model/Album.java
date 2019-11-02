@@ -11,9 +11,6 @@ import java.util.Date;
 @Entity
 @Table(name="album")
 public class Album implements Serializable {
-    public Album() {
-    }
-
     public Album(String title, Boolean analog) {
         this.title = title;
         this.analog = analog;

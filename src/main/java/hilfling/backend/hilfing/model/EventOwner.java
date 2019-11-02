@@ -9,8 +9,6 @@ import java.io.Serializable;
 @Entity
 @Table(name = "event_owner")
 public class EventOwner implements Serializable {
-    public EventOwner(){ }
-
     public EventOwner(String owner) {
         this.owner = owner;
     }

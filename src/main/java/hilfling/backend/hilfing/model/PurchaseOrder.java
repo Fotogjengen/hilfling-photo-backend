@@ -7,16 +7,12 @@ import javax.persistence.*;
 import javax.validation.constraints.Email;
 import java.io.Serializable;
 import java.util.Date;
-import java.util.List;
 
 
 @Data
 @Entity
 @Table(name = "purchase_order")
 public class PurchaseOrder implements Serializable {
-    public PurchaseOrder() {
-    }
-
     public PurchaseOrder(
             String name,
             @Email String email,
@@ -62,7 +58,7 @@ public class PurchaseOrder implements Serializable {
     @Column(name = "send_by_post", nullable = false)
     private Boolean sendByPost;
 
-    @Column(name = "comment")
+    @Column(name = "comment", columnDefinition = "TEXT")
     private String comment;
 
     @Column(name = "date_created", nullable = false)

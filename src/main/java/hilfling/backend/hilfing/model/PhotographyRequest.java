@@ -11,11 +11,8 @@ import java.util.Date;
 
 @Data
 @Entity
-@Table(name = "photo")
+@Table(name = "photography_request")
 public class PhotographyRequest implements Serializable {
-    public PhotographyRequest() {
-    }
-
     public PhotographyRequest(
             Date startTime,
             Date endTime,
@@ -68,7 +65,7 @@ public class PhotographyRequest implements Serializable {
     @Column(name = "phone", nullable = false)
     private String phone;
 
-    @Column(name = "description", nullable = false)
+    @Column(name = "description", columnDefinition = "TEXT", nullable = false)
     private String description;
 
 }

@@ -11,10 +11,6 @@ import java.io.Serializable;
 @Table(name = "photo")
 @Inheritance(strategy = InheritanceType.JOINED)
 public class Photo implements Serializable {
-    public Photo() {
-
-    };
-
     public Photo(
             String smallUrl,
             String mediumUrl,

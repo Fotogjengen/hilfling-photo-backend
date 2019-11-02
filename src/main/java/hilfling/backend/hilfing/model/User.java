@@ -12,9 +12,6 @@ import java.io.Serializable;
 @Table(name = "user")
 @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
 public class User implements Serializable {
-    public User() {
-    }
-
     public User(
             String firstName,
             String lastName,

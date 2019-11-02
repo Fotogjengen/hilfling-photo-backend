@@ -1,8 +1,6 @@
 package hilfling.backend.hilfing.model;
 
 import lombok.Data;
-import org.hibernate.annotations.NotFound;
-import org.hibernate.annotations.NotFoundAction;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -14,8 +12,6 @@ import java.util.Date;
         @UniqueConstraint(columnNames = {"title", "date_taken"})
 })
 public class Motive implements Serializable {
-    public Motive() {}
-
     public Motive(String title, Date date_taken, Category category, EventOwner eventOwner) {
         this.title = title;
         this.date_taken = date_taken;
@@ -35,12 +31,11 @@ public class Motive implements Serializable {
 
     @OneToOne // TODO: ManyToOne?
     // TODO: Always join?? What if we don't want to join?
-    @JoinColumn(name = "category_id", referencedColumnName = "id")
+    @JoinColumn(name = "category_id", referencedColumnName = "id", nullable = false)
     private Category category;
 
     @OneToOne // TODO: ManyToOne?
     // TODO: Always join?? What if we don't want to join?
-    @JoinColumn(name = "event_id", referencedColumnName = "id")
-    @NotFound(action = NotFoundAction.IGNORE)
+    @JoinColumn(name = "event_owner_id", referencedColumnName = "id")
     private EventOwner eventOwner;
 }

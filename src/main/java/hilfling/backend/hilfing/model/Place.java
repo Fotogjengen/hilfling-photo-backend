@@ -9,9 +9,6 @@ import java.io.Serializable;
 @Entity
 @Table(name = "place")
 public class Place implements Serializable {
-    public Place() {
-    }
-
     public Place(String location) {
         this.location = location;
     }

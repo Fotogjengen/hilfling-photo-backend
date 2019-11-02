@@ -10,9 +10,6 @@ import java.io.Serializable;
 @Entity
 @Table(name = "position")
 public class Position implements Serializable {
-    public Position() {
-    }
-
     public Position(String title, @Email String email) {
         this.title = title;
         this.email = email;

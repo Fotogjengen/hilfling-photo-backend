@@ -9,8 +9,6 @@ import java.io.Serializable;
 @Entity
 @Table(name="category")
 public class Category implements Serializable {
-    public Category() { }
-
     public Category(String title) {
         this.title = title;
     }

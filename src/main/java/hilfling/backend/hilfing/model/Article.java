@@ -8,11 +8,8 @@ import java.util.Date;
 
 @Data
 @Entity
-@Table(name = "photo")
+@Table(name = "article")
 public class Article {
-    public Article() {
-    }
-
     public Article(String title, String content, Security security) {
         this.title = title;
         this.content = content;
@@ -26,7 +23,7 @@ public class Article {
     @Column(name = "title", nullable = false)
     private String title;
 
-    @Column(name = "content", nullable = false)
+    @Column(name = "content", columnDefinition = "TEXT", nullable = false)
     private String content;
 
     @Column(name = "date_published", insertable = false, updatable = false)
@@ -37,6 +34,8 @@ public class Article {
     @JoinColumn(name = "security_id", referencedColumnName = "id", nullable = false)
     private Security security;
 
-    // TODO: photogangbanger column
+    @ManyToOne
+    @JoinColumn(name = "photo_gang_banger_id", referencedColumnName = "id", nullable = false)
+    private PhotoGangBanger photoGangBanger;
 
 }

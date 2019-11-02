@@ -9,9 +9,6 @@ import java.io.Serializable;
 @Entity
 @Table(name = "security")
 public class Security implements Serializable {
-    public Security() {
-    }
-
     public Security(String type) {
         this.type = type;
     }

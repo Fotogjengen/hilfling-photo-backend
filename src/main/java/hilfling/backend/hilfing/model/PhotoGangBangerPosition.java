@@ -1,6 +1,7 @@
 package hilfling.backend.hilfing.model;
 
 import lombok.Data;
+import org.hibernate.annotations.ColumnDefault;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -11,7 +12,10 @@ import java.io.Serializable;
         @UniqueConstraint(columnNames = {"photo_gang_banger_id", "position_id"})
 })
 public class PhotoGangBangerPosition implements Serializable {
-    public PhotoGangBangerPosition() {
+    public PhotoGangBangerPosition(PhotoGangBanger photoGangBanger, Position position, Boolean current) {
+        this.photoGangBanger = photoGangBanger;
+        this.position = position;
+        this.current = current;
     }
 
     @Id
@@ -27,5 +31,6 @@ public class PhotoGangBangerPosition implements Serializable {
     private Position position;
 
     @Column(name = "current", nullable = false)
+    @ColumnDefault("true")
     private Boolean current;
 }
