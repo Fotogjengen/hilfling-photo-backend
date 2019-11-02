@@ -12,6 +12,9 @@ import java.util.Date;
         @UniqueConstraint(columnNames = {"title", "date_taken"})
 })
 public class Motive implements Serializable {
+    public Motive() {
+    }
+
     public Motive(String title, Date date_taken, Category category, EventOwner eventOwner) {
         this.title = title;
         this.date_taken = date_taken;

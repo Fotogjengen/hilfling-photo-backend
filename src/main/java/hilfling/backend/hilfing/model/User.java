@@ -9,9 +9,12 @@ import java.io.Serializable;
 
 @Data
 @Entity
-@Table(name = "user")
+@Table(name = "hilfling_user")
 @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
 public class User implements Serializable {
+    public User() {
+    }
+
     public User(
             String firstName,
             String lastName,

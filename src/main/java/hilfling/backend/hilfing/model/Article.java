@@ -10,6 +10,9 @@ import java.util.Date;
 @Entity
 @Table(name = "article")
 public class Article {
+    public Article() {
+    }
+
     public Article(String title, String content, Security security) {
         this.title = title;
         this.content = content;

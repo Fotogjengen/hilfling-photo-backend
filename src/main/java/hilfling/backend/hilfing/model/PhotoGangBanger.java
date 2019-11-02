@@ -13,6 +13,9 @@ import javax.validation.constraints.Email;
 @Entity
 @Table(name = "photo_gang_banger")
 public class PhotoGangBanger extends User {
+    public PhotoGangBanger() {
+    }
+
     public PhotoGangBanger(
             String firstName,
             String lastName,

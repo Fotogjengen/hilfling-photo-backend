@@ -12,6 +12,9 @@ import java.io.Serializable;
         @UniqueConstraint(columnNames = {"photo_gang_banger_id", "position_id"})
 })
 public class PhotoGangBangerPosition implements Serializable {
+    public PhotoGangBangerPosition() {
+    }
+
     public PhotoGangBangerPosition(PhotoGangBanger photoGangBanger, Position position, Boolean current) {
         this.photoGangBanger = photoGangBanger;
         this.position = position;

@@ -13,6 +13,9 @@ import java.util.Date;
 @Entity
 @Table(name = "purchase_order")
 public class PurchaseOrder implements Serializable {
+    public PurchaseOrder() {
+    }
+
     public PurchaseOrder(
             String name,
             @Email String email,

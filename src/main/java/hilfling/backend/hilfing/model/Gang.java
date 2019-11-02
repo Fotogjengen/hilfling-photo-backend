@@ -9,6 +9,9 @@ import java.io.Serializable;
 @Entity
 @Table(name = "gang")
 public class Gang implements Serializable {
+    public Gang() {
+    }
+
     public Gang(String name) {
         this.name = name;
     }

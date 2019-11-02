@@ -8,6 +8,9 @@ import javax.persistence.*;
 @Entity
 @Table(name = "article_tag")
 public class ArticleTag {
+    public ArticleTag() {
+    }
+
     public ArticleTag(String tag) {
         this.tag = tag;
     }

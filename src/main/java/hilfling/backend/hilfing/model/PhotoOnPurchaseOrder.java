@@ -12,6 +12,8 @@ import java.io.Serializable;
         @UniqueConstraint(columnNames = {"purchase_order_id", "photo_id", "size"})
 })
 public class PhotoOnPurchaseOrder implements Serializable {
+    public PhotoOnPurchaseOrder() {
+    }
 
     public PhotoOnPurchaseOrder(PurchaseOrder purchaseOrder, Photo photo, String size, Integer amount) {
         this.purchaseOrder = purchaseOrder;

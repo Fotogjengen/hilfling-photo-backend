@@ -10,6 +10,9 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "analog_photo")
 public class AnalogPhoto extends Photo {
+    public AnalogPhoto() {
+    }
+
     public AnalogPhoto(
             String smallUrl,
             String mediumUrl,

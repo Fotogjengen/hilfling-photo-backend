@@ -13,6 +13,9 @@ import java.util.Date;
 @Entity
 @Table(name = "photography_request")
 public class PhotographyRequest implements Serializable {
+    public PhotographyRequest() {
+    }
+
     public PhotographyRequest(
             Date startTime,
             Date endTime,
