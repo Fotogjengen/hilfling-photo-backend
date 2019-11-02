@@ -16,10 +16,9 @@ import java.util.Date;
 public class Motive implements Serializable {
     public Motive() {}
 
-    public Motive(String title, Date date_taken, Date date_uploaded, Category category, EventOwner eventOwner) {
+    public Motive(String title, Date date_taken, Category category, EventOwner eventOwner) {
         this.title = title;
         this.date_taken = date_taken;
-        this.date_uploaded = date_uploaded;
         this.category = category;
         this.eventOwner = eventOwner;
     }
@@ -31,13 +30,8 @@ public class Motive implements Serializable {
     @Column(name = "title", nullable = false)
     private String title;
 
-    @Column(name = "date_taken")
+    @Column(name = "date_taken", nullable = false)
     private Date date_taken;
-
-    // TODO: Autogenerate
-    // @Temporal(TemporalType.DATE)
-    @Column(name = "date_uploaded")
-    private Date date_uploaded;
 
     @OneToOne // TODO: ManyToOne?
     // TODO: Always join?? What if we don't want to join?

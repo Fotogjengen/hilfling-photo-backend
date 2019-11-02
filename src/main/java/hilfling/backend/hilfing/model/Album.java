@@ -1,6 +1,7 @@
 package hilfling.backend.hilfing.model;
 
 import lombok.Data;
+import org.hibernate.annotations.ColumnDefault;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -13,9 +14,8 @@ public class Album implements Serializable {
     public Album() {
     }
 
-    public Album(String title, Date dateCreated, Boolean analog) {
+    public Album(String title, Boolean analog) {
         this.title = title;
-        this.dateCreated = dateCreated;
         this.analog = analog;
     }
 
@@ -27,10 +27,12 @@ public class Album implements Serializable {
     private String title;
 
     // TODO: Autogenerate
-    @Column(name = "date_created", updatable = false)
+    @Column(name = "date_created", insertable = false, updatable = false)
+    @ColumnDefault("CURRENT_TIMESTAMP")
     private Date dateCreated;
 
-    @Column(name = "analog")
+    @Column(name = "analog", nullable = false)
+    @ColumnDefault("false")
     private Boolean analog;
 
 }

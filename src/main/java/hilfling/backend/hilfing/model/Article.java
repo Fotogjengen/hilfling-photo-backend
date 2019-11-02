@@ -1,6 +1,7 @@
 package hilfling.backend.hilfing.model;
 
 import lombok.Data;
+import org.hibernate.annotations.ColumnDefault;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -10,6 +11,12 @@ import java.util.Date;
 @Table(name = "photo")
 public class Article {
     public Article() {
+    }
+
+    public Article(String title, String content, Security security) {
+        this.title = title;
+        this.content = content;
+        this.security = security;
     }
 
     @Id
@@ -22,8 +29,9 @@ public class Article {
     @Column(name = "content", nullable = false)
     private String content;
 
-    @Column(name = "date_published", nullable = false)
-    private Date date;
+    @Column(name = "date_published", insertable = false, updatable = false)
+    @ColumnDefault("CURRENT_TIMESTAMP")
+    private Date datePublished;
 
     @ManyToOne
     @JoinColumn(name = "security_id", referencedColumnName = "id", nullable = false)

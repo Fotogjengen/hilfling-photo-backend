@@ -17,10 +17,14 @@ public class AnalogPhoto extends Photo {
             String largeUrl,
             Boolean goodPicture,
             Motive motive,
+            Place place,
+            Security security,
+            Gang gang,
+            PhotoGangBanger photoGangBanger,
             Integer imageNumber,
             Integer pageNumber
     ) {
-        super(smallUrl, mediumUrl, largeUrl, goodPicture, motive);
+        super(smallUrl, mediumUrl, largeUrl, goodPicture, motive, place, security, gang, photoGangBanger);
         this.imageNumber = imageNumber;
         this.pageNumber = pageNumber;
     }

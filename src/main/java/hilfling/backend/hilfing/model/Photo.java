@@ -15,12 +15,26 @@ public class Photo implements Serializable {
 
     };
 
-    public Photo(String smallUrl, String mediumUrl, String largeUrl, Boolean goodPicture, Motive motive) {
+    public Photo(
+            String smallUrl,
+            String mediumUrl,
+            String largeUrl,
+            Boolean goodPicture,
+            Motive motive,
+            Place place,
+            Security security,
+            Gang gang,
+            PhotoGangBanger photoGangBanger
+    ) {
         this.smallUrl = smallUrl;
         this.mediumUrl = mediumUrl;
         this.largeUrl = largeUrl;
         this.goodPicture = goodPicture;
         this.motive = motive;
+        this.place = place;
+        this.security = security;
+        this.gang = gang;
+        this.photoGangBanger = photoGangBanger;
     }
 
     @Id
@@ -56,6 +70,8 @@ public class Photo implements Serializable {
     @JoinColumn(name = "gang_id", referencedColumnName = "id")
     private Gang gang;
 
-    // TODO: photogangbanger column
+    @ManyToOne
+    @JoinColumn(name = "photo_gang_banger_id", referencedColumnName = "id", nullable = false)
+    private PhotoGangBanger photoGangBanger;
 
 }
