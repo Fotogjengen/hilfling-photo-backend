@@ -1,43 +1,41 @@
 package hilfling.backend.hilfing.model;
 
 import lombok.Data;
-import org.hibernate.annotations.NotFound;
-import org.hibernate.annotations.NotFoundAction;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.Date;
 
 @Data
 @Entity
-@Table(name = "motive")
-public class Motive {
-    public Motive() {}
+@Table(name = "motive", uniqueConstraints = {
+        @UniqueConstraint(columnNames = {"title", "date_taken"})
+})
+public class Motive implements Serializable {
+    public Motive(String title, Date date_taken, Category category, EventOwner eventOwner) {
+        this.title = title;
+        this.date_taken = date_taken;
+        this.category = category;
+        this.eventOwner = eventOwner;
+    }
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "title")
+    @Column(name = "title", nullable = false)
     private String title;
 
-    @Column(name = "date_taken")
+    @Column(name = "date_taken", nullable = false)
     private Date date_taken;
 
-    // TODO: Autogenerate
-    // @Temporal(TemporalType.DATE)
-    @Column(name = "date_uploaded")
-    private Date date_uploaded;
-
-    @OneToOne
+    @OneToOne // TODO: ManyToOne?
     // TODO: Always join?? What if we don't want to join?
-    @JoinColumn(name = "category_id", referencedColumnName = "id")
-    @Column(name = "category")
+    @JoinColumn(name = "category_id", referencedColumnName = "id", nullable = false)
     private Category category;
 
-    @OneToOne
+    @OneToOne // TODO: ManyToOne?
     // TODO: Always join?? What if we don't want to join?
-    @JoinColumn(name = "event_id", referencedColumnName = "id")
-    @Column(name = "event_owner")
-    @NotFound(action = NotFoundAction.IGNORE)
+    @JoinColumn(name = "event_owner_id", referencedColumnName = "id")
     private EventOwner eventOwner;
 }
