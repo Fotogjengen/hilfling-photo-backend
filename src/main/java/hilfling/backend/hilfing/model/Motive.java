@@ -10,7 +10,9 @@ import java.util.Date;
 
 @Data
 @Entity
-@Table(name = "motive", uniqueConstraints = {@UniqueConstraint(columnNames = {"title", "date_taken"})})
+@Table(name = "motive", uniqueConstraints = {
+        @UniqueConstraint(columnNames = {"title", "date_taken"})
+})
 public class Motive implements Serializable {
     public Motive() {}
 
@@ -37,12 +39,12 @@ public class Motive implements Serializable {
     @Column(name = "date_uploaded")
     private Date date_uploaded;
 
-    @OneToOne
+    @OneToOne // TODO: ManyToOne?
     // TODO: Always join?? What if we don't want to join?
     @JoinColumn(name = "category_id", referencedColumnName = "id")
     private Category category;
 
-    @OneToOne
+    @OneToOne // TODO: ManyToOne?
     // TODO: Always join?? What if we don't want to join?
     @JoinColumn(name = "event_id", referencedColumnName = "id")
     @NotFound(action = NotFoundAction.IGNORE)

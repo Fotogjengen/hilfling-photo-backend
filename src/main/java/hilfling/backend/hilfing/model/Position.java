@@ -22,11 +22,11 @@ public class Position implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "title")
+    @Column(name = "title", nullable = false, unique = true)
     private String title;
 
     @Email
-    @Column(name = "email")
+    @Column(name = "email", nullable = false, unique = true)
     private String email;
 
 }

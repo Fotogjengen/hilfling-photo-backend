@@ -13,9 +13,9 @@ public class Album implements Serializable {
     public Album() {
     }
 
-    public Album(String title, Date date_created, Boolean analog) {
+    public Album(String title, Date dateCreated, Boolean analog) {
         this.title = title;
-        this.date_created = date_created;
+        this.dateCreated = dateCreated;
         this.analog = analog;
     }
 
@@ -28,7 +28,7 @@ public class Album implements Serializable {
 
     // TODO: Autogenerate
     @Column(name = "date_created", updatable = false)
-    private Date date_created;
+    private Date dateCreated;
 
     @Column(name = "analog")
     private Boolean analog;

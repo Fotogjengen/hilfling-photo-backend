@@ -9,6 +9,7 @@ import java.io.Serializable;
 @Data
 @Entity
 @Table(name = "photo")
+@Inheritance(strategy = InheritanceType.JOINED)
 public class Photo implements Serializable {
     public Photo() {
 
@@ -54,4 +55,7 @@ public class Photo implements Serializable {
     @ManyToOne
     @JoinColumn(name = "gang_id", referencedColumnName = "id")
     private Gang gang;
+
+    // TODO: photogangbanger column
+
 }
