@@ -21,7 +21,7 @@ public class Photo implements Serializable {
             Boolean goodPicture,
             Motive motive,
             Place place,
-            Security security,
+            SecurityLevel securityLevel,
             Gang gang,
             PhotoGangBanger photoGangBanger
     ) {
@@ -31,7 +31,7 @@ public class Photo implements Serializable {
         this.goodPicture = goodPicture;
         this.motive = motive;
         this.place = place;
-        this.security = security;
+        this.securityLevel = securityLevel;
         this.gang = gang;
         this.photoGangBanger = photoGangBanger;
     }
@@ -63,7 +63,7 @@ public class Photo implements Serializable {
 
     @ManyToOne
     @JoinColumn(name = "security_id", referencedColumnName = "id", nullable = false)
-    private Security security;
+    private SecurityLevel securityLevel;
 
     @ManyToOne
     @JoinColumn(name = "gang_id", referencedColumnName = "id")
