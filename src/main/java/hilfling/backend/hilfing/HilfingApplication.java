@@ -10,7 +10,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 
 @SpringBootApplication
-public class HilfingApplication {
+class HilfingApplication {
 
 	public static void main(String[] args) {
 		SpringApplication.run(HilfingApplication.class, args);
@@ -19,7 +19,6 @@ public class HilfingApplication {
 	@Bean
 	public CommandLineRunner demoData(CategoryService categoryService) {
 		//Motive firstMotive = new Motive();
-
 
 		return args -> {
 			categoryService.createCategory(new Category("Fotostand"));
