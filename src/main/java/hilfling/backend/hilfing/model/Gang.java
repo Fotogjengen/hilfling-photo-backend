@@ -12,6 +12,9 @@ public class Gang implements Serializable {
     public Gang() {
     }
 
+    public Gang(String name) {
+        this.name = name;
+    }
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

@@ -1,4 +1,7 @@
 package hilfling.backend.hilfing.model;
 
-public class PurchaseOrder {
+import java.io.Serializable;
+
+public class PurchaseOrder implements Serializable {
+
 }
