@@ -1,8 +1,6 @@
 package hilfling.backend.hilfing;
 
 import hilfling.backend.hilfing.model.*;
-import hilfling.backend.hilfing.repositories.CategoryRepository;
-import hilfling.backend.hilfing.repositories.PhotoRepository;
 import hilfling.backend.hilfing.service.CategoryService;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
@@ -10,7 +8,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 
 @SpringBootApplication
-class HilfingApplication {
+public class HilfingApplication {
 
 	public static void main(String[] args) {
 		SpringApplication.run(HilfingApplication.class, args);
@@ -22,7 +20,7 @@ class HilfingApplication {
 
 		return args -> {
 			categoryService.createCategory(new Category("Fotostand"));
-			System.out.println(categoryService.getCategories());
+			System.out.println(categoryService.getAllCategories());
 		};
 	}
 
