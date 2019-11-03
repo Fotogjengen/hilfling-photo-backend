@@ -17,6 +17,7 @@ public class Album implements Serializable, BaseModel {
     public Album(String title, Boolean analog) {
         this.title = title;
         this.analog = analog;
+        this.dateCreated = new Date();
     }
 
     @Id
@@ -27,7 +28,7 @@ public class Album implements Serializable, BaseModel {
     private String title;
 
     // TODO: Autogenerate
-    @Column(name = "date_created", insertable = false, updatable = false)
+    @Column(name = "date_created", updatable = false)
     @ColumnDefault("CURRENT_TIMESTAMP")
     private Date dateCreated;
 
