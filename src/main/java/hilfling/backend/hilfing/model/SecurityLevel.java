@@ -8,11 +8,11 @@ import java.io.Serializable;
 @Data
 @Entity
 @Table(name = "security")
-public class Security implements Serializable {
-    public Security() {
+public class SecurityLevel implements Serializable {
+    public SecurityLevel() {
     }
 
-    public Security(String type) {
+    public SecurityLevel(String type) {
         this.type = type;
     }
 

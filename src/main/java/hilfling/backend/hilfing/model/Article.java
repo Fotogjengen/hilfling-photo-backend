@@ -13,10 +13,10 @@ public class Article {
     public Article() {
     }
 
-    public Article(String title, String content, Security security) {
+    public Article(String title, String content, SecurityLevel securityLevel) {
         this.title = title;
         this.content = content;
-        this.security = security;
+        this.securityLevel = securityLevel;
     }
 
     @Id
@@ -35,7 +35,7 @@ public class Article {
 
     @ManyToOne
     @JoinColumn(name = "security_id", referencedColumnName = "id", nullable = false)
-    private Security security;
+    private SecurityLevel securityLevel;
 
     @ManyToOne
     @JoinColumn(name = "photo_gang_banger_id", referencedColumnName = "id", nullable = false)
