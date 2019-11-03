@@ -8,7 +8,7 @@ import java.io.Serializable;
 @Data
 @Entity
 @Table(name = "gang")
-public class Gang implements Serializable {
+public class Gang implements Serializable, BaseModel {
     public Gang() {
     }
 

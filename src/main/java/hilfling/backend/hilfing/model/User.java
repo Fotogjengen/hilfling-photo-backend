@@ -11,7 +11,7 @@ import java.io.Serializable;
 @Entity
 @Table(name = "hilfling_user")
 @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
-public class User implements Serializable {
+public class User implements Serializable, BaseModel {
     public User() {
     }
 
