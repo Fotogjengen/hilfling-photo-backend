@@ -11,6 +11,9 @@ public abstract class GenericBaseServiceImplementation<T extends BaseModel> impl
 
     @Override
     public ResponseEntity<T> create(T entity) {
+        if (entity.getId() != null) {
+            return ResponseEntity.status(403).build();
+        }
         try {
             T savedEntity = getRepository().save(entity);
             return ResponseEntity.ok().body(savedEntity);
@@ -41,11 +44,10 @@ public abstract class GenericBaseServiceImplementation<T extends BaseModel> impl
     }
 
     @Override
-    public ResponseEntity update(T entity, Long id) {
-        if(getRepository().findById(id).isEmpty()) {
+    public ResponseEntity update(T entity) {
+        if(getRepository().findById(entity.getId()).isEmpty()) {
             return ResponseEntity.notFound().build();
         }
-        entity.setId(id);
         return ResponseEntity.ok().body(getRepository().save(entity));
     }
 

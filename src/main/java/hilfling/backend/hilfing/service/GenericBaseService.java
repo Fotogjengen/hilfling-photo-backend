@@ -10,5 +10,5 @@ public interface GenericBaseService<T extends BaseModel> {
     ResponseEntity<?> delete(Long id);
     ResponseEntity<T> getById(Long id);
     ResponseEntity<List<T>> getAll();
-    ResponseEntity<T> update(T entity, Long id);
+    ResponseEntity<T> update(T entity);
 }

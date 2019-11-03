@@ -8,4 +8,5 @@ import javax.persistence.Id;
 
 public interface BaseModel {
  void setId(Long id);
+ Long getId();
 }

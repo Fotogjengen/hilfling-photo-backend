@@ -29,9 +29,9 @@ public abstract class GenericBaseControllerImplementation<T extends BaseModel> i
     }
 
     @Override
-    @PutMapping("/{id}")
-    public ResponseEntity<T> update(@Valid @RequestBody T entity, @PathVariable("id") Long id) {
-        return getService().update(entity, id);
+    @PutMapping
+    public ResponseEntity<T> update(@Valid @RequestBody T entity) {
+        return getService().update(entity);
     }
 
     @Override
