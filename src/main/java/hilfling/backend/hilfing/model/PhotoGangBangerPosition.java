@@ -11,7 +11,7 @@ import java.io.Serializable;
 @Table(name = "photo_gang_banger_position"  , uniqueConstraints = {
         @UniqueConstraint(columnNames = {"photo_gang_banger_id", "position_id"})
 })
-public class PhotoGangBangerPosition implements Serializable {
+public class PhotoGangBangerPosition implements Serializable, BaseModel {
     public PhotoGangBangerPosition() {
     }
 

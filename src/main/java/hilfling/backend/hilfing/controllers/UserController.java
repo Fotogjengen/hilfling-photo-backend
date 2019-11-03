@@ -11,32 +11,10 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/users")
-public class UserController {
+public class UserController extends GenericBaseControllerImplementation<User> {
     @Autowired
-    UserService userService;
-
-    @PostMapping
-    public ResponseEntity<User> createUser(@Valid @RequestBody User user) {
-        return userService.createUser(user);
-    }
-
-    @GetMapping("/{id}")
-    public ResponseEntity<User> getUser(@PathVariable("id") Long id) {
-        return userService.getUser(id);
-    }
-
-    @GetMapping
-    public ResponseEntity<List<User>> getAllUsers() {
-        return userService.getAllUsers();
-    }
-
-    @PutMapping("/{id}")
-    public ResponseEntity<User> updateUser(@Valid @RequestBody User user, @PathVariable("id") Long id) {
-        return userService.updateUser(user, id);
-    }
-
-    @DeleteMapping("/{id}")
-    public ResponseEntity<?> deleteUser(@PathVariable("id") Long id) {
-        return userService.deleteUser(id);
+    private UserService service;
+    public UserService getService() {
+        return service;
     }
 }

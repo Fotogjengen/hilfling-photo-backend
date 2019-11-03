@@ -11,7 +11,7 @@ import java.util.Date;
 @Table(name = "motive", uniqueConstraints = {
         @UniqueConstraint(columnNames = {"title", "date_taken"})
 })
-public class Motive implements Serializable {
+public class Motive implements Serializable, BaseModel {
     public Motive() {
     }
 

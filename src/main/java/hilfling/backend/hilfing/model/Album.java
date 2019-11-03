@@ -10,7 +10,7 @@ import java.util.Date;
 @Data
 @Entity
 @Table(name="album")
-public class Album implements Serializable {
+public class Album implements Serializable, BaseModel {
     public Album() {
     }
 

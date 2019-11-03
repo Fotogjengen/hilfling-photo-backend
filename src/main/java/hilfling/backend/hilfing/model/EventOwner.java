@@ -8,7 +8,7 @@ import java.io.Serializable;
 @Data
 @Entity
 @Table(name = "event_owner")
-public class EventOwner implements Serializable {
+public class EventOwner implements Serializable, BaseModel {
     public EventOwner() {
     }
 

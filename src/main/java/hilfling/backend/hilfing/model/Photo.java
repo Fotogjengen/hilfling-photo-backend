@@ -10,7 +10,7 @@ import java.io.Serializable;
 @Entity
 @Table(name = "photo")
 @Inheritance(strategy = InheritanceType.JOINED)
-public class Photo implements Serializable {
+public class Photo implements Serializable, BaseModel {
     public Photo() {
     }
 

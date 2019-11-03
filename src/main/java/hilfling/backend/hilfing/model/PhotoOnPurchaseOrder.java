@@ -11,7 +11,7 @@ import java.io.Serializable;
 @Table(name = "photo_on_purchase_order", uniqueConstraints = {
         @UniqueConstraint(columnNames = {"purchase_order_id", "photo_id", "size"})
 })
-public class PhotoOnPurchaseOrder implements Serializable {
+public class PhotoOnPurchaseOrder implements Serializable, BaseModel {
     public PhotoOnPurchaseOrder() {
     }
 

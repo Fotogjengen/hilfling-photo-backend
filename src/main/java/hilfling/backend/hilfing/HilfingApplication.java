@@ -19,8 +19,8 @@ public class HilfingApplication {
 		//Motive firstMotive = new Motive();
 
 		return args -> {
-			categoryService.createCategory(new Category("Fotostand"));
-			System.out.println(categoryService.getAllCategories());
+			categoryService.create(new Category("Fotostand"));
+			System.out.println(categoryService.getAll());
 		};
 	}
 
