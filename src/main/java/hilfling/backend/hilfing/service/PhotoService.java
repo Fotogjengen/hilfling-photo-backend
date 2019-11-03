@@ -1,7 +1,6 @@
 package hilfling.backend.hilfing.service;
 import hilfling.backend.hilfing.model.Photo;
 
-import java.util.UUID;
 /*
 public class PhotoService {
     private final Photo photo;

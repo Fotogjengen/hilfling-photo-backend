@@ -1,1 +1,1 @@
-docker-compose exec postgres psql photodb postgres
+docker-compose exec postgres psql hilflingdb postgres
