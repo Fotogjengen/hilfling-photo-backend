@@ -12,7 +12,7 @@ import java.util.Date;
 @Data
 @Entity
 @Table(name = "photography_request")
-public class PhotographyRequest implements Serializable {
+public class PhotographyRequest implements Serializable, BaseModel {
     public PhotographyRequest() {
     }
 

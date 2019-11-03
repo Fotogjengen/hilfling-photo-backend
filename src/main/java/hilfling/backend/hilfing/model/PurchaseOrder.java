@@ -12,7 +12,7 @@ import java.util.Date;
 @Data
 @Entity
 @Table(name = "purchase_order")
-public class PurchaseOrder implements Serializable {
+public class PurchaseOrder implements Serializable, BaseModel {
     public PurchaseOrder() {
     }
 

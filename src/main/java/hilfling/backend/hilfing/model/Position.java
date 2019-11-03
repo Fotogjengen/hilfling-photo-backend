@@ -9,7 +9,7 @@ import java.io.Serializable;
 @Data
 @Entity
 @Table(name = "position")
-public class Position implements Serializable {
+public class Position implements Serializable, BaseModel {
     public Position() {
     }
 

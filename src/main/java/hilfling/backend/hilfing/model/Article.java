@@ -4,12 +4,13 @@ import lombok.Data;
 import org.hibernate.annotations.ColumnDefault;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.Date;
 
 @Data
 @Entity
 @Table(name = "article")
-public class Article {
+public class Article implements Serializable, BaseModel {
     public Article() {
     }
 

@@ -8,7 +8,7 @@ import java.io.Serializable;
 @Data
 @Entity
 @Table(name = "place")
-public class Place implements Serializable {
+public class Place implements Serializable, BaseModel {
     public Place() {
     }
 

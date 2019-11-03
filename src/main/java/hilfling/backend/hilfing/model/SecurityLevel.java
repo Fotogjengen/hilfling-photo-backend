@@ -8,7 +8,7 @@ import java.io.Serializable;
 @Data
 @Entity
 @Table(name = "security")
-public class SecurityLevel implements Serializable {
+public class SecurityLevel implements Serializable, BaseModel {
     public SecurityLevel() {
     }
 
