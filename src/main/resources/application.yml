@@ -1,4 +1,6 @@
 spring:
+  main:
+    allow-bean-definition-overriding: true
   datasource:
     hikari:
       connection-timeout: 20000
@@ -22,3 +24,9 @@ spring:
       org:
         hibernate:
           type: trace
+keycloak:
+  realm: SpringBootKeycloakSe
+  auth-server-url: http://localhost:8180/auth
+  resource: login-app
+  public-client: true
+
