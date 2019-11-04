@@ -14,5 +14,4 @@ public class HilfingApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(HilfingApplication.class, args);
 	}
-
 }

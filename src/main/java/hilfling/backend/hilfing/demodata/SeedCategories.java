@@ -26,5 +26,5 @@ public class SeedCategories {
             add(new Category("Bilder av Sindre"));
          }
       };
-      categories.stream().forEach(category -> this.service.createCategory(category));
+      categories.stream().forEach(category -> this.service.create(category));
 }}
