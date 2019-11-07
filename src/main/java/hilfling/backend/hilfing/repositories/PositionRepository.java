@@ -1,13 +1,9 @@
 package hilfling.backend.hilfing.repositories;
 
-
-import hilfling.backend.hilfing.model.Photo;
+import hilfling.backend.hilfing.model.Position;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import java.util.UUID;
-
 @Repository
-public interface PhotoRepository extends JpaRepository<Photo, Long> {
-
+public interface PositionRepository extends JpaRepository<Position, Long> {
 }

@@ -1,18 +1,17 @@
 package hilfling.backend.hilfing.service;
+
 import hilfling.backend.hilfing.model.Photo;
+import hilfling.backend.hilfing.repositories.PhotoRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
-/*
-public class PhotoService {
-    private final Photo photo;
-
-    public PhotoService(Photo photo) {
-        this.photo = photo;
+@Service
+public class PhotoService extends
+        GenericBaseServiceImplementation<Photo> {
+    @Autowired
+    PhotoRepository repository;
+    public PhotoRepository getRepository() {
+        return repository;
     }
 
-    public int addPhoto(Photo photo) {
-        UUID uuid = UUID.randomUUID();
-        this.photo.setId(uuid);
-    };
 }
-
- */

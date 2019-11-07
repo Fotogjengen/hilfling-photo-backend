@@ -15,8 +15,8 @@ public abstract class GenericBaseServiceImplementation<T extends BaseModel> impl
             return ResponseEntity.status(403).build();
         }
         try {
-            T savedEntity = getRepository().save(entity);
-            return ResponseEntity.ok().body(savedEntity);
+            getRepository().save(entity);
+            return ResponseEntity.ok().build();
         } catch (Exception error) {
             return ResponseEntity.status(304).build();
         }
@@ -48,7 +48,8 @@ public abstract class GenericBaseServiceImplementation<T extends BaseModel> impl
         if(getRepository().findById(entity.getId()).isEmpty()) {
             return ResponseEntity.notFound().build();
         }
-        return ResponseEntity.ok().body(getRepository().save(entity));
+        getRepository().save(entity);
+        return ResponseEntity.ok().build();
     }
 
 }

@@ -35,7 +35,7 @@ public class Article implements Serializable, BaseModel {
     private Date datePublished;
 
     @ManyToOne
-    @JoinColumn(name = "security_id", referencedColumnName = "id", nullable = false)
+    @JoinColumn(name = "security_level_id", referencedColumnName = "id", nullable = false)
     private SecurityLevel securityLevel;
 
     @ManyToOne
