@@ -23,3 +23,10 @@ spring:
       org:
         hibernate:
           type: trace
+okta:
+  oauth2:
+    issuer: https://dev-812828.okta.com/oauth2/default
+    client-id: 0oa2lxbl9mygTznZy357
+    audience: api://default
+    groups-claim: groups
+    scopes: 'openid'
