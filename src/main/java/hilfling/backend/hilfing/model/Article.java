@@ -14,10 +14,11 @@ public class Article implements Serializable, BaseModel {
     public Article() {
     }
 
-    public Article(String title, String content, SecurityLevel securityLevel) {
+    public Article(String title, String content, SecurityLevel securityLevel, PhotoGangBanger photoGangBanger) {
         this.title = title;
         this.content = content;
         this.securityLevel = securityLevel;
+        this.photoGangBanger = photoGangBanger;
     }
 
     @Id
