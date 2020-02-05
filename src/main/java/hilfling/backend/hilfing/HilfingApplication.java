@@ -36,50 +36,47 @@ public class HilfingApplication {
             PurchaseOrderService purchaseOrderService,
             SecurityLevelService securityLevelService,
             PlaceService placeService,
-            PhotoTagService photoTagService,
-
-            SecurityLevelRepository securityLevelRepository,
-            PhotoGangBangerRepository photoGangBangerRepository,
-            CategoryRepository categoryRepository,
-            EventOwnerRepository eventOwnerRepository,
-            MotiveRepository motiveRepository,
-            PlaceRepository placeRepository,
-            GangRepository gangRepository,
-            PositionRepository positionRepository,
-            PhotoRepository photoRepository,
-            PurchaseOrderRepository purchaseOrderRepository
+            PhotoTagService photoTagService
     ) {
         return args -> {
             DemoData.demoCategoryData(categoryService);
             DemoData.demoAlbumData(albumService);
             DemoData.demoSecurityLevelData(securityLevelService);
             DemoData.demoPhotoGangBangerData(photoGangBangerService);
-            DemoData.demoArticleData(articleService, securityLevelRepository, photoGangBangerRepository);
+            DemoData.demoArticleData(
+                    articleService,
+                    securityLevelService.getRepository(),
+                    photoGangBangerService.getRepository()
+            );
             DemoData.demoArticleTagData(articleTagService);
             DemoData.demoEventOwnerData(eventOwnerService);
             DemoData.demoGangData(gangService);
-            DemoData.demoMotiveData(motiveService, categoryRepository, eventOwnerRepository);
+            DemoData.demoMotiveData(
+                    motiveService,
+                    categoryService.getRepository(),
+                    eventOwnerService.getRepository()
+            );
             DemoData.demoPlaceData(placeService);
             DemoData.demoPhotoData(
                     photoService,
-                    motiveRepository,
-                    placeRepository,
-                    securityLevelRepository,
-                    gangRepository,
-                    photoGangBangerRepository
+                    motiveService.getRepository(),
+                    placeService.getRepository(),
+                    securityLevelService.getRepository(),
+                    gangService.getRepository(),
+                    photoGangBangerService.getRepository()
             );
             DemoData.demoPositionData(positionService);
             DemoData.demoPhotoGangBangerPositionData(
                     photoGangBangerPositionService,
-                    photoGangBangerRepository,
-                    positionRepository
+                    photoGangBangerService.getRepository(),
+                    positionService.getRepository()
             );
             DemoData.demoPhotographyRequestData(photographyRequestService);
             DemoData.demoPurchaseOrderData(purchaseOrderService);
             DemoData.demoPhotoOnPurchaseOrderData(
                     photoOnPurchaseOrderService,
-                    photoRepository,
-                    purchaseOrderRepository
+                    photoService.getRepository(),
+                    purchaseOrderService.getRepository()
 			);
             DemoData.demoPhotoTagData(photoTagService);
         };

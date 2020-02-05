@@ -10,7 +10,6 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class DemoData {
-    @Bean
     public static void demoCategoryData(CategoryService service) {
         service.create(new Category("Fotostand"));
         service.create(new Category("Miljøbilde"));
@@ -25,7 +24,6 @@ public class DemoData {
         service.create(new Category("Konsert"));
     }
 
-    @Bean
     public static void demoAlbumData(AlbumService service) {
         service.create(new Album("Vår 2017"));
         service.create(new Album("Høst 2017"));
@@ -38,14 +36,12 @@ public class DemoData {
         service.create(new Album("Vår 2020", true));
     }
 
-    @Bean
     public static void demoSecurityLevelData(SecurityLevelService service) {
         service.create(new SecurityLevel("FG"));
         service.create(new SecurityLevel("HUSFOLK"));
         service.create(new SecurityLevel("ALLE"));
     }
 
-    @Bean
     public static void demoPhotoGangBangerData(PhotoGangBangerService service) {
         service.create(new PhotoGangBanger(
                 "Caroline",
@@ -82,7 +78,6 @@ public class DemoData {
         ));
     }
 
-    @Bean
     public static void demoArticleData(
             ArticleService service,
             SecurityLevelRepository securityLevelRepository,
@@ -108,21 +103,18 @@ public class DemoData {
         ));
     }
 
-    @Bean
     public static void demoArticleTagData(ArticleTagService service) {
         service.create(new ArticleTag("Morsom"));
         service.create(new ArticleTag("Fotografi"));
         service.create(new ArticleTag("Web"));
     }
 
-    @Bean
     public static void demoEventOwnerData(EventOwnerService service) {
         service.create(new EventOwner("Samfundet"));
         service.create(new EventOwner("UKA"));
         service.create(new EventOwner("ISFiT"));
     }
 
-    @Bean
     public static void demoGangData(GangService service) {
         service.create(new Gang("FG"));
         service.create(new Gang("KSG"));
@@ -131,7 +123,6 @@ public class DemoData {
         service.create(new Gang("ARK"));
     }
 
-    @Bean
     public static void demoMotiveData(
             MotiveService service,
             CategoryRepository categoryRepository,
@@ -157,7 +148,6 @@ public class DemoData {
         }
     }
 
-    @Bean
     public static void demoPlaceData(PlaceService service) {
         service.create(new Place("Edgar"));
         service.create(new Place("Knaus"));
@@ -168,7 +158,6 @@ public class DemoData {
         service.create(new Place("Lyche"));
     }
 
-    @Bean
     public static void demoPhotoData(
             PhotoService service,
             MotiveRepository motiveRepository,
@@ -190,14 +179,12 @@ public class DemoData {
         ));
     }
 
-    @Bean
     public static void demoPositionData(PositionService service) {
         service.create(new Position("Gjengsjef", "fg-sjef@samfundet.no"));
         service.create(new Position("Webutvikler", "fg-web@samfundet.no"));
         service.create(new Position("Koordineringssjef", "fg-koordinator.no"));
     }
 
-    @Bean
     public static void demoPhotoGangBangerPositionData(
             PhotoGangBangerPositionService service,
             PhotoGangBangerRepository photoGangBangerRepository,
@@ -215,7 +202,6 @@ public class DemoData {
         ));
     }
 
-    @Bean
     public static void demoPhotographyRequestData(PhotographyRequestService service) {
         SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy hh:mm");
         try {
@@ -246,7 +232,6 @@ public class DemoData {
         }
     }
 
-    @Bean
     public static void demoPurchaseOrderData(PurchaseOrderService service) {
         service.create(new PurchaseOrder(
                 "Caroline Sandsbråten",
@@ -272,7 +257,6 @@ public class DemoData {
         ));
     }
 
-    @Bean
     public static void demoPhotoOnPurchaseOrderData(
             PhotoOnPurchaseOrderService service,
             PhotoRepository photoRepository,
@@ -292,7 +276,6 @@ public class DemoData {
         ));
     }
 
-    @Bean
     public static void demoPhotoTagData(PhotoTagService service) {
         service.create(new PhotoTag("Hottie!!"));
         service.create(new PhotoTag("Grusomt bra bilde"));
