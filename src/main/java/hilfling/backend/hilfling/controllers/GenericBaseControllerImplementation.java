@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 
+@CrossOrigin
 public abstract class GenericBaseControllerImplementation<T extends BaseModel> implements GenericBaseController<T> {
     abstract GenericBaseServiceImplementation getService();
 

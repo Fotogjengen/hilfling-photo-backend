@@ -1,6 +1,6 @@
 package hilfling.backend.hilfling;
 
-import hilfling.backend.hilfling.properties.FileStorageProperties;
+import hilfling.backend.hilfling.configurations.FileStorageProperties;
 import hilfling.backend.hilfling.service.*;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
@@ -9,6 +9,9 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.annotation.Bean;
 
 @SpringBootApplication
+@EnableConfigurationProperties({
+        FileStorageProperties.class
+})
 public class HilflingApplication {
 
     public static void main(String[] args) {

@@ -12,7 +12,7 @@ public abstract class GenericBaseServiceImplementation<T extends BaseModel> impl
     @Override
     public ResponseEntity<T> create(T entity) {
         if (entity.getId() != null) {
-            return ResponseEntity.status(403).build();
+            return ResponseEntity.status(404).build();
         }
         try {
             getRepository().save(entity);

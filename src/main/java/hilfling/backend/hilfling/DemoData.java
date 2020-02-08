@@ -165,17 +165,18 @@ public class DemoData {
             GangRepository gangRepository,
             PhotoGangBangerRepository photoGangBangerRepository
     ) {
-        service.create(new Photo(
-                "https://foto.samfundet.no/media/alle/web/DIGF%C3%98/digf%C3%B81791.jpg",
-                "https://foto.samfundet.no/media/alle/web/DIGF%C3%98/digf%C3%B81791.jpg",
-                "https://foto.samfundet.no/media/alle/web/DIGF%C3%98/digf%C3%B81791.jpg",
+        Photo photo = new Photo(
                 true,
                 motiveRepository.getOne(1L),
                 placeRepository.getOne(1L),
                 securityLevelRepository.getOne(1L),
                 gangRepository.getOne(1L),
                 photoGangBangerRepository.getOne(1L)
-        ));
+        );
+        photo.setLargeUrl("https://foto.samfundet.no/media/alle/web/DIGF%C3%98/digf%C3%B81791.jpg");
+        photo.setMediumUrl("https://foto.samfundet.no/media/alle/web/DIGF%C3%98/digf%C3%B81791.jpg");
+        photo.setSmallUrl("https://foto.samfundet.no/media/alle/web/DIGF%C3%98/digf%C3%B81791.jpg");
+        service.create(photo);
     }
 
     public static void demoPositionData(PositionService service) {

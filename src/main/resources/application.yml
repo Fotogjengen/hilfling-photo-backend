@@ -23,6 +23,14 @@ spring:
       org:
         hibernate:
           type: trace
+  servlet:
+    multipart:
+      enabled: true # Enable multipart uploads (files)
+      file-size-threshold: 2KB
+      max-file-size: 50MB
+      max-request-size: 60MB
+file:
+  upload-dir: photos/
 okta:
   oauth2:
     issuer: https://dev-812828.okta.com/oauth2/default
@@ -30,3 +38,4 @@ okta:
     audience: api://default
     groups-claim: groups
     scopes: 'openid'
+
