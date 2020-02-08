@@ -6,7 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/v1/photo")
+@RequestMapping("/api/v1/photos")
 public class PhotoController extends GenericBaseControllerImplementation<Photo> {
     @Autowired
     private PhotoService service;
