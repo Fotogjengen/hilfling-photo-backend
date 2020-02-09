@@ -11,5 +11,6 @@ public class OktaOAuth2WebSecurityConfigurerAdapter extends WebSecurityConfigure
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.oauth2ResourceServer().jwt();
+
     }
 }
