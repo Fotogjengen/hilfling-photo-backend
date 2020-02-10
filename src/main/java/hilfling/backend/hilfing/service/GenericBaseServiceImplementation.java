@@ -13,29 +13,19 @@ public abstract class GenericBaseServiceImplementation<T extends BaseModel> impl
         if (entity.getId() != null) {
             return ResponseEntity.status(403).build();
         }
-        try {
-            getRepository().save(entity);
-            return new ResponseEntity(entity, HttpStatus.CREATED);
-        } catch (Exception error) {
-            // TODO: Lage exceptions. Ikke sikkert å sende errors fra backend
-            return new ResponseEntity(error, HttpStatus.BAD_REQUEST);
-        }
+        getRepository().save(entity);
+        return new ResponseEntity(entity, HttpStatus.CREATED);
     }
 
     @Override
     public ResponseEntity<?> delete(Long id) {
-       return getRepository().findById(id)
-       .map(entity -> {
-           getRepository().deleteById(id);
-           return ResponseEntity.ok().build();
-       }).orElse(ResponseEntity.notFound().build());
+        getRepository().deleteById(id);
+        return ResponseEntity.ok().build();
     }
 
     @Override
     public ResponseEntity<T> getById(Long id) {
-        return getRepository().findById(id)
-                .map(entity -> ResponseEntity.ok().body(entity))
-                .orElse(ResponseEntity.notFound().build());
+        return ResponseEntity.ok().body(getRepository().getOne(id));
     }
 
     @Override
