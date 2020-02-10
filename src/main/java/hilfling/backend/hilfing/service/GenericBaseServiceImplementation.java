@@ -15,7 +15,7 @@ public abstract class GenericBaseServiceImplementation<T extends BaseModel> impl
         }
         try {
             getRepository().save(entity);
-            return ResponseEntity.ok().build();
+            return new ResponseEntity(entity, HttpStatus.CREATED);
         } catch (Exception error) {
             // TODO: Lage exceptions. Ikke sikkert å sende errors fra backend
             return new ResponseEntity(error, HttpStatus.BAD_REQUEST);
