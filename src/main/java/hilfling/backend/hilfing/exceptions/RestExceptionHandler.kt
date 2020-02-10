@@ -14,8 +14,13 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 import javax.persistence.EntityNotFoundException
 
 @Order(Ordered.HIGHEST_PRECEDENCE)
-@ControllerAdvice
+@ControllerAdvice // This annotation makes the class handle all exceptions
 class RestExceptionHandler : ResponseEntityExceptionHandler() {
+    /*
+        The function of this class is to handle all exceptions that the service layer throws.
+        it extends ResponseEntityExceptionHandler which has a lot of methods out of the box.
+        But we can also add or improve exceptionsHandlers by adding them like we do below.
+     */
 
     protected override fun handleHttpMessageNotReadable(ex: HttpMessageNotReadableException, headers: HttpHeaders, status: HttpStatus, request: WebRequest): ResponseEntity<Any> {
         val error = "Malformed JSON request"
@@ -23,7 +28,7 @@ class RestExceptionHandler : ResponseEntityExceptionHandler() {
         return ResponseEntity(apiError, apiError.status)
     }
 
-    @ExceptionHandler(value = [(EntityNotFoundException::class)])
+    @ExceptionHandler(value = [(EntityNotFoundException::class)]) // this defines which exceptions we want to improve
     protected fun handleEntityNotFound(ex: EntityNotFoundException) : ResponseEntity<Any> {
         val error = ApiError("Not found", "", HttpStatus.NOT_FOUND, ex)
         return ResponseEntity(error, error.status)
@@ -35,11 +40,6 @@ class RestExceptionHandler : ResponseEntityExceptionHandler() {
     return ResponseEntity(error, error.status)
 
     }
-
-    private fun buildResponseEntity(apiError: ApiError): ResponseEntity<Any> {
-        return ResponseEntity(apiError, apiError.status);
-    }
-
     //other exception handlers below
 
 }
