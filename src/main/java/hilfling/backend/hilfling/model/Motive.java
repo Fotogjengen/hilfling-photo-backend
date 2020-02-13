@@ -15,11 +15,12 @@ public class Motive implements Serializable, BaseModel {
     public Motive() {
     }
 
-    public Motive(String title, Date date_taken, Category category, EventOwner eventOwner) {
+    public Motive(String title, Date date_taken, Category category, EventOwner eventOwner, Album album) {
         this.title = title;
         this.date_taken = date_taken;
         this.category = category;
         this.eventOwner = eventOwner;
+        this.album = album;
     }
 
     @Id
@@ -41,4 +42,11 @@ public class Motive implements Serializable, BaseModel {
     // TODO: Always join?? What if we don't want to join?
     @JoinColumn(name = "event_owner_id", referencedColumnName = "id")
     private EventOwner eventOwner;
+
+    @OneToOne // TODO: ManyToOne?
+    // TODO: Always join?? What if we don't want to join?
+    @JoinColumn(name = "album_id", referencedColumnName = "id")
+    private Album album;
+
+
 }

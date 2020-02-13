@@ -125,7 +125,8 @@ public class DemoData {
     public static void demoMotiveData(
             MotiveService service,
             CategoryRepository categoryRepository,
-            EventOwnerRepository eventOwnerRepository
+            EventOwnerRepository eventOwnerRepository,
+            AlbumRepository albumRepository
     ) {
         SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
         try {
@@ -133,14 +134,16 @@ public class DemoData {
                     "Bilder av Caroline",
                     formatter.parse("20/01/2020"),
                     categoryRepository.findByTitle("Portrett"),
-                    eventOwnerRepository.getOne(1L)
+                    eventOwnerRepository.getOne(1L),
+                    albumRepository.getOne(1L)
             ));
 
             service.create(new Motive(
                     "Kakkamaddafakka",
                     formatter.parse("01/02/2020"),
                     categoryRepository.findByTitle("Konsert"),
-                    eventOwnerRepository.getOne(2L)
+                    eventOwnerRepository.getOne(2L),
+                    albumRepository.getOne(3L)
             ));
         } catch (ParseException e) {
             e.printStackTrace();

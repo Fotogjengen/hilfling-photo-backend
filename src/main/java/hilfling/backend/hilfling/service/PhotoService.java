@@ -5,6 +5,7 @@ import hilfling.backend.hilfling.exceptions.FileNotFoundException;
 import hilfling.backend.hilfling.exceptions.FileStorageException;
 import hilfling.backend.hilfling.model.Photo;
 import hilfling.backend.hilfling.repositories.PhotoRepository;
+import hilfling.backend.hilfling.utils.ImageUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
@@ -13,7 +14,13 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.imageio.ImageIO;
+import javax.imageio.stream.ImageInputStream;
+import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -30,16 +37,35 @@ public class PhotoService extends
         return repository;
     }
 
-    private final Path photoStorageLocation;
+    private final String baseLargePhotoStorageLocation;
+    private final String baseMediumPhotoStorageLocation;
+    private final String baseSmallPhotoStorageLocation;
+
+    private final Path largePhotoStorageLocation;
+    private final Path mediumPhotoStorageLocation;
+    private final Path smallPhotoStorageLocation;
 
     @Autowired
     public PhotoService(FileStorageProperties fileStorageProperties) {
-        this.photoStorageLocation = Paths.get(fileStorageProperties.getUploadDir())
+        this.baseLargePhotoStorageLocation = fileStorageProperties.getLargeUploadDir();
+        this.baseMediumPhotoStorageLocation = fileStorageProperties.getMediumUploadDir();
+        this.baseSmallPhotoStorageLocation = fileStorageProperties.getSmallUploadDir();
+
+        this.largePhotoStorageLocation = Paths.get(baseLargePhotoStorageLocation)
+                .toAbsolutePath().normalize();
+        this.mediumPhotoStorageLocation = Paths.get(baseMediumPhotoStorageLocation)
+                .toAbsolutePath().normalize();
+        this.smallPhotoStorageLocation = Paths.get(baseSmallPhotoStorageLocation)
                 .toAbsolutePath().normalize();
         try {
-            Files.createDirectories(this.photoStorageLocation);
-        } catch (Exception ex) {
-            throw new FileStorageException("Could not create the directory where the uploaded files will be stored.", ex);
+            Files.createDirectories(this.largePhotoStorageLocation);
+            Files.createDirectories(this.mediumPhotoStorageLocation);
+            Files.createDirectories(this.smallPhotoStorageLocation);
+        } catch (Exception exception) {
+            throw new FileStorageException(
+                    "Could not create the directory where the uploaded files will be stored.",
+                    exception
+            );
         }
     }
 
@@ -56,7 +82,7 @@ public class PhotoService extends
         }
     }
 
-    public String storeFile(MultipartFile file) {
+    public Photo storePhoto(MultipartFile file, Photo photo) {
         // Normalize filename
         String fileName = StringUtils.cleanPath(file.getOriginalFilename());
 
@@ -65,11 +91,34 @@ public class PhotoService extends
             if (fileName.contains("..")) {
                 throw new FileStorageException("Filename contains invalid path sequence " + fileName);
             }
+            Path imagePath = Paths.get(
+                    "album_" + photo.getMotive().getAlbum()
+                            + "/motive_" + photo.getMotive().getId()
+                            + "/" + fileName
+            );
             // Copy file to the target location (Replacing existing file with the same name)
-            Path targetLocation = this.photoStorageLocation.resolve(fileName);
-            Files.copy(file.getInputStream(), targetLocation, StandardCopyOption.REPLACE_EXISTING);
+            Path largeTargetLocation = this.largePhotoStorageLocation.resolve(imagePath);
+            Path mediumTargetLocation = this.mediumPhotoStorageLocation.resolve(imagePath);
+            Path smallTargetLocation = this.smallPhotoStorageLocation.resolve(imagePath);
 
-            return fileName;
+            // Create directories if not exists
+            Files.createDirectories(largeTargetLocation);
+            Files.createDirectories(mediumTargetLocation);
+            Files.createDirectories(smallTargetLocation);
+
+            Files.copy(file.getInputStream(), largeTargetLocation, StandardCopyOption.REPLACE_EXISTING); // Full size
+            Files.copy(ImageUtils.resizeImage(
+                    file, 600
+            ), mediumTargetLocation, StandardCopyOption.REPLACE_EXISTING);
+            Files.copy(ImageUtils.resizeImage(
+                    file, 200
+            ), smallTargetLocation, StandardCopyOption.REPLACE_EXISTING);
+
+            photo.setLargeUrl(baseLargePhotoStorageLocation + imagePath);
+            photo.setMediumUrl(baseMediumPhotoStorageLocation + imagePath);
+            photo.setSmallUrl(baseSmallPhotoStorageLocation + imagePath);
+
+            return photo;
         } catch (IOException exception) {
             throw new FileStorageException("Could not store file " + fileName + ". Please try again!", exception);
         }
@@ -77,7 +126,7 @@ public class PhotoService extends
 
     public Resource loadFileAsResource(String fileName) {
         try {
-            Path filePath = this.photoStorageLocation.resolve(fileName).normalize();
+            Path filePath = this.largePhotoStorageLocation.resolve(fileName).normalize();
             Resource resource = new UrlResource(filePath.toUri());
             if (resource.exists()) {
                 return resource;

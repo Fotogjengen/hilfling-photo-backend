@@ -7,5 +7,8 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 @Data
 @ConfigurationProperties(prefix = "file")
 public class FileStorageProperties {
-    private String uploadDir;
+    private String largeUploadDir;
+    private String mediumUploadDir;
+    private String smallUploadDir;
+
 }

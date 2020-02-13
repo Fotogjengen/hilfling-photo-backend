@@ -30,7 +30,9 @@ spring:
       max-file-size: 50MB
       max-request-size: 60MB
 file:
-  upload-dir: photos/
+  large-upload-dir: photos/large/
+  medium-upload-dir: photos/medium/
+  small-upload-dir: photos/small/
 okta:
   oauth2:
     issuer: https://dev-812828.okta.com/oauth2/default

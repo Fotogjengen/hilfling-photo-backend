@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.StreamUtils;
@@ -15,19 +16,31 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/photo")
 public class PhotoController extends GenericBaseControllerImplementation<Photo> {
     private static final Logger logger = LoggerFactory.getLogger(PhotoController.class);
+    private static List<String> ALLOWED_MEDIA_TYPES;
+
+    static { // Allowed photo media types defined here
+        ArrayList<String> tmp = new ArrayList<>();
+        tmp.add(MediaType.IMAGE_JPEG.toString());
+        tmp.add(MediaType.IMAGE_PNG.toString());
+        ALLOWED_MEDIA_TYPES = Collections.unmodifiableList(tmp);
+    }
 
 
     @Autowired
     private PhotoService service;
+
     public PhotoService getService() {
         return service;
     }
@@ -38,33 +51,61 @@ public class PhotoController extends GenericBaseControllerImplementation<Photo> 
 
     @Override
     public ResponseEntity<Photo> create(@Valid Photo entity) {
-        return null; // Null response if missing photo file
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).build(); // Illegal response if missing photo file
     }
 
-    @PostMapping("/upload")
+    /*@PostMapping("/upload")
     public ResponseEntity<Photo> create(
-//            @Valid @RequestBody Photo entity,
+            @RequestParam("entity") String entity,
             @RequestParam("file") MultipartFile file
     ) {
-        String fileName = photoService.storeFile(file);
-        String fileDownloadUri = ServletUriComponentsBuilder.fromCurrentContextPath()
-                .path("/downloadFile/")
+        String fileName = getService().storeFile(file);
+        String photosUri = ServletUriComponentsBuilder.fromCurrentContextPath()
+                .path("/photos/")
                 .path(fileName)
                 .toUriString();
-        /*entity.setLargeUrl(fileDownloadUri);
-        entity.setMediumUrl(fileDownloadUri);
-        entity.setSmallUrl(fileDownloadUri);*/
-        System.out.println(fileName);
 
-        return ResponseEntity.ok().build();
+        Photo photo = new Gson().fromJson(entity, Photo.class);
+        photo.setLargeUrl(photosUri);
+        photo.setMediumUrl(photosUri);
+        photo.setSmallUrl(photosUri);
+
+        return getService().create(photo);
+    }*/
+    @PostMapping("/upload")
+    public ResponseEntity<Photo> create(
+            @RequestPart("file") MultipartFile file,
+            @RequestPart("entity") Photo entity
+    ) {
+        if (!entity.isValid()) {
+            // Photo missing/having extra fields, e.q. not allowed
+            // return Unprocessable entity
+            return ResponseEntity.status(422).build();
+        }
+        if (!ALLOWED_MEDIA_TYPES.contains(file.getContentType())) {
+            // File not in ALLOWED_MEDIA_TYPES, return unsupported media type
+            return ResponseEntity.status(415).build();
+        }
+        Photo photo = getService().storePhoto(file, entity);
+        /*String photosUri = ServletUriComponentsBuilder.fromCurrentContextPath()
+                .path("/photos/")
+                .path(fileName)
+                .toUriString();*/
+
+        return getService().create(photo);
     }
 
     @GetMapping("/image")
     public ResponseEntity<byte[]> getImage() throws IOException {
 
         var imgFile = new ClassPathResource("./photos/eir1.png");
-        byte[] bytes = StreamUtils.copyToByteArray(imgFile.getInputStream());
-
+        System.out.println(imgFile);
+        byte[] bytes;
+        try {
+            bytes = StreamUtils.copyToByteArray(imgFile.getInputStream());
+        } catch (FileNotFoundException err) {
+            return ResponseEntity.notFound().build();
+        }
         return ResponseEntity
                 .ok()
                 .contentType(MediaType.IMAGE_JPEG)
@@ -85,7 +126,7 @@ public class PhotoController extends GenericBaseControllerImplementation<Photo> 
         }
 
         // Fallback to the default content type if type could not be determined
-        if(contentType == null) {
+        if (contentType == null) {
             contentType = "application/octet-stream";
         }
 

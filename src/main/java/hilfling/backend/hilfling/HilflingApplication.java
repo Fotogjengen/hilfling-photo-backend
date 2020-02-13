@@ -54,7 +54,8 @@ public class HilflingApplication {
             DemoData.demoMotiveData(
                     motiveService,
                     categoryService.getRepository(),
-                    eventOwnerService.getRepository()
+                    eventOwnerService.getRepository(),
+                    albumService.getRepository()
             );
             DemoData.demoPlaceData(placeService);
             DemoData.demoPhotoData(

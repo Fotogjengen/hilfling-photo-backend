@@ -9,7 +9,8 @@ import javax.persistence.*;
 @Entity
 @Inheritance(strategy = InheritanceType.JOINED)
 public class BasePhoto implements BaseModel {
-    public BasePhoto() {}
+    public BasePhoto() {
+    }
 
     public BasePhoto(Boolean goodPicture, Motive motive, Place place, SecurityLevel securityLevel, Gang gang, PhotoGangBanger photoGangBanger) {
         this.goodPicture = goodPicture;
@@ -47,4 +48,16 @@ public class BasePhoto implements BaseModel {
     @ManyToOne
     @JoinColumn(name = "photo_gang_banger_id", referencedColumnName = "id", nullable = false)
     private PhotoGangBanger photoGangBanger;
+
+    public boolean isValid() {
+        return photoGangBanger != null &&
+                gang != null &&
+                securityLevel != null &&
+                place != null &&
+                motive != null &&
+                motive.getAlbum() != null &&
+                motive.getCategory() != null &&
+                motive.getEventOwner() != null &&
+                goodPicture != null;
+    }
 }

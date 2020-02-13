@@ -16,6 +16,7 @@ public class Album implements Serializable, BaseModel {
 
     public Album(String title) {
         this.title = title;
+        this.analog = false;
     }
 
     public Album(String title, Boolean analog) {
