@@ -14,7 +14,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.util.StreamUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
@@ -54,24 +53,7 @@ public class PhotoController extends GenericBaseControllerImplementation<Photo> 
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).build(); // Illegal response if missing photo file
     }
 
-    /*@PostMapping("/upload")
-    public ResponseEntity<Photo> create(
-            @RequestParam("entity") String entity,
-            @RequestParam("file") MultipartFile file
-    ) {
-        String fileName = getService().storeFile(file);
-        String photosUri = ServletUriComponentsBuilder.fromCurrentContextPath()
-                .path("/photos/")
-                .path(fileName)
-                .toUriString();
 
-        Photo photo = new Gson().fromJson(entity, Photo.class);
-        photo.setLargeUrl(photosUri);
-        photo.setMediumUrl(photosUri);
-        photo.setSmallUrl(photosUri);
-
-        return getService().create(photo);
-    }*/
     @PostMapping("/upload")
     public ResponseEntity<Photo> create(
             @RequestPart("file") MultipartFile file,
@@ -87,36 +69,20 @@ public class PhotoController extends GenericBaseControllerImplementation<Photo> 
             return ResponseEntity.status(415).build();
         }
         Photo photo = getService().storePhoto(file, entity);
-        /*String photosUri = ServletUriComponentsBuilder.fromCurrentContextPath()
-                .path("/photos/")
-                .path(fileName)
-                .toUriString();*/
-
         return getService().create(photo);
     }
 
-    @GetMapping("/image")
-    public ResponseEntity<byte[]> getImage() throws IOException {
-
-        var imgFile = new ClassPathResource("./photos/eir1.png");
-        System.out.println(imgFile);
-        byte[] bytes;
-        try {
-            bytes = StreamUtils.copyToByteArray(imgFile.getInputStream());
-        } catch (FileNotFoundException err) {
-            return ResponseEntity.notFound().build();
-        }
-        return ResponseEntity
-                .ok()
-                .contentType(MediaType.IMAGE_JPEG)
-                .body(bytes);
-    }
-
-    @GetMapping("/downloadFile/{fileName:.+}")
-    public ResponseEntity<Resource> downloadFile(@PathVariable String fileName, HttpServletRequest request) {
+    @GetMapping("/download/{album}/{motive}/{fileName:.+}")
+    public ResponseEntity<Resource> downloadFile(
+            @PathVariable String album,
+            @PathVariable String motive,
+            @PathVariable String fileName,
+            HttpServletRequest request
+    ) {
         // Load file as Resource
-        Resource resource = photoService.loadFileAsResource(fileName);
-
+        Resource resource = photoService.loadLargePhotoAsResource(
+                album + "/" + motive + "/" + fileName
+        );
         // Try to determine file's content type
         String contentType = null;
         try {
@@ -132,7 +98,7 @@ public class PhotoController extends GenericBaseControllerImplementation<Photo> 
 
         return ResponseEntity.ok()
                 .contentType(MediaType.parseMediaType(contentType))
-                .header(HttpHeaders.CONTENT_DISPOSITION, "inline; filename=\"" + resource.getFilename() + "\"")
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + resource.getFilename() + "\"")
                 .body(resource);
     }
 }

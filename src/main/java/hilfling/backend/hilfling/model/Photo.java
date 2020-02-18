@@ -24,13 +24,12 @@ public class Photo extends BasePhoto implements Serializable {
         super(goodPicture, motive, place, securityLevel, gang, photoGangBanger);
     }
 
-    @Column(name = "s_url") // Is nullable when analog photo
+    @Column(name = "s_url", unique = true) // Is nullable when analog photo
     private String smallUrl;
 
-    @Column(name = "m_url") // Is nullable when analog photo
+    @Column(name = "m_url", unique = true) // Is nullable when analog photo
     private String mediumUrl;
 
-    @Column(name = "l_url") // Is nullable when analog photo
+    @Column(name = "l_url", unique = true) // Is nullable when analog photo
     private String largeUrl;
-
 }
