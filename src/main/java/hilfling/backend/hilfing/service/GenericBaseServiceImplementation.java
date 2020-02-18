@@ -2,40 +2,30 @@ package hilfling.backend.hilfing.service;
 
 import hilfling.backend.hilfing.model.BaseModel;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 import java.util.List;
 public abstract class GenericBaseServiceImplementation<T extends BaseModel> implements GenericBaseService<T> {
     abstract JpaRepository<T, Long> getRepository();
-
-
     @Override
     public ResponseEntity<T> create(T entity) {
         if (entity.getId() != null) {
             return ResponseEntity.status(403).build();
         }
-        try {
-            getRepository().save(entity);
-            return ResponseEntity.ok().build();
-        } catch (Exception error) {
-            return ResponseEntity.status(304).build();
-        }
+        getRepository().save(entity);
+        return new ResponseEntity(entity, HttpStatus.CREATED);
     }
 
     @Override
     public ResponseEntity<?> delete(Long id) {
-       return getRepository().findById(id)
-       .map(entity -> {
-           getRepository().deleteById(id);
-           return ResponseEntity.ok().build();
-       }).orElse(ResponseEntity.notFound().build());
+        getRepository().deleteById(id);
+        return ResponseEntity.ok().build();
     }
 
     @Override
     public ResponseEntity<T> getById(Long id) {
-        return getRepository().findById(id)
-                .map(entity -> ResponseEntity.ok().body(entity))
-                .orElse(ResponseEntity.notFound().build());
+        return ResponseEntity.ok().body(getRepository().getOne(id));
     }
 
     @Override
