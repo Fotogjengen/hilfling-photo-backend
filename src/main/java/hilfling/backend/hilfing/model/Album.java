@@ -9,7 +9,9 @@ import java.util.Date;
 
 @Data
 @Entity
-@Table(name="album")
+@Table(name="album", uniqueConstraints = {
+        @UniqueConstraint(columnNames = {"title", "analog"})
+})
 public class Album implements Serializable, BaseModel {
     public Album() {
     }
@@ -27,7 +29,7 @@ public class Album implements Serializable, BaseModel {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "title", nullable = false, unique = true)
+    @Column(name = "title", nullable = false)
     private String title;
 
     // TODO: Autogenerate
@@ -35,7 +37,7 @@ public class Album implements Serializable, BaseModel {
     @ColumnDefault("CURRENT_TIMESTAMP")
     private Date dateCreated;
 
-    @Column(name = "analog", nullable = false)
+    @Column(name = "analog")
     @ColumnDefault("false")
     private Boolean analog;
 

@@ -3,13 +3,104 @@ package hilfling.backend.hilfing;
 import hilfling.backend.hilfing.model.*;
 import hilfling.backend.hilfing.repositories.*;
 import hilfling.backend.hilfing.service.*;
+import lombok.Data;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+@Data
+@RestController
+@RequestMapping("/seed")
 public class DemoData {
+
+
+    @Autowired
+    private AlbumService albumService;
+    @Autowired
+    private ArticleService articleService;
+    @Autowired
+    private ArticleTagService articleTagService;
+    @Autowired
+    private CategoryService categoryService;
+    @Autowired
+    private EventOwnerService eventOwnerService;
+    @Autowired
+    private GangService gangService;
+    @Autowired
+    private MotiveService motiveService;
+    @Autowired
+    private PhotoService photoService;
+    @Autowired
+    private PhotoGangBangerService photoGangBangerService;
+    @Autowired
+    private PhotoGangBangerPositionService photoGangBangerPositionService;
+    @Autowired
+    private PhotographyRequestService photographyRequestService;
+    @Autowired
+    private PhotoOnPurchaseOrderService photoOnPurchaseOrderService;
+    @Autowired
+    private PhotoTagService photoTagService;
+    @Autowired
+    private PlaceService placeService;
+    @Autowired
+    private PositionService positionService;
+    @Autowired
+    private PurchaseOrderService purchaseOrderService;
+    @Autowired
+    private SecurityLevelService securityLevelService;
+
+    @GetMapping
+    public ResponseEntity<String> seedDemoData() {
+        demoCategoryData(categoryService);
+        demoAlbumData(albumService);
+        demoSecurityLevelData(securityLevelService);
+        demoPhotoGangBangerData(photoGangBangerService);
+        demoArticleData(
+                articleService,
+                securityLevelService.getRepository(),
+                photoGangBangerService.getRepository()
+        );
+        demoArticleTagData(articleTagService);
+        demoEventOwnerData(eventOwnerService);
+        demoGangData(gangService);
+        demoMotiveData(
+                motiveService,
+                categoryService.getRepository(),
+                eventOwnerService.getRepository()
+        );
+        demoPlaceData(placeService);
+        demoPhotoData(
+                photoService,
+                motiveService.getRepository(),
+                placeService.getRepository(),
+                securityLevelService.getRepository(),
+                gangService.getRepository(),
+                photoGangBangerService.getRepository()
+        );
+        demoPositionData(positionService);
+        demoPhotoGangBangerPositionData(
+                photoGangBangerPositionService,
+                photoGangBangerService.getRepository(),
+                positionService.getRepository()
+        );
+        demoPhotographyRequestData(photographyRequestService);
+        demoPurchaseOrderData(purchaseOrderService);
+        demoPhotoOnPurchaseOrderData(
+                photoOnPurchaseOrderService,
+                photoService.getRepository(),
+                purchaseOrderService.getRepository()
+        );
+        demoPhotoTagData(photoTagService);
+        return ResponseEntity.ok("Data seeded");
+    }
+
     public static void demoCategoryData(CategoryService service) {
         service.create(new Category("Fotostand"));
         service.create(new Category("Miljøbilde"));
@@ -182,7 +273,7 @@ public class DemoData {
     public static void demoPositionData(PositionService service) {
         service.create(new Position("Gjengsjef", "fg-sjef@samfundet.no"));
         service.create(new Position("Webutvikler", "fg-web@samfundet.no"));
-        service.create(new Position("Koordineringssjef", "fg-koordinator.no"));
+        service.create(new Position("Koordineringssjef", "fg-koordinator@samfundet.no"));
     }
 
     public static void demoPhotoGangBangerPositionData(
