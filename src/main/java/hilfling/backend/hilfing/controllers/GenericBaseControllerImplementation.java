@@ -29,7 +29,7 @@ public abstract class GenericBaseControllerImplementation<T extends BaseModel> i
     }
 
     @Override
-    @PutMapping
+    @PatchMapping
     public ResponseEntity<T> update(@Valid @RequestBody T entity) {
         return getService().update(entity);
     }
