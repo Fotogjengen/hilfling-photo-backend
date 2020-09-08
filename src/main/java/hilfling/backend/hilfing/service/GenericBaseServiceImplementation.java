@@ -1,6 +1,8 @@
 package hilfling.backend.hilfing.service;
 
 import hilfling.backend.hilfing.model.BaseModel;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -29,8 +31,8 @@ public abstract class GenericBaseServiceImplementation<T extends BaseModel> impl
     }
 
     @Override
-    public ResponseEntity<List<T>> getAll() {
-        return ResponseEntity.ok().body(getRepository().findAll());
+    public ResponseEntity<Page<T>> getAll(Pageable pageable) {
+        return ResponseEntity.ok().body(getRepository().findAll(pageable));
     }
 
     @Override

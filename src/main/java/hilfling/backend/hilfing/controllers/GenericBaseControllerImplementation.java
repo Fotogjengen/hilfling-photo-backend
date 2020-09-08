@@ -2,6 +2,7 @@ package hilfling.backend.hilfing.controllers;
 
 import hilfling.backend.hilfing.model.BaseModel;
 import hilfling.backend.hilfing.service.GenericBaseServiceImplementation;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -36,7 +37,10 @@ public abstract class GenericBaseControllerImplementation<T extends BaseModel> i
 
     @Override
     @GetMapping
-    public ResponseEntity<T> getAll() {
-        return getService().getAll();
+    public ResponseEntity<T> getAll(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "50") int size
+    ) {
+        return getService().getAll(PageRequest.of(page, size));
     }
 }

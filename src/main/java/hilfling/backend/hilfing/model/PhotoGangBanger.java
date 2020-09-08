@@ -10,8 +10,8 @@ import javax.persistence.Table;
 import javax.validation.constraints.Email;
 
 @Data
-@Entity
-@Table(name = "photo_gang_banger")
+@Entity(name = "photo_gang_bangers")
+@Table(name = "photo_gang_bangers")
 public class PhotoGangBanger extends User {
     public PhotoGangBanger() {
     }

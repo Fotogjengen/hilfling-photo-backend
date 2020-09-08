@@ -7,8 +7,8 @@ import java.io.Serializable;
 import java.util.Date;
 
 @Data
-@Entity
-@Table(name = "motive", uniqueConstraints = {
+@Entity(name = "motives")
+@Table(name = "motives", uniqueConstraints = {
         @UniqueConstraint(columnNames = {"title", "date_taken"})
 })
 public class Motive implements Serializable, BaseModel {

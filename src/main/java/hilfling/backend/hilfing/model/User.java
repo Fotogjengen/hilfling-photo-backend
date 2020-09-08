@@ -8,8 +8,8 @@ import javax.validation.constraints.Email;
 import java.io.Serializable;
 
 @Data
-@Entity
-@Table(name = "hilfling_user")
+@Entity(name = "hilfling_users")
+@Table(name = "hilfling_users")
 @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
 public class User implements Serializable, BaseModel {
     public User() {
