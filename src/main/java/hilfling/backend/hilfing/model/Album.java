@@ -8,8 +8,8 @@ import java.io.Serializable;
 import java.util.Date;
 
 @Data
-@Entity
-@Table(name="album", uniqueConstraints = {
+@Entity(name = "albums")
+@Table(name = "albums", uniqueConstraints = {
         @UniqueConstraint(columnNames = {"title", "analog"})
 })
 public class Album implements Serializable, BaseModel {

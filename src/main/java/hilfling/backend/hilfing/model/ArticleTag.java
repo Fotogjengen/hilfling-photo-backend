@@ -6,8 +6,8 @@ import javax.persistence.*;
 import java.io.Serializable;
 
 @Data
-@Entity
-@Table(name = "article_tag")
+@Entity(name = "article_tags")
+@Table(name = "article_tags")
 public class ArticleTag implements Serializable, BaseModel {
     public ArticleTag() {
     }

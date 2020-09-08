@@ -6,8 +6,8 @@ import javax.persistence.*;
 import java.io.Serializable;
 
 @Data
-@Entity
-@Table(name = "security")
+@Entity(name = "security_levels")
+@Table(name = "security_levels")
 public class SecurityLevel implements Serializable, BaseModel {
     public SecurityLevel() {
     }
