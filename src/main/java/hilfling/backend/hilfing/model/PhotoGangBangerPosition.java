@@ -11,7 +11,7 @@ import java.io.Serializable;
 @Table(name = "photo_gang_banger_position"  , uniqueConstraints = {
         @UniqueConstraint(columnNames = {"photo_gang_banger_id", "position_id"})
 })
-public class PhotoGangBangerPosition implements Serializable, BaseModel {
+public class PhotoGangBangerPosition extends BaseEntity<Long>{
     public PhotoGangBangerPosition() {
     }
 
@@ -20,10 +20,6 @@ public class PhotoGangBangerPosition implements Serializable, BaseModel {
         this.position = position;
         this.current = current;
     }
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
 
     @ManyToOne
     @JoinColumn(name = "photo_gang_banger_id", referencedColumnName = "id", nullable = false)

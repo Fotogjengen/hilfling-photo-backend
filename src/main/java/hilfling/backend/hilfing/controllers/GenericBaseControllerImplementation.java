@@ -1,5 +1,6 @@
 package hilfling.backend.hilfing.controllers;
 
+import hilfling.backend.hilfing.model.BaseEntity;
 import hilfling.backend.hilfing.model.BaseModel;
 import hilfling.backend.hilfing.service.GenericBaseServiceImplementation;
 import org.springframework.http.ResponseEntity;
@@ -7,7 +8,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 
-public abstract class GenericBaseControllerImplementation<T extends BaseModel> implements GenericBaseController<T> {
+public abstract class GenericBaseControllerImplementation<T extends BaseEntity<Long>> implements GenericBaseController<T> {
     abstract GenericBaseServiceImplementation getService();
 
     @Override

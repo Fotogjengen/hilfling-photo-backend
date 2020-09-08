@@ -12,7 +12,7 @@ import java.util.Date;
 @Data
 @Entity
 @Table(name = "photography_request")
-public class PhotographyRequest implements Serializable, BaseModel {
+public class PhotographyRequest extends BaseEntity<Long>{
     public PhotographyRequest() {
     }
 
@@ -37,10 +37,6 @@ public class PhotographyRequest implements Serializable, BaseModel {
         this.phone = phone;
         this.description = description;
     }
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
 
     @Column(name = "start_time", nullable = false)
     private Date startTime;

@@ -11,7 +11,7 @@ import java.io.Serializable;
 @Table(name = "photo_on_purchase_order", uniqueConstraints = {
         @UniqueConstraint(columnNames = {"purchase_order_id", "photo_id", "size"})
 })
-public class PhotoOnPurchaseOrder implements Serializable, BaseModel {
+public class PhotoOnPurchaseOrder extends BaseEntity<Long>{
     public PhotoOnPurchaseOrder() {
     }
 
@@ -21,10 +21,6 @@ public class PhotoOnPurchaseOrder implements Serializable, BaseModel {
         this.size = size;
         this.amount = amount;
     }
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
 
     @ManyToOne
     @JoinColumn(name = "purchase_order_id", referencedColumnName = "id", nullable = false)

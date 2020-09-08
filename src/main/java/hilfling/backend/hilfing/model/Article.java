@@ -10,7 +10,7 @@ import java.util.Date;
 @Data
 @Entity
 @Table(name = "article")
-public class Article implements Serializable, BaseModel {
+public class Article extends BaseEntity<Long> {
     public Article() {
     }
 
@@ -20,10 +20,6 @@ public class Article implements Serializable, BaseModel {
         this.securityLevel = securityLevel;
         this.photoGangBanger = photoGangBanger;
     }
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
 
     @Column(name = "title", nullable = false)
     private String title;

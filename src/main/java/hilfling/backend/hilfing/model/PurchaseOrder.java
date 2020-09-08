@@ -12,7 +12,7 @@ import java.util.Date;
 @Data
 @Entity
 @Table(name = "purchase_order")
-public class PurchaseOrder implements Serializable, BaseModel {
+public class PurchaseOrder extends BaseEntity<Long>{
     public PurchaseOrder() {
     }
 
@@ -37,10 +37,6 @@ public class PurchaseOrder implements Serializable, BaseModel {
         this.dateCreated = dateCreated;
         this.completed = completed;
     }
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
 
     @Column(name = "name", nullable = false)
     private String name;

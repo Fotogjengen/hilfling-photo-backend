@@ -1,16 +1,18 @@
 package hilfling.backend.hilfing.service;
 
+import hilfling.backend.hilfing.model.BaseEntity;
 import hilfling.backend.hilfing.model.BaseModel;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 import java.util.List;
-public abstract class GenericBaseServiceImplementation<T extends BaseModel> implements GenericBaseService<T> {
+public abstract class GenericBaseServiceImplementation<T extends BaseEntity<Long>> implements GenericBaseService<T> {
     abstract JpaRepository<T, Long> getRepository();
     @Override
     public ResponseEntity<T> create(T entity) {
         if (entity.getId() != null) {
+            // TODO: Implement
             return ResponseEntity.status(403).build();
         }
         getRepository().save(entity);

@@ -11,7 +11,7 @@ import java.util.Date;
 @Table(name = "motive", uniqueConstraints = {
         @UniqueConstraint(columnNames = {"title", "date_taken"})
 })
-public class Motive implements Serializable, BaseModel {
+public class Motive extends BaseEntity<Long>{
     public Motive() {
     }
 
@@ -21,10 +21,6 @@ public class Motive implements Serializable, BaseModel {
         this.category = category;
         this.eventOwner = eventOwner;
     }
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
 
     @Column(name = "title", nullable = false)
     private String title;

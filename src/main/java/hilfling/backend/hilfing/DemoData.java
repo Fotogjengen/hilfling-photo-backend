@@ -116,15 +116,13 @@ public class DemoData {
     }
 
     public static void demoAlbumData(AlbumService service) {
-        service.create(new Album("Vår 2017"));
-        service.create(new Album("Høst 2017"));
-        service.create(new Album("Vår 2018"));
-        service.create(new Album("Høst 2018"));
-        service.create(new Album("Vår 2019"));
-        service.create(new Album("Høst 2019"));
-        service.create(new Album("Høst 2019", true));
-        service.create(new Album("Vår 2020"));
-        service.create(new Album("Vår 2020", true));
+        // service.create(new Album("Vår 2017"));
+        // service.create(new Album("Høst 2017"));
+        // service.create(new Album("Vår 2018"));
+        // service.create(new Album("Høst 2018"));
+        // service.create(new Album("Vår 2019"));
+        // service.create(new Album("Høst 2019"));
+        // service.create(new Album("Vår 2020"));
     }
 
     public static void demoSecurityLevelData(SecurityLevelService service) {

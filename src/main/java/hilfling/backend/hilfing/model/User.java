@@ -7,11 +7,10 @@ import javax.persistence.*;
 import javax.validation.constraints.Email;
 import java.io.Serializable;
 
-@Data
 @Entity
 @Table(name = "hilfling_user")
-@Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
-public class User implements Serializable, BaseModel {
+@Inheritance(strategy = InheritanceType.JOINED)
+public class User extends BaseEntity<Long>{
     public User() {
     }
 
@@ -32,10 +31,6 @@ public class User implements Serializable, BaseModel {
         this.phoneNumber = phoneNumber;
         this.sex = sex;
     }
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.TABLE)
-    private Long id;
 
     @Column(name = "first_name", nullable = false)
     private String firstName;
