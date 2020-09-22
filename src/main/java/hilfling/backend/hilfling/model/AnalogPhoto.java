@@ -7,8 +7,8 @@ import javax.persistence.Entity;
 import javax.persistence.Table;
 
 @Data
-@Entity
-@Table(name = "analog_photo")
+@Entity(name = "analog_photos")
+@Table(name = "analog_photos")
 public class AnalogPhoto extends Photo {
     public AnalogPhoto() {
     }

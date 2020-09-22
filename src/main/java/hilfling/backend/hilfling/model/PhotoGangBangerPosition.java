@@ -7,8 +7,8 @@ import javax.persistence.*;
 import java.io.Serializable;
 
 @Data
-@Entity
-@Table(name = "photo_gang_banger_position"  , uniqueConstraints = {
+@Entity(name = "photo_gang_banger_positions")
+@Table(name = "photo_gang_banger_positions"  , uniqueConstraints = {
         @UniqueConstraint(columnNames = {"photo_gang_banger_id", "position_id"})
 })
 public class PhotoGangBangerPosition implements Serializable, BaseModel {

@@ -10,8 +10,8 @@ import java.util.Date;
 
 
 @Data
-@Entity
-@Table(name = "photography_request")
+@Entity(name = "photography_requests")
+@Table(name = "photography_requests")
 public class PhotographyRequest implements Serializable, BaseModel {
     public PhotographyRequest() {
     }

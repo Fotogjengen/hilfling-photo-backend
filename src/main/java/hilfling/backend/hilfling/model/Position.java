@@ -7,8 +7,8 @@ import javax.validation.constraints.Email;
 import java.io.Serializable;
 
 @Data
-@Entity
-@Table(name = "position")
+@Entity(name = "positions")
+@Table(name = "positions")
 public class Position implements Serializable, BaseModel {
     public Position() {
     }

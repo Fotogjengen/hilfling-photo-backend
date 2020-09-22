@@ -10,8 +10,8 @@ import java.util.Date;
 
 
 @Data
-@Entity
-@Table(name = "purchase_order")
+@Entity(name = "purchase_orders")
+@Table(name = "purchase_orders")
 public class PurchaseOrder implements Serializable, BaseModel {
     public PurchaseOrder() {
     }

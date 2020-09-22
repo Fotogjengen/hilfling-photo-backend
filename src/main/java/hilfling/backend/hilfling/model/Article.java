@@ -8,8 +8,8 @@ import java.io.Serializable;
 import java.util.Date;
 
 @Data
-@Entity
-@Table(name = "article")
+@Entity(name = "articles")
+@Table(name = "articles")
 public class Article implements Serializable, BaseModel {
     public Article() {
     }

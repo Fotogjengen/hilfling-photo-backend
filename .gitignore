@@ -7,6 +7,9 @@ target/
 !**/src/main/**
 !**/src/test/**
 
+### OSX ###
+.DS_Store
+
 ### STS ###
 .apt_generated
 .classpath

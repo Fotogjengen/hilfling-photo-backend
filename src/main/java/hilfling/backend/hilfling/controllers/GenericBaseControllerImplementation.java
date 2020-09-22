@@ -1,13 +1,13 @@
 package hilfling.backend.hilfling.controllers;
 
-import hilfling.backend.hilfling.model.BaseModel;
 import hilfling.backend.hilfling.service.GenericBaseServiceImplementation;
+import hilfling.backend.hilfling.model.BaseModel;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 
-@CrossOrigin
 public abstract class GenericBaseControllerImplementation<T extends BaseModel> implements GenericBaseController<T> {
     abstract GenericBaseServiceImplementation getService();
 
@@ -30,14 +30,17 @@ public abstract class GenericBaseControllerImplementation<T extends BaseModel> i
     }
 
     @Override
-    @PutMapping
+    @PatchMapping
     public ResponseEntity<T> update(@Valid @RequestBody T entity) {
         return getService().update(entity);
     }
 
     @Override
     @GetMapping
-    public ResponseEntity<T> getAll() {
-        return getService().getAll();
+    public ResponseEntity<T> getAll(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "50") int size
+    ) {
+        return getService().getAll(PageRequest.of(page, size));
     }
 }

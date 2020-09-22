@@ -6,8 +6,8 @@ import javax.persistence.*;
 import java.io.Serializable;
 
 @Data
-@Entity
-@Table(name = "photo")
+@Entity(name = "photos")
+@Table(name = "photos")
 @Inheritance(strategy = InheritanceType.JOINED)
 public class Photo extends BasePhoto implements Serializable {
     public Photo() {

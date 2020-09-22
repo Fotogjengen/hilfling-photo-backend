@@ -1,17 +1,18 @@
 package hilfling.backend.hilfling.service;
 
 import hilfling.backend.hilfling.model.BaseModel;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
-import java.util.List;
 public abstract class GenericBaseServiceImplementation<T extends BaseModel> implements GenericBaseService<T> {
     abstract JpaRepository<T, Long> getRepository();
     @Override
     public ResponseEntity<T> create(T entity) {
         if (entity.getId() != null) {
-            return ResponseEntity.status(404).build();
+            return ResponseEntity.status(403).build();
         }
         getRepository().save(entity);
         return new ResponseEntity(entity, HttpStatus.CREATED);
@@ -29,8 +30,8 @@ public abstract class GenericBaseServiceImplementation<T extends BaseModel> impl
     }
 
     @Override
-    public ResponseEntity<List<T>> getAll() {
-        return ResponseEntity.ok().body(getRepository().findAll());
+    public ResponseEntity<Page<T>> getAll(Pageable pageable) {
+        return ResponseEntity.ok().body(getRepository().findAll(pageable));
     }
 
     @Override

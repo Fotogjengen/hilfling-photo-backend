@@ -6,8 +6,8 @@ import javax.persistence.*;
 import java.io.Serializable;
 
 @Data
-@Entity
-@Table(name = "event_owner")
+@Entity(name = "event_owners")
+@Table(name = "event_owners")
 public class EventOwner implements Serializable, BaseModel {
     public EventOwner() {
     }

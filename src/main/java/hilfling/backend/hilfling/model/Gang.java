@@ -6,8 +6,8 @@ import javax.persistence.*;
 import java.io.Serializable;
 
 @Data
-@Entity
-@Table(name = "gang")
+@Entity(name = "gangs")
+@Table(name = "gangs")
 public class Gang implements Serializable, BaseModel {
     public Gang() {
     }

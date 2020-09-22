@@ -7,5 +7,5 @@ public interface GenericBaseController<T> {
     ResponseEntity<T> getById(Long id);
     ResponseEntity<T> delete(Long id);
     ResponseEntity<T> update(T entity);
-    ResponseEntity<T> getAll();
+    ResponseEntity<T> getAll(int page, int size);
 }

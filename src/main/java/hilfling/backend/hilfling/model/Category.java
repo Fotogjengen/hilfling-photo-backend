@@ -6,8 +6,8 @@ import javax.persistence.*;
 import java.io.Serializable;
 
 @Data
-@Entity
-@Table(name="category")
+@Entity(name = "categories")
+@Table(name="categories")
 public class Category implements Serializable, BaseModel {
     public Category() {
     }
