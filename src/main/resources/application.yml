@@ -23,10 +23,27 @@ spring:
       org:
         hibernate:
           type: trace
-okta:
-  oauth2:
-    issuer: https://dev-812828.okta.com/oauth2/default
-    client-id: 0oa2lxbl9mygTznZy357
-    audience: api://default
-    groups-claim: groups
-    scopes: 'openid'
+  servlet:
+    multipart:
+      enabled: true # Enable multipart uploads (files)
+      file-size-threshold: 2KB
+      max-file-size: 50MB
+      max-request-size: 60MB
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: http://localhost:9000/oauth/token/
+          jwk-set-uri: http://localhost:9000/.well-known/jwks.json
+file:
+  large-upload-dir: photos/large/
+  medium-upload-dir: photos/medium/
+  small-upload-dir: photos/small/
+#okta: # SECURITY OKTA
+#  oauth2:
+#    issuer: https://dev-812828.okta.com/oauth2/default
+#    client-id: 0oa2lxbl9mygTznZy357
+#    audience: api://default
+#    groups-claim: groups
+#    scopes: 'openid'
+
