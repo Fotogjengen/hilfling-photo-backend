@@ -21,7 +21,7 @@ import java.util.Collections;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/v1/photo")
+@RequestMapping("/api/v1/photos")
 public class PhotoController extends GenericBaseControllerImplementation<Photo> {
     private static final Logger logger = LoggerFactory.getLogger(PhotoController.class);
     private static List<String> ALLOWED_MEDIA_TYPES;
