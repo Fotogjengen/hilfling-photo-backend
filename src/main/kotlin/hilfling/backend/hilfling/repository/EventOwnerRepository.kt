@@ -25,7 +25,7 @@ class EventOwnerRepository {
         return database.event_owners.toList()
     }
 
-    fun create(name: String): EventOwner? {
+    fun create(name: String): EventOwner {
         val eventOwner = EventOwner{
             this.name = name
         }

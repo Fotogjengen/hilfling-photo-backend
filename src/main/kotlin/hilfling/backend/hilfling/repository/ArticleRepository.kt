@@ -23,12 +23,9 @@ class ArticleRepository {
     fun create(
             title: String,
             plainTextBody: String,
-            securityLevelId: Long,
-            photoGangBangerId: Long
-    ): Article? {
-        val securityLevel = database.security_levels.find { it.id eq securityLevelId } ?: return null
-        val photoGangBanger = database.photo_gang_bangers.find { it.id eq photoGangBangerId } ?: return null
-
+            securityLevel: SecurityLevel,
+            photoGangBanger: PhotoGangBanger
+    ): Article {
         val article = Article{
             this.title = title
             this.plainTextBody = plainTextBody

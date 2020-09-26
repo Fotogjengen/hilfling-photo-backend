@@ -25,7 +25,7 @@ class GangRepository {
         return database.gangs.toList()
     }
 
-    fun create(name: String): Gang? {
+    fun create(name: String): Gang {
         val gang = Gang{
             this.name = name
         }

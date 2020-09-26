@@ -30,7 +30,7 @@ class MotiveRepository {
             category: Category,
             eventOwner: EventOwner,
             album: Album
-    ): Motive? {
+    ): Motive {
         val motive = Motive{
             this.title = title
             this.category = category

@@ -25,7 +25,7 @@ class ArticleTagRepository {
         return database.article_tags.toList()
     }
 
-    fun create(name: String): ArticleTag? {
+    fun create(name: String): ArticleTag {
         val articleTag = ArticleTag{
             this.name = name
         }

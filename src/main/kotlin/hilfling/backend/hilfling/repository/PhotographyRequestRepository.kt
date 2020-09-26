@@ -35,7 +35,7 @@ class PhotographyRequestRepository {
             email: String,
             phone: String,
             description: String
-    ): PhotographyRequest? {
+    ): PhotographyRequest {
         val photographyRequest = PhotographyRequest{
             this.startTime = startTime
             this.endTime = endTime

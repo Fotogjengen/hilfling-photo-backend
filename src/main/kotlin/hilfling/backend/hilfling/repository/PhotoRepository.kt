@@ -51,16 +51,10 @@ class PhotoRepository {
             largeUrl: String,
             motiveId: Long,
             placeId: Long,
-            securityLevelId: Long,
-            gangId: Long,
-            photoGangBangerId: Long
-    ): Photo? {
-        val motive = database.motives.find { it.id eq motiveId } ?: return null
-        val place = database.places.find { it.id eq placeId } ?: return null
-        val securityLevel = database.security_levels.find { it.id eq securityLevelId } ?: return null
-        val gang = database.gangs.find { it.id eq gangId } ?: return null
-        val photoGangBanger = database.photo_gang_bangers.find { it.id eq photoGangBangerId } ?: return null
-
+            securityLevel: SecurityLevel,
+            gang: Gang,
+            photoGangBanger: PhotoGangBanger
+    ): Photo {
         val photo = Photo{
             this.isGoodPicture = isGoodPicture
             this.smallUrl = smallUrl
@@ -85,10 +79,10 @@ class PhotoRepository {
             largeUrl: String,
             motiveId: Long,
             placeId: Long,
-            securityLevelId: Long,
-            gangId: Long,
-            photoGangBangerId: Long
-    ): AnalogPhoto? {
+            securityLevel: SecurityLevel,
+            gang: Gang,
+            photoGangBanger: PhotoGangBanger
+    ): AnalogPhoto {
         val photo = createPhoto(
                 isGoodPicture,
                 smallUrl,
@@ -96,10 +90,10 @@ class PhotoRepository {
                 largeUrl,
                 motiveId,
                 placeId,
-                securityLevelId,
-                gangId,
-                photoGangBangerId
-        ) ?: return null
+                securityLevel,
+                gang,
+                photoGangBanger
+        )
         val analogPhoto = AnalogPhoto{
             this.imageNumber = imageNumber
             this.pageNumber = pageNumber

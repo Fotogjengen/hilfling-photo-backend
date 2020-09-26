@@ -25,7 +25,7 @@ class CategoryRepository {
         return database.categories.toList()
     }
 
-    fun create(name: String): Category? {
+    fun create(name: String): Category {
         val category = Category{
             this.name = name
         }

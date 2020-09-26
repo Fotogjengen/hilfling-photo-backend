@@ -29,8 +29,7 @@ class AlbumRepository {
             profilePicture: String,
             phoneNumber: String,
             sex: String
-    ): User? {
-
+    ): User {
         val user = User {
             this.firstName = firstName;
             this.lastName = lastName;

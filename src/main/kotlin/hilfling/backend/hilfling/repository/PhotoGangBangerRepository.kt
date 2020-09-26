@@ -34,8 +34,7 @@ class PhotoGangBangerRepository {
             city: String,
             user: User
 
-    ): PhotoGangBanger? {
-        val userFromDatabase = database.users.find{ it.id eq user.id } ?: return null
+    ): PhotoGangBanger {
         val photoGangBanger = PhotoGangBanger{
             this.relationshipStatus = relationshipStatus;
             this.semesterStart = semesterStart;

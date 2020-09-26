@@ -30,7 +30,7 @@ class PurchaseOrderRepository {
             sendByPost: Boolean,
             comment: String,
             isCompleted: Boolean = false
-    ): PurchaseOrder{
+    ): PurchaseOrder {
         val purchaseOrder = PurchaseOrder{
             this.name = name;
             this.email = email;

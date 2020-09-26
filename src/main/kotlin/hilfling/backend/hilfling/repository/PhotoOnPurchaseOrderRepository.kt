@@ -30,7 +30,7 @@ class PhotoOnPurchaseOrderRepository {
             amount: Int,
             purchaseOrder: PurchaseOrder,
             photo: Photo
-    ): PhotoOnPurchaseOrder? {
+    ): PhotoOnPurchaseOrder {
         val photoOnPurchaseOrder = PhotoOnPurchaseOrder{
             this.size = size
             this.amount = amount
