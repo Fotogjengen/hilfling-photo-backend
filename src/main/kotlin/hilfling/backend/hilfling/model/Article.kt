@@ -21,8 +21,8 @@ object Articles : BaseTable<Article>("article") {
     val plainTextBody = varchar("plain_text_body").bindTo { it.plainTextBody }
 
     // Foreign keys
-    val securityLevel = int("security_level_id").references(SecurityLevels){it.securityLevel}
-    val photoGangBanger = int("photo_gang_banger_id").references(PhotoGangBangers){it.photoGangBanger}
+    val securityLevelId = int("security_level_id").references(SecurityLevels){it.securityLevel}
+    val photoGangBangerId = int("photo_gang_banger_id").references(PhotoGangBangers){it.photoGangBanger}
 }
 
 val Database.articles get() = this.sequenceOf(Articles)
