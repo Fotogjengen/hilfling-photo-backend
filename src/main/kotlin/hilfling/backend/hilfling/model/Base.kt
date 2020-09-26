@@ -7,7 +7,6 @@ import me.liuwj.ktorm.schema.long
 import java.time.LocalDate
 
 open interface BaseModel<E: Entity<E>>: Entity<E> {
-    //companion object : Entity.Factory<T>()
     val id: Long
     var dateCreated: LocalDate
 }
