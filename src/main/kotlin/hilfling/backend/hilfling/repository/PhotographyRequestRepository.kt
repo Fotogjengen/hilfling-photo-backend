@@ -26,26 +26,18 @@ class PhotographyRequestRepository {
     }
 
     fun create(
-            startTime: LocalDate,
-            endTime: LocalDate,
-            place: String,
-            isIntern: Boolean,
-            type: String,
-            name: String,
-            email: String,
-            phone: String,
-            description: String
+            photographyRequest: PhotographyRequest
     ): PhotographyRequest {
         val photographyRequest = PhotographyRequest{
-            this.startTime = startTime
-            this.endTime = endTime
-            this.place = place
-            this.isIntern = isIntern
-            this.type = type
-            this.name = name
-            this.email = email
-            this.phone = phone
-            this.description = description
+            this.startTime = photographyRequest.startTime
+            this.endTime = photographyRequest.endTime
+            this.place = photographyRequest.place
+            this.isIntern = photographyRequest.isIntern
+            this.type = photographyRequest.type
+            this.name = photographyRequest.name
+            this.email = photographyRequest.email
+            this.phone = photographyRequest.phone
+            this.description = photographyRequest.description
         }
         database.photography_requests.add(photographyRequest)
         return photographyRequest

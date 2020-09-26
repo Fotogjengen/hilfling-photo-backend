@@ -1,31 +1,32 @@
 package hilfling.backend.hilfling.controller
 
 import hilfling.backend.hilfling.model.Album
+import hilfling.backend.hilfling.model.Position
 import hilfling.backend.hilfling.repository.AlbumRepository
+import hilfling.backend.hilfling.repository.PositionRepository
 import me.liuwj.ktorm.database.Database
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.web.bind.annotation.*
 
 @RestController
-@RequestMapping("/albums")
-class AlbumController {
-    val repository = AlbumRepository()
+@RequestMapping("/positions")
+class PositionController {
+    val repository = PositionRepository()
 
     @GetMapping("/{id}")
-    fun getById(@PathVariable("id") id: Long) : Album? {
+    fun getById(@PathVariable("id") id: Long) : Position? {
         return repository.findById(id)
     }
 
     @GetMapping
-    fun getAll() : List<Album> {
+    fun getAll() : List<Position> {
         return repository.findAll()
     }
 
     @PostMapping
     fun create(
-            @RequestParam("title") title: String,
-            @RequestParam("isAnalog") isAnalog: Boolean
-    ): Album {
-        return repository.create(title, isAnalog)
+            @RequestParam("position") position: Position
+    ): Position {
+        return repository.create(position)
     }
 }

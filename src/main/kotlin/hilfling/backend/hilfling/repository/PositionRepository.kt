@@ -22,12 +22,11 @@ class PositionRepository {
     }
 
     fun create(
-           title: String,
-           email: String
+           position: Position
     ): Position {
         val position = Position{
-            this.title = title;
-            this.email = email;
+            this.title = position.title;
+            this.email = position.email;
         }
         database.positions.add(position)
         return position
