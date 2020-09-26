@@ -27,14 +27,10 @@ class MotiveRepository {
 
     fun create(
             title: String,
-            categoryId: Long,
-            eventOwnerId: Long,
-            albumId: Long
+            category: Category,
+            eventOwner: EventOwner,
+            album: Album
     ): Motive? {
-        val category = database.categories.find { it.id eq categoryId } ?: return null
-        val eventOwner = database.event_owners.find { it.id eq eventOwnerId } ?: return null
-        val album = database.albums.find { it.id eq albumId } ?: return null
-
         val motive = Motive{
             this.title = title
             this.category = category
