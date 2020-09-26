@@ -21,7 +21,8 @@ services:
     ports:
       - "5432:5432"
     environment:
-      POSTGRES_PASSWORD: example
+      POSTGRES_USER: hilfling
+      POSTGRES_PASSWORD: password
 
 networks:
   traefik:
