@@ -11,14 +11,14 @@ interface Album : Entity<Album> {
 
     val id : Long
     var title: String
-    var timeCreated : LocalDate
+    var dateCreated : LocalDate
     var isAnalog : Boolean
 }
 
 object Albums : Table<Album>("t_album") {
     val id = long("id").primaryKey().bindTo { it.id }
     val title = varchar("title").bindTo { it.title }
-    val timeCreated = date("time_created").bindTo { it.timeCreated }
+    val dateCreated = date("date_created").bindTo { it.dateCreated }
     val isAnalog = boolean("is_analog").bindTo { it.isAnalog }
 }
 

@@ -27,7 +27,7 @@ class AlbumRepository {
         val album = Album{
             this.title = title
             this.isAnalog = isAnalog
-            this.timeCreated = LocalDate.now()
+            this.dateCreated = LocalDate.now()
         }
         database.albums.add(album)
         return album
