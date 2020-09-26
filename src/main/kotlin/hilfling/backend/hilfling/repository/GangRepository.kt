@@ -13,23 +13,23 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.web.bind.annotation.RequestParam
 import java.time.LocalDate
 
-class ArticleTagRepository {
+class GangRepository {
     @Autowired
     lateinit var database: Database
 
-    fun findById(id: Long): ArticleTag? {
-        return database.article_tags.find { it.id eq id }
+    fun findById(id: Long): Gang? {
+        return database.gangs.find { it.id eq id }
     }
 
-    fun findAll(): List<ArticleTag> {
-        return database.article_tags.toList()
+    fun findAll(): List<Gang> {
+        return database.gangs.toList()
     }
 
-    fun create(name: String): ArticleTag? {
-        val articleTag = ArticleTag{
+    fun create(name: String): Gang? {
+        val gang = Gang{
             this.name = name
         }
-        database.article_tags.add(articleTag)
-        return articleTag
+        database.gangs.add(gang)
+        return gang
     }
 }

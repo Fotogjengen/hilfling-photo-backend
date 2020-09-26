@@ -37,7 +37,6 @@ class ArticleRepository {
         val article = Article{
             this.title = title
             this.plainTextBody = plainTextBody
-
             this.securityLevel = securityLevel
             this.photoGangBanger = photoGangBanger
         }
