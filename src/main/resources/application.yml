@@ -3,10 +3,10 @@ spring:
     hikari:
       connection-timeout: 20000
       maximum-pool-size: 5
-    url: jdbc:postgresql://localhost:5432/hilflingdb
-    username: postgres
-    password: example
-    driver-class-name: org.postgresql.Driver
+    username: ${DATABASE_USERNAME:hilfling}
+    url: ${DATABASE_URL:jdbc\:postgresql\://localhost\:5432/hilflingdb?createDatabaseIfNotExist=true}
+    password: ${DATABASE_PASSWORD:password}
+    driver-class-name: ${DATABASE_DRIVER:org.postgresql.Driver}
   jpa:
     show-sql: true
     properties:
