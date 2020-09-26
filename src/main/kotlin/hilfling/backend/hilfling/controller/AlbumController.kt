@@ -12,17 +12,17 @@ class AlbumController {
     val repository = AlbumRepository()
 
     @GetMapping("/{id}")
-    fun getAlbumById(@PathVariable("id") id: Long) : Album? {
+    fun getById(@PathVariable("id") id: Long) : Album? {
         return repository.findById(id)
     }
 
     @GetMapping
-    fun getAllAlbums() : List<Album> {
+    fun getAll() : List<Album> {
         return repository.findAll()
     }
 
     @PostMapping
-    fun createAlbum(
+    fun create(
             @RequestParam("title") title: String,
             @RequestParam("isAnalog") isAnalog: Boolean
     ): Album {
