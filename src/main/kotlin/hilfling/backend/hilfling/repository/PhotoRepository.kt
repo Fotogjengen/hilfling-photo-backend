@@ -24,7 +24,7 @@ class PhotoRepository {
     fun findAllAnalogPhotos(): List<Photo> {
         return database.photos.filter {
             val motive = it.motiveId.referenceTable as Motives
-            val album = motive.album.referenceTable as Albums
+            val album = motive.albumId.referenceTable as Albums
             album.isAnalog eq true
         }.toList()
     }
@@ -32,7 +32,7 @@ class PhotoRepository {
     fun findAllDigitalPhotos(): List<Photo> {
         return database.photos.filter {
             val motive = it.motiveId.referenceTable as Motives
-            val album = motive.album.referenceTable as Albums
+            val album = motive.albumId.referenceTable as Albums
             album.isAnalog eq false
         }.toList()
     }

@@ -20,9 +20,9 @@ object Motives : BaseTable<Motive>("motive") {
     val title = varchar("title").bindTo { it.title }
 
     // Foreign keys
-    val category = int("category_id").references(Categories){it.category}
-    val eventOwner = int("event_owner_id").references(EventOwners){it.eventOwner}
-    val album = int("album_id").references(Albums){it.album}
+    val categoryId = int("category_id").references(Categories){it.category}
+    val eventOwnerId = int("event_owner_id").references(EventOwners){it.eventOwner}
+    val albumId = int("album_id").references(Albums){it.album}
 }
 
 val Database.motives get() = this.sequenceOf(Motives)
