@@ -1,7 +1,7 @@
 package hilfling.backend.hilfling.repository
 
-import hilfling.backend.hilfing.model.Album
-import hilfling.backend.hilfing.model.albums
+import hilfling.backend.hilfling.model.Album
+import hilfling.backend.hilfling.model.albums
 import me.liuwj.ktorm.database.Database
 import me.liuwj.ktorm.dsl.eq
 import me.liuwj.ktorm.entity.add

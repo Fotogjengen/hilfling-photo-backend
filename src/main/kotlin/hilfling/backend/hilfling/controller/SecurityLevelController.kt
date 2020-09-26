@@ -1,6 +1,6 @@
-package hilfling.backend.hilfing.controller
+package hilfling.backend.hilfling.controller
 
-import hilfling.backend.hilfing.model.SecurityLevel
+import hilfling.backend.hilfling.model.SecurityLevel
 import hilfling.backend.hilfling.repository.SecurityLevelRepository
 import org.springframework.web.bind.annotation.*
 

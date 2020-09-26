@@ -1,7 +1,7 @@
 package hilfling.backend.hilfling.repository
 
-import hilfling.backend.hilfing.model.PhotoTag
-import hilfling.backend.hilfing.model.photo_tags
+import hilfling.backend.hilfling.model.PhotoTag
+import hilfling.backend.hilfling.model.photo_tags
 import me.liuwj.ktorm.database.Database
 import me.liuwj.ktorm.dsl.eq
 import me.liuwj.ktorm.entity.add

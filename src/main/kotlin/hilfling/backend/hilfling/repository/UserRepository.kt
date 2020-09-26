@@ -1,7 +1,7 @@
 package hilfling.backend.hilfling.repository;
 
 
-import hilfling.backend.hilfing.model.*
+import hilfling.backend.hilfling.model.*
 import me.liuwj.ktorm.database.Database;
 import org.springframework.beans.factory.annotation.Autowired;
 import me.liuwj.ktorm.dsl.eq;

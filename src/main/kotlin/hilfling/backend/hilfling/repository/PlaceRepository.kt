@@ -1,7 +1,7 @@
 package hilfling.backend.hilfling.repository
 
-import hilfling.backend.hilfing.model.Place
-import hilfling.backend.hilfing.model.places
+import hilfling.backend.hilfling.model.Place
+import hilfling.backend.hilfling.model.places
 import me.liuwj.ktorm.database.Database
 import me.liuwj.ktorm.dsl.eq
 import me.liuwj.ktorm.entity.add

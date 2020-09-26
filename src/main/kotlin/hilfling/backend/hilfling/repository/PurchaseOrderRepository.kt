@@ -1,7 +1,7 @@
 package hilfling.backend.hilfling.repository
 
-import hilfling.backend.hilfing.model.PurchaseOrder
-import hilfling.backend.hilfing.model.purchase_orders
+import hilfling.backend.hilfling.model.PurchaseOrder
+import hilfling.backend.hilfling.model.purchase_orders
 import me.liuwj.ktorm.database.Database
 import me.liuwj.ktorm.dsl.eq
 import me.liuwj.ktorm.entity.add

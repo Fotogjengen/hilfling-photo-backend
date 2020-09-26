@@ -1,4 +1,4 @@
-package hilfling.backend.hilfing
+package hilfling.backend.hilfling
 
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.runApplication

@@ -1,6 +1,6 @@
 package hilfling.backend.hilfling.repository
 
-import hilfling.backend.hilfing.model.*
+import hilfling.backend.hilfling.model.*
 import me.liuwj.ktorm.database.Database
 import me.liuwj.ktorm.dsl.eq
 import me.liuwj.ktorm.entity.add

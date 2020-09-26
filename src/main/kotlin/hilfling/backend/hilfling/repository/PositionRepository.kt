@@ -1,7 +1,7 @@
 package hilfling.backend.hilfling.repository
 
-import hilfling.backend.hilfing.model.Position
-import hilfling.backend.hilfing.model.positions
+import hilfling.backend.hilfling.model.Position
+import hilfling.backend.hilfling.model.positions
 import me.liuwj.ktorm.database.Database
 import me.liuwj.ktorm.dsl.eq
 import me.liuwj.ktorm.entity.add

@@ -1,4 +1,4 @@
-package hilfling.backend.hilfing.model
+package hilfling.backend.hilfling.model
 
 import me.liuwj.ktorm.entity.Entity
 import me.liuwj.ktorm.schema.Table
