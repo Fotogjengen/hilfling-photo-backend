@@ -20,11 +20,11 @@ class GangRepository {
         return database.gangs.toList()
     }
 
-    fun create(name: String): Gang {
-        val gang = Gang{
-            this.name = name
+    fun create(gang: Gang): Gang {
+        val gangFromDatabase = Gang{
+            this.name = gang.name
         }
-        database.gangs.add(gang)
-        return gang
+        database.gangs.add(gangFromDatabase)
+        return gangFromDatabase
     }
 }

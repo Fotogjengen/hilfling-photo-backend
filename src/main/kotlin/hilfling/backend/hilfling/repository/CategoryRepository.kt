@@ -20,11 +20,13 @@ class CategoryRepository {
         return database.categories.toList()
     }
 
-    fun create(name: String): Category {
-        val category = Category{
-            this.name = name
+    fun create(
+            category: Category
+    ): Category {
+        val categoryFromDatabase = Category{
+            this.name = category.name
         }
-        database.categories.add(category)
-        return category
+        database.categories.add(categoryFromDatabase)
+        return categoryFromDatabase
     }
 }

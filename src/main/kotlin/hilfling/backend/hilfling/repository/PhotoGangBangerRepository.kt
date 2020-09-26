@@ -47,7 +47,7 @@ class PhotoGangBangerRepository {
     fun create(
             photoGangBanger: PhotoGangBanger
     ): PhotoGangBanger {
-        val photoGangBanger = PhotoGangBanger{
+        val photoGangBangerFromDatabase = PhotoGangBanger{
             this.relationshipStatus = photoGangBanger.relationshipStatus;
             this.semesterStart = photoGangBanger.semesterStart;
             this.isActive = photoGangBanger.isActive;
@@ -57,7 +57,7 @@ class PhotoGangBangerRepository {
             this.city = photoGangBanger.city;
             this.user = photoGangBanger.user;
         }
-        database.photo_gang_bangers.add(photoGangBanger)
-        return photoGangBanger
+        database.photo_gang_bangers.add(photoGangBangerFromDatabase)
+        return photoGangBangerFromDatabase
     }
 }

@@ -24,16 +24,10 @@ class MotiveController {
 
     @PostMapping
     fun create(
-            @RequestParam("title") title: String,
-            @RequestParam("category") category: Category,
-            @RequestParam("eventOwner") eventOwner: EventOwner,
-            @RequestParam("album") album: Album
+            @RequestParam("motive") motive: Motive
     ): Motive {
         return repository.create(
-                title,
-                category,
-                eventOwner,
-                album
+                motive
         )
     }
 }

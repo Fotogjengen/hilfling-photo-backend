@@ -21,18 +21,15 @@ class ArticleRepository {
     }
 
     fun create(
-            title: String,
-            plainTextBody: String,
-            securityLevel: SecurityLevel,
-            photoGangBanger: PhotoGangBanger
+            article: Article
     ): Article {
-        val article = Article{
-            this.title = title
-            this.plainTextBody = plainTextBody
-            this.securityLevel = securityLevel
-            this.photoGangBanger = photoGangBanger
+        val articleFromDatabase = Article{
+            this.title = article.title
+            this.plainTextBody = article.plainTextBody
+            this.securityLevel = article.securityLevel
+            this.photoGangBanger = article.photoGangBanger
         }
-        database.articles.add(article)
-        return article
+        database.articles.add(articleFromDatabase)
+        return articleFromDatabase
     }
 }

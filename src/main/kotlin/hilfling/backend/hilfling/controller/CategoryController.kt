@@ -21,10 +21,10 @@ class CategoryController {
 
     @PostMapping
     fun create(
-            @RequestParam("name") name: String
+            @RequestParam("category") category: Category
     ): Category {
         return repository.create(
-                name
+                category
         )
     }
 }

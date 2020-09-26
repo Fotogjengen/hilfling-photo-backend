@@ -20,7 +20,9 @@ class SecurityLevelController {
     }
 
     @PostMapping
-    fun createSecurityLevel(@RequestParam("type") type: String): SecurityLevel {
-        return repository.create(type)
+    fun createSecurityLevel(
+            @RequestParam("securityLevel") securityLevel: SecurityLevel
+    ): SecurityLevel {
+        return repository.create(securityLevel)
     }
 }

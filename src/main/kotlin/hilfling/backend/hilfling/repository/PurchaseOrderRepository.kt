@@ -24,7 +24,7 @@ class PurchaseOrderRepository {
     fun create(
             purchaseOrder: PurchaseOrder
     ): PurchaseOrder {
-        val purchaseOrder = PurchaseOrder{
+        val purchaseOrderFromDatabase = PurchaseOrder{
             this.name = purchaseOrder.name;
             this.email = purchaseOrder.email;
             this.address = purchaseOrder.address;
@@ -34,8 +34,8 @@ class PurchaseOrderRepository {
             this.comment = purchaseOrder.comment;
             this.isCompleted = purchaseOrder.isCompleted;
         }
-        database.purchase_orders.add(purchaseOrder)
-        return purchaseOrder
+        database.purchase_orders.add(purchaseOrderFromDatabase)
+        return purchaseOrderFromDatabase
     }
     // TODO: DELETE
 }

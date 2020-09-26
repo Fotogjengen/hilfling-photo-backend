@@ -22,24 +22,18 @@ class UserRepository {
     }
 
     fun create(
-            firstName: String,
-            lastName: String,
-            username: String,
-            email: String,
-            profilePicture: String,
-            phoneNumber: String,
-            sex: String
+            user: User
     ): User {
-        val user = User {
-            this.firstName = firstName;
-            this.lastName = lastName;
-            this.username = username;
-            this.email = email;
-            this.profilePicture = profilePicture;
-            this.phoneNumber = phoneNumber;
-            this.sex = sex
+        val userFromDatabase = User {
+            this.firstName = user.firstName;
+            this.lastName = user.lastName;
+            this.username = user.username;
+            this.email = user.email;
+            this.profilePicture = user.profilePicture;
+            this.phoneNumber = user.phoneNumber;
+            this.sex = user.sex
         }
-        database.users.add(user)
-        return user
+        database.users.add(userFromDatabase)
+        return userFromDatabase
     }
 }

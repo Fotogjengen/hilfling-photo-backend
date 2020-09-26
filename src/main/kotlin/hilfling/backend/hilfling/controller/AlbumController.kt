@@ -21,9 +21,8 @@ class AlbumController {
 
     @PostMapping
     fun create(
-            @RequestParam("title") title: String,
-            @RequestParam("isAnalog") isAnalog: Boolean
+            @RequestParam("album") album: Album
     ): Album {
-        return repository.create(title, isAnalog)
+        return repository.create(album)
     }
 }

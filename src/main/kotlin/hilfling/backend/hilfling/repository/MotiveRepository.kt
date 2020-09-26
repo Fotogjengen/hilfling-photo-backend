@@ -21,18 +21,15 @@ class MotiveRepository {
     }
 
     fun create(
-            title: String,
-            category: Category,
-            eventOwner: EventOwner,
-            album: Album
+            motive: Motive
     ): Motive {
-        val motive = Motive{
-            this.title = title
-            this.category = category
-            this.eventOwner = eventOwner
-            this.album = album
+        val motiveFromDatabase = Motive{
+            this.title = motive.title
+            this.category = motive.category
+            this.eventOwner = motive.eventOwner
+            this.album = motive.album
         }
-        database.motives.add(motive)
-        return motive
+        database.motives.add(motiveFromDatabase)
+        return motiveFromDatabase
     }
 }

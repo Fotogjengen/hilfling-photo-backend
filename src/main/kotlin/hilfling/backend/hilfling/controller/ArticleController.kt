@@ -23,16 +23,10 @@ class ArticleController {
 
     @PostMapping
     fun create(
-            @RequestParam("title") title: String,
-            @RequestParam("plainTextBody") plainTextBody: String,
-            @RequestParam("securityLevel") securityLevel: SecurityLevel,
-            @RequestParam("photoGangBanger") photoGangBanger: PhotoGangBanger
+            @RequestParam("article") article: Article
     ): Article {
         return repository.create(
-                title,
-                plainTextBody,
-                securityLevel,
-                photoGangBanger
+                article
         )
     }
 }

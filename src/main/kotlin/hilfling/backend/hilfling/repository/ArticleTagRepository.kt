@@ -20,11 +20,13 @@ class ArticleTagRepository {
         return database.article_tags.toList()
     }
 
-    fun create(name: String): ArticleTag {
-        val articleTag = ArticleTag{
-            this.name = name
+    fun create(
+            articleTag: ArticleTag
+    ): ArticleTag {
+        val articleTagFromDatabase = ArticleTag{
+            this.name = articleTag.name
         }
-        database.article_tags.add(articleTag)
-        return articleTag
+        database.article_tags.add(articleTagFromDatabase)
+        return articleTagFromDatabase
     }
 }

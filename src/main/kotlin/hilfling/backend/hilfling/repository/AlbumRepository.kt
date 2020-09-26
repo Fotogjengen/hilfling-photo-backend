@@ -22,13 +22,15 @@ class AlbumRepository {
         return database.albums.toList()
     }
 
-    fun create(title: String, isAnalog: Boolean): Album {
-        val album = Album{
-            this.title = title
-            this.isAnalog = isAnalog
+    fun create(
+            album: Album
+    ): Album {
+        val albumFromDatabase = Album{
+            this.title = album.title
+            this.isAnalog = album.isAnalog
             this.dateCreated = LocalDate.now()
         }
-        database.albums.add(album)
-        return album
+        database.albums.add(albumFromDatabase)
+        return albumFromDatabase
     }
 }

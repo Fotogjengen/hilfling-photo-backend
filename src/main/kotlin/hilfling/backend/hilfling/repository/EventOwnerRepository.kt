@@ -20,11 +20,13 @@ class EventOwnerRepository {
         return database.event_owners.toList()
     }
 
-    fun create(name: String): EventOwner {
-        val eventOwner = EventOwner{
-            this.name = name
+    fun create(
+            eventOwner: EventOwner
+    ): EventOwner {
+        val eventOwnerFromDatabase = EventOwner{
+            this.name = eventOwner.name
         }
-        database.event_owners.add(eventOwner)
-        return eventOwner
+        database.event_owners.add(eventOwnerFromDatabase)
+        return eventOwnerFromDatabase
     }
 }

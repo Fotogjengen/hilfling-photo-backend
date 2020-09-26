@@ -23,7 +23,7 @@ class PhotographyRequestRepository {
     fun create(
             photographyRequest: PhotographyRequest
     ): PhotographyRequest {
-        val photographyRequest = PhotographyRequest{
+        val photographyRequestFromDatabase = PhotographyRequest{
             this.startTime = photographyRequest.startTime
             this.endTime = photographyRequest.endTime
             this.place = photographyRequest.place
@@ -34,7 +34,7 @@ class PhotographyRequestRepository {
             this.phone = photographyRequest.phone
             this.description = photographyRequest.description
         }
-        database.photography_requests.add(photographyRequest)
-        return photographyRequest
+        database.photography_requests.add(photographyRequestFromDatabase)
+        return photographyRequestFromDatabase
     }
 }

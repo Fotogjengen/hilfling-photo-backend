@@ -22,12 +22,14 @@ class SecurityLevelRepository {
         return database.security_levels.toList()
     }
 
-    fun create(type: String): SecurityLevel {
-        val securityLevel = SecurityLevel{
-            this.type = type
+    fun create(
+            securityLevel: SecurityLevel
+    ): SecurityLevel {
+        val securityLevelFromDatabase = SecurityLevel{
+            this.type = securityLevel.type
             this.dateCreated = LocalDate.now()
         }
-        database.security_levels.add(securityLevel)
-        return securityLevel
+        database.security_levels.add(securityLevelFromDatabase)
+        return securityLevelFromDatabase
     }
 }

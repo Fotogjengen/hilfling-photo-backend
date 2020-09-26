@@ -21,18 +21,15 @@ class PhotoOnPurchaseOrderRepository {
     }
 
     fun create(
-            size: String,
-            amount: Int,
-            purchaseOrder: PurchaseOrder,
-            photo: Photo
+            photoOnPurchaseOrder: PhotoOnPurchaseOrder
     ): PhotoOnPurchaseOrder {
-        val photoOnPurchaseOrder = PhotoOnPurchaseOrder{
-            this.size = size
-            this.amount = amount
-            this.purchaseOrder = purchaseOrder
-            this.photo = photo
+        val photoOnPurchaseOrderFromDatabase = PhotoOnPurchaseOrder{
+            this.size = photoOnPurchaseOrder.size
+            this.amount = photoOnPurchaseOrder.amount
+            this.purchaseOrder = photoOnPurchaseOrder.purchaseOrder
+            this.photo = photoOnPurchaseOrder.photo
         }
-        database.photo_on_purchase_orders.add(photoOnPurchaseOrder)
-        return photoOnPurchaseOrder
+        database.photo_on_purchase_orders.add(photoOnPurchaseOrderFromDatabase)
+        return photoOnPurchaseOrderFromDatabase
     }
 }
