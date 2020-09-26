@@ -14,7 +14,7 @@ class PurchaseOrderController {
     val repository = PurchaseOrderRepository()
 
     @GetMapping("/{id}")
-    fun getById(@PathVariable("id") id: Long) : PurchaseOrder? {
+    fun getById(@PathVariable("id") id: Int) : PurchaseOrder? {
         return repository.findById(id)
     }
 

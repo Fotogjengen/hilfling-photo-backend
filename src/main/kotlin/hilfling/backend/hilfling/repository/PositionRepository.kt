@@ -13,7 +13,7 @@ class PositionRepository {
     @Autowired
     lateinit var database: Database
 
-    fun findById(id: Long): Position? {
+    fun findById(id: Int): Position? {
         return database.positions.find{it.id eq  id}
     }
 

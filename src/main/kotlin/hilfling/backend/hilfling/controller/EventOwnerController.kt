@@ -15,7 +15,7 @@ class EventOwnerController {
     val repository = EventOwnerRepository()
 
     @GetMapping("/{id}")
-    fun getById(@PathVariable("id") id: Long): EventOwner? {
+    fun getById(@PathVariable("id") id: Int): EventOwner? {
         return repository.findById(id)
     }
 

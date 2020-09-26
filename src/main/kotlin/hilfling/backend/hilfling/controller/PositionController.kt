@@ -14,7 +14,7 @@ class PositionController {
     val repository = PositionRepository()
 
     @GetMapping("/{id}")
-    fun getById(@PathVariable("id") id: Long) : Position? {
+    fun getById(@PathVariable("id") id: Int) : Position? {
         return repository.findById(id)
     }
 

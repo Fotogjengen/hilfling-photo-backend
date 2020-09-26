@@ -17,7 +17,7 @@ class GangRepository {
     @Autowired
     lateinit var database: Database
 
-    fun findById(id: Long): Gang? {
+    fun findById(id: Int): Gang? {
         return database.gangs.find { it.id eq id }
     }
 

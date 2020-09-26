@@ -12,7 +12,7 @@ class ArticleRepository {
     @Autowired
     lateinit var database: Database
 
-    fun findById(id: Long): Article? {
+    fun findById(id: Int): Article? {
         return database.articles.find { it.id eq id }
     }
 

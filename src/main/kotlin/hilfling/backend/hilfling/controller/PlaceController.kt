@@ -14,7 +14,7 @@ class PlaceController {
     val repository = PlaceRepository()
 
     @GetMapping("/{id}")
-    fun getById(@PathVariable("id") id: Long) : Place? {
+    fun getById(@PathVariable("id") id: Int) : Place? {
         return repository.findById(id)
     }
 

@@ -13,7 +13,7 @@ class UserRepository {
     @Autowired
     lateinit var database: Database
 
-    fun findById(id: Long): User? {
+    fun findById(id: Int): User? {
         return database.users.find { it.id eq id }
     }
 

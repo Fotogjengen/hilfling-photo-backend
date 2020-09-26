@@ -14,7 +14,7 @@ class SecurityLevelRepository {
     @Autowired
     lateinit var database: Database
 
-    fun findById(id: Long): SecurityLevel? {
+    fun findById(id: Int): SecurityLevel? {
         return database.security_levels.find{it.id eq  id}
     }
 

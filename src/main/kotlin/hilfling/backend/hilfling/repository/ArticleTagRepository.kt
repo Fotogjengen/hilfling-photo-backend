@@ -17,7 +17,7 @@ class ArticleTagRepository {
     @Autowired
     lateinit var database: Database
 
-    fun findById(id: Long): ArticleTag? {
+    fun findById(id: Int): ArticleTag? {
         return database.article_tags.find { it.id eq id }
     }
 

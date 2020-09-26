@@ -14,7 +14,7 @@ class PhotoGangBangerController {
     val repository = PhotoGangBangerRepository()
 
     @GetMapping("/{id}")
-    fun getById(@PathVariable("id") id: Long): PhotoGangBanger? {
+    fun getById(@PathVariable("id") id: Int): PhotoGangBanger? {
         return repository.findById(id)
     }
 

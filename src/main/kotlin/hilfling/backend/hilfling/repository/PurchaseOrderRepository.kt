@@ -13,7 +13,7 @@ class PurchaseOrderRepository {
     @Autowired
     lateinit var database: Database
 
-    fun findById(id: Long): PurchaseOrder? {
+    fun findById(id: Int): PurchaseOrder? {
         return database.purchase_orders.find{it.id eq  id}
     }
 

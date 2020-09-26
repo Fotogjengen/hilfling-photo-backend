@@ -17,7 +17,7 @@ class PhotographyRequestRepository {
     @Autowired
     lateinit var database: Database
 
-    fun findById(id: Long): PhotographyRequest? {
+    fun findById(id: Int): PhotographyRequest? {
         return database.photography_requests.find { it.id eq id }
     }
 

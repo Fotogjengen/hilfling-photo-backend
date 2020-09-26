@@ -16,7 +16,7 @@ class PhotoGangBangerRepository {
     @Autowired
     lateinit var database: Database
 
-    fun findById(id: Long): PhotoGangBanger? {
+    fun findById(id: Int): PhotoGangBanger? {
         return database.photo_gang_bangers.find{it.id eq  id}
     }
 

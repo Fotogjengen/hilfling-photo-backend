@@ -13,7 +13,7 @@ class PlaceRepository {
     @Autowired
     lateinit var database: Database
 
-    fun findById(id: Long): Place? {
+    fun findById(id: Int): Place? {
         return database.places.find{it.id eq  id}
     }
 

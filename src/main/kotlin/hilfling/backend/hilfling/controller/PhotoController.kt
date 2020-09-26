@@ -14,7 +14,7 @@ class PhotoController {
     val repository = PhotoRepository()
 
     @GetMapping("/{id}")
-    fun getById(@PathVariable("id") id: Long): Photo? {
+    fun getById(@PathVariable("id") id: Int): Photo? {
         return repository.findById(id)
     }
 

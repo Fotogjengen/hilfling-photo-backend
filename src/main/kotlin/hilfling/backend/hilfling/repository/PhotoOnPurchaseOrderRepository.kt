@@ -17,7 +17,7 @@ class PhotoOnPurchaseOrderRepository {
     @Autowired
     lateinit var database: Database
 
-    fun findById(id: Long): PhotoOnPurchaseOrder? {
+    fun findById(id: Int): PhotoOnPurchaseOrder? {
         return database.photo_on_purchase_orders.find { it.id eq id }
     }
 

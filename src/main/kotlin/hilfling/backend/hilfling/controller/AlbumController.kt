@@ -12,7 +12,7 @@ class AlbumController {
     val repository = AlbumRepository()
 
     @GetMapping("/{id}")
-    fun getById(@PathVariable("id") id: Long) : Album? {
+    fun getById(@PathVariable("id") id: Int) : Album? {
         return repository.findById(id)
     }
 

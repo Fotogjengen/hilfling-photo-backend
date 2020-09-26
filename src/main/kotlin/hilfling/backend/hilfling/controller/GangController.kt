@@ -12,7 +12,7 @@ class GangController {
     val repository = GangRepository()
 
     @GetMapping("/{id}")
-    fun getById(@PathVariable("id") id: Long): Gang? {
+    fun getById(@PathVariable("id") id: Int): Gang? {
         return repository.findById(id)
     }
 

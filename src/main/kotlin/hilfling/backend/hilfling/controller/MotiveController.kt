@@ -16,7 +16,7 @@ class MotiveController {
     val repository = MotiveRepository()
 
     @GetMapping("/{id}")
-    fun getById(@PathVariable("id") id: Long): Motive? {
+    fun getById(@PathVariable("id") id: Int): Motive? {
         return repository.findById(id)
     }
 

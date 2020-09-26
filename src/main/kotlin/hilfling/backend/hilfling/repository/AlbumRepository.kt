@@ -15,7 +15,7 @@ class AlbumRepository {
     @Autowired
     lateinit var database: Database
 
-    fun findById(id: Long): Album? {
+    fun findById(id: Int): Album? {
         return database.albums.find { it.id eq id }
     }
 

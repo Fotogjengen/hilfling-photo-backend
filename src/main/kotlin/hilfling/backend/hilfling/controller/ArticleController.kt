@@ -16,7 +16,7 @@ class ArticleController {
     val repository = ArticleRepository()
 
     @GetMapping("/{id}")
-    fun getById(@PathVariable("id") id: Long): Article? {
+    fun getById(@PathVariable("id") id: Int): Article? {
         return repository.findById(id)
     }
 

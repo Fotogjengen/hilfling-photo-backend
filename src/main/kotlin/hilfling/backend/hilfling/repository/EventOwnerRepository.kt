@@ -17,7 +17,7 @@ class EventOwnerRepository {
     @Autowired
     lateinit var database: Database
 
-    fun findById(id: Long): EventOwner? {
+    fun findById(id: Int): EventOwner? {
         return database.event_owners.find { it.id eq id }
     }
 

@@ -13,7 +13,7 @@ class PhotoRepository {
     @Autowired
     lateinit var database: Database
 
-    fun findById(id: Long): Photo? {
+    fun findById(id: Int): Photo? {
         return database.photos.find { it.id eq id }
     }
 

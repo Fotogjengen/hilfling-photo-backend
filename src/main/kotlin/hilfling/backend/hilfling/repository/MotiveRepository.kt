@@ -17,7 +17,7 @@ class MotiveRepository {
     @Autowired
     lateinit var database: Database
 
-    fun findById(id: Long): Motive? {
+    fun findById(id: Int): Motive? {
         return database.motives.find { it.id eq id }
     }
 

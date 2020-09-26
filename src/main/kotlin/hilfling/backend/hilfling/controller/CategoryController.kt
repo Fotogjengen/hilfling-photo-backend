@@ -14,7 +14,7 @@ class CategoryController {
     val repository = CategoryRepository()
 
     @GetMapping("/{id}")
-    fun getById(@PathVariable("id") id: Long): Category? {
+    fun getById(@PathVariable("id") id: Int): Category? {
         return repository.findById(id)
     }
 

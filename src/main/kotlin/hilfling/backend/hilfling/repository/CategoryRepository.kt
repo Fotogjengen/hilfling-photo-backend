@@ -17,7 +17,7 @@ class CategoryRepository {
     @Autowired
     lateinit var database: Database
 
-    fun findById(id: Long): Category? {
+    fun findById(id: Int): Category? {
         return database.categories.find { it.id eq id }
     }
 
