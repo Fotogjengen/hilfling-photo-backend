@@ -1,7 +1,6 @@
 package hilfling.backend.hilfling.repository
 
 import hilfling.backend.hilfling.model.PhotoGangBanger
-import hilfling.backend.hilfling.model.User
 import hilfling.backend.hilfling.model.photo_gang_bangers
 import me.liuwj.ktorm.database.Database
 import me.liuwj.ktorm.dsl.eq

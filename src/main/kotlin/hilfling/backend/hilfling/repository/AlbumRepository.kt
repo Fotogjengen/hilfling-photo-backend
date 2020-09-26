@@ -8,7 +8,6 @@ import me.liuwj.ktorm.entity.add
 import me.liuwj.ktorm.entity.find
 import me.liuwj.ktorm.entity.toList
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.web.bind.annotation.RequestParam
 import java.time.LocalDate
 
 class AlbumRepository {

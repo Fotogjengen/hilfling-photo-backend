@@ -4,10 +4,7 @@ import hilfling.backend.hilfling.model.Album
 import hilfling.backend.hilfling.model.Category
 import hilfling.backend.hilfling.model.EventOwner
 import hilfling.backend.hilfling.model.Motive
-import hilfling.backend.hilfling.repository.AlbumRepository
 import hilfling.backend.hilfling.repository.MotiveRepository
-import me.liuwj.ktorm.database.Database
-import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.web.bind.annotation.*
 
 @RestController
