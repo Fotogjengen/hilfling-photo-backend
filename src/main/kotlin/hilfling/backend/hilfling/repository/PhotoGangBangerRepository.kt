@@ -23,7 +23,7 @@ class PhotoGangBangerRepository {
         return database.photo_gang_bangers.toList()
     }
 
-    fun createUser(
+    fun create(
             relationshipStatus: String,
             semesterStart: String,
             isActive: Boolean,
@@ -32,7 +32,6 @@ class PhotoGangBangerRepository {
             zipCode: String,
             city: String,
             user: User
-
     ): PhotoGangBanger {
         val photoGangBanger = PhotoGangBanger{
             this.relationshipStatus = relationshipStatus;
