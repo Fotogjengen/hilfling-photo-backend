@@ -45,61 +45,36 @@ class PhotoRepository {
     }
 
     fun createPhoto(
-            isGoodPicture: Boolean,
-            smallUrl: String,
-            mediumUrl: String,
-            largeUrl: String,
-            motiveId: Long,
-            placeId: Long,
-            securityLevel: SecurityLevel,
-            gang: Gang,
-            photoGangBanger: PhotoGangBanger
+            photo: Photo
     ): Photo {
-        val photo = Photo{
-            this.isGoodPicture = isGoodPicture
-            this.smallUrl = smallUrl
-            this.mediumUrl = mediumUrl
-            this.largeUrl = largeUrl
-            this.motive = motive
-            this.place = place
-            this.securityLevel = securityLevel
-            this.gang = gang
-            this.photoGangBanger = photoGangBanger
+
+        val createdPhoto = Photo{
+            this.isGoodPicture = photo.isGoodPicture
+            this.smallUrl = photo.smallUrl
+            this.mediumUrl = photo.mediumUrl
+            this.largeUrl = photo.largeUrl
+            this.motive = photo.motive
+            this.place = photo.place
+            this.securityLevel = photo.securityLevel
+            this.gang = photo.gang
+            this.photoGangBanger = photo.photoGangBanger
         }
-        database.photos.add(photo)
-        return photo
+        database.photos.add(createdPhoto)
+        return createdPhoto
     }
 
     fun createAnalogPhoto(
-            imageNumber: Int,
-            pageNumber: Int,
-            isGoodPicture: Boolean,
-            smallUrl: String,
-            mediumUrl: String,
-            largeUrl: String,
-            motiveId: Long,
-            placeId: Long,
-            securityLevel: SecurityLevel,
-            gang: Gang,
-            photoGangBanger: PhotoGangBanger
+            analogPhoto: AnalogPhoto
     ): AnalogPhoto {
-        val photo = createPhoto(
-                isGoodPicture,
-                smallUrl,
-                mediumUrl,
-                largeUrl,
-                motiveId,
-                placeId,
-                securityLevel,
-                gang,
-                photoGangBanger
+        val createdPhoto = createPhoto(
+                analogPhoto.photo
         )
-        val analogPhoto = AnalogPhoto{
-            this.imageNumber = imageNumber
-            this.pageNumber = pageNumber
-            this.photo = photo
+        val createdAnalogPhoto = AnalogPhoto{
+            this.imageNumber = analogPhoto.imageNumber
+            this.pageNumber = analogPhoto.pageNumber
+            this.photo = createdPhoto
         }
-        database.analog_photos.add(analogPhoto)
-        return analogPhoto
+        database.analog_photos.add(createdAnalogPhoto)
+        return createdAnalogPhoto
     }
 }
