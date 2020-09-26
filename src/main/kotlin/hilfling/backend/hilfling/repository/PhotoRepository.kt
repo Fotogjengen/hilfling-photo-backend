@@ -13,7 +13,7 @@ class PhotoRepository {
     @Autowired
     lateinit var database: Database
 
-    fun findById(id: Long): Photo? {
+    fun findById(id: Int): Photo? {
         return database.photos.find { it.id eq id }
     }
 
@@ -48,7 +48,7 @@ class PhotoRepository {
             photo: Photo
     ): Photo {
 
-        val createdPhoto = Photo{
+        val photoFromDatabase = Photo{
             this.isGoodPicture = photo.isGoodPicture
             this.smallUrl = photo.smallUrl
             this.mediumUrl = photo.mediumUrl
@@ -59,22 +59,22 @@ class PhotoRepository {
             this.gang = photo.gang
             this.photoGangBanger = photo.photoGangBanger
         }
-        database.photos.add(createdPhoto)
-        return createdPhoto
+        database.photos.add(photoFromDatabase)
+        return photoFromDatabase
     }
 
     fun createAnalogPhoto(
             analogPhoto: AnalogPhoto
     ): AnalogPhoto {
-        val createdPhoto = createPhoto(
+        val photoFromDatabase = createPhoto(
                 analogPhoto.photo
         )
-        val createdAnalogPhoto = AnalogPhoto{
+        val analogPhotoFromDatabase = AnalogPhoto{
             this.imageNumber = analogPhoto.imageNumber
             this.pageNumber = analogPhoto.pageNumber
-            this.photo = createdPhoto
+            this.photo = photoFromDatabase
         }
-        database.analog_photos.add(createdAnalogPhoto)
-        return createdAnalogPhoto
+        database.analog_photos.add(analogPhotoFromDatabase)
+        return analogPhotoFromDatabase
     }
 }

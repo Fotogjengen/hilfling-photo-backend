@@ -13,7 +13,7 @@ class PositionRepository {
     @Autowired
     lateinit var database: Database
 
-    fun findById(id: Long): Position? {
+    fun findById(id: Int): Position? {
         return database.positions.find{it.id eq  id}
     }
 
@@ -24,11 +24,11 @@ class PositionRepository {
     fun create(
            position: Position
     ): Position {
-        val position = Position{
+        val positionFromDatabase = Position{
             this.title = position.title;
             this.email = position.email;
         }
-        database.positions.add(position)
-        return position
+        database.positions.add(positionFromDatabase)
+        return positionFromDatabase
     }
 }

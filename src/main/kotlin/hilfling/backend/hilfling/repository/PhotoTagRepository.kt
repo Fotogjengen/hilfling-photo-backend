@@ -13,7 +13,7 @@ class PhotoTagRepository {
     @Autowired
     lateinit var database: Database
 
-    fun findById(id: Long): PhotoTag? {
+    fun findById(id: Int): PhotoTag? {
         return database.photo_tags.find{it.id eq  id}
     }
 
@@ -21,11 +21,11 @@ class PhotoTagRepository {
         return database.photo_tags.toList()
     }
 
-    fun createPhotoTag(name: String): PhotoTag {
-        val photoTag = PhotoTag{
-            this.name;
+    fun createPhotoTag(photoTag: PhotoTag): PhotoTag {
+        val photoTagFromDatabase = PhotoTag{
+            this.name = photoTag.name;
         }
-        database.photo_tags.add(photoTag)
-        return photoTag
+        database.photo_tags.add(photoTagFromDatabase)
+        return photoTagFromDatabase
     }
 }

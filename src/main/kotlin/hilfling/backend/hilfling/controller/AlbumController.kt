@@ -2,8 +2,6 @@ package hilfling.backend.hilfling.controller
 
 import hilfling.backend.hilfling.model.Album
 import hilfling.backend.hilfling.repository.AlbumRepository
-import me.liuwj.ktorm.database.Database
-import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.web.bind.annotation.*
 
 @RestController
@@ -12,7 +10,7 @@ class AlbumController {
     val repository = AlbumRepository()
 
     @GetMapping("/{id}")
-    fun getById(@PathVariable("id") id: Long) : Album? {
+    fun getById(@PathVariable("id") id: Int) : Album? {
         return repository.findById(id)
     }
 
@@ -23,9 +21,8 @@ class AlbumController {
 
     @PostMapping
     fun create(
-            @RequestParam("title") title: String,
-            @RequestParam("isAnalog") isAnalog: Boolean
+            @RequestParam("album") album: Album
     ): Album {
-        return repository.create(title, isAnalog)
+        return repository.create(album)
     }
 }

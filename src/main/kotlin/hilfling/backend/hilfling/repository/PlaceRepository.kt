@@ -13,7 +13,7 @@ class PlaceRepository {
     @Autowired
     lateinit var database: Database
 
-    fun findById(id: Long): Place? {
+    fun findById(id: Int): Place? {
         return database.places.find{it.id eq  id}
     }
 
@@ -21,11 +21,11 @@ class PlaceRepository {
         return database.places.toList()
     }
 
-    fun create(name: String): Place {
-        val place = Place{
-            this.name = name;
+    fun create(place: Place): Place {
+        val placeFromDatabase = Place{
+            this.name = place.name;
         }
-        database.places.add(place)
-        return place
+        database.places.add(placeFromDatabase)
+        return placeFromDatabase
     }
 }

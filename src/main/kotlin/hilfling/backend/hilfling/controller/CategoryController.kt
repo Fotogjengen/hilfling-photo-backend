@@ -1,11 +1,7 @@
 package hilfling.backend.hilfling.controller
 
 import hilfling.backend.hilfling.model.*
-import hilfling.backend.hilfling.repository.AlbumRepository
-import hilfling.backend.hilfling.repository.ArticleRepository
 import hilfling.backend.hilfling.repository.CategoryRepository
-import me.liuwj.ktorm.database.Database
-import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.web.bind.annotation.*
 
 @RestController
@@ -14,7 +10,7 @@ class CategoryController {
     val repository = CategoryRepository()
 
     @GetMapping("/{id}")
-    fun getById(@PathVariable("id") id: Long): Category? {
+    fun getById(@PathVariable("id") id: Int): Category? {
         return repository.findById(id)
     }
 
@@ -25,10 +21,10 @@ class CategoryController {
 
     @PostMapping
     fun create(
-            @RequestParam("name") name: String
+            @RequestParam("category") category: Category
     ): Category {
         return repository.create(
-                name
+                category
         )
     }
 }

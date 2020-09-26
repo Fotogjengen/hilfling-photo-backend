@@ -1,11 +1,7 @@
 package hilfling.backend.hilfling.controller
 
 import hilfling.backend.hilfling.model.*
-import hilfling.backend.hilfling.repository.AlbumRepository
-import hilfling.backend.hilfling.repository.MotiveRepository
 import hilfling.backend.hilfling.repository.PhotoRepository
-import me.liuwj.ktorm.database.Database
-import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.web.bind.annotation.*
 
 @RestController
@@ -14,7 +10,7 @@ class PhotoController {
     val repository = PhotoRepository()
 
     @GetMapping("/{id}")
-    fun getById(@PathVariable("id") id: Long): Photo? {
+    fun getById(@PathVariable("id") id: Int): Photo? {
         return repository.findById(id)
     }
 

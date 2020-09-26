@@ -3,21 +3,16 @@ package hilfling.backend.hilfling.repository
 import hilfling.backend.hilfling.model.*
 import me.liuwj.ktorm.database.Database
 import me.liuwj.ktorm.dsl.eq
-import me.liuwj.ktorm.dsl.from
-import me.liuwj.ktorm.dsl.select
-import me.liuwj.ktorm.dsl.where
 import me.liuwj.ktorm.entity.add
 import me.liuwj.ktorm.entity.find
 import me.liuwj.ktorm.entity.toList
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.web.bind.annotation.RequestParam
-import java.time.LocalDate
 
 class PhotoOnPurchaseOrderRepository {
     @Autowired
     lateinit var database: Database
 
-    fun findById(id: Long): PhotoOnPurchaseOrder? {
+    fun findById(id: Int): PhotoOnPurchaseOrder? {
         return database.photo_on_purchase_orders.find { it.id eq id }
     }
 
@@ -26,18 +21,15 @@ class PhotoOnPurchaseOrderRepository {
     }
 
     fun create(
-            size: String,
-            amount: Int,
-            purchaseOrder: PurchaseOrder,
-            photo: Photo
+            photoOnPurchaseOrder: PhotoOnPurchaseOrder
     ): PhotoOnPurchaseOrder {
-        val photoOnPurchaseOrder = PhotoOnPurchaseOrder{
-            this.size = size
-            this.amount = amount
-            this.purchaseOrder = purchaseOrder
-            this.photo = photo
+        val photoOnPurchaseOrderFromDatabase = PhotoOnPurchaseOrder{
+            this.size = photoOnPurchaseOrder.size
+            this.amount = photoOnPurchaseOrder.amount
+            this.purchaseOrder = photoOnPurchaseOrder.purchaseOrder
+            this.photo = photoOnPurchaseOrder.photo
         }
-        database.photo_on_purchase_orders.add(photoOnPurchaseOrder)
-        return photoOnPurchaseOrder
+        database.photo_on_purchase_orders.add(photoOnPurchaseOrderFromDatabase)
+        return photoOnPurchaseOrderFromDatabase
     }
 }

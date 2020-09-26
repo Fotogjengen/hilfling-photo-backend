@@ -10,7 +10,7 @@ class SecurityLevelController {
     val repository = SecurityLevelRepository()
 
     @GetMapping("/{id}")
-    fun getSecurityLevelById(@PathVariable("id") id: Long): SecurityLevel? {
+    fun getSecurityLevelById(@PathVariable("id") id: Int): SecurityLevel? {
         return repository.findById(id)
     }
 
@@ -20,7 +20,9 @@ class SecurityLevelController {
     }
 
     @PostMapping
-    fun createSecurityLevel(@RequestParam("type") type: String): SecurityLevel {
-        return repository.create(type)
+    fun createSecurityLevel(
+            @RequestParam("securityLevel") securityLevel: SecurityLevel
+    ): SecurityLevel {
+        return repository.create(securityLevel)
     }
 }

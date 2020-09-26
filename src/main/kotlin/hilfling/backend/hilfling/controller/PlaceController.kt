@@ -1,11 +1,7 @@
 package hilfling.backend.hilfling.controller
 
-import hilfling.backend.hilfling.model.Album
 import hilfling.backend.hilfling.model.Place
-import hilfling.backend.hilfling.repository.AlbumRepository
 import hilfling.backend.hilfling.repository.PlaceRepository
-import me.liuwj.ktorm.database.Database
-import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.web.bind.annotation.*
 
 @RestController
@@ -14,7 +10,7 @@ class PlaceController {
     val repository = PlaceRepository()
 
     @GetMapping("/{id}")
-    fun getById(@PathVariable("id") id: Long) : Place? {
+    fun getById(@PathVariable("id") id: Int) : Place? {
         return repository.findById(id)
     }
 
@@ -25,8 +21,8 @@ class PlaceController {
 
     @PostMapping
     fun create(
-            @RequestParam("name") name: String
+            @RequestParam("place") place: Place
     ): Place {
-        return repository.create(name)
+        return repository.create(place)
     }
 }
