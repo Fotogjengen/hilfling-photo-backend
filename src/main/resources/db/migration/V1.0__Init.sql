@@ -1,0 +1,3 @@
+CREATE TABLE "TEST" (
+"Id" varchar(6) PRIMARY KEY
+)
