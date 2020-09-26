@@ -1,4 +1,4 @@
-package hilfling.backend.hilfing.configurations
+package hilfling.backend.hilfling.configurations
 
 import com.fasterxml.jackson.databind.Module
 import me.liuwj.ktorm.database.Database

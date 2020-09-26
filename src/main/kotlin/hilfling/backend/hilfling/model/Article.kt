@@ -1,4 +1,4 @@
-package hilfling.backend.hilfing.model
+package hilfling.backend.hilfling.model
 
 import me.liuwj.ktorm.database.Database
 import me.liuwj.ktorm.entity.Entity
@@ -9,7 +9,7 @@ interface Article : BaseModel<Article> {
     companion object : Entity.Factory<Article>()
 
     var title: String
-    var content: String
+    var plainTextBody: String
 
     // Foreign keys
     var securityLevel: SecurityLevel
@@ -18,7 +18,7 @@ interface Article : BaseModel<Article> {
 
 object Articles : BaseTable<Article>("article") {
     val title = varchar("name").bindTo { it.title }
-    val content = varchar("content").bindTo { it.content }
+    val plainTextBody = varchar("plain_text_body").bindTo { it.plainTextBody }
 
     // Foreign keys
     val securityLevel = int("security_level_id").references(SecurityLevels){it.securityLevel}

@@ -17,7 +17,7 @@
 	<properties>
 		<java.version>11</java.version>
         <kotlin.version>1.3.61</kotlin.version>
-		<start-class>hilfling.backend.hilfing.HilfingApplicationKt</start-class>
+		<start-class>hilfling.backend.hilfling.HilfingApplicationKt</start-class>
     </properties>
 
 	<dependencies>

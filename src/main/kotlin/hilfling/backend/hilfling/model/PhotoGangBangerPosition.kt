@@ -1,6 +1,6 @@
-package hilfling.backend.hilfing.model
+package hilfling.backend.hilfling.model
 
-import hilfling.backend.hilfing.model.Photos.references
+import hilfling.backend.hilfling.model.Photos.references
 import me.liuwj.ktorm.database.Database
 import me.liuwj.ktorm.entity.Entity
 import me.liuwj.ktorm.entity.sequenceOf

@@ -1,4 +1,4 @@
-package hilfling.backend.hilfing.model
+package hilfling.backend.hilfling.model
 
 import me.liuwj.ktorm.database.Database
 import me.liuwj.ktorm.entity.Entity
@@ -21,8 +21,8 @@ object PhotoOnPurchaseOrders : BaseTable<PhotoOnPurchaseOrder>("photo_on_purchas
     val amount = int("amount").bindTo { it.amount }
 
     // Foreign keys
-    val purchaseOrder = int("purchase_order_id").references(PurchaseOrders){it.purchaseOrder}
-    val photo = int("photo_id").references(Photos){it.photo}
+    val purchaseOrderId = int("purchase_order_id").references(PurchaseOrders){it.purchaseOrder}
+    val photoId = int("photo_id").references(Photos){it.photo}
 }
 
 val Database.photo_on_purchase_orders get() = this.sequenceOf(PhotoOnPurchaseOrders)
