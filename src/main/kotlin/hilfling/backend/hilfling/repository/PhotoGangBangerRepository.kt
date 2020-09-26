@@ -6,6 +6,7 @@ import hilfling.backend.hilfling.model.photo_gang_bangers
 import me.liuwj.ktorm.database.Database
 import me.liuwj.ktorm.dsl.eq
 import me.liuwj.ktorm.entity.add
+import me.liuwj.ktorm.entity.filter
 import me.liuwj.ktorm.entity.find
 import me.liuwj.ktorm.entity.toList
 import org.springframework.beans.factory.annotation.Autowired
@@ -21,6 +22,27 @@ class PhotoGangBangerRepository {
 
     fun findAll(): List<PhotoGangBanger> {
         return database.photo_gang_bangers.toList()
+    }
+
+    fun findAllActives(): List<PhotoGangBanger> {
+        return database.photo_gang_bangers.filter {
+            it.isActive eq true
+            it.isPang eq false
+        }.toList()
+    }
+
+    fun findAllActivePangs(): List<PhotoGangBanger> {
+        return database.photo_gang_bangers.filter {
+            it.isActive eq true
+            it.isPang eq true
+        }.toList()
+    }
+
+    fun findAllInActivePangs(): List<PhotoGangBanger> {
+        return database.photo_gang_bangers.filter {
+            it.isActive eq false
+            it.isPang eq true
+        }.toList()
     }
 
     fun create(
