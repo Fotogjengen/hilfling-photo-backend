@@ -1,7 +1,7 @@
 package hilfling.backend.hilfing.controller
 
 import hilfling.backend.hilfing.model.Album
-import hilfling.backend.hilfing.repository.AlbumRepository
+import hilfling.backend.hilfling.repository.AlbumRepository
 import me.liuwj.ktorm.database.Database
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.web.bind.annotation.*

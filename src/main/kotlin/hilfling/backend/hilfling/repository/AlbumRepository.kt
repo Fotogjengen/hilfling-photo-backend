@@ -1,4 +1,4 @@
-package hilfling.backend.hilfing.repository
+package hilfling.backend.hilfling.repository
 
 import hilfling.backend.hilfing.model.Album
 import hilfling.backend.hilfing.model.albums

@@ -1,4 +1,4 @@
-package hilfling.backend.hilfing.repository
+package hilfling.backend.hilfling.repository
 
 import hilfling.backend.hilfing.model.SecurityLevel
 import hilfling.backend.hilfing.model.security_levels

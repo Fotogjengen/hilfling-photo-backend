@@ -9,7 +9,7 @@ import me.liuwj.ktorm.entity.add
 import me.liuwj.ktorm.entity.find
 import me.liuwj.ktorm.entity.toList
 
-class AlbumRepository {
+class UserRepository {
     @Autowired
     lateinit var database: Database
 
