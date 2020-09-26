@@ -3,7 +3,6 @@ package hilfling.backend.hilfling.repository
 import hilfling.backend.hilfing.model.PhotoGangBanger
 import hilfling.backend.hilfing.model.User
 import hilfling.backend.hilfing.model.photo_gang_bangers
-import hilfling.backend.hilfing.model.users
 import me.liuwj.ktorm.database.Database
 import me.liuwj.ktorm.dsl.eq
 import me.liuwj.ktorm.entity.add
@@ -12,6 +11,7 @@ import me.liuwj.ktorm.entity.toList
 import org.springframework.beans.factory.annotation.Autowired
 
 class PhotoGangBangerRepository {
+    // TODO: Join with PhotoGangBangerPositions
     @Autowired
     lateinit var database: Database
 
@@ -23,7 +23,6 @@ class PhotoGangBangerRepository {
         return database.photo_gang_bangers.toList()
     }
 
-    // TODO: Should we pass in Long or full object?
     fun createUser(
             relationshipStatus: String,
             semesterStart: String,
