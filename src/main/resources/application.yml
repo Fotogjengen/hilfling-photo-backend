@@ -3,11 +3,45 @@ spring:
     hikari:
       connection-timeout: 20000
       maximum-pool-size: 5
-    url: jdbc:postgresql://localhost:5432/hilflingdb?createDatabaseIfNotExist=true
-    username: postgres
-    password: example
-    driver-class-name: org.postgresql.Driver
+    username: ${DATABASE_USERNAME:hilfling}
+    url: ${DATABASE_URL:jdbc:postgresql://localhost:5432/hilflingdb?createDatabaseIfNotExist=true}
+    password: ${DATABASE_PASSWORD:password}
+    driver-class-name: ${DATABASE_DRIVER:org.postgresql.Driver}
+
   logging:
     level:
       root: error
       me.liuwj.ktorm: debug
+
+  flyway:
+    user: ${DATABASE_USERNAME:hilfling}
+    url: ${DATABASE_URL:jdbc:postgresql://localhost:5432/hilflingdb?createDatabaseIfNotExist=true}
+    password: ${DATABASE_PASSWORD:password}
+    enabled: true
+    validate-on-migrate: true
+    locations: classpath:/db/migration
+
+  servlet:
+    multipart:
+      enabled: true # Enable multipart uploads (files)
+      file-size-threshold: 2KB
+      max-file-size: 50MB
+      max-request-size: 60MB
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: http://localhost:9000/oauth/token/
+          jwk-set-uri: http://localhost:9000/.well-known/jwks.json
+file:
+  large-upload-dir: photos/large/
+  medium-upload-dir: photos/medium/
+  small-upload-dir: photos/small/
+#okta: # SECURITY OKTA
+#  oauth2:
+#    issuer: https://dev-812828.okta.com/oauth2/default
+#    client-id: 0oa2lxbl9mygTznZy357
+#    audience: api://default
+#    groups-claim: groups
+#    scopes: 'openid'
+
