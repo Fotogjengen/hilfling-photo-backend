@@ -11,6 +11,10 @@ spring:
     level:
       root: error
       me.liuwj.ktorm: debug
-      org:
-        hibernate:
-          type: trace
+
+  jpa:
+    properties:
+      hibernate:
+        jdbc:
+          lob:
+            non_contextual_creation=true:
