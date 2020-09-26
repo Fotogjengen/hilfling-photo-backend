@@ -11,7 +11,7 @@ interface SecurityLevel : BaseModel<SecurityLevel> {
     var type: String
 }
 
-object SecurityLevels : BaseTable<SecurityLevel>("t_article") {
+object SecurityLevels : BaseTable<SecurityLevel>("security_level") {
     val type = varchar("type").bindTo { it.type }
 }
 

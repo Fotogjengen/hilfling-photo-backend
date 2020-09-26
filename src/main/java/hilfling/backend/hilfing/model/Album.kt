@@ -11,7 +11,7 @@ interface Album : BaseModel<Album> {
     var isAnalog : Boolean
 }
 
-object Albums : BaseTable<Album>("t_album") {
+object Albums : BaseTable<Album>("album") {
     val title = varchar("title").bindTo { it.title }
     val isAnalog = boolean("is_analog").bindTo { it.isAnalog }
 }
