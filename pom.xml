@@ -17,6 +17,7 @@
 	<properties>
 		<java.version>11</java.version>
         <kotlin.version>1.3.61</kotlin.version>
+		<start-class>hilfling.backend.hilfing.HilfingApplicationKt</start-class>
     </properties>
 
 	<dependencies>
@@ -24,21 +25,41 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-data-jpa</artifactId>
 		</dependency>
+
+		<!-- Database -->
 		<dependency>
-			<groupId>org.projectlombok</groupId>
-			<artifactId>lombok</artifactId>
-			<version>1.18.10</version>
-			<scope>provided</scope>
+			<groupId>org.flywaydb</groupId>
+			<artifactId>flyway-core</artifactId>
+			<version>6.5.7</version>
 		</dependency>
+		<!-- Database -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-web</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>com.fasterxml.jackson.datatype</groupId>
-			<artifactId>jackson-datatype-hibernate5</artifactId>
-			<version>2.9.8</version>
+			<groupId>me.liuwj.ktorm</groupId>
+			<artifactId>ktorm-core</artifactId>
+			<version>3.0.0</version>
 		</dependency>
+
+		<dependency>
+			<groupId>me.liuwj.ktorm</groupId>
+			<artifactId>ktorm-jackson</artifactId>
+			<version>3.0.0</version>
+		</dependency>
+
+		<dependency>
+			<groupId>me.liuwj.ktorm</groupId>
+			<artifactId>ktorm-support-postgresql</artifactId>
+			<version>3.0.0</version>
+		</dependency>
+
+		<dependency>
+			<groupId>com.fasterxml.jackson.module</groupId>
+			<artifactId>jackson-module-kotlin</artifactId>
+		</dependency>
+
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-devtools</artifactId>
@@ -55,30 +76,13 @@
 			<artifactId>spring-boot-starter-test</artifactId>
 			<scope>test</scope>
 		</dependency>
-		<!--<dependency>
-			<groupId>org.springframework.security</groupId>
-			<artifactId>spring-security-core</artifactId>
-			<version>5.2.1.RELEASE</version>
-		</dependency>-->
+
+		<!-- https://mvnrepository.com/artifact/org.jetbrains.kotlin/kotlin-reflect -->
 		<dependency>
-			<groupId>org.springframework.security.oauth</groupId>
-			<artifactId>spring-security-oauth2</artifactId>
-			<version>2.4.0.RELEASE</version>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-security</artifactId>
-			<version>2.2.5.RELEASE</version>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-oauth2-resource-server</artifactId>
-			<version>2.2.5.RELEASE</version>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework.security</groupId>
-			<artifactId>spring-security-jwt</artifactId>
-			<version>1.1.0.RELEASE</version>
+			<groupId>org.jetbrains.kotlin</groupId>
+			<artifactId>kotlin-reflect</artifactId>
+			<version>1.4.0</version>
+			<scope>runtime</scope>
 		</dependency>
 		<dependency>
             <groupId>org.jetbrains.kotlin</groupId>
@@ -168,6 +172,8 @@
                     </execution>
                 </executions>
                 <configuration>
+					        <compilerPlugins>
+        </compilerPlugins>
                     <jvmTarget>1.8</jvmTarget>
                 </configuration>
             </plugin>
@@ -191,6 +197,7 @@
                     </execution>
                 </executions>
             </plugin>
+
         </plugins>
 	</build>
 </project>
