@@ -21,25 +21,18 @@ class PurchaseOrderRepository {
         return database.purchase_orders.toList()
     }
 
-    fun createPurchaseOrder(
-            name: String,
-            email: String,
-            address: String,
-            zipCode: String,
-            city: String,
-            sendByPost: Boolean,
-            comment: String,
-            isCompleted: Boolean = false
+    fun create(
+            purchaseOrder: PurchaseOrder
     ): PurchaseOrder {
         val purchaseOrder = PurchaseOrder{
-            this.name = name;
-            this.email = email;
-            this.address = address;
-            this.zipCode = zipCode;
-            this.city = city;
-            this.sendByPost = sendByPost;
-            this.comment = comment;
-            this.isCompleted = isCompleted;
+            this.name = purchaseOrder.name;
+            this.email = purchaseOrder.email;
+            this.address = purchaseOrder.address;
+            this.zipCode = purchaseOrder.zipCode;
+            this.city = purchaseOrder.city;
+            this.sendByPost = purchaseOrder.sendByPost;
+            this.comment = purchaseOrder.comment;
+            this.isCompleted = purchaseOrder.isCompleted;
         }
         database.purchase_orders.add(purchaseOrder)
         return purchaseOrder
