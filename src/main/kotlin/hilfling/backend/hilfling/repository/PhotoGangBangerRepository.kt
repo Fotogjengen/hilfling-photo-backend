@@ -24,24 +24,17 @@ class PhotoGangBangerRepository {
     }
 
     fun create(
-            relationshipStatus: String,
-            semesterStart: String,
-            isActive: Boolean,
-            isPang: Boolean,
-            address: String,
-            zipCode: String,
-            city: String,
-            user: User
+            photoGangBanger: PhotoGangBanger
     ): PhotoGangBanger {
         val photoGangBanger = PhotoGangBanger{
-            this.relationshipStatus = relationshipStatus;
-            this.semesterStart = semesterStart;
-            this.isActive = isActive;
-            this.isPang = isPang;
-            this.address = address;
-            this.zipCode = zipCode;
-            this.city = city;
-            this.user = user;
+            this.relationshipStatus = photoGangBanger.relationshipStatus;
+            this.semesterStart = photoGangBanger.semesterStart;
+            this.isActive = photoGangBanger.isActive;
+            this.isPang = photoGangBanger.isPang;
+            this.address = photoGangBanger.address;
+            this.zipCode = photoGangBanger.zipCode;
+            this.city = photoGangBanger.city;
+            this.user = photoGangBanger.user;
         }
         database.photo_gang_bangers.add(photoGangBanger)
         return photoGangBanger
