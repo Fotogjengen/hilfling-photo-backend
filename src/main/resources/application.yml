@@ -7,26 +7,10 @@ spring:
     username: postgres
     password: example
     driver-class-name: org.postgresql.Driver
-  jpa:
-    show-sql: true
-    properties:
-      hibernate:
-        dialect: org.hibernate.dialect.PostgreSQLDialect
-        auto-ddl: drop-create
-        ddl-auto: drop-create
-        jdbc:
-          lob:
-            non_contextual_creation: true # Disable creatClob (not implemented, not necessary)
-    generate-ddl: true
   logging:
     level:
+      root: error
+      me.liuwj.ktorm: debug
       org:
         hibernate:
           type: trace
-okta:
-  oauth2:
-    issuer: https://dev-812828.okta.com/oauth2/default
-    client-id: 0oa2lxbl9mygTznZy357
-    audience: api://default
-    groups-claim: groups
-    scopes: 'openid'

@@ -1,21 +1,25 @@
 package hilfling.backend.hilfing.model
 
-import lombok.Data
-import org.hibernate.annotations.ColumnDefault
-import java.io.Serializable
-import java.util.*
-import javax.persistence.*
+import me.liuwj.ktorm.database.Database
+import me.liuwj.ktorm.entity.Entity
+import me.liuwj.ktorm.entity.sequenceOf
+import me.liuwj.ktorm.schema.*
+import java.time.LocalDate
 
-@Entity
-@Table(name = "album", uniqueConstraints = [UniqueConstraint(columnNames = ["title", "analog"])])
-class Album (
-        @Column(name = "title", nullable = false)
-        var title: String,
-        @Column(name = "date_created", insertable = false, updatable = false)
-        @ColumnDefault("CURRENT_TIMESTAMP")
-        val dateCreated: Date,
-        @Column(name = "analog")
-        @ColumnDefault("false")
-        private var analog: Boolean = false
+interface Album : Entity<Album> {
+    companion object : Entity.Factory<Album>()
 
-): BaseEntity<Long>()
+    val id : Long
+    var title: String
+    var timeCreated : LocalDate
+    var isAnalog : Boolean
+}
+
+object Albums : Table<Album>("t_album") {
+    val id = long("id").primaryKey().bindTo { it.id }
+    val title = varchar("title").bindTo { it.title }
+    val timeCreated = date("time_created").bindTo { it.timeCreated }
+    val isAnalog = boolean("is_analog").bindTo { it.isAnalog }
+}
+
+val Database.albums get() = this.sequenceOf(Albums)

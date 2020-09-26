@@ -1,5 +1,6 @@
 package hilfling.backend.hilfing.configurations
 
+import com.fasterxml.jackson.databind.Module
 import me.liuwj.ktorm.database.Database
 import me.liuwj.ktorm.jackson.KtormModule
 import org.springframework.beans.factory.annotation.Autowired
