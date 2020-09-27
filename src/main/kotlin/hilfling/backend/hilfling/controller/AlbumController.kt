@@ -26,6 +26,8 @@ class AlbumController {
             @RequestParam("title") title: String,
             @RequestParam("isAnalog") isAnalog: Boolean
     ): Album {
-        return repository.create(title, isAnalog)
+        return repository.create(Album{
+
+        })
     }
 }
