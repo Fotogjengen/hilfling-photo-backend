@@ -8,9 +8,11 @@ import me.liuwj.ktorm.entity.toList
 import no.fg.hilflingbackend.model.Album
 import no.fg.hilflingbackend.model.albums
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.stereotype.Repository
 import java.time.LocalDate
 
-class AlbumRepository {
+@Repository
+open class AlbumRepository {
     @Autowired
     lateinit var database: Database
 
