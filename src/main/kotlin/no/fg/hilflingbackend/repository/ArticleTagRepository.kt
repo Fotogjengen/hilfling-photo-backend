@@ -8,10 +8,12 @@ import me.liuwj.ktorm.entity.toList
 import no.fg.hilflingbackend.model.ArticleTag
 import no.fg.hilflingbackend.model.article_tags
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.stereotype.Repository
 
+@Repository
 class ArticleTagRepository {
     @Autowired
-    lateinit var database: Database
+    open lateinit var database: Database
 
     fun findById(id: Int): ArticleTag? {
         return database.article_tags.find { it.id eq id }

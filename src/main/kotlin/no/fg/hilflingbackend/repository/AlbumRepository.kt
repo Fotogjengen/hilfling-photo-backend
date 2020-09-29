@@ -12,7 +12,7 @@ import org.springframework.stereotype.Repository
 import java.time.LocalDate
 
 @Repository
-open class AlbumRepository {
+open class AlbumRepository() {
     @Autowired
     open lateinit var database: Database
 

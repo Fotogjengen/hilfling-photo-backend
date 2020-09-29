@@ -8,10 +8,12 @@ import me.liuwj.ktorm.entity.toList
 import no.fg.hilflingbackend.model.PhotographyRequest
 import no.fg.hilflingbackend.model.photography_requests
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.stereotype.Repository
 
+@Repository
 class PhotographyRequestRepository {
     @Autowired
-    lateinit var database: Database
+    open lateinit var database: Database
 
     fun findById(id: Int): PhotographyRequest? {
         return database.photography_requests.find { it.id eq id }

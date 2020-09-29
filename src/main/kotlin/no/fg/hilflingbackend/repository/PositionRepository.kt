@@ -8,10 +8,12 @@ import me.liuwj.ktorm.entity.toList
 import no.fg.hilflingbackend.model.Position
 import no.fg.hilflingbackend.model.positions
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.stereotype.Repository
 
+@Repository
 class PositionRepository {
     @Autowired
-    lateinit var database: Database
+    open lateinit var database: Database
 
     fun findById(id: Int): Position? {
         return database.positions.find{it.id eq  id}
