@@ -30,7 +30,7 @@ open class ArticleRepository {
     ): Article {
         val articleFromDatabase = Article{
             this.title = article.title
-            this.plainTextBody = article.plainTextBody
+            this.plainText = article.plainText
             this.securityLevel = article.securityLevel
             this.photoGangBanger = article.photoGangBanger
         }
