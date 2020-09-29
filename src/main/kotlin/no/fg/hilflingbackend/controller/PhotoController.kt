@@ -19,11 +19,8 @@ class PhotoController {
     }
 
     @GetMapping
-    fun getAll(
-            securityLevel: SecurityLevel?
-    ): List<Photo> {
-        securityLevel ?: return repository.findAll()
-        return repository.findBySecurityLevel(securityLevel)
+    fun getAll(): List<Photo> {
+        return repository.findAll()
     }
 
     @GetMapping("/analog")
