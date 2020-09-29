@@ -11,7 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Repository
 
 @Repository
-class ArticleTagRepository {
+open class ArticleTagRepository {
     @Autowired
     open lateinit var database: Database
 

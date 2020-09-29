@@ -13,7 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Repository
 
 @Repository
-class PhotoOnPurchaseOrderRepository {
+open class PhotoOnPurchaseOrderRepository {
     @Autowired
     open lateinit var database: Database
 

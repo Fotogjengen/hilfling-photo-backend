@@ -11,7 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Repository
 
 @Repository
-class PurchaseOrderRepository {
+open class PurchaseOrderRepository {
     @Autowired
     open lateinit var database: Database
 

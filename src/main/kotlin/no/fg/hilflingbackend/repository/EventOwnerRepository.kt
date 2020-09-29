@@ -11,7 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Repository
 
 @Repository
-class EventOwnerRepository {
+open class EventOwnerRepository {
     @Autowired
     open lateinit var database: Database
 

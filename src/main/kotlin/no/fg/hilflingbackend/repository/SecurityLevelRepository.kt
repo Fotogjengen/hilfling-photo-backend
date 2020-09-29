@@ -12,7 +12,7 @@ import org.springframework.stereotype.Repository
 import java.time.LocalDate
 
 @Repository
-class SecurityLevelRepository {
+open class SecurityLevelRepository {
     @Autowired
     open lateinit var database: Database
 

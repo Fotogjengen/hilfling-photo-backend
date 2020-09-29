@@ -12,7 +12,7 @@ import no.fg.hilflingbackend.model.users
 import org.springframework.stereotype.Repository
 
 @Repository
-class UserRepository {
+open class UserRepository {
     @Autowired
     open lateinit var database: Database
 

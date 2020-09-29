@@ -11,7 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Repository
 
 @Repository
-class PlaceRepository {
+open class PlaceRepository {
     @Autowired
     open lateinit var database: Database
 

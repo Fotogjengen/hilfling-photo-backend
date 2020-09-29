@@ -10,7 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Repository
 
 @Repository
-class MotiveRepository {
+open class MotiveRepository {
     @Autowired
     open lateinit var database: Database
 

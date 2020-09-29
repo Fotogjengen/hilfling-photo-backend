@@ -12,7 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Repository
 
 @Repository
-class PhotoGangBangerRepository {
+open class PhotoGangBangerRepository {
     // TODO: Join with PhotoGangBangerPositions
     @Autowired
     open lateinit var database: Database
