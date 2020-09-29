@@ -1,4 +1,4 @@
-package hilfling.backend.hilfling.controller
+package no.fg.hilflingbackend.controller
 
 import no.fg.hilflingbackend.model.EventOwner
 import no.fg.hilflingbackend.repository.EventOwnerRepository
