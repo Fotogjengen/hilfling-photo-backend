@@ -8,10 +8,12 @@ import me.liuwj.ktorm.entity.toList
 import no.fg.hilflingbackend.model.Category
 import no.fg.hilflingbackend.model.categories
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.stereotype.Repository
 
-class CategoryRepository {
+@Repository
+open class CategoryRepository {
     @Autowired
-    lateinit var database: Database
+    open lateinit var database: Database
 
     fun findById(id: Int): Category? {
         return database.categories.find { it.id eq id }

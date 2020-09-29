@@ -4,12 +4,14 @@ import no.fg.hilflingbackend.model.AnalogPhoto
 import no.fg.hilflingbackend.model.Photo
 import no.fg.hilflingbackend.model.SecurityLevel
 import no.fg.hilflingbackend.repository.PhotoRepository
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.web.bind.annotation.*
 
 @RestController
 @RequestMapping("/photos")
 class PhotoController {
-    val repository = PhotoRepository()
+    @Autowired
+    lateinit var repository: PhotoRepository
 
     @GetMapping("/{id}")
     fun getById(@PathVariable("id") id: Int): Photo? {

@@ -7,10 +7,12 @@ import me.liuwj.ktorm.entity.find
 import me.liuwj.ktorm.entity.toList
 import no.fg.hilflingbackend.model.*
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.stereotype.Repository
 
-class MotiveRepository {
+@Repository
+open class MotiveRepository {
     @Autowired
-    lateinit var database: Database
+    open lateinit var database: Database
 
     fun findById(id: Int): Motive? {
         return database.motives.find { it.id eq id }

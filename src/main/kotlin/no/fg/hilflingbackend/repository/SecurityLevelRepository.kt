@@ -8,11 +8,13 @@ import me.liuwj.ktorm.entity.toList
 import no.fg.hilflingbackend.model.SecurityLevel
 import no.fg.hilflingbackend.model.security_levels
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.stereotype.Repository
 import java.time.LocalDate
 
-class SecurityLevelRepository {
+@Repository
+open class SecurityLevelRepository {
     @Autowired
-    lateinit var database: Database
+    open lateinit var database: Database
 
     fun findById(id: Int): SecurityLevel? {
         return database.security_levels.find{it.id eq  id}

@@ -1,5 +1,5 @@
 CREATE TABLE ALBUM (
-    id INTEGER PRIMARY KEY,
+    id SERIAL PRIMARY KEY,
     title VARCHAR(40),
     date_created DATE NOT NULL DEFAULT CURRENT_DATE,
     is_analog BOOLEAN

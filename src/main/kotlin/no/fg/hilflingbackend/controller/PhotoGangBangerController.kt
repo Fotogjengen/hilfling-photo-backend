@@ -1,12 +1,14 @@
 package no.fg.hilflingbackend.controller
 
 import no.fg.hilflingbackend.model.PhotoGangBanger
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.web.bind.annotation.*
 
 @RestController
 @RequestMapping("/photo_gang_bangers")
 class PhotoGangBangerController {
-    val repository = PhotoGangBangerRepository()
+    @Autowired
+    lateinit var  repository: PhotoGangBangerRepository
 
     @GetMapping("/{id}")
     fun getById(@PathVariable("id") id: Int): PhotoGangBanger? {

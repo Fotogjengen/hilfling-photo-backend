@@ -8,11 +8,13 @@ import me.liuwj.ktorm.entity.toList
 import no.fg.hilflingbackend.model.Album
 import no.fg.hilflingbackend.model.albums
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.stereotype.Repository
 import java.time.LocalDate
 
-class AlbumRepository {
+@Repository
+open class AlbumRepository() {
     @Autowired
-    lateinit var database: Database
+    open lateinit var database: Database
 
     fun findById(id: Int): Album? {
         return database.albums.find { it.id eq id }
@@ -25,7 +27,7 @@ class AlbumRepository {
     fun create(
             album: Album
     ): Album {
-        val albumFromDatabase = Album{
+        val albumFromDatabase = Album {
             this.title = album.title
             this.isAnalog = album.isAnalog
             this.dateCreated = LocalDate.now()

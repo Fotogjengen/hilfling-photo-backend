@@ -1,5 +1,6 @@
 package no.fg.hilflingbackend
 
+import no.fg.hilflingbackend.repository.AlbumRepository
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.runApplication
 
