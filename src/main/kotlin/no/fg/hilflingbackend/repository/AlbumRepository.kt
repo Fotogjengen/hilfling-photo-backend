@@ -14,7 +14,7 @@ import java.time.LocalDate
 @Repository
 open class AlbumRepository {
     @Autowired
-    lateinit var database: Database
+    open lateinit var database: Database
 
     fun findById(id: Int): Album? {
         return database.albums.find { it.id eq id }
@@ -27,7 +27,7 @@ open class AlbumRepository {
     fun create(
             album: Album
     ): Album {
-        val albumFromDatabase = Album{
+        val albumFromDatabase = Album {
             this.title = album.title
             this.isAnalog = album.isAnalog
             this.dateCreated = LocalDate.now()

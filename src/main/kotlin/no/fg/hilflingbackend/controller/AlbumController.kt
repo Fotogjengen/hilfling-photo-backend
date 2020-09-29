@@ -12,13 +12,8 @@ import org.springframework.web.bind.annotation.*
 @RequestMapping("/albums")
 class AlbumController {
 
-    /*@Autowired
-    lateinit var repository: AlbumRepository*/
-
     @Autowired
-    lateinit var database: Database
-
-    val repository = AlbumRepository()
+    lateinit var repository: AlbumRepository
 
     @GetMapping("/{id}")
     fun getById(@PathVariable("id") id: Int) : Album? {
@@ -27,8 +22,8 @@ class AlbumController {
 
     @GetMapping
     fun getAll() : List<Album> {
-        return database.albums.toList()
-        //return repository.findAll()
+        //return database.albums.toList()
+        return repository.findAll()
     }
 
     @PostMapping

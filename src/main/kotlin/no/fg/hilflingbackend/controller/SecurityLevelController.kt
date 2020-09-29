@@ -2,12 +2,14 @@ package no.fg.hilflingbackend.controller
 
 import no.fg.hilflingbackend.model.SecurityLevel
 import no.fg.hilflingbackend.repository.SecurityLevelRepository
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.web.bind.annotation.*
 
 @RestController
 @RequestMapping("/security_levels")
 class SecurityLevelController {
-    val repository = SecurityLevelRepository()
+    @Autowired
+    lateinit var  repository: SecurityLevelRepository
 
     @GetMapping("/{id}")
     fun getSecurityLevelById(@PathVariable("id") id: Int): SecurityLevel? {
