@@ -20,7 +20,7 @@ interface PhotoGangBanger : BaseModel<PhotoGangBanger> {
     var user: User
 }
 
-object PhotoGangBangers : BaseTable<PhotoGangBanger>("photo_gang_bangers") {
+object PhotoGangBangers : BaseTable<PhotoGangBanger>("photo_gang_banger") {
     val relationshipStatus = varchar("relationship_status").bindTo { it.relationshipStatus }
     val semesterStart = varchar("semester_start").bindTo { it.semesterStart }
     val isActive = boolean("is_active").bindTo { it.isActive }

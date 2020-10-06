@@ -12,7 +12,7 @@ interface Place : BaseModel<Place> {
 }
 
 object Places : BaseTable<Place>("place") {
-    val location = varchar("location").bindTo { it.name }
+    val name = varchar("name").bindTo { it.name }
 }
 
 val Database.places get() = this.sequenceOf(Places)

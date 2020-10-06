@@ -8,10 +8,12 @@ import me.liuwj.ktorm.entity.find
 import me.liuwj.ktorm.entity.toList
 import no.fg.hilflingbackend.model.*
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.stereotype.Repository
 
-class PhotoRepository {
+@Repository
+open class PhotoRepository {
     @Autowired
-    lateinit var database: Database
+    open lateinit var database: Database
 
     fun findById(id: Int): Photo? {
         return database.photos.find { it.id eq id }

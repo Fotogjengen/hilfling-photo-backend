@@ -10,10 +10,12 @@ import no.fg.hilflingbackend.model.PhotoGangBanger
 import no.fg.hilflingbackend.model.SecurityLevel
 import no.fg.hilflingbackend.model.articles
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.stereotype.Repository
 
-class ArticleRepository {
+@Repository
+open class ArticleRepository {
     @Autowired
-    lateinit var database: Database
+    open lateinit var database: Database
 
     fun findById(id: Int): Article? {
         return database.articles.find { it.id eq id }
@@ -28,7 +30,7 @@ class ArticleRepository {
     ): Article {
         val articleFromDatabase = Article{
             this.title = article.title
-            this.plainTextBody = article.plainTextBody
+            this.plainText = article.plainText
             this.securityLevel = article.securityLevel
             this.photoGangBanger = article.photoGangBanger
         }

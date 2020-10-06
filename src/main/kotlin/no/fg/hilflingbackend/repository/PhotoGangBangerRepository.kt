@@ -9,11 +9,13 @@ import me.liuwj.ktorm.entity.toList
 import no.fg.hilflingbackend.model.PhotoGangBanger
 import no.fg.hilflingbackend.model.photo_gang_bangers
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.stereotype.Repository
 
-class PhotoGangBangerRepository {
+@Repository
+open class PhotoGangBangerRepository {
     // TODO: Join with PhotoGangBangerPositions
     @Autowired
-    lateinit var database: Database
+    open lateinit var database: Database
 
     fun findById(id: Int): PhotoGangBanger? {
         return database.photo_gang_bangers.find{it.id eq  id}

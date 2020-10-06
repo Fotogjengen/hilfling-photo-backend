@@ -8,10 +8,12 @@ import me.liuwj.ktorm.entity.toList
 import no.fg.hilflingbackend.model.PurchaseOrder
 import no.fg.hilflingbackend.model.purchase_orders
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.stereotype.Repository
 
-class PurchaseOrderRepository {
+@Repository
+open class PurchaseOrderRepository {
     @Autowired
-    lateinit var database: Database
+    open lateinit var database: Database
 
     fun findById(id: Int): PurchaseOrder? {
         return database.purchase_orders.find{it.id eq  id}

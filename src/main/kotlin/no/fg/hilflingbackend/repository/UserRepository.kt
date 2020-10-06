@@ -9,10 +9,12 @@ import me.liuwj.ktorm.entity.find
 import me.liuwj.ktorm.entity.toList
 import no.fg.hilflingbackend.model.User
 import no.fg.hilflingbackend.model.users
+import org.springframework.stereotype.Repository
 
-class UserRepository {
+@Repository
+open class UserRepository {
     @Autowired
-    lateinit var database: Database
+    open lateinit var database: Database
 
     fun findById(id: Int): User? {
         return database.users.find { it.id eq id }
