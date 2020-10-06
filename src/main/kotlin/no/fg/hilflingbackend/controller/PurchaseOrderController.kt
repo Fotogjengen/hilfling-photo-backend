@@ -23,7 +23,7 @@ class PurchaseOrderController {
 
     @PostMapping
     fun create(
-            @RequestParam("purchaseOrder") purchaseOrder: PurchaseOrder
+            @RequestBody purchaseOrder: PurchaseOrder
     ): PurchaseOrder {
         return repository.create(purchaseOrder)
     }

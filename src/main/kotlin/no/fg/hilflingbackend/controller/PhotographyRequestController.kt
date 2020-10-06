@@ -23,7 +23,7 @@ class PhotographyRequestController {
 
     @PostMapping
     fun create(
-            @RequestParam("photographyRequest") photographyRequest: PhotographyRequest
+            @RequestBody photographyRequest: PhotographyRequest
     ): PhotographyRequest {
         return repository.create(photographyRequest)
     }
