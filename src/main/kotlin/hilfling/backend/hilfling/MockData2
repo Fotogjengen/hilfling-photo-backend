@@ -1,0 +1,37 @@
+package hilfling.backend.hilfling
+
+class MockData {
+
+    @autowired
+    val photoRepository = PhotoRepository()
+
+    @autowired
+    val photoGangBangerRepository = PhotoGangBangerRepository()
+
+    @autowired
+    val photoGangBangerPositionRepository = PhotoGangBangerPositionRepository();
+
+    @autowired
+    val photographyRequestRepository = PhotographyRequestRepository()
+
+    @autowired
+    val photoOnPurchaseOrderRepository = PhotoOnPurchaseOrderRepository()
+
+    @autowired
+    val photoTagRepository = PhotoTagRepository()
+
+    @autowired
+    val placeRepository = PlaceRepository()
+
+    @autowired
+    val positionRepository = PositionRepository()
+
+    @autowired
+    val purchaseOrderRepository = PurchaseOrderRepository()
+
+    @autowired
+    val securitylevelRepository = SecurityLevelRepository()
+
+
+
+}
