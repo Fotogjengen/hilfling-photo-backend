@@ -51,12 +51,16 @@ class PhotoController {
 
     @PostMapping
     fun createPhoto(
-            @RequestBody photo: Photo
+            @RequestPart("photo") photo: Photo,
+            @RequestPart("file") file: MultipartFile
     ): Photo {
         val path = photoService.store(file, photo.securityLevel)
-
-
-        return "photo created"
+        // TODO: test photo upload
+        photo.smallUrl = path
+        photo.mediumUrl = path
+        photo.largeUrl = path
+        repository.createPhoto(photo)
+        return photo
     }
 
     @PostMapping("/analog")
