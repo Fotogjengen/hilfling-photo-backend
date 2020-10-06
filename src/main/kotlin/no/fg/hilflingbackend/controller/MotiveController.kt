@@ -23,7 +23,7 @@ class MotiveController {
 
     @PostMapping
     fun create(
-            @RequestParam("motive") motive: Motive
+            @RequestBody motive: Motive
     ): Motive {
         return repository.create(
                 motive

@@ -24,7 +24,7 @@ class AlbumController {
 
     @PostMapping
     fun create(
-            @RequestParam("album") album: Album
+            @RequestBody album: Album
     ): Album {
         return repository.create(album)
     }
