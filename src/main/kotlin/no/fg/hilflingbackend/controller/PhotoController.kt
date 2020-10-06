@@ -4,12 +4,19 @@ import no.fg.hilflingbackend.model.AnalogPhoto
 import no.fg.hilflingbackend.model.Photo
 import no.fg.hilflingbackend.model.SecurityLevel
 import no.fg.hilflingbackend.repository.PhotoRepository
+import no.fg.hilflingbackend.service.PhotoService
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.ui.Model
 import org.springframework.web.bind.annotation.*
+import org.springframework.web.multipart.MultipartFile
 
 @RestController
 @RequestMapping("/photos")
 class PhotoController {
+
+    @Autowired
+    lateinit var photoService: PhotoService
+
     @Autowired
     lateinit var repository: PhotoRepository
 
@@ -33,11 +40,24 @@ class PhotoController {
         return repository.findAllDigitalPhotos()
     }
 
+    /*@PostMapping
+    fun createPhoto(
+            @RequestParam("photo") photo: Photo,
+            @RequestParam("file") file: MultipartFile
+    ): Photo {
+
+        return repository.createPhoto(photo)
+    }*/
+
     @PostMapping
     fun createPhoto(
-            @RequestParam("photo") photo: Photo
+            @RequestPart("file") file: MultipartFile,
+            @RequestPart("photo") photo: Photo,
     ): Photo {
-        return repository.createPhoto(photo)
+        val path = photoService.store(file, photo.securityLevel)
+
+
+        return "photo created"
     }
 
     @PostMapping("/analog")

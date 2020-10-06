@@ -1,0 +1,21 @@
+{
+  "photo":{
+    "isGoodPicture": true,
+    "filename": "tmp",
+    "motive": {
+      "id": 1
+    },
+    "place": {
+      "id": 1
+    },
+    "securityLevel": {
+      "id": 1
+    },
+    "gang": {
+      "id": 1
+    },
+    "photoGangBanger": {
+      "id": 1
+    }
+  }
+}
