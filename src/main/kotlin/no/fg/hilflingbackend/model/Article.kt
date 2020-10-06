@@ -9,7 +9,7 @@ interface Article : BaseModel<Article> {
     companion object : Entity.Factory<Article>()
 
     var title: String
-    var plainTextBody: String
+    var plainText: String
 
     // Foreign keys
     var securityLevel: SecurityLevel
@@ -17,8 +17,8 @@ interface Article : BaseModel<Article> {
 }
 
 object Articles : BaseTable<Article>("article") {
-    val title = varchar("name").bindTo { it.title }
-    val plainTextBody = varchar("plain_text_body").bindTo { it.plainTextBody }
+    val title = varchar("title").bindTo { it.title }
+    val plainText = varchar("plain_text").bindTo { it.plainText }
 
     // Foreign keys
     val securityLevelId = int("security_level_id").references(SecurityLevels){it.securityLevel}
