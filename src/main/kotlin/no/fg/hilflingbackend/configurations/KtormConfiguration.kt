@@ -17,4 +17,9 @@ open class KtormConfiguration{
     open fun database(): Database {
         return Database.connectWithSpringSupport(dataSource)
     }
+
+    @Bean
+    open fun ktormModule(): Module {
+        return KtormModule()
+    }
 }
