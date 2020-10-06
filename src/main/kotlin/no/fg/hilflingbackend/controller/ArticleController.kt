@@ -23,7 +23,7 @@ class ArticleController {
 
     @PostMapping
     fun create(
-            @RequestParam("article") article: Article
+            @RequestBody article: Article
     ): Article {
         return repository.create(
                 article

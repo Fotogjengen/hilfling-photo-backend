@@ -1,4 +1,4 @@
-package no.fg.hilflingbackend.controller
+package no.fg.hilflingbackend.repository
 
 import me.liuwj.ktorm.database.Database
 import me.liuwj.ktorm.dsl.eq

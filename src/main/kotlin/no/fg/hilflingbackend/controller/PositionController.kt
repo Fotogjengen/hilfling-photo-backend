@@ -23,7 +23,7 @@ class PositionController {
 
     @PostMapping
     fun create(
-            @RequestParam("position") position: Position
+            @RequestBody position: Position
     ): Position {
         return repository.create(position)
     }

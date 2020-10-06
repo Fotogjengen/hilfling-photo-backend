@@ -23,7 +23,7 @@ class EventOwnerController {
 
     @PostMapping
     fun create(
-            @RequestParam("eventOwner") eventOwner: EventOwner
+            @RequestBody eventOwner: EventOwner
     ): EventOwner {
         return repository.create(
                 eventOwner
