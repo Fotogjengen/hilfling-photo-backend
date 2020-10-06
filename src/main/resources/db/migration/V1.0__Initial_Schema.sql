@@ -110,9 +110,9 @@ CREATE TABLE PHOTO_GANG_BANGER (
 CREATE TABLE PHOTO (
     id INTEGER PRIMARY KEY,
     date_created DATE NOT NULL DEFAULT CURRENT_DATE,
-    s_url VARCHAR(40),
-    m_url VARCHAR(40),
-    l_url VARCHAR(40),
+    s_url VARCHAR(255),
+    m_url VARCHAR(255),
+    l_url VARCHAR(255),
     is_good_picture BOOLEAN,
     motive_id INTEGER REFERENCES MOTIVE(id),
     place_id INTEGER REFERENCES PLACE(id),
