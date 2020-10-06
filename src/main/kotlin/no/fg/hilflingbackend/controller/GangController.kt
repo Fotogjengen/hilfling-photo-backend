@@ -23,7 +23,7 @@ class GangController {
 
     @PostMapping
     fun create(
-            @RequestParam("gang") gang: Gang
+            @RequestBody gang: Gang
     ): Gang {
         return repository.create(
                 gang

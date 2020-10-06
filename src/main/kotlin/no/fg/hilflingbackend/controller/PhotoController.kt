@@ -35,14 +35,14 @@ class PhotoController {
 
     @PostMapping
     fun createPhoto(
-            @RequestParam("photo") photo: Photo
+            @RequestBody photo: Photo
     ): Photo {
         return repository.createPhoto(photo)
     }
 
     @PostMapping("/analog")
     fun createPhoto(
-            @RequestParam("photo") analogPhoto: AnalogPhoto
+            @RequestBody analogPhoto: AnalogPhoto
     ): AnalogPhoto {
         return repository.createAnalogPhoto(analogPhoto)
     }

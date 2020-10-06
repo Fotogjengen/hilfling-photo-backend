@@ -1,6 +1,7 @@
 package no.fg.hilflingbackend.controller
 
 import no.fg.hilflingbackend.model.PhotoGangBanger
+import no.fg.hilflingbackend.repository.PhotoGangBangerRepository
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.web.bind.annotation.*
 
@@ -37,7 +38,7 @@ class PhotoGangBangerController {
 
     @PostMapping
     fun create(
-            @RequestParam("photoGangBanger") photoGangBanger: PhotoGangBanger
+            @RequestBody photoGangBanger: PhotoGangBanger
     ): PhotoGangBanger {
         return repository.create(photoGangBanger)
     }
