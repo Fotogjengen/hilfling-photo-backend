@@ -8,7 +8,7 @@ CREATE TABLE ALBUM
 
 CREATE TABLE POSITION
 (
-    id           INTEGER,
+    id           SERIAL PRIMARY KEY,
     title        VARCHAR(40),
     email        VARCHAR(40),
     date_created DATE NOT NULL DEFAULT CURRENT_DATE
@@ -16,21 +16,21 @@ CREATE TABLE POSITION
 
 CREATE TABLE GANG
 (
-    id           INTEGER PRIMARY KEY,
+    id           SERIAL PRIMARY KEY,
     name         VARCHAR(30),
     date_created DATE NOT NULL DEFAULT CURRENT_DATE
 );
 
 CREATE TABLE PHOTO_TAG
 (
-    id           INTEGER PRIMARY KEY,
+    id           SERIAL PRIMARY KEY,
     name         VARCHAR(20),
     date_created DATE NOT NULL DEFAULT CURRENT_DATE
 );
 
 CREATE TABLE PURCHASE_ORDER
 (
-    id           INTEGER PRIMARY KEY,
+    id           SERIAL PRIMARY KEY,
     name         VARCHAR(30),
     email        VARCHAR(30),
     address      VARCHAR(40),
@@ -44,35 +44,35 @@ CREATE TABLE PURCHASE_ORDER
 
 CREATE TABLE SECURITY_LEVEL
 (
-    id           INTEGER PRIMARY KEY,
+    id           SERIAL PRIMARY KEY,
     type         VARCHAR(10),
     date_created DATE NOT NULL DEFAULT CURRENT_DATE
 );
 
 CREATE TABLE PLACE
 (
-    id           INTEGER PRIMARY KEY,
+    id           SERIAL PRIMARY KEY,
     date_created DATE NOT NULL DEFAULT CURRENT_DATE,
     name         VARCHAR(30)
 );
 
 CREATE TABLE EVENT_OWNER
 (
-    id           INTEGER PRIMARY KEY,
+    id           SERIAL PRIMARY KEY,
     date_created DATE NOT NULL DEFAULT CURRENT_DATE,
     name         VARCHAR(30)
 );
 
 CREATE TABLE CATEGORY
 (
-    id           INTEGER PRIMARY KEY,
+    id           SERIAL PRIMARY KEY,
     date_created DATE NOT NULL DEFAULT CURRENT_DATE,
     name         VARCHAR(20)
 );
 
 CREATE TABLE ARTICLE_TAG
 (
-    id           INTEGER PRIMARY KEY,
+    id           SERIAL PRIMARY KEY,
     date_created DATE NOT NULL DEFAULT CURRENT_DATE,
 <<<<<<< HEAD
     relation_ship_status VARCHAR(15),
@@ -120,7 +120,7 @@ CREATE TABLE PHOTOGRAPHY_REQUEST
 
 CREATE TABLE "user"
 (
-    id                INTEGER PRIMARY KEY,
+    id                SERIAL PRIMARY KEY,
     date_created      DATE NOT NULL DEFAULT CURRENT_DATE,
     first_name        VARCHAR(20),
     last_name         VARCHAR(20),
@@ -134,7 +134,7 @@ CREATE TABLE "user"
 
 CREATE TABLE PHOTO_GANG_BANGER
 (
-    id                  INTEGER PRIMARY KEY,
+    id                  SERIAL PRIMARY KEY,
     date_created        DATE NOT NULL DEFAULT CURRENT_DATE,
     relationship_status VARCHAR(15),
     semester_start      VARCHAR(20),
@@ -148,7 +148,7 @@ CREATE TABLE PHOTO_GANG_BANGER
 
 CREATE TABLE ARTICLE
 (
-    id                   INTEGER PRIMARY KEY,
+    id                   SERIAL PRIMARY KEY,
     date_created         DATE NOT NULL DEFAULT CURRENT_DATE,
     title                VARCHAR(50),
     plain_text           VARCHAR(100),
@@ -158,7 +158,7 @@ CREATE TABLE ARTICLE
 
 CREATE TABLE MOTIVE
 (
-    id             INTEGER PRIMARY KEY,
+    id             SERIAL PRIMARY KEY,
     title          VARCHAR(20),
     date_created   DATE NOT NULL DEFAULT CURRENT_DATE,
     category_id    INTEGER REFERENCES CATEGORY (id),
@@ -168,7 +168,7 @@ CREATE TABLE MOTIVE
 
 CREATE TABLE PHOTO
 (
-    id                   INTEGER PRIMARY KEY,
+    id                   SERIAL PRIMARY KEY,
     date_created         DATE NOT NULL DEFAULT CURRENT_DATE,
     small_url            VARCHAR(40),
     medium_url           VARCHAR(40),
