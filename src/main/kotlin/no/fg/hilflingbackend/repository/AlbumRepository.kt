@@ -2,9 +2,8 @@ package no.fg.hilflingbackend.repository
 
 import me.liuwj.ktorm.database.Database
 import me.liuwj.ktorm.dsl.eq
-import me.liuwj.ktorm.entity.add
-import me.liuwj.ktorm.entity.find
-import me.liuwj.ktorm.entity.toList
+import me.liuwj.ktorm.dsl.greater
+import me.liuwj.ktorm.entity.*
 import no.fg.hilflingbackend.model.Album
 import no.fg.hilflingbackend.model.albums
 import org.springframework.beans.factory.annotation.Autowired

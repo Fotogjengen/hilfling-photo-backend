@@ -2,7 +2,9 @@ package no.fg.hilflingbackend.repository
 
 import me.liuwj.ktorm.database.Database
 import me.liuwj.ktorm.dsl.eq
+import me.liuwj.ktorm.dsl.greater
 import me.liuwj.ktorm.entity.add
+import me.liuwj.ktorm.entity.filter
 import me.liuwj.ktorm.entity.find
 import me.liuwj.ktorm.entity.toList
 import no.fg.hilflingbackend.model.Category
