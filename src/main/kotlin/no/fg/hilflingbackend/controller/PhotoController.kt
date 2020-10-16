@@ -18,10 +18,13 @@ class PhotoController {
         return repository.findById(id)
     }
 
-    @GetMapping("/date_created")
-
     @GetMapping
     fun getAll(): List<Photo> {
+        return repository.findAll()
+    }
+
+    @GetMapping
+    fun getSixNewest(): List<Photo> {
         return repository.findAll()
     }
 
