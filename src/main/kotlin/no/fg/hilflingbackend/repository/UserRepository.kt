@@ -34,7 +34,7 @@ open class UserRepository {
             this.email = user.email;
             this.profilePicture = user.profilePicture;
             this.phoneNumber = user.phoneNumber;
-            this.sex = user.sex
+            this.sex = user.sex;
         }
         database.users.add(userFromDatabase)
         return userFromDatabase
