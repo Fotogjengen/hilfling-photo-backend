@@ -9,7 +9,9 @@ import java.time.LocalDate
 interface PhotographyRequest : BaseModel<PhotographyRequest> {
     companion object : Entity.Factory<PhotographyRequest>()
 
+    // TODO: Make LocalDateTime
     var startTime: LocalDate
+    // TODO: Make LocalDateTime
     var endTime: LocalDate
     var place: String
     var isIntern: Boolean

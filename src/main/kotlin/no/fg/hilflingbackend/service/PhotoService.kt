@@ -1,7 +1,5 @@
 package no.fg.hilflingbackend.service
 
-import com.google.common.collect.ImmutableList
-import com.google.common.collect.ImmutableMap
 import no.fg.hilflingbackend.model.SecurityLevel
 import org.slf4j.LoggerFactory
 import org.springframework.core.io.Resource

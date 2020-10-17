@@ -1,6 +1,5 @@
 package no.fg.hilflingbackend.controller
 
-import me.liuwj.ktorm.database.Database
 import no.fg.hilflingbackend.model.Album
 import no.fg.hilflingbackend.repository.AlbumRepository
 import org.springframework.beans.factory.annotation.Autowired
