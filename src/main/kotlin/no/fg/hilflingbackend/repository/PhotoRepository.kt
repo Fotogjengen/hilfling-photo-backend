@@ -6,17 +6,18 @@ import me.liuwj.ktorm.entity.*
 import no.fg.hilflingbackend.model.*
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Repository
+import java.util.*
 
 @Repository
 open class PhotoRepository {
   @Autowired
   open lateinit var database: Database
 
-  fun findById(id: Int): Photo? {
+  fun findById(id: UUID): Photo? {
     return database.photos.find { it.id eq id }
   }
 
-  fun findAnalogPhotoById(id: Int): AnalogPhoto? {
+  fun findAnalogPhotoById(id: UUID): AnalogPhoto? {
     return database.analog_photos.find { it.id eq id }
   }
 

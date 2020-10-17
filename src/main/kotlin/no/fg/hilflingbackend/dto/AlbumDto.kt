@@ -5,11 +5,11 @@ import java.util.UUID
 data class AlbumDto(
   val albumId: AlbumId = AlbumId(),
   val title: String,
-  val isAnalog: Boolean
+  val isAnalog: Boolean = false
 )
 
-data class AlbumId (
-    override val id: UUID = UUID.randomUUID()
+data class AlbumId(
+  override val id: UUID = UUID.randomUUID()
 ) : UuidId {
   override fun toString(): String = id.toString()
 }

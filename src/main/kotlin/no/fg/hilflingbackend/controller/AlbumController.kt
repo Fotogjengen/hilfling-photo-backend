@@ -5,6 +5,7 @@ import no.fg.hilflingbackend.model.Album
 import no.fg.hilflingbackend.repository.AlbumRepository
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.web.bind.annotation.*
+import java.util.*
 
 @RestController
 @RequestMapping("/albums")
@@ -13,7 +14,7 @@ class AlbumController {
   lateinit var repository: AlbumRepository
 
   @GetMapping("/{id}")
-  fun getById(@PathVariable("id") id: Int): Album? {
+  fun getById(@PathVariable("id") id: UUID): Album? {
     return repository.findById(id)
   }
 

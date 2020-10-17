@@ -9,13 +9,14 @@ import no.fg.hilflingbackend.model.PhotoTag
 import no.fg.hilflingbackend.model.photo_tags
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Repository
+import java.util.*
 
 @Repository
 open class PhotoTagRepository {
   @Autowired
   open lateinit var database: Database
 
-  fun findById(id: Int): PhotoTag? {
+  fun findById(id: UUID): PhotoTag? {
     return database.photo_tags.find { it.id eq id }
   }
 

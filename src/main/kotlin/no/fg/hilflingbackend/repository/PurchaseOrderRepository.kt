@@ -9,13 +9,14 @@ import no.fg.hilflingbackend.model.PurchaseOrder
 import no.fg.hilflingbackend.model.purchase_orders
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Repository
+import java.util.*
 
 @Repository
 open class PurchaseOrderRepository {
   @Autowired
   open lateinit var database: Database
 
-  fun findById(id: Int): PurchaseOrder? {
+  fun findById(id: UUID): PurchaseOrder? {
     return database.purchase_orders.find { it.id eq id }
   }
 

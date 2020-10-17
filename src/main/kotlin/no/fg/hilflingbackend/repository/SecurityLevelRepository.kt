@@ -10,13 +10,14 @@ import no.fg.hilflingbackend.model.security_levels
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Repository
 import java.time.LocalDate
+import java.util.*
 
 @Repository
 open class SecurityLevelRepository {
   @Autowired
   open lateinit var database: Database
 
-  fun findById(id: Int): SecurityLevel? {
+  fun findById(id: UUID): SecurityLevel? {
     return database.security_levels.find { it.id eq id }
   }
 

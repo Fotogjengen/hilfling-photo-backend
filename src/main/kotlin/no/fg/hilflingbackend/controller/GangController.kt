@@ -4,6 +4,7 @@ import no.fg.hilflingbackend.model.Gang
 import no.fg.hilflingbackend.repository.GangRepository
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.web.bind.annotation.*
+import java.util.*
 
 @RestController
 @RequestMapping("/gangs")
@@ -12,7 +13,7 @@ class GangController {
   lateinit var repository: GangRepository
 
   @GetMapping("/{id}")
-  fun getById(@PathVariable("id") id: Int): Gang? {
+  fun getById(@PathVariable("id") id: UUID): Gang? {
     return repository.findById(id)
   }
 

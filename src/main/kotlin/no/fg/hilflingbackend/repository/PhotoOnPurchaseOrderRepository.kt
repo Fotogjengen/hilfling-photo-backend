@@ -9,13 +9,14 @@ import no.fg.hilflingbackend.model.PhotoOnPurchaseOrder
 import no.fg.hilflingbackend.model.photo_on_purchase_orders
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Repository
+import java.util.*
 
 @Repository
 open class PhotoOnPurchaseOrderRepository {
   @Autowired
   open lateinit var database: Database
 
-  fun findById(id: Int): PhotoOnPurchaseOrder? {
+  fun findById(id: UUID): PhotoOnPurchaseOrder? {
     return database.photo_on_purchase_orders.find { it.id eq id }
   }
 

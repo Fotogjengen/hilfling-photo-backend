@@ -4,6 +4,7 @@ import no.fg.hilflingbackend.model.Article
 import no.fg.hilflingbackend.repository.ArticleRepository
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.web.bind.annotation.*
+import java.util.*
 
 @RestController
 @RequestMapping("/articles")
@@ -12,7 +13,7 @@ class ArticleController {
   lateinit var repository: ArticleRepository
 
   @GetMapping("/{id}")
-  fun getById(@PathVariable("id") id: Int): Article? {
+  fun getById(@PathVariable("id") id: UUID): Article? {
     return repository.findById(id)
   }
 

@@ -11,6 +11,7 @@ import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 import org.springframework.web.multipart.MultipartFile
+import java.util.*
 
 @RestController
 @RequestMapping("/photos")
@@ -26,7 +27,7 @@ class PhotoController {
   lateinit var securityLevelRepository: SecurityLevelRepository
 
   @GetMapping("/{id}")
-  fun getById(@PathVariable("id") id: Int): Photo? {
+  fun getById(@PathVariable("id") id: UUID): Photo? {
     return repository.findById(id)
   }
 
@@ -56,7 +57,7 @@ class PhotoController {
 
   private fun uploadPhotoFile(
     file: MultipartFile,
-    securityLevelId: Int
+    securityLevelId: UUID
   ): String {
     val securityLevel = securityLevelRepository.findById(securityLevelId)
       ?: throw IllegalAccessError("Security level does not exist.")

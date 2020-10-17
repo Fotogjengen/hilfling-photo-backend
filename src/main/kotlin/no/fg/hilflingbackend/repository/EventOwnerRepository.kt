@@ -9,13 +9,14 @@ import no.fg.hilflingbackend.model.EventOwner
 import no.fg.hilflingbackend.model.event_owners
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Repository
+import java.util.*
 
 @Repository
 open class EventOwnerRepository {
   @Autowired
   open lateinit var database: Database
 
-  fun findById(id: Int): EventOwner? {
+  fun findById(id: UUID): EventOwner? {
     return database.event_owners.find { it.id eq id }
   }
 

@@ -5,4 +5,3 @@ import java.util.*
 interface UuidId {
   val id: UUID
 }
-

@@ -10,6 +10,7 @@ import no.fg.hilflingbackend.model.PhotoGangBanger
 import no.fg.hilflingbackend.model.photo_gang_bangers
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Repository
+import java.util.*
 
 @Repository
 open class PhotoGangBangerRepository {
@@ -17,7 +18,7 @@ open class PhotoGangBangerRepository {
   @Autowired
   open lateinit var database: Database
 
-  fun findById(id: Int): PhotoGangBanger? {
+  fun findById(id: UUID): PhotoGangBanger? {
     return database.photo_gang_bangers.find { it.id eq id }
   }
 

@@ -9,13 +9,14 @@ import no.fg.hilflingbackend.model.Category
 import no.fg.hilflingbackend.model.categories
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Repository
+import java.util.*
 
 @Repository
 open class CategoryRepository {
   @Autowired
   open lateinit var database: Database
 
-  fun findById(id: Int): Category? {
+  fun findById(id: UUID): Category? {
     return database.categories.find { it.id eq id }
   }
 

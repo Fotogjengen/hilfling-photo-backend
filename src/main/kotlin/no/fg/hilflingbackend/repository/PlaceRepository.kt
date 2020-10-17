@@ -9,13 +9,14 @@ import no.fg.hilflingbackend.model.Place
 import no.fg.hilflingbackend.model.places
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Repository
+import java.util.*
 
 @Repository
 open class PlaceRepository {
   @Autowired
   open lateinit var database: Database
 
-  fun findById(id: Int): Place? {
+  fun findById(id: UUID): Place? {
     return database.places.find { it.id eq id }
   }
 

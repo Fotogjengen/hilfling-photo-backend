@@ -9,13 +9,14 @@ import no.fg.hilflingbackend.model.Motive
 import no.fg.hilflingbackend.model.motives
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Repository
+import java.util.*
 
 @Repository
 open class MotiveRepository {
   @Autowired
   open lateinit var database: Database
 
-  fun findById(id: Int): Motive? {
+  fun findById(id: UUID): Motive? {
     return database.motives.find { it.id eq id }
   }
 

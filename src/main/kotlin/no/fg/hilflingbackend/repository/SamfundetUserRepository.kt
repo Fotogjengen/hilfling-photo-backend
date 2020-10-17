@@ -9,13 +9,14 @@ import no.fg.hilflingbackend.model.SamfundetUser
 import no.fg.hilflingbackend.model.samfundet_users
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Repository
+import java.util.*
 
 @Repository
 open class SamfundetUserRepository {
   @Autowired
   open lateinit var database: Database
 
-  fun findById(id: Int): SamfundetUser? {
+  fun findById(id: UUID): SamfundetUser? {
     return database.samfundet_users.find { it.id eq id }
   }
 

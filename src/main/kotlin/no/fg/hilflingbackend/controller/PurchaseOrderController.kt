@@ -4,6 +4,7 @@ import no.fg.hilflingbackend.model.PurchaseOrder
 import no.fg.hilflingbackend.repository.PurchaseOrderRepository
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.web.bind.annotation.*
+import java.util.*
 
 @RestController
 @RequestMapping("/purchase_orders")
@@ -12,7 +13,7 @@ class PurchaseOrderController {
   lateinit var repository: PurchaseOrderRepository
 
   @GetMapping("/{id}")
-  fun getById(@PathVariable("id") id: Int): PurchaseOrder? {
+  fun getById(@PathVariable("id") id: UUID): PurchaseOrder? {
     return repository.findById(id)
   }
 

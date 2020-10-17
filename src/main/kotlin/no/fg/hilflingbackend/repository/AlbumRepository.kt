@@ -10,13 +10,14 @@ import no.fg.hilflingbackend.model.Album
 import no.fg.hilflingbackend.model.albums
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Repository
+import java.util.*
 
 @Repository
 open class AlbumRepository {
   @Autowired
   open lateinit var database: Database
 
-  fun findById(id: Int): Album? {
+  fun findById(id: UUID): Album? {
     return database.albums.find { it.id eq id }
   }
 

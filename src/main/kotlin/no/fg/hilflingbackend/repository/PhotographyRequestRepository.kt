@@ -9,13 +9,14 @@ import no.fg.hilflingbackend.model.PhotographyRequest
 import no.fg.hilflingbackend.model.photography_requests
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Repository
+import java.util.*
 
 @Repository
 open class PhotographyRequestRepository {
   @Autowired
   open lateinit var database: Database
 
-  fun findById(id: Int): PhotographyRequest? {
+  fun findById(id: UUID): PhotographyRequest? {
     return database.photography_requests.find { it.id eq id }
   }
 

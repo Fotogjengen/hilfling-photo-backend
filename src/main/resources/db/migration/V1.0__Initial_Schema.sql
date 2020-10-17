@@ -103,7 +103,7 @@ CREATE TABLE SAMFUNDET_USER
     profile_picture   VARCHAR(100),
     phone_number      VARCHAR(20),
     sex               VARCHAR(10),
-    security_level_id INTEGER REFERENCES SECURITY_LEVEL (id)
+    security_level_id UUID REFERENCES SECURITY_LEVEL (id)
 );
 
 CREATE TABLE PHOTO_GANG_BANGER
@@ -117,7 +117,7 @@ CREATE TABLE PHOTO_GANG_BANGER
     address             VARCHAR(40),
     zip_code            VARCHAR(4),
     city                VARCHAR(30),
-    samfundet_user_id   INTEGER REFERENCES SAMFUNDET_USER (id)
+    samfundet_user_id   UUID REFERENCES SAMFUNDET_USER (id)
 );
 
 CREATE TABLE ARTICLE
@@ -126,8 +126,8 @@ CREATE TABLE ARTICLE
     date_created         DATE NOT NULL DEFAULT CURRENT_DATE,
     title                VARCHAR(50),
     plain_text           VARCHAR(100),
-    security_level_id    INTEGER REFERENCES SECURITY_LEVEL (id),
-    photo_gang_banger_id INTEGER REFERENCES PHOTO_GANG_BANGER (id)
+    security_level_id    UUID REFERENCES SECURITY_LEVEL (id),
+    photo_gang_banger_id UUID REFERENCES PHOTO_GANG_BANGER (id)
 );
 
 CREATE TABLE MOTIVE
@@ -135,9 +135,9 @@ CREATE TABLE MOTIVE
     id             uuid PRIMARY KEY,
     title          VARCHAR(20),
     date_created   DATE NOT NULL DEFAULT CURRENT_DATE,
-    category_id    INTEGER REFERENCES CATEGORY (id),
-    event_owner_id INTEGER REFERENCES EVENT_OWNER (id),
-    album_id       INTEGER REFERENCES ALBUM (id)
+    category_id    UUID REFERENCES CATEGORY (id),
+    event_owner_id UUID REFERENCES EVENT_OWNER (id),
+    album_id       UUID REFERENCES ALBUM (id)
 );
 
 CREATE TABLE PHOTO
@@ -148,11 +148,11 @@ CREATE TABLE PHOTO
     medium_url           VARCHAR(40),
     large_url            VARCHAR(40),
     is_good_picture      BOOLEAN,
-    motive_id            INTEGER REFERENCES MOTIVE (id),
-    place_id             INTEGER REFERENCES PLACE (id),
-    security_level_id    INTEGER REFERENCES SECURITY_LEVEL (id),
-    gang_id              INTEGER REFERENCES GANG (id),
-    photo_gang_banger_id INTEGER REFERENCES PHOTO_GANG_BANGER (id)
+    motive_id            UUID REFERENCES MOTIVE (id),
+    place_id             UUID REFERENCES PLACE (id),
+    security_level_id    UUID REFERENCES SECURITY_LEVEL (id),
+    gang_id              UUID REFERENCES GANG (id),
+    photo_gang_banger_id UUID REFERENCES PHOTO_GANG_BANGER (id)
 );
 
 CREATE TABLE ANALOG_PHOTO
@@ -160,25 +160,25 @@ CREATE TABLE ANALOG_PHOTO
     image_number INTEGER,
     date_created DATE NOT NULL DEFAULT CURRENT_DATE,
     page_number  INTEGER,
-    photo_id     INTEGER REFERENCES PHOTO (id)
+    photo_id     UUID REFERENCES PHOTO (id)
 );
 
 
 CREATE TABLE ARTICLE_TAG_IN_ARTICLE
 (
-    article_tag_id INTEGER REFERENCES ARTICLE_TAG (id),
-    article_id     INTEGER REFERENCES ARTICLE (id)
+    article_tag_id UUID REFERENCES ARTICLE_TAG (id),
+    article_id     UUID REFERENCES ARTICLE (id)
 );
 
 CREATE TABLE PHOTOS_IN_PURCHASE_ORDER
 (
-    purchase_order_id INTEGER REFERENCES PURCHASE_ORDER (id),
-    photo_id          INTEGER REFERENCES PHOTO (id),
+    purchase_order_id UUID REFERENCES PURCHASE_ORDER (id),
+    photo_id          UUID REFERENCES PHOTO (id),
     img_size          VARCHAR(10)
 );
 
 CREATE TABLE PHOTO_TAG_IN_PHOTO
 (
-    photo_tag_id INTEGER REFERENCES PHOTO_TAG (id),
-    photo_id     INTEGER REFERENCES PHOTO (id)
+    photo_tag_id UUID REFERENCES PHOTO_TAG (id),
+    photo_id     UUID REFERENCES PHOTO (id)
 );

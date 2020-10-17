@@ -4,6 +4,7 @@ import no.fg.hilflingbackend.model.SecurityLevel
 import no.fg.hilflingbackend.repository.SecurityLevelRepository
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.web.bind.annotation.*
+import java.util.*
 
 @RestController
 @RequestMapping("/security_levels")
@@ -12,7 +13,7 @@ class SecurityLevelController {
   lateinit var repository: SecurityLevelRepository
 
   @GetMapping("/{id}")
-  fun getSecurityLevelById(@PathVariable("id") id: Int): SecurityLevel? {
+  fun getSecurityLevelById(@PathVariable("id") id: UUID): SecurityLevel? {
     return repository.findById(id)
   }
 

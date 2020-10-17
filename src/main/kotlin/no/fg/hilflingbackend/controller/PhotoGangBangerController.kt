@@ -4,6 +4,7 @@ import no.fg.hilflingbackend.model.PhotoGangBanger
 import no.fg.hilflingbackend.repository.PhotoGangBangerRepository
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.web.bind.annotation.*
+import java.util.*
 
 @RestController
 @RequestMapping("/photo_gang_bangers")
@@ -12,7 +13,7 @@ class PhotoGangBangerController {
   lateinit var repository: PhotoGangBangerRepository
 
   @GetMapping("/{id}")
-  fun getById(@PathVariable("id") id: Int): PhotoGangBanger? {
+  fun getById(@PathVariable("id") id: UUID): PhotoGangBanger? {
     return repository.findById(id)
   }
 
