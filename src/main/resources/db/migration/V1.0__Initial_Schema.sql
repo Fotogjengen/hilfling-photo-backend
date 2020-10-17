@@ -92,7 +92,7 @@ CREATE TABLE PHOTOGRAPHY_REQUEST
     description  TEXT        NOT NULL
 );
 
-CREATE TABLE "user"
+CREATE TABLE SAMFUNDET_USER
 (
     id                SERIAL PRIMARY KEY,
     date_created      DATE NOT NULL DEFAULT CURRENT_DATE,
@@ -117,7 +117,7 @@ CREATE TABLE PHOTO_GANG_BANGER
     address             VARCHAR(40),
     zip_code            VARCHAR(4),
     city                VARCHAR(30),
-    user_id             INTEGER REFERENCES "user" (id)
+    samfundet_user_id   INTEGER REFERENCES SAMFUNDET_USER (id)
 );
 
 CREATE TABLE ARTICLE

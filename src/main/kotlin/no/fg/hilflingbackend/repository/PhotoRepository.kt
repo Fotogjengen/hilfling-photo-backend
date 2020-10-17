@@ -48,18 +48,17 @@ open class PhotoRepository {
 
     fun createPhoto(
             photo: Photo
-    ): Photo {
-
+    ): Photo? {
         val photoFromDatabase = Photo{
             this.isGoodPicture = photo.isGoodPicture
             this.smallUrl = photo.smallUrl
             this.mediumUrl = photo.mediumUrl
             this.largeUrl = photo.largeUrl
-            this.motive = photo.motive
-            this.place = photo.place
-            this.securityLevel = photo.securityLevel
-            this.gang = photo.gang
-            this.photoGangBanger = photo.photoGangBanger
+            this.motive = database.motives.find { it.id eq photo.motive.id } ?: return null
+            this.place = database.places.find{it.id eq photo.place.id} ?: return null
+            this.securityLevel = database.security_levels.find{it.id eq photo.securityLevel.id} ?: return null
+            this.gang = database.gangs.find{it.id eq photo.gang.id} ?: return null
+            this.photoGangBanger = database.photo_gang_bangers.find{it.id eq photo.photoGangBanger.id} ?: return null
         }
         database.photos.add(photoFromDatabase)
         return photoFromDatabase
@@ -67,10 +66,10 @@ open class PhotoRepository {
 
     fun createAnalogPhoto(
             analogPhoto: AnalogPhoto
-    ): AnalogPhoto {
+    ): AnalogPhoto? {
         val photoFromDatabase = createPhoto(
                 analogPhoto.photo
-        )
+        ) ?: return null
         val analogPhotoFromDatabase = AnalogPhoto{
             this.imageNumber = analogPhoto.imageNumber
             this.pageNumber = analogPhoto.pageNumber

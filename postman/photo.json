@@ -1,0 +1,22 @@
+{
+  "isGoodPicture": true,
+  "filename": "tmp",
+  "smallUrl": "smallUrl",
+  "mediumUrl": "mediumUrl",
+  "largeUrl": "largeUrl",
+  "motive": {
+    "id": 1
+  },
+  "place": {
+    "id": 1
+  },
+  "securityLevel": {
+    "id": 1
+  },
+  "gang": {
+    "id": 1
+  },
+  "photoGangBanger": {
+    "id": 1
+  }
+}
