@@ -1,24 +1,24 @@
 package hilfling.backend.hilfling.exceptions
 
-//package hilfling.backend.hilfling.exceptions;
+// package hilfling.backend.hilfling.exceptions;
 // package no.fg.hilflingbackend.exceptions;
-//import org.springframework.core.Ordered
-//import org.springframework.core.annotation.Order
-//import org.springframework.dao.DataIntegrityViolationException
-//import org.springframework.dao.EmptyResultDataAccessException
-//import org.springframework.http.HttpHeaders
-//import org.springframework.http.HttpStatus
-//import org.springframework.http.ResponseEntity
-//import org.springframework.http.converter.HttpMessageNotReadableException
-//import org.springframework.web.bind.annotation.ControllerAdvice
-//import org.springframework.web.bind.annotation.ExceptionHandler
-//import org.springframework.web.context.request.WebRequest
-//import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler
-//import javax.persistence.EntityNotFoundException
+// import org.springframework.core.Ordered
+// import org.springframework.core.annotation.Order
+// import org.springframework.dao.DataIntegrityViolationException
+// import org.springframework.dao.EmptyResultDataAccessException
+// import org.springframework.http.HttpHeaders
+// import org.springframework.http.HttpStatus
+// import org.springframework.http.ResponseEntity
+// import org.springframework.http.converter.HttpMessageNotReadableException
+// import org.springframework.web.bind.annotation.ControllerAdvice
+// import org.springframework.web.bind.annotation.ExceptionHandler
+// import org.springframework.web.context.request.WebRequest
+// import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler
+// import javax.persistence.EntityNotFoundException
 //
-//@Order(Ordered.HIGHEST_PRECEDENCE)
-//@ControllerAdvice // This annotation makes the class handle all exceptions
-//class RestExceptionHandler : ResponseEntityExceptionHandler() {
+// @Order(Ordered.HIGHEST_PRECEDENCE)
+// @ControllerAdvice // This annotation makes the class handle all exceptions
+// class RestExceptionHandler : ResponseEntityExceptionHandler() {
 //    /*
 //        The function of this class is to handle all exceptions that the service layer throws.
 //        it extends ResponseEntityExceptionHandler which has a lot of methods out of the box.
@@ -49,12 +49,12 @@ package hilfling.backend.hilfling.exceptions
 //        val error = ApiError(String.format("Database error %s", ex.rootCause), "", HttpStatus.INTERNAL_SERVER_ERROR, ex)
 //        return ResponseEntity(error, error.status)
 //    }
-///* TODO: removed because error in import, find another way
+// /* TODO: removed because error in import, find another way
 //    @ExceptionHandler(ConstraintViolationException::class)
 //    fun handleConstraintViolation(ex: ConstraintViolationException): ResponseEntity<Any> {
 //        val error = ApiError("Violates constraint", "", HttpStatus.BAD_REQUEST, ex)
 //        return ResponseEntity(error, error.status)
 //    }*/
 //
-//}
+// }
 //

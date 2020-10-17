@@ -1,5 +1,6 @@
 package no.fg.hilflingbackend
 
+import no.fg.hilflingbackend.dto.AlbumDto
 import no.fg.hilflingbackend.model.*
 import no.fg.hilflingbackend.model.PhotoOnPurchaseOrders.size
 import no.fg.hilflingbackend.repository.*
@@ -26,27 +27,38 @@ class MockDataService {
     @Autowired
     lateinit var motiveRepository: MotiveRepository
 
-    private fun generateAlbumData(): List<Album>{
+    private fun generateAlbumData(): List<AlbumDto>{
         listOf(
-                Album{
-                    title = "Vår 2017";
-                    isAnalog = true;
+                AlbumDto(
+                    title = "Vår 2017",
+                    isAnalog = true,
+      ),
+          AlbumDto(
+            title = "Høst 2017";
+          ),
+          AlbumDto(
+            title = "Vår 2018"
+          ),
+          AlbumDto(
+            title = "Høst 2018"
+          ),
+      AlbumDto(
+
+        title = "Vår 2019"
+      ),
+      AlbumDto(
+        title = "Høst 2019",
+         isAnalog = true
+      ),
+                AlbumDto{
                 },
-                Album{
-                    title = "Høst 2017";
+                AlbumDto {
                 },
-                Album {
-                    title = "Vår 2018"
+                AlbumDto {
                 },
-                Album {
-                    title = "Høst 2018"
+                AlbumDto {
                 },
-                Album {
-                    title = "Vår 2019"
-                },
-                Album {
-                    title = "Høst 2019"
-                    isAnalog = true
+                AlbumDto {
                 }
         ).forEach{
             albumRepository.create(it)

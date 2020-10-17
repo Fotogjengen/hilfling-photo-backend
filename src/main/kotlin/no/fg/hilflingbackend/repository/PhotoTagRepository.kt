@@ -9,25 +9,26 @@ import no.fg.hilflingbackend.model.PhotoTag
 import no.fg.hilflingbackend.model.photo_tags
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Repository
+import java.util.*
 
 @Repository
 open class PhotoTagRepository {
-    @Autowired
-    open lateinit var database: Database
+  @Autowired
+  open lateinit var database: Database
 
-    fun findById(id: Int): PhotoTag? {
-        return database.photo_tags.find{it.id eq  id}
-    }
+  fun findById(id: UUID): PhotoTag? {
+    return database.photo_tags.find { it.id eq id }
+  }
 
-    fun findAll(): List<PhotoTag> {
-        return database.photo_tags.toList()
-    }
+  fun findAll(): List<PhotoTag> {
+    return database.photo_tags.toList()
+  }
 
-    fun createPhotoTag(photoTag: PhotoTag): PhotoTag {
-        val photoTagFromDatabase = PhotoTag{
-            this.name = photoTag.name;
-        }
-        database.photo_tags.add(photoTagFromDatabase)
-        return photoTagFromDatabase
+  fun createPhotoTag(photoTag: PhotoTag): PhotoTag {
+    val photoTagFromDatabase = PhotoTag {
+      this.name = photoTag.name
     }
+    database.photo_tags.add(photoTagFromDatabase)
+    return photoTagFromDatabase
+  }
 }
