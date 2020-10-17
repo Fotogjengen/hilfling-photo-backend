@@ -47,7 +47,7 @@ class PhotoService {
     }
 
     // TODO: REMOVE FROM PROD
-    fun init() {
+    fun createFilesystemIfNotExists() {
         FileSystemUtils.deleteRecursively(rootLocation) // TODO remove, deletes everything
         if (!Files.exists(rootLocation)) {
             Files.createDirectory(rootLocation)
