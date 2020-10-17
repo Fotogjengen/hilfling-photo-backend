@@ -7,6 +7,9 @@ import no.fg.hilflingbackend.repository.PhotoRepository
 import no.fg.hilflingbackend.repository.SecurityLevelRepository
 import no.fg.hilflingbackend.service.PhotoService
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.http.HttpHeaders
+import org.springframework.http.HttpStatus
+import org.springframework.http.ResponseEntity
 import org.springframework.ui.Model
 import org.springframework.web.bind.annotation.*
 import org.springframework.web.multipart.MultipartFile
@@ -57,15 +60,16 @@ class PhotoController {
     fun createPhoto(
             @RequestPart("photo") photo: Photo,
             @RequestPart("file") file: MultipartFile
-    ): Photo? {
-        val securityLevel = securityLevelRepository.findById(photo.securityLevel.id) ?: return null
+    ): ResponseEntity<Photo> {
+        val securityLevel = securityLevelRepository.findById(photo.securityLevel.id) ?:
+                throw IllegalAccessError("Security level does not exist.")
         val path = photoService.store(file, securityLevel)
         // TODO: test photo upload
         photo.smallUrl = path
         photo.mediumUrl = path
         photo.largeUrl = path
         val createdPhoto = repository.createPhoto(photo)
-        return photo
+        return ResponseEntity<Photo>(createdPhoto, HttpHeaders(), HttpStatus.CREATED)
     }
 
     @PostMapping("/analog")
