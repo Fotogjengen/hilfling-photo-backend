@@ -9,17 +9,17 @@ import org.springframework.context.annotation.Configuration
 import javax.sql.DataSource
 
 @Configuration
-open class KtormConfiguration{
-    @Autowired
-    lateinit var dataSource: DataSource
+open class KtormConfiguration {
+  @Autowired
+  lateinit var dataSource: DataSource
 
-    @Bean
-    open fun database(): Database {
-        return Database.connectWithSpringSupport(dataSource)
-    }
+  @Bean
+  open fun database(): Database {
+    return Database.connectWithSpringSupport(dataSource)
+  }
 
-    @Bean
-    open fun ktormModule(): Module {
-        return KtormModule()
-    }
+  @Bean
+  open fun ktormModule(): Module {
+    return KtormModule()
+  }
 }

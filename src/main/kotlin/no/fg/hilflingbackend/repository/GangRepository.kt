@@ -12,22 +12,22 @@ import org.springframework.stereotype.Repository
 
 @Repository
 open class GangRepository {
-    @Autowired
-    open lateinit var database: Database
+  @Autowired
+  open lateinit var database: Database
 
-    fun findById(id: Int): Gang? {
-        return database.gangs.find { it.id eq id }
-    }
+  fun findById(id: Int): Gang? {
+    return database.gangs.find { it.id eq id }
+  }
 
-    fun findAll(): List<Gang> {
-        return database.gangs.toList()
-    }
+  fun findAll(): List<Gang> {
+    return database.gangs.toList()
+  }
 
-    fun create(gang: Gang): Gang {
-        val gangFromDatabase = Gang{
-            this.name = gang.name
-        }
-        database.gangs.add(gangFromDatabase)
-        return gangFromDatabase
+  fun create(gang: Gang): Gang {
+    val gangFromDatabase = Gang {
+      this.name = gang.name
     }
+    database.gangs.add(gangFromDatabase)
+    return gangFromDatabase
+  }
 }

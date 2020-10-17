@@ -8,23 +8,23 @@ import org.springframework.web.bind.annotation.*
 @RestController
 @RequestMapping("/security_levels")
 class SecurityLevelController {
-    @Autowired
-    lateinit var  repository: SecurityLevelRepository
+  @Autowired
+  lateinit var repository: SecurityLevelRepository
 
-    @GetMapping("/{id}")
-    fun getSecurityLevelById(@PathVariable("id") id: Int): SecurityLevel? {
-        return repository.findById(id)
-    }
+  @GetMapping("/{id}")
+  fun getSecurityLevelById(@PathVariable("id") id: Int): SecurityLevel? {
+    return repository.findById(id)
+  }
 
-    @GetMapping
-    fun getAllSecurityLevels(): List<SecurityLevel> {
-        return repository.findAll()
-    }
+  @GetMapping
+  fun getAllSecurityLevels(): List<SecurityLevel> {
+    return repository.findAll()
+  }
 
-    @PostMapping
-    fun createSecurityLevel(
-            @RequestBody securityLevel: SecurityLevel
-    ): SecurityLevel {
-        return repository.create(securityLevel)
-    }
+  @PostMapping
+  fun createSecurityLevel(
+    @RequestBody securityLevel: SecurityLevel
+  ): SecurityLevel {
+    return repository.create(securityLevel)
+  }
 }

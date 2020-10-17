@@ -12,24 +12,24 @@ import org.springframework.stereotype.Repository
 
 @Repository
 open class EventOwnerRepository {
-    @Autowired
-    open lateinit var database: Database
+  @Autowired
+  open lateinit var database: Database
 
-    fun findById(id: Int): EventOwner? {
-        return database.event_owners.find { it.id eq id }
-    }
+  fun findById(id: Int): EventOwner? {
+    return database.event_owners.find { it.id eq id }
+  }
 
-    fun findAll(): List<EventOwner> {
-        return database.event_owners.toList()
-    }
+  fun findAll(): List<EventOwner> {
+    return database.event_owners.toList()
+  }
 
-    fun create(
-            eventOwner: EventOwner
-    ): EventOwner {
-        val eventOwnerFromDatabase = EventOwner{
-            this.name = eventOwner.name
-        }
-        database.event_owners.add(eventOwnerFromDatabase)
-        return eventOwnerFromDatabase
+  fun create(
+    eventOwner: EventOwner
+  ): EventOwner {
+    val eventOwnerFromDatabase = EventOwner {
+      this.name = eventOwner.name
     }
+    database.event_owners.add(eventOwnerFromDatabase)
+    return eventOwnerFromDatabase
+  }
 }

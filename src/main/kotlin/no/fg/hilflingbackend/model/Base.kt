@@ -3,7 +3,6 @@ package no.fg.hilflingbackend.model
 import me.liuwj.ktorm.entity.Entity
 import me.liuwj.ktorm.schema.Table
 import me.liuwj.ktorm.schema.date
-import me.liuwj.ktorm.schema.int
 import me.liuwj.ktorm.schema.uuid
 import java.time.LocalDate
 import java.util.*

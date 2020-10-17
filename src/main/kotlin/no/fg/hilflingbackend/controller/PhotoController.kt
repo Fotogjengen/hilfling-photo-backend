@@ -16,83 +16,83 @@ import org.springframework.web.multipart.MultipartFile
 @RequestMapping("/photos")
 class PhotoController {
 
-    @Autowired
-    lateinit var photoService: PhotoService
+  @Autowired
+  lateinit var photoService: PhotoService
 
-    @Autowired
-    lateinit var repository: PhotoRepository
+  @Autowired
+  lateinit var repository: PhotoRepository
 
-    @Autowired
-    lateinit var securityLevelRepository: SecurityLevelRepository
+  @Autowired
+  lateinit var securityLevelRepository: SecurityLevelRepository
 
-    @GetMapping("/{id}")
-    fun getById(@PathVariable("id") id: Int): Photo? {
-        return repository.findById(id)
-    }
+  @GetMapping("/{id}")
+  fun getById(@PathVariable("id") id: Int): Photo? {
+    return repository.findById(id)
+  }
 
-    @GetMapping
-    fun getAll(): List<Photo> {
-        return repository.findAll()
-    }
+  @GetMapping
+  fun getAll(): List<Photo> {
+    return repository.findAll()
+  }
 
-    @GetMapping("/analog")
-    fun getAllAnalogPhotos(): List<Photo> {
-        return repository.findAllAnalogPhotos()
-    }
+  @GetMapping("/analog")
+  fun getAllAnalogPhotos(): List<Photo> {
+    return repository.findAllAnalogPhotos()
+  }
 
-    @GetMapping("/digital")
-    fun getAllDigitalPhotos(): List<Photo> {
-        return repository.findAllDigitalPhotos()
-    }
+  @GetMapping("/digital")
+  fun getAllDigitalPhotos(): List<Photo> {
+    return repository.findAllDigitalPhotos()
+  }
 
-    /*@PostMapping
-    fun createPhoto(
-            @RequestParam("photo") photo: Photo,
-            @RequestParam("file") file: MultipartFile
-    ): Photo {
+  /*@PostMapping
+  fun createPhoto(
+          @RequestParam("photo") photo: Photo,
+          @RequestParam("file") file: MultipartFile
+  ): Photo {
 
-        return repository.createPhoto(photo)
-    }*/
+      return repository.createPhoto(photo)
+  }*/
 
-    private fun uploadPhotoFile(
-            file: MultipartFile,
-            securityLevelId: Int
-    ): String {
-        val securityLevel = securityLevelRepository.findById(securityLevelId)
-                ?: throw IllegalAccessError("Security level does not exist.")
-        return photoService.store(file, securityLevel)
-    }
+  private fun uploadPhotoFile(
+    file: MultipartFile,
+    securityLevelId: Int
+  ): String {
+    val securityLevel = securityLevelRepository.findById(securityLevelId)
+      ?: throw IllegalAccessError("Security level does not exist.")
+    return photoService.store(file, securityLevel)
+  }
 
-    @PostMapping
-    fun uploadPhoto(
-            @RequestPart("photo") photo: Photo,
-            @RequestPart("file") file: MultipartFile
-    ): ResponseEntity<Photo> {
-        val path = uploadPhotoFile(file, photo.securityLevel.id)
-        photo.smallUrl = path
-        photo.mediumUrl = path
-        photo.largeUrl = path
-        val createdPhoto = repository.createPhoto(photo)
-        return ResponseEntity<Photo>(createdPhoto, HttpHeaders(), HttpStatus.CREATED)
-    }
+  @PostMapping
+  fun uploadPhoto(
+    @RequestPart("photo") photo: Photo,
+    @RequestPart("file") file: MultipartFile
+  ): ResponseEntity<Photo> {
+    val path = uploadPhotoFile(file, photo.securityLevel.id)
+    photo.smallUrl = path
+    photo.mediumUrl = path
+    photo.largeUrl = path
+    val createdPhoto = repository.createPhoto(photo)
+    return ResponseEntity<Photo>(createdPhoto, HttpHeaders(), HttpStatus.CREATED)
+  }
 
-    @PostMapping("/analog")
-    fun createAnalogPhoto(
-            @RequestBody analogPhoto: AnalogPhoto
-    ): AnalogPhoto {
-        return repository.createAnalogPhoto(analogPhoto)
-    }
+  @PostMapping("/analog")
+  fun createAnalogPhoto(
+    @RequestBody analogPhoto: AnalogPhoto
+  ): AnalogPhoto {
+    return repository.createAnalogPhoto(analogPhoto)
+  }
 
-    @PatchMapping("/analog")
-    fun uploadAnalogPhoto(
-            @RequestPart("photo") analogPhoto: AnalogPhoto,
-            @RequestPart("file") file: MultipartFile
-    ): ResponseEntity<AnalogPhoto> {
-        val path = uploadPhotoFile(file, analogPhoto.photo.securityLevel.id)
-        analogPhoto.photo.smallUrl = path
-        analogPhoto.photo.mediumUrl = path
-        analogPhoto.photo.largeUrl = path
-        val updatedAnalogPhoto = repository.patchAnalogPhoto(analogPhoto)
-        return ResponseEntity<AnalogPhoto>(updatedAnalogPhoto, HttpHeaders(), HttpStatus.ACCEPTED)
-    }
+  @PatchMapping("/analog")
+  fun uploadAnalogPhoto(
+    @RequestPart("photo") analogPhoto: AnalogPhoto,
+    @RequestPart("file") file: MultipartFile
+  ): ResponseEntity<AnalogPhoto> {
+    val path = uploadPhotoFile(file, analogPhoto.photo.securityLevel.id)
+    analogPhoto.photo.smallUrl = path
+    analogPhoto.photo.mediumUrl = path
+    analogPhoto.photo.largeUrl = path
+    val updatedAnalogPhoto = repository.patchAnalogPhoto(analogPhoto)
+    return ResponseEntity<AnalogPhoto>(updatedAnalogPhoto, HttpHeaders(), HttpStatus.ACCEPTED)
+  }
 }

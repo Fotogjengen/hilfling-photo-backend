@@ -8,25 +8,25 @@ import org.springframework.web.bind.annotation.*
 @RestController
 @RequestMapping("/articles")
 class ArticleController {
-    @Autowired
-    lateinit var repository: ArticleRepository
+  @Autowired
+  lateinit var repository: ArticleRepository
 
-    @GetMapping("/{id}")
-    fun getById(@PathVariable("id") id: Int): Article? {
-        return repository.findById(id)
-    }
+  @GetMapping("/{id}")
+  fun getById(@PathVariable("id") id: Int): Article? {
+    return repository.findById(id)
+  }
 
-    @GetMapping
-    fun getAll(): List<Article> {
-        return repository.findAll()
-    }
+  @GetMapping
+  fun getAll(): List<Article> {
+    return repository.findAll()
+  }
 
-    @PostMapping
-    fun create(
-            @RequestBody article: Article
-    ): Article {
-        return repository.create(
-                article
-        )
-    }
+  @PostMapping
+  fun create(
+    @RequestBody article: Article
+  ): Article {
+    return repository.create(
+      article
+    )
+  }
 }

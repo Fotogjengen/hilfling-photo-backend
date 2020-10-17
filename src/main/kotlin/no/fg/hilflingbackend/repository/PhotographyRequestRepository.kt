@@ -12,32 +12,32 @@ import org.springframework.stereotype.Repository
 
 @Repository
 open class PhotographyRequestRepository {
-    @Autowired
-    open lateinit var database: Database
+  @Autowired
+  open lateinit var database: Database
 
-    fun findById(id: Int): PhotographyRequest? {
-        return database.photography_requests.find { it.id eq id }
-    }
+  fun findById(id: Int): PhotographyRequest? {
+    return database.photography_requests.find { it.id eq id }
+  }
 
-    fun findAll(): List<PhotographyRequest> {
-        return database.photography_requests.toList()
-    }
+  fun findAll(): List<PhotographyRequest> {
+    return database.photography_requests.toList()
+  }
 
-    fun create(
-            photographyRequest: PhotographyRequest
-    ): PhotographyRequest {
-        val photographyRequestFromDatabase = PhotographyRequest{
-            this.startTime = photographyRequest.startTime
-            this.endTime = photographyRequest.endTime
-            this.place = photographyRequest.place
-            this.isIntern = photographyRequest.isIntern
-            this.type = photographyRequest.type
-            this.name = photographyRequest.name
-            this.email = photographyRequest.email
-            this.phone = photographyRequest.phone
-            this.description = photographyRequest.description
-        }
-        database.photography_requests.add(photographyRequestFromDatabase)
-        return photographyRequestFromDatabase
+  fun create(
+    photographyRequest: PhotographyRequest
+  ): PhotographyRequest {
+    val photographyRequestFromDatabase = PhotographyRequest {
+      this.startTime = photographyRequest.startTime
+      this.endTime = photographyRequest.endTime
+      this.place = photographyRequest.place
+      this.isIntern = photographyRequest.isIntern
+      this.type = photographyRequest.type
+      this.name = photographyRequest.name
+      this.email = photographyRequest.email
+      this.phone = photographyRequest.phone
+      this.description = photographyRequest.description
     }
+    database.photography_requests.add(photographyRequestFromDatabase)
+    return photographyRequestFromDatabase
+  }
 }
