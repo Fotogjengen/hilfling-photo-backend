@@ -74,32 +74,6 @@ CREATE TABLE ARTICLE_TAG
 (
     id           SERIAL PRIMARY KEY,
     date_created DATE NOT NULL DEFAULT CURRENT_DATE,
-<<<<<<< HEAD
-    relation_ship_status VARCHAR(15),
-    semester_start VARCHAR(20),
-    is_active BOOLEAN,
-    is_pang BOOLEAN,
-    Address VARCHAR(40),
-    zip_code VARCHAR(4),
-    city VARCHAR(30),
-    user_id INTEGER REFERENCES HILFLING_USER(id)
-);
-
-CREATE TABLE PHOTO (
-    id INTEGER PRIMARY KEY,
-    date_created DATE NOT NULL DEFAULT CURRENT_DATE,
-    s_url VARCHAR(255),
-    m_url VARCHAR(255),
-    l_url VARCHAR(255),
-    is_good_picture BOOLEAN,
-    motive_id INTEGER REFERENCES MOTIVE(id),
-    place_id INTEGER REFERENCES PLACE(id),
-    security_level_id INTEGER REFERENCES SECURITY_LEVEL(id),
-    photo_gang_banger INTEGER REFERENCES PHOTO_GANG_BANGER(id)
-);
-
-CREATE TABLE ANALOG_PHOTO (
-=======
     name         VARCHAR(20)
 );
 
@@ -183,7 +157,6 @@ CREATE TABLE PHOTO
 
 CREATE TABLE ANALOG_PHOTO
 (
->>>>>>> 8bac0a0336f751bf943215436e7ac6929abf8f66
     image_number INTEGER,
     date_created DATE NOT NULL DEFAULT CURRENT_DATE,
     page_number  INTEGER,

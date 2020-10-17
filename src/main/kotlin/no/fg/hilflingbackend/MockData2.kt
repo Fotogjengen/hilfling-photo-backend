@@ -1,9 +1,9 @@
 package hilfling.backend.hilfling
 
+/*
 import no.fg.hilflingbackend.controller.PhotoGangBangerRepository
 import no.fg.hilflingbackend.repository.*
 import org.springframework.beans.factory.annotation.Autowired
-/*
 
 class MockData2 {
 
