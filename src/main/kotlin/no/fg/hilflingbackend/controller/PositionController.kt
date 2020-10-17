@@ -4,6 +4,7 @@ import no.fg.hilflingbackend.model.Position
 import no.fg.hilflingbackend.repository.PositionRepository
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.web.bind.annotation.*
+import java.util.*
 
 @RestController
 @RequestMapping("/positions")
@@ -12,7 +13,7 @@ class PositionController {
   lateinit var repository: PositionRepository
 
   @GetMapping("/{id}")
-  fun getById(@PathVariable("id") id: Int): Position? {
+  fun getById(@PathVariable("id") id: UUID): Position? {
     return repository.findById(id)
   }
 
