@@ -17,7 +17,7 @@ interface PhotoGangBanger : BaseModel<PhotoGangBanger> {
     var city: String
 
     // From User model
-    var user: User
+    var samfundetUser: SamfundetUser
 }
 
 object PhotoGangBangers : BaseTable<PhotoGangBanger>("photo_gang_banger") {
@@ -30,7 +30,7 @@ object PhotoGangBangers : BaseTable<PhotoGangBanger>("photo_gang_banger") {
     val city = varchar("city").bindTo { it.city }
 
     // From User model
-    val userId = int("user_id").references(Users){it.user}
+    val samfundetUserId = int("samfundet_user_id").references(SamfundetUsers){it.samfundetUser}
 }
 
 val Database.photo_gang_bangers get() = this.sequenceOf(PhotoGangBangers)
