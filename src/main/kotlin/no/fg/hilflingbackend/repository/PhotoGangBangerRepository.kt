@@ -57,7 +57,7 @@ open class PhotoGangBangerRepository {
             this.address = photoGangBanger.address;
             this.zipCode = photoGangBanger.zipCode;
             this.city = photoGangBanger.city;
-            this.user = photoGangBanger.user;
+            this.samfundetUser = photoGangBanger.samfundetUser;
         }
         database.photo_gang_bangers.add(photoGangBangerFromDatabase)
         return photoGangBangerFromDatabase

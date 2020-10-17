@@ -65,7 +65,7 @@ class PhotoService {
 
     fun loadFiles(): Stream<Path> {
         return Files.walk(this.rootLocation, 1)
-                .filter{path -> !path.equals(this.rootLocation)}
+                .filter{path -> path != this.rootLocation }
                 .map(this.rootLocation::relativize)
     }
 

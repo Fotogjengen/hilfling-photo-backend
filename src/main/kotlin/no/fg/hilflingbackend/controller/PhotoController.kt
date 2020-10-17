@@ -4,6 +4,7 @@ import no.fg.hilflingbackend.model.AnalogPhoto
 import no.fg.hilflingbackend.model.Photo
 import no.fg.hilflingbackend.model.SecurityLevel
 import no.fg.hilflingbackend.repository.PhotoRepository
+import no.fg.hilflingbackend.repository.SecurityLevelRepository
 import no.fg.hilflingbackend.service.PhotoService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.ui.Model
@@ -19,6 +20,9 @@ class PhotoController {
 
     @Autowired
     lateinit var repository: PhotoRepository
+
+    @Autowired
+    lateinit var securityLevelRepository: SecurityLevelRepository
 
     @GetMapping("/{id}")
     fun getById(@PathVariable("id") id: Int): Photo? {
@@ -53,20 +57,21 @@ class PhotoController {
     fun createPhoto(
             @RequestPart("photo") photo: Photo,
             @RequestPart("file") file: MultipartFile
-    ): Photo {
-        val path = photoService.store(file, photo.securityLevel)
+    ): Photo? {
+        val securityLevel = securityLevelRepository.findById(photo.securityLevel.id) ?: return null
+        val path = photoService.store(file, securityLevel)
         // TODO: test photo upload
         photo.smallUrl = path
         photo.mediumUrl = path
         photo.largeUrl = path
-        repository.createPhoto(photo)
+        val createdPhoto = repository.createPhoto(photo)
         return photo
     }
 
     @PostMapping("/analog")
     fun createPhoto(
             @RequestBody analogPhoto: AnalogPhoto
-    ): AnalogPhoto {
+    ): AnalogPhoto? {
         return repository.createAnalogPhoto(analogPhoto)
     }
 }
