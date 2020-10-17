@@ -12,32 +12,32 @@ import org.springframework.stereotype.Repository
 
 @Repository
 open class PurchaseOrderRepository {
-    @Autowired
-    open lateinit var database: Database
+  @Autowired
+  open lateinit var database: Database
 
-    fun findById(id: Int): PurchaseOrder? {
-        return database.purchase_orders.find{it.id eq  id}
-    }
+  fun findById(id: Int): PurchaseOrder? {
+    return database.purchase_orders.find { it.id eq id }
+  }
 
-    fun findAll(): List<PurchaseOrder> {
-        return database.purchase_orders.toList()
-    }
+  fun findAll(): List<PurchaseOrder> {
+    return database.purchase_orders.toList()
+  }
 
-    fun create(
-            purchaseOrder: PurchaseOrder
-    ): PurchaseOrder {
-        val purchaseOrderFromDatabase = PurchaseOrder{
-            this.name = purchaseOrder.name;
-            this.email = purchaseOrder.email;
-            this.address = purchaseOrder.address;
-            this.zipCode = purchaseOrder.zipCode;
-            this.city = purchaseOrder.city;
-            this.sendByPost = purchaseOrder.sendByPost;
-            this.comment = purchaseOrder.comment;
-            this.isCompleted = purchaseOrder.isCompleted;
-        }
-        database.purchase_orders.add(purchaseOrderFromDatabase)
-        return purchaseOrderFromDatabase
+  fun create(
+    purchaseOrder: PurchaseOrder
+  ): PurchaseOrder {
+    val purchaseOrderFromDatabase = PurchaseOrder {
+      this.name = purchaseOrder.name
+      this.email = purchaseOrder.email
+      this.address = purchaseOrder.address
+      this.zipCode = purchaseOrder.zipCode
+      this.city = purchaseOrder.city
+      this.sendByPost = purchaseOrder.sendByPost
+      this.comment = purchaseOrder.comment
+      this.isCompleted = purchaseOrder.isCompleted
     }
-    // TODO: DELETE
+    database.purchase_orders.add(purchaseOrderFromDatabase)
+    return purchaseOrderFromDatabase
+  }
+  // TODO: DELETE
 }

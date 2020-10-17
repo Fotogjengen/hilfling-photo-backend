@@ -8,23 +8,23 @@ import org.springframework.web.bind.annotation.*
 @RestController
 @RequestMapping("/places")
 class PlaceController {
-    @Autowired
-    lateinit var  repository: PlaceRepository
+  @Autowired
+  lateinit var repository: PlaceRepository
 
-    @GetMapping("/{id}")
-    fun getById(@PathVariable("id") id: Int) : Place? {
-        return repository.findById(id)
-    }
+  @GetMapping("/{id}")
+  fun getById(@PathVariable("id") id: Int): Place? {
+    return repository.findById(id)
+  }
 
-    @GetMapping
-    fun getAll() : List<Place> {
-        return repository.findAll()
-    }
+  @GetMapping
+  fun getAll(): List<Place> {
+    return repository.findAll()
+  }
 
-    @PostMapping
-    fun create(
-            @RequestBody place: Place
-    ): Place {
-        return repository.create(place)
-    }
+  @PostMapping
+  fun create(
+    @RequestBody place: Place
+  ): Place {
+    return repository.create(place)
+  }
 }

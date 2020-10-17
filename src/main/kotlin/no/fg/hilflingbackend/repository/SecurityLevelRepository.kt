@@ -13,25 +13,25 @@ import java.time.LocalDate
 
 @Repository
 open class SecurityLevelRepository {
-    @Autowired
-    open lateinit var database: Database
+  @Autowired
+  open lateinit var database: Database
 
-    fun findById(id: Int): SecurityLevel? {
-        return database.security_levels.find{it.id eq  id}
-    }
+  fun findById(id: Int): SecurityLevel? {
+    return database.security_levels.find { it.id eq id }
+  }
 
-    fun findAll(): List<SecurityLevel> {
-        return database.security_levels.toList()
-    }
+  fun findAll(): List<SecurityLevel> {
+    return database.security_levels.toList()
+  }
 
-    fun create(
-            securityLevel: SecurityLevel
-    ): SecurityLevel {
-        val securityLevelFromDatabase = SecurityLevel{
-            this.type = securityLevel.type
-            this.dateCreated = LocalDate.now()
-        }
-        database.security_levels.add(securityLevelFromDatabase)
-        return securityLevelFromDatabase
+  fun create(
+    securityLevel: SecurityLevel
+  ): SecurityLevel {
+    val securityLevelFromDatabase = SecurityLevel {
+      this.type = securityLevel.type
+      this.dateCreated = LocalDate.now()
     }
+    database.security_levels.add(securityLevelFromDatabase)
+    return securityLevelFromDatabase
+  }
 }

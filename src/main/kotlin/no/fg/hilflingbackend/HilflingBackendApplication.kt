@@ -9,15 +9,15 @@ import org.springframework.context.annotation.Bean
 
 @SpringBootApplication
 open class HilflingBackendApplication {
-	@Autowired
-	lateinit var photoService: PhotoService
+  @Autowired
+  lateinit var photoService: PhotoService
 
-	@Bean
-	open fun run() = CommandLineRunner {
-		photoService.createFilesystemIfNotExists() // TODO: Don't run in prod
-	}
+  @Bean
+  open fun run() = CommandLineRunner {
+    photoService.createFilesystemIfNotExists() // TODO: Don't run in prod
+  }
 }
 
 fun main(args: Array<String>) {
-	runApplication<HilflingBackendApplication>(*args)
+  runApplication<HilflingBackendApplication>(*args)
 }

@@ -12,25 +12,25 @@ import org.springframework.stereotype.Repository
 
 @Repository
 open class PositionRepository {
-    @Autowired
-    open lateinit var database: Database
+  @Autowired
+  open lateinit var database: Database
 
-    fun findById(id: Int): Position? {
-        return database.positions.find{it.id eq  id}
-    }
+  fun findById(id: Int): Position? {
+    return database.positions.find { it.id eq id }
+  }
 
-    fun findAll(): List<Position> {
-        return database.positions.toList()
-    }
+  fun findAll(): List<Position> {
+    return database.positions.toList()
+  }
 
-    fun create(
-           position: Position
-    ): Position {
-        val positionFromDatabase = Position{
-            this.title = position.title;
-            this.email = position.email;
-        }
-        database.positions.add(positionFromDatabase)
-        return positionFromDatabase
+  fun create(
+    position: Position
+  ): Position {
+    val positionFromDatabase = Position {
+      this.title = position.title
+      this.email = position.email
     }
+    database.positions.add(positionFromDatabase)
+    return positionFromDatabase
+  }
 }

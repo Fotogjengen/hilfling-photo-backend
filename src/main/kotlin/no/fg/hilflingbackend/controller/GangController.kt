@@ -8,25 +8,25 @@ import org.springframework.web.bind.annotation.*
 @RestController
 @RequestMapping("/gangs")
 class GangController {
-    @Autowired
-    lateinit var  repository: GangRepository
+  @Autowired
+  lateinit var repository: GangRepository
 
-    @GetMapping("/{id}")
-    fun getById(@PathVariable("id") id: Int): Gang? {
-        return repository.findById(id)
-    }
+  @GetMapping("/{id}")
+  fun getById(@PathVariable("id") id: Int): Gang? {
+    return repository.findById(id)
+  }
 
-    @GetMapping
-    fun getAll(): List<Gang> {
-        return repository.findAll()
-    }
+  @GetMapping
+  fun getAll(): List<Gang> {
+    return repository.findAll()
+  }
 
-    @PostMapping
-    fun create(
-            @RequestBody gang: Gang
-    ): Gang {
-        return repository.create(
-                gang
-        )
-    }
+  @PostMapping
+  fun create(
+    @RequestBody gang: Gang
+  ): Gang {
+    return repository.create(
+      gang
+    )
+  }
 }

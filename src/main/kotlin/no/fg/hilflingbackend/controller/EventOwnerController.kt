@@ -8,25 +8,25 @@ import org.springframework.web.bind.annotation.*
 @RestController
 @RequestMapping("/event_owners")
 class EventOwnerController {
-    @Autowired
-    lateinit var repository: EventOwnerRepository
+  @Autowired
+  lateinit var repository: EventOwnerRepository
 
-    @GetMapping("/{id}")
-    fun getById(@PathVariable("id") id: Int): EventOwner? {
-        return repository.findById(id)
-    }
+  @GetMapping("/{id}")
+  fun getById(@PathVariable("id") id: Int): EventOwner? {
+    return repository.findById(id)
+  }
 
-    @GetMapping
-    fun getAll(): List<EventOwner> {
-        return repository.findAll()
-    }
+  @GetMapping
+  fun getAll(): List<EventOwner> {
+    return repository.findAll()
+  }
 
-    @PostMapping
-    fun create(
-            @RequestBody eventOwner: EventOwner
-    ): EventOwner {
-        return repository.create(
-                eventOwner
-        )
-    }
+  @PostMapping
+  fun create(
+    @RequestBody eventOwner: EventOwner
+  ): EventOwner {
+    return repository.create(
+      eventOwner
+    )
+  }
 }

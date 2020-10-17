@@ -3,16 +3,16 @@ package no.fg.hilflingbackend.model
 import me.liuwj.ktorm.database.Database
 import me.liuwj.ktorm.entity.Entity
 import me.liuwj.ktorm.entity.sequenceOf
-import me.liuwj.ktorm.schema.*
+import me.liuwj.ktorm.schema.varchar
 
 interface Gang : BaseModel<Gang> {
-    companion object : Entity.Factory<Gang>()
+  companion object : Entity.Factory<Gang>()
 
-    var name: String
+  var name: String
 }
 
 object Gangs : BaseTable<Gang>("gang") {
-    val name = varchar("name").bindTo { it.name }
+  val name = varchar("name").bindTo { it.name }
 }
 
 val Database.gangs get() = this.sequenceOf(Gangs)

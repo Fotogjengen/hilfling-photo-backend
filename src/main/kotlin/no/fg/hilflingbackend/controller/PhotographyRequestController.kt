@@ -8,23 +8,23 @@ import org.springframework.web.bind.annotation.*
 @RestController
 @RequestMapping("/photography_requests")
 class PhotographyRequestController {
-    @Autowired
-    lateinit var  repository: PhotographyRequestRepository
+  @Autowired
+  lateinit var repository: PhotographyRequestRepository
 
-    @GetMapping("/{id}")
-    fun getById(@PathVariable("id") id: Int) : PhotographyRequest? {
-        return repository.findById(id)
-    }
+  @GetMapping("/{id}")
+  fun getById(@PathVariable("id") id: Int): PhotographyRequest? {
+    return repository.findById(id)
+  }
 
-    @GetMapping
-    fun getAll() : List<PhotographyRequest> {
-        return repository.findAll()
-    }
+  @GetMapping
+  fun getAll(): List<PhotographyRequest> {
+    return repository.findAll()
+  }
 
-    @PostMapping
-    fun create(
-            @RequestBody photographyRequest: PhotographyRequest
-    ): PhotographyRequest {
-        return repository.create(photographyRequest)
-    }
+  @PostMapping
+  fun create(
+    @RequestBody photographyRequest: PhotographyRequest
+  ): PhotographyRequest {
+    return repository.create(photographyRequest)
+  }
 }
