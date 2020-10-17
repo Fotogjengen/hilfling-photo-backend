@@ -26,12 +26,6 @@ class AlbumController {
     fun create(
             @RequestParam("album") album: Album
     ): Album {
-<<<<<<< HEAD:src/main/kotlin/hilfling/backend/hilfling/controller/AlbumController.kt
-        return repository.create(Album{
-
-        })
-=======
         return repository.create(album)
->>>>>>> 8bac0a0336f751bf943215436e7ac6929abf8f66:src/main/kotlin/no/fg/hilflingbackend/controller/AlbumController.kt
     }
 }

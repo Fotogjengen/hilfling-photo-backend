@@ -1,35 +1,37 @@
 package hilfling.backend.hilfling
 
-class MockData {
+import no.fg.hilflingbackend.controller.PhotoGangBangerRepository
+import no.fg.hilflingbackend.repository.*
+import org.springframework.beans.factory.annotation.Autowired
+/*
 
-    @autowired
+class MockData2 {
+
+    @Autowired
     val photoRepository = PhotoRepository()
 
-    @autowired
+    @Autowired
     val photoGangBangerRepository = PhotoGangBangerRepository()
 
-    @autowired
-    val photoGangBangerPositionRepository = PhotoGangBangerPositionRepository();
-
-    @autowired
+    @Autowired
     val photographyRequestRepository = PhotographyRequestRepository()
 
-    @autowired
+    @Autowired
     val photoOnPurchaseOrderRepository = PhotoOnPurchaseOrderRepository()
 
-    @autowired
+    @Autowired
     val photoTagRepository = PhotoTagRepository()
 
-    @autowired
+    @Autowired
     val placeRepository = PlaceRepository()
 
-    @autowired
+    @Autowired
     val positionRepository = PositionRepository()
 
-    @autowired
+    @Autowired
     val purchaseOrderRepository = PurchaseOrderRepository()
 
-    @autowired
+    @Autowired
     val securitylevelRepository = SecurityLevelRepository()
 
 
@@ -298,3 +300,4 @@ class MockData {
 
 
 }
+*/

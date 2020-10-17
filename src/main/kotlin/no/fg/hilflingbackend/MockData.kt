@@ -1,7 +1,7 @@
 package hilfling.backend.hilfling
 
-import hilfling.backend.hilfling.model.Album
-import hilfling.backend.hilfling.repository.*
+import no.fg.hilflingbackend.model.Album
+import no.fg.hilflingbackend.repository.*
 import org.springframework.beans.factory.annotation.Autowired
 
 class MockData {
