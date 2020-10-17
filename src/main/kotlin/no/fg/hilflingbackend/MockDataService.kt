@@ -1,4 +1,3 @@
-/*
 package no.fg.hilflingbackend
 
 import no.fg.hilflingbackend.dto.AlbumDto
@@ -35,29 +34,32 @@ class MockDataService {
   lateinit var motiveRepository: MotiveRepository
 
   private fun generateAlbumData(): List<AlbumDto> {
-    listOf(
+    return listOf(
       AlbumDto(
         title = "Vår 2017",
         isAnalog = true,
       ),
       AlbumDto(
         title = "Høst 2017"
-    ),
-    AlbumDto(
-      title = "Vår 2018"
-    ),
-    AlbumDto(
-      title = "Høst 2018"
-    ),
-    AlbumDto(
-      title = "Vår 2019"
-    ),
-    AlbumDto(
-      title = "Høst 2019",
-      isAnalog = true
+      ),
+      AlbumDto(
+        title = "Vår 2018"
+      ),
+      AlbumDto(
+        title = "Høst 2018"
+      ),
+      AlbumDto(
+        title = "Vår 2019"
+      ),
+      AlbumDto(
+        title = "Høst 2019",
+        isAnalog = true
+      )
     )
 
   }
+  /*:w
+
   private fun generatePhotoTagData(): List<PhotoTag> {
     return listOf(
       PhotoTag {
@@ -271,11 +273,15 @@ class MockDataService {
   private fun generateMotiveData() {
 
   }
+  */
 
   fun seedMockData() {
     generateAlbumData()
+      .forEach{
+        albumRepository.create(it)
+      }
+
   }
 
 
 }
-*/
