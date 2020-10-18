@@ -16,6 +16,7 @@ data class PhotoGangBangerDto(
   val zipCode: String,
   val city: String,
   val samfundetUser: SamfundetUserDto,
+  val position: PositionDto,
 )
 fun PhotoGangBangerDto.toEntity(): PhotoGangBanger {
   val dto = this
@@ -28,14 +29,8 @@ fun PhotoGangBangerDto.toEntity(): PhotoGangBanger {
     address = dto.address
     zipCode = dto.zipCode
     city = dto.city
-    samfundetUser = SamfundetUser{
-        id = dto.samfundetUser.samfundetUserId.id
-        email = dto.samfundetUser.email.value
-        firstName = dto.samfundetUser.firstName
-        lastName = dto.samfundetUser.lastName
-        phoneNumber = dto.samfundetUser.phoneNumber
-        profilePicture = dto.samfundetUser.profilePicturePath
-    }
+    position = dto.position.toEntity()
+    samfundetUser = dto.samfundetUser.toEntity()
   }
 }
 

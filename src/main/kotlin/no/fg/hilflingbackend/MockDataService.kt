@@ -17,6 +17,9 @@ class MockDataService {
   lateinit var photoGangBangerRepository: PhotoGangBangerRepository
 
   @Autowired
+  lateinit var positionRepository: PositionRepository
+
+  @Autowired
   lateinit var samfundetUserRepository: SamfundetUserRepository
 
   @Autowired
@@ -95,9 +98,10 @@ class MockDataService {
         phoneNumber = "91382506"
       )
     )
-  private fun generatePhotoGangBanger(): List<PhotoGangBangerDto> =
+  private fun generatePhotoGangBangerData(): List<PhotoGangBangerDto> =
     listOf(
       PhotoGangBangerDto(
+        photoGangBangerId = PhotoGangBangerId(UUID.fromString("6a89444f-25f6-44d9-8a73-94587d72b839")),
         address = "Odd Brochmanns Veg 52",
         city = "Trondheim",
         isActive = true,
@@ -109,6 +113,33 @@ class MockDataService {
       )
     )
 
+  private fun generatePhotoGangBangerPositionData(): List<PhotoGangBangerPositionDto> =
+    listOf(
+      PhotoGangBangerPositionDto(
+        photoGangBangerPositionId = PhotoGangBangerPositionId(UUID.fromString("6a89444f-25f6-44d9-8a73-94587d72b831")),
+        isCurrent = true,
+        photoGangBangerDto = generatePhotoGangBangerData().first(),
+        position = generatePositionData().first(),
+      ),
+      PhotoGangBangerPositionDto (
+        photoGangBangerPositionId = PhotoGangBangerPositionId(UUID.fromString("6a89444f-25f6-44d9-8a73-94587d72b832")),
+        isCurrent = false,
+        photoGangBangerDto = generatePhotoGangBangerData().first(),
+        position = generatePositionData().first(),
+      )
+    )
+
+  private fun generatePositionData(): List<PositionDto> =
+    listOf(
+      PositionDto(
+        title = "Gjengsjef",
+        email = Email.create("fg-web@samfundet.no")
+      ),
+      PositionDto (
+        title = "Web",
+        email = Email.create("fg-web@samfundet.no")
+      )
+    )
   /*
   private fun generatePhotoOnPurchaseOrderData(): List<PhotoOnPurchaseOrder> {
     return listOf(
@@ -186,32 +217,7 @@ class MockDataService {
     )
   }
 
-  private fun generatePositionData(): List<Position> {
-    return listOf(
-      Position {
-        title = "Gjengsjef"
-        email = "fg-web@samfundet.no"
-      },
-      Position {
-        title = "Web"
-        email = "fg-web@samfundet.no"
-      }
-    )
-  }
 
-  private fun generatePhotoGangBangerPositionData(): List<PhotoGangBangerPosition> {
-    return listOf(
-      PhotoGangBangerPosition {
-        isCurrent = true
-        photoGangBanger = gener
-        position = PositionRepository.findById(1)
-      },
-      PhotoGangBangerPosition {
-        photoGangBanger = PhotoGangBangerRepository.findById(2)
-        position = PositionRepository.findById(2)
-      }
-    )
-  }
 
   private fun generatePlaceData(): List<Place> {
     return listOf(
@@ -325,10 +331,16 @@ class MockDataService {
     println("SamunfdetUsers seeded")
     println(samfundetUserRepository.findAll().toString())
 
-    generatePhotoGangBanger().forEach {
+    generatePhotoGangBangerData().forEach {
       photoGangBangerRepository.create(it)
     }
     println("PhotoGangBangers seeded")
+
+    generatePositionData().forEach {
+      positionRepository.create(it)
+    }
+    println("Position seeded")
+
   }
 
 

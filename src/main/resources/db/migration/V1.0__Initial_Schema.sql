@@ -117,7 +117,8 @@ CREATE TABLE PHOTO_GANG_BANGER
     address             VARCHAR(40),
     zip_code            VARCHAR(4),
     city                VARCHAR(30),
-    samfundet_user_id   UUID REFERENCES SAMFUNDET_USER (id)
+    samfundet_user_id   UUID REFERENCES SAMFUNDET_USER (id),
+    position_id UUID NOT NULL REFERENCES POSITION (id)
 );
 
 CREATE TABLE ARTICLE
