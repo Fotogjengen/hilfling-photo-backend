@@ -7,6 +7,7 @@ import me.liuwj.ktorm.schema.uuid
 import java.time.LocalDate
 import java.util.*
 
+
 open interface BaseModel<E : Entity<E>> : Entity<E> {
   val id: UUID
   var dateCreated: LocalDate
