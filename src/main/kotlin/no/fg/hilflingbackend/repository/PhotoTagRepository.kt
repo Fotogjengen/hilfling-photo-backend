@@ -5,6 +5,7 @@ import me.liuwj.ktorm.dsl.eq
 import me.liuwj.ktorm.entity.add
 import me.liuwj.ktorm.entity.find
 import me.liuwj.ktorm.entity.toList
+import no.fg.hilflingbackend.dto.PhotoTagDto
 import no.fg.hilflingbackend.model.PhotoTag
 import no.fg.hilflingbackend.model.photo_tags
 import org.springframework.beans.factory.annotation.Autowired
@@ -24,11 +25,12 @@ open class PhotoTagRepository {
     return database.photo_tags.toList()
   }
 
-  fun createPhotoTag(photoTag: PhotoTag): PhotoTag {
-    val photoTagFromDatabase = PhotoTag {
-      this.name = photoTag.name
-    }
-    database.photo_tags.add(photoTagFromDatabase)
-    return photoTagFromDatabase
+  fun create(photoTagDto: PhotoTagDto): Int {
+    return database.photo_tags.add(
+      PhotoTag {
+        id = photoTagDto.photoTagId.id
+        name = photoTagDto.name
+      }
+    )
   }
 }

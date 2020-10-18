@@ -5,6 +5,7 @@ import me.liuwj.ktorm.entity.Entity
 import me.liuwj.ktorm.entity.sequenceOf
 import me.liuwj.ktorm.schema.boolean
 import me.liuwj.ktorm.schema.int
+import me.liuwj.ktorm.schema.uuid
 import me.liuwj.ktorm.schema.varchar
 
 interface PhotoGangBanger : BaseModel<PhotoGangBanger> {
@@ -32,7 +33,7 @@ object PhotoGangBangers : BaseTable<PhotoGangBanger>("photo_gang_banger") {
   val city = varchar("city").bindTo { it.city }
 
   // From User model
-  val samfundetUserId = int("samfundet_user_id").references(SamfundetUsers) { it.samfundetUser }
+  val samfundetUserId = uuid("samfundet_user_id").references(SamfundetUsers) { it.samfundetUser }
 }
 
 val Database.photo_gang_bangers get() = this.sequenceOf(PhotoGangBangers)

@@ -1,16 +1,23 @@
 package no.fg.hilflingbackend
 
-import no.fg.hilflingbackend.dto.AlbumDto
-import no.fg.hilflingbackend.model.*
+import no.fg.hilflingbackend.dto.*
+import no.fg.hilflingbackend.model.SecurityLevel
 import no.fg.hilflingbackend.repository.*
+import no.fg.hilflingbackend.value_object.Email
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
-import java.time.LocalDate
+import java.util.*
 
 @Service
 class MockDataService {
   @Autowired
   lateinit var albumRepository: AlbumRepository
+
+  @Autowired
+  lateinit var photoGangBangerRepository: PhotoGangBangerRepository
+
+  @Autowired
+  lateinit var samfundetUserRepository: SamfundetUserRepository
 
   @Autowired
   lateinit var articleRepository: ArticleRepository
@@ -58,22 +65,51 @@ class MockDataService {
     )
 
   }
-  /*:w
 
-  private fun generatePhotoTagData(): List<PhotoTag> {
+  private fun generatePhotoTagData(): List<PhotoTagDto> {
     return listOf(
-      PhotoTag {
+      PhotoTagDto(
         name = "WowFactor100"
-      },
-      PhotoTag {
-        name = "insane!"
-      },
-      PhotoTag {
+      ),
+      PhotoTagDto(
+          name = "insane!"
+      ),
+      PhotoTagDto(
         name = "Meh"
-      }
+      )
     )
   }
+  private fun generateSamfundetUserData(): List<SamfundetUserDto> =
+    listOf(
+      SamfundetUserDto(
+        samfundetUserId = SamfundetUserId(UUID.fromString("6a89444f-25f6-44d9-8a73-94587d72b838")),
+        email = Email.create("emailtest@gmail.com"),
+        firstName = "Sindre",
+        lastName = "Sivertsen",
+        profilePicturePath = "https://media1.tenor.com/images/79f8be09f39791c6462d30c5ce42e3be/tenor.gif?itemid=18386674",
+        sex = "Mann",
+        username = "sjsivert",
+        securituLevel = SecurityLevel{
+          type = "1"
+        },
+        phoneNumber = "91382506"
+      )
+    )
+  private fun generatePhotoGangBanger(): List<PhotoGangBangerDto> =
+    listOf(
+      PhotoGangBangerDto(
+        address = "Odd Brochmanns Veg 52",
+        city = "Trondheim",
+        isActive = true,
+        isPang = true,
+        relationShipStatus = RelationshipStatus.SINGLE,
+        zipCode = "7051",
+        semesterStart = SemesterStart("H2018"),
+        samfundetUser = generateSamfundetUserData().first()
+      )
+    )
 
+  /*
   private fun generatePhotoOnPurchaseOrderData(): List<PhotoOnPurchaseOrder> {
     return listOf(
       PhotoOnPurchaseOrder {
@@ -280,7 +316,19 @@ class MockDataService {
       .forEach{
         albumRepository.create(it)
       }
+    generatePhotoTagData().forEach {
+      photoTagRepository.create(it)
+    }
+    generateSamfundetUserData().forEach {
+      samfundetUserRepository.create(it)
+    }
+    println("SamunfdetUsers seeded")
+    println(samfundetUserRepository.findAll().toString())
 
+    generatePhotoGangBanger().forEach {
+      photoGangBangerRepository.create(it)
+    }
+    println("PhotoGangBangers seeded")
   }
 
 
