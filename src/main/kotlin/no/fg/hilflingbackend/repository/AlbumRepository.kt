@@ -1,38 +1,30 @@
 package no.fg.hilflingbackend.repository
 
 import me.liuwj.ktorm.database.Database
-import me.liuwj.ktorm.dsl.eq
+import me.liuwj.ktorm.dsl.QueryRowSet
 import me.liuwj.ktorm.entity.add
-import me.liuwj.ktorm.entity.find
-import me.liuwj.ktorm.entity.toList
-import no.fg.hilflingbackend.dto.AlbumDto
+import me.liuwj.ktorm.entity.update
 import no.fg.hilflingbackend.model.Album
+import no.fg.hilflingbackend.model.Albums
 import no.fg.hilflingbackend.model.albums
-import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Repository
-import java.util.*
 
 @Repository
-open class AlbumRepository {
-  @Autowired
-  open lateinit var database: Database
-
-  fun findById(id: UUID): Album? {
-    return database.albums.find { it.id eq id }
+open class AlbumRepository(database: Database) : BaseRepository<Album>(table = Albums, database) {
+  override fun convertToClass(qrs: QueryRowSet): Album {
+    return Album{
+      id = qrs[Albums.id]!!
+      dateCreated = qrs[Albums.dateCreated]!!
+      title = qrs[Albums.title]!!
+      isAnalog = qrs[Albums.isAnalog]!!
+    }
   }
 
-  fun findAll(): List<Album> {
-    return database.albums.toList()
+  override fun create(entity: Album): Int {
+    return database.albums.add(entity)
   }
 
-  fun create(
-    album: AlbumDto
-  ): Int {
-    return database.albums.add(
-      Album {
-        isAnalog = album.isAnalog
-        title = album.title
-      }
-    )
+  override fun patch(entity: Album): Int {
+    return database.albums.update(entity)
   }
 }

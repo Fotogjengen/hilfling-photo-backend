@@ -1,3 +1,4 @@
+/*
 package no.fg.hilflingbackend
 
 import no.fg.hilflingbackend.dto.AlbumDto
@@ -58,7 +59,7 @@ class MockDataService {
     )
 
   }
-  /*:w
+:w
 
   private fun generatePhotoTagData(): List<PhotoTag> {
     return listOf(
@@ -273,9 +274,10 @@ class MockDataService {
   private fun generateMotiveData() {
 
   }
-  */
 
-  fun seedMockData() {
+
+
+fun seedMockData() {
     generateAlbumData()
       .forEach{
         albumRepository.create(it)
@@ -284,4 +286,6 @@ class MockDataService {
   }
 
 
+
 }
+*/

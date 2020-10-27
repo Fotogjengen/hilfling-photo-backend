@@ -6,8 +6,8 @@ import org.springframework.stereotype.Component
 import org.springframework.web.bind.annotation.*
 import java.util.*
 
-@Component
-open class Controller<T>(open val repository: IRepository<T>) {
+
+open class BaseController<T>(open val repository: IRepository<T>) {
 
   @GetMapping("/{id}")
   fun getById(
@@ -27,7 +27,7 @@ open class Controller<T>(open val repository: IRepository<T>) {
   @PostMapping
   fun create(
     @RequestBody entity: T
-  ): T {
+  ): Int {
     return repository.create(
       entity
     )

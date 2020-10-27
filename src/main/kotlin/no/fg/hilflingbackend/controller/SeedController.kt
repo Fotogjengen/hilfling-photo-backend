@@ -1,3 +1,4 @@
+/*
 package no.fg.hilflingbackend.controller
 
 import no.fg.hilflingbackend.MockDataService
@@ -19,3 +20,4 @@ class SeedController {
   }
 }
 
+*/

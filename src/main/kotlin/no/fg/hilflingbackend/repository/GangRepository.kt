@@ -27,6 +27,7 @@ open class GangRepository {
   fun create(gang: Gang): Gang {
     val gangFromDatabase = Gang {
       this.name = gang.name
+      this.id = gang.id
     }
     database.gangs.add(gangFromDatabase)
     return gangFromDatabase
