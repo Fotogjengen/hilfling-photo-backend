@@ -41,6 +41,10 @@ open class PhotoRepository {
     }.toList()
   }
 
+  fun findSixLatestPhotos(): List<Photo> {
+    return database.photos.toList().subList(1,6)
+  }
+
   fun findBySecurityLevel(securityLevel: SecurityLevel): List<Photo> {
     return database.photos.filter {
       val securityLevelFromDatabase = it.securityLevelId.referenceTable as SecurityLevels
