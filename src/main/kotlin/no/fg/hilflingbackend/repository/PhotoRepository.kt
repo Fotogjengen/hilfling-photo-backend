@@ -41,8 +41,10 @@ open class PhotoRepository {
     }.toList()
   }
 
-  fun findSixLatestPhotos(): List<Photo> {
-    return database.photos.take(6).toList()
+  fun findCarouselPhotos(): List<Photo> {
+    return database.photos
+      .filter { it.isGoodPicture eq true }
+      .take(6).toList()
   }
 
   fun findBySecurityLevel(securityLevel: SecurityLevel): List<Photo> {
