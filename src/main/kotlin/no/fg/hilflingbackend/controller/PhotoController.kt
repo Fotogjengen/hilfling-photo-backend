@@ -36,6 +36,11 @@ class PhotoController {
     return repository.findAll()
   }
 
+  @GetMapping("/six-latest")
+  fun getSixLatest(): List<Photo> {
+    return repository.findSixLatestPhotos()
+  }
+
   @GetMapping("/analog")
   fun getAllAnalogPhotos(): List<Photo> {
     return repository.findAllAnalogPhotos()
