@@ -1,7 +1,6 @@
 package no.fg.hilflingbackend.dto
 
 import no.fg.hilflingbackend.model.PhotoGangBanger
-import no.fg.hilflingbackend.model.SamfundetUser
 import java.util.*
 
 data class PhotoGangBangerDto(

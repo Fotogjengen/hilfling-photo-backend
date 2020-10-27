@@ -106,6 +106,7 @@ CREATE TABLE SAMFUNDET_USER
     security_level_id UUID REFERENCES SECURITY_LEVEL (id)
 );
 
+
 CREATE TABLE PHOTO_GANG_BANGER
 (
     id                  uuid PRIMARY KEY,
@@ -118,8 +119,9 @@ CREATE TABLE PHOTO_GANG_BANGER
     zip_code            VARCHAR(4),
     city                VARCHAR(30),
     samfundet_user_id   UUID REFERENCES SAMFUNDET_USER (id),
-    position_id UUID NOT NULL REFERENCES POSITION (id)
+    position_id UUID NOT NULL REFERENCES POSITION(id)
 );
+
 
 CREATE TABLE ARTICLE
 (

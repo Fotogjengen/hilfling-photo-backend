@@ -85,7 +85,7 @@ class MockDataService {
   private fun generateSamfundetUserData(): List<SamfundetUserDto> =
     listOf(
       SamfundetUserDto(
-        samfundetUserId = SamfundetUserId(UUID.fromString("6a89444f-25f6-44d9-8a73-94587d72b838")),
+        samfundetUserId = SamfundetUserId(UUID.fromString("6a89444f-25f6-44d9-8a73-94587d72b822")),
         email = Email.create("emailtest@gmail.com"),
         firstName = "Sindre",
         lastName = "Sivertsen",
@@ -109,7 +109,8 @@ class MockDataService {
         relationShipStatus = RelationshipStatus.SINGLE,
         zipCode = "7051",
         semesterStart = SemesterStart("H2018"),
-        samfundetUser = generateSamfundetUserData().first()
+        samfundetUser = generateSamfundetUserData().first(),
+        position = generatePositionData().first()
       )
     )
 
@@ -132,10 +133,12 @@ class MockDataService {
   private fun generatePositionData(): List<PositionDto> =
     listOf(
       PositionDto(
+        positionId = PositionId((UUID.fromString("bdd0cf5a-c952-41b8-8b83-c071da51f946"))),
         title = "Gjengsjef",
         email = Email.create("fg-web@samfundet.no")
       ),
       PositionDto (
+        positionId = PositionId((UUID.fromString("bdd0cf5a-c952-41b8-8b83-c071da51f945"))),
         title = "Web",
         email = Email.create("fg-web@samfundet.no")
       )
@@ -330,16 +333,17 @@ class MockDataService {
     }
     println("SamunfdetUsers seeded")
     println(samfundetUserRepository.findAll().toString())
+    generatePositionData().forEach {
+      positionRepository.create(it)
+    }
+    println("Position seeded")
+    println(positionRepository.findAll())
 
     generatePhotoGangBangerData().forEach {
       photoGangBangerRepository.create(it)
     }
     println("PhotoGangBangers seeded")
 
-    generatePositionData().forEach {
-      positionRepository.create(it)
-    }
-    println("Position seeded")
 
   }
 
