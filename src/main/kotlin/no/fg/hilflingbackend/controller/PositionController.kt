@@ -1,5 +1,6 @@
 package no.fg.hilflingbackend.controller
 
+import no.fg.hilflingbackend.dto.PositionDto
 import no.fg.hilflingbackend.model.Position
 import no.fg.hilflingbackend.repository.PositionRepository
 import org.springframework.beans.factory.annotation.Autowired
@@ -24,8 +25,8 @@ class PositionController {
 
   @PostMapping
   fun create(
-    @RequestBody position: Position
-  ): Position {
-    return repository.create(position)
+    @RequestBody positionDto: PositionDto
+  ): Int {
+    return repository.create(positionDto)
   }
 }

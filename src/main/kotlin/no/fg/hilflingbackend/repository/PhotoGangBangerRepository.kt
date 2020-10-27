@@ -6,6 +6,8 @@ import me.liuwj.ktorm.entity.add
 import me.liuwj.ktorm.entity.filter
 import me.liuwj.ktorm.entity.find
 import me.liuwj.ktorm.entity.toList
+import no.fg.hilflingbackend.dto.PhotoGangBangerDto
+import no.fg.hilflingbackend.dto.toEntity
 import no.fg.hilflingbackend.model.PhotoGangBanger
 import no.fg.hilflingbackend.model.photo_gang_bangers
 import org.springframework.beans.factory.annotation.Autowired
@@ -48,19 +50,9 @@ open class PhotoGangBangerRepository {
   }
 
   fun create(
-    photoGangBanger: PhotoGangBanger
-  ): PhotoGangBanger {
-    val photoGangBangerFromDatabase = PhotoGangBanger {
-      this.relationshipStatus = photoGangBanger.relationshipStatus
-      this.semesterStart = photoGangBanger.semesterStart
-      this.isActive = photoGangBanger.isActive
-      this.isPang = photoGangBanger.isPang
-      this.address = photoGangBanger.address
-      this.zipCode = photoGangBanger.zipCode
-      this.city = photoGangBanger.city
-      this.samfundetUser = photoGangBanger.samfundetUser
-    }
-    database.photo_gang_bangers.add(photoGangBangerFromDatabase)
-    return photoGangBangerFromDatabase
-  }
+    photoGangBangerDto: PhotoGangBangerDto
+  ): Int =
+    database.photo_gang_bangers.add(
+      photoGangBangerDto.toEntity()
+    )
 }

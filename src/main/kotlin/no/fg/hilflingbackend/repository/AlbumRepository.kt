@@ -30,6 +30,7 @@ open class AlbumRepository {
   ): Int {
     return database.albums.add(
       Album {
+        id = album.albumId.id
         isAnalog = album.isAnalog
         title = album.title
       }

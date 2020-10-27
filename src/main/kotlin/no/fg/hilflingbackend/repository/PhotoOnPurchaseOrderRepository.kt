@@ -5,6 +5,7 @@ import me.liuwj.ktorm.dsl.eq
 import me.liuwj.ktorm.entity.add
 import me.liuwj.ktorm.entity.find
 import me.liuwj.ktorm.entity.toList
+import no.fg.hilflingbackend.dto.PhotoOnPurchaseOrderDto
 import no.fg.hilflingbackend.model.PhotoOnPurchaseOrder
 import no.fg.hilflingbackend.model.photo_on_purchase_orders
 import org.springframework.beans.factory.annotation.Autowired
@@ -24,9 +25,22 @@ open class PhotoOnPurchaseOrderRepository {
     return database.photo_on_purchase_orders.toList()
   }
 
-  fun create(
-    photoOnPurchaseOrder: PhotoOnPurchaseOrder
-  ): PhotoOnPurchaseOrder {
+  /*
+fun create(
+  photoOnPurchaseOrder: PhotoOnPurchaseOrderDto
+): Int {
+  return database
+    .photo_on_purchase_orders
+    .add {
+      PhotoOnPurchaseOrder {
+        id = photoOnPurchaseOrder.photoOnPurchaseOrderId.id
+        photo
+        amount
+        size
+
+
+      }
+    }
     val photoOnPurchaseOrderFromDatabase = PhotoOnPurchaseOrder {
       this.size = photoOnPurchaseOrder.size
       this.amount = photoOnPurchaseOrder.amount
@@ -36,4 +50,5 @@ open class PhotoOnPurchaseOrderRepository {
     database.photo_on_purchase_orders.add(photoOnPurchaseOrderFromDatabase)
     return photoOnPurchaseOrderFromDatabase
   }
+   */
 }

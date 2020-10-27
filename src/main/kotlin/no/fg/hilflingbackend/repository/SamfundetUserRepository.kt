@@ -5,7 +5,10 @@ import me.liuwj.ktorm.dsl.eq
 import me.liuwj.ktorm.entity.add
 import me.liuwj.ktorm.entity.find
 import me.liuwj.ktorm.entity.toList
+import no.fg.hilflingbackend.dto.SamfundetUserDto
+import no.fg.hilflingbackend.dto.toEntity
 import no.fg.hilflingbackend.model.SamfundetUser
+import no.fg.hilflingbackend.model.SamfundetUsers
 import no.fg.hilflingbackend.model.samfundet_users
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Repository
@@ -25,18 +28,12 @@ open class SamfundetUserRepository {
   }
 
   fun create(
-    samfundetUser: SamfundetUser
-  ): SamfundetUser {
-    val userFromDatabase = SamfundetUser {
-      this.firstName = samfundetUser.firstName
-      this.lastName = samfundetUser.lastName
-      this.username = samfundetUser.username
-      this.email = samfundetUser.email
-      this.profilePicture = samfundetUser.profilePicture
-      this.phoneNumber = samfundetUser.phoneNumber
-      this.sex = samfundetUser.sex
-    }
-    database.samfundet_users.add(userFromDatabase)
-    return userFromDatabase
+    samfundetUserDto: SamfundetUserDto
+  ): Int{
+    return database
+      .samfundet_users
+      .add(
+        samfundetUserDto.toEntity()
+      )
   }
 }

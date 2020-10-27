@@ -1,16 +1,26 @@
 package no.fg.hilflingbackend
 
-import no.fg.hilflingbackend.dto.AlbumDto
-import no.fg.hilflingbackend.model.*
+import no.fg.hilflingbackend.dto.*
+import no.fg.hilflingbackend.model.SecurityLevel
 import no.fg.hilflingbackend.repository.*
+import no.fg.hilflingbackend.value_object.Email
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
-import java.time.LocalDate
+import java.util.*
 
 @Service
 class MockDataService {
   @Autowired
   lateinit var albumRepository: AlbumRepository
+
+  @Autowired
+  lateinit var photoGangBangerRepository: PhotoGangBangerRepository
+
+  @Autowired
+  lateinit var positionRepository: PositionRepository
+
+  @Autowired
+  lateinit var samfundetUserRepository: SamfundetUserRepository
 
   @Autowired
   lateinit var articleRepository: ArticleRepository
@@ -58,22 +68,82 @@ class MockDataService {
     )
 
   }
-  /*:w
 
-  private fun generatePhotoTagData(): List<PhotoTag> {
+  private fun generatePhotoTagData(): List<PhotoTagDto> {
     return listOf(
-      PhotoTag {
+      PhotoTagDto(
         name = "WowFactor100"
-      },
-      PhotoTag {
-        name = "insane!"
-      },
-      PhotoTag {
+      ),
+      PhotoTagDto(
+          name = "insane!"
+      ),
+      PhotoTagDto(
         name = "Meh"
-      }
+      )
     )
   }
+  private fun generateSamfundetUserData(): List<SamfundetUserDto> =
+    listOf(
+      SamfundetUserDto(
+        samfundetUserId = SamfundetUserId(UUID.fromString("6a89444f-25f6-44d9-8a73-94587d72b822")),
+        email = Email.create("emailtest@gmail.com"),
+        firstName = "Sindre",
+        lastName = "Sivertsen",
+        profilePicturePath = "https://media1.tenor.com/images/79f8be09f39791c6462d30c5ce42e3be/tenor.gif?itemid=18386674",
+        sex = "Mann",
+        username = "sjsivert",
+        securituLevel = SecurityLevel{
+          type = "1"
+        },
+        phoneNumber = "91382506"
+      )
+    )
+  private fun generatePhotoGangBangerData(): List<PhotoGangBangerDto> =
+    listOf(
+      PhotoGangBangerDto(
+        photoGangBangerId = PhotoGangBangerId(UUID.fromString("6a89444f-25f6-44d9-8a73-94587d72b839")),
+        address = "Odd Brochmanns Veg 52",
+        city = "Trondheim",
+        isActive = true,
+        isPang = true,
+        relationShipStatus = RelationshipStatus.SINGLE,
+        zipCode = "7051",
+        semesterStart = SemesterStart("H2018"),
+        samfundetUser = generateSamfundetUserData().first(),
+        position = generatePositionData().first()
+      )
+    )
 
+  private fun generatePhotoGangBangerPositionData(): List<PhotoGangBangerPositionDto> =
+    listOf(
+      PhotoGangBangerPositionDto(
+        photoGangBangerPositionId = PhotoGangBangerPositionId(UUID.fromString("6a89444f-25f6-44d9-8a73-94587d72b831")),
+        isCurrent = true,
+        photoGangBangerDto = generatePhotoGangBangerData().first(),
+        position = generatePositionData().first(),
+      ),
+      PhotoGangBangerPositionDto (
+        photoGangBangerPositionId = PhotoGangBangerPositionId(UUID.fromString("6a89444f-25f6-44d9-8a73-94587d72b832")),
+        isCurrent = false,
+        photoGangBangerDto = generatePhotoGangBangerData().first(),
+        position = generatePositionData().first(),
+      )
+    )
+
+  private fun generatePositionData(): List<PositionDto> =
+    listOf(
+      PositionDto(
+        positionId = PositionId((UUID.fromString("bdd0cf5a-c952-41b8-8b83-c071da51f946"))),
+        title = "Gjengsjef",
+        email = Email.create("fg-web@samfundet.no")
+      ),
+      PositionDto (
+        positionId = PositionId((UUID.fromString("bdd0cf5a-c952-41b8-8b83-c071da51f945"))),
+        title = "Web",
+        email = Email.create("fg-web@samfundet.no")
+      )
+    )
+  /*
   private fun generatePhotoOnPurchaseOrderData(): List<PhotoOnPurchaseOrder> {
     return listOf(
       PhotoOnPurchaseOrder {
@@ -150,32 +220,7 @@ class MockDataService {
     )
   }
 
-  private fun generatePositionData(): List<Position> {
-    return listOf(
-      Position {
-        title = "Gjengsjef"
-        email = "fg-web@samfundet.no"
-      },
-      Position {
-        title = "Web"
-        email = "fg-web@samfundet.no"
-      }
-    )
-  }
 
-  private fun generatePhotoGangBangerPositionData(): List<PhotoGangBangerPosition> {
-    return listOf(
-      PhotoGangBangerPosition {
-        isCurrent = true
-        photoGangBanger = gener
-        position = PositionRepository.findById(1)
-      },
-      PhotoGangBangerPosition {
-        photoGangBanger = PhotoGangBangerRepository.findById(2)
-        position = PositionRepository.findById(2)
-      }
-    )
-  }
 
   private fun generatePlaceData(): List<Place> {
     return listOf(
@@ -280,6 +325,25 @@ class MockDataService {
       .forEach{
         albumRepository.create(it)
       }
+    generatePhotoTagData().forEach {
+      photoTagRepository.create(it)
+    }
+    generateSamfundetUserData().forEach {
+      samfundetUserRepository.create(it)
+    }
+    println("SamunfdetUsers seeded")
+    println(samfundetUserRepository.findAll().toString())
+    generatePositionData().forEach {
+      positionRepository.create(it)
+    }
+    println("Position seeded")
+    println(positionRepository.findAll())
+
+    generatePhotoGangBangerData().forEach {
+      photoGangBangerRepository.create(it)
+    }
+    println("PhotoGangBangers seeded")
+
 
   }
 
