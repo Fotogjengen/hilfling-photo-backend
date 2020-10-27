@@ -36,6 +36,11 @@ class PhotoController {
     return repository.findAll()
   }
 
+  @GetMapping("/carousel")
+  fun getCarouselPhotos(): List<Photo> {
+    return repository.findCarouselPhotos()
+  }
+
   @GetMapping("/analog")
   fun getAllAnalogPhotos(): List<Photo> {
     return repository.findAllAnalogPhotos()

@@ -41,6 +41,12 @@ open class PhotoRepository {
     }.toList()
   }
 
+  fun findCarouselPhotos(): List<Photo> {
+    return database.photos
+      .filter { it.isGoodPicture eq true }
+      .take(6).toList()
+  }
+
   fun findBySecurityLevel(securityLevel: SecurityLevel): List<Photo> {
     return database.photos.filter {
       val securityLevelFromDatabase = it.securityLevelId.referenceTable as SecurityLevels

@@ -13,7 +13,6 @@ interface PhotoGangBangerPosition : BaseModel<PhotoGangBangerPosition> {
 
   // Foreign keys
   var position: Position
-  var photoGangBanger: PhotoGangBanger
 }
 
 object PhotoGangBangerPositions : BaseTable<PhotoGangBangerPosition>("photo_gang_banger_position") {
@@ -21,7 +20,6 @@ object PhotoGangBangerPositions : BaseTable<PhotoGangBangerPosition>("photo_gang
 
   // Foreign keys
   val position = int("position_id").references(Positions) { it.position }
-  val photoGangBanger = int("photo_gang_banger_id").references(PhotoGangBangers) { it.photoGangBanger }
 }
 
 val Database.photo_gang_banger_positions get() = this.sequenceOf(PhotoGangBangerPositions)
