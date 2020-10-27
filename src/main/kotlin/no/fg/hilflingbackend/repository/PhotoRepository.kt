@@ -42,7 +42,7 @@ open class PhotoRepository {
   }
 
   fun findSixLatestPhotos(): List<Photo> {
-    return database.photos.toList().subList(1,6)
+    return database.photos.take(6).toList()
   }
 
   fun findBySecurityLevel(securityLevel: SecurityLevel): List<Photo> {
