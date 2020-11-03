@@ -31,8 +31,8 @@ class MockDataService {
   @Autowired
   lateinit var articleTagRepository: ArticleTagRepository
 
-  @Autowired
-  lateinit var category: CategoryRepository
+  /*@Autowired
+  lateinit var category: CategoryRepository*/
 
   @Autowired
   lateinit var eventOwnerRepository: EventOwnerRepository
@@ -75,13 +75,14 @@ class MockDataService {
         name = "WowFactor100"
       ),
       PhotoTagDto(
-          name = "insane!"
+        name = "insane!"
       ),
       PhotoTagDto(
         name = "Meh"
       )
     )
   }
+
   private fun generateSamfundetUserData(): List<SamfundetUserDto> =
     listOf(
       SamfundetUserDto(
@@ -92,12 +93,13 @@ class MockDataService {
         profilePicturePath = "https://media1.tenor.com/images/79f8be09f39791c6462d30c5ce42e3be/tenor.gif?itemid=18386674",
         sex = "Mann",
         username = "sjsivert",
-        securituLevel = SecurityLevel{
+        securituLevel = SecurityLevel {
           type = "1"
         },
         phoneNumber = "91382506"
       )
     )
+
   private fun generatePhotoGangBangerData(): List<PhotoGangBangerDto> =
     listOf(
       PhotoGangBangerDto(
@@ -122,7 +124,7 @@ class MockDataService {
         photoGangBangerDto = generatePhotoGangBangerData().first(),
         position = generatePositionData().first(),
       ),
-      PhotoGangBangerPositionDto (
+      PhotoGangBangerPositionDto(
         photoGangBangerPositionId = PhotoGangBangerPositionId(UUID.fromString("6a89444f-25f6-44d9-8a73-94587d72b832")),
         isCurrent = false,
         photoGangBangerDto = generatePhotoGangBangerData().first(),
@@ -137,7 +139,7 @@ class MockDataService {
         title = "Gjengsjef",
         email = Email.create("fg-web@samfundet.no")
       ),
-      PositionDto (
+      PositionDto(
         positionId = PositionId((UUID.fromString("bdd0cf5a-c952-41b8-8b83-c071da51f945"))),
         title = "Web",
         email = Email.create("fg-web@samfundet.no")
@@ -318,11 +320,12 @@ class MockDataService {
   private fun generateMotiveData() {
 
   }
-  */
+
+*/
 
   fun seedMockData() {
     generateAlbumData()
-      .forEach{
+      .forEach {
         albumRepository.create(it)
       }
     generatePhotoTagData().forEach {
@@ -343,9 +346,6 @@ class MockDataService {
       photoGangBangerRepository.create(it)
     }
     println("PhotoGangBangers seeded")
-
-
   }
-
 
 }

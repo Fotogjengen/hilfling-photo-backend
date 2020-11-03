@@ -1,36 +1,26 @@
 package no.fg.hilflingbackend.repository
 
 import me.liuwj.ktorm.database.Database
-import me.liuwj.ktorm.dsl.eq
-import me.liuwj.ktorm.entity.add
-import me.liuwj.ktorm.entity.find
-import me.liuwj.ktorm.entity.toList
-import no.fg.hilflingbackend.model.Category
-import no.fg.hilflingbackend.model.categories
-import org.springframework.beans.factory.annotation.Autowired
+import me.liuwj.ktorm.dsl.*
+import me.liuwj.ktorm.entity.*
+import no.fg.hilflingbackend.model.*
 import org.springframework.stereotype.Repository
-import java.util.*
 
 @Repository
-open class CategoryRepository {
-  @Autowired
-  open lateinit var database: Database
-
-  fun findById(id: UUID): Category? {
-    return database.categories.find { it.id eq id }
-  }
-
-  fun findAll(): List<Category> {
-    return database.categories.toList()
-  }
-
-  fun create(
-    category: Category
-  ): Category {
-    val categoryFromDatabase = Category {
-      this.name = category.name
+open class CategoryRepository(database: Database) : BaseRepository<Category, Category>(table = Categories, database) {
+  override fun convertToClass(qrs: QueryRowSet): Category {
+    return Category{
+      id = qrs[Categories.id]!!
+      dateCreated = qrs[Categories.dateCreated]!!
+      name = qrs[Categories.name]!!
     }
-    database.categories.add(categoryFromDatabase)
-    return categoryFromDatabase
+  }
+
+  override fun create(entity: Category): Int {
+    return database.categories.add(entity)
+  }
+
+  override fun patch(entity: Category): Int {
+    return database.categories.update(entity)
   }
 }
