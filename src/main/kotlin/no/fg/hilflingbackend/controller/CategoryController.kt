@@ -7,5 +7,5 @@ import org.springframework.web.bind.annotation.*
 
 @RestController
 @RequestMapping("/categories")
-open class CategoryController(override val repository: CategoryRepository) : BaseController<Category>(repository) {
+open class CategoryController(override val repository: CategoryRepository) : BaseController<Category, Category>(repository) {
 }

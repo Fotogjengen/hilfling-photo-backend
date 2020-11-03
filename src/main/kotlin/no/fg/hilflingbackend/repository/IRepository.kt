@@ -6,11 +6,11 @@ import org.springframework.stereotype.Component
 import java.util.*
 
 @Component
-interface IRepository<T> {
-  fun convertToClass(qrs: QueryRowSet): T
-  fun findById(id: UUID): T?
-  fun create(entity: T): Int
-  fun findAll(offset: Int, limit: Int): Page<T>
+interface IRepository<E, D> {
+  fun convertToClass(qrs: QueryRowSet): D
+  fun findById(id: UUID): D?
+  fun create(dto: D): Int
+  fun findAll(offset: Int, limit: Int): Page<D>
   fun delete(id: UUID): Int
-  fun patch(entity: T): Int
+  fun patch(dto: D): Int
 }

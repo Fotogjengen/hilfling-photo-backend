@@ -7,12 +7,12 @@ import org.springframework.web.bind.annotation.*
 import java.util.*
 
 
-open class BaseController<T>(open val repository: IRepository<T>) {
+open class BaseController<E, D>(open val repository: IRepository<E, D>) {
 
   @GetMapping("/{id}")
   fun getById(
     @PathVariable("id") id: UUID
-  ): T? {
+  ): D? {
     return repository.findById(id)
   }
 
@@ -20,16 +20,18 @@ open class BaseController<T>(open val repository: IRepository<T>) {
   fun getAll(
     @RequestParam("offset", required = false) offset: Int?,
     @RequestParam("limit", required = false) limit: Int?
-  ): Page<T> {
+  ): Page<D> {
     return repository.findAll(offset ?: 0, limit ?: 100)
   }
 
   @PostMapping
   fun create(
-    @RequestBody entity: T
+    @RequestBody dto: D
   ): Int {
+    print(dto.toString())
+    print("test")
     return repository.create(
-      entity
+      dto
     )
   }
 }
