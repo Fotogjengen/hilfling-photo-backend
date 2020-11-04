@@ -27,12 +27,7 @@ open class SecurityLevelRepository {
 
   fun create(
     securityLevel: SecurityLevel
-  ): SecurityLevel {
-    val securityLevelFromDatabase = SecurityLevel {
-      this.type = securityLevel.type
-      this.dateCreated = LocalDate.now()
-    }
-    database.security_levels.add(securityLevelFromDatabase)
-    return securityLevelFromDatabase
+  ): Int {
+    return database.security_levels.add(securityLevel)
   }
 }

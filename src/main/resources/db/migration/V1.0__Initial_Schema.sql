@@ -136,7 +136,7 @@ CREATE TABLE ARTICLE
 CREATE TABLE MOTIVE
 (
     id             uuid PRIMARY KEY,
-    title          VARCHAR(20),
+    title          VARCHAR(100),
     date_created   DATE NOT NULL DEFAULT CURRENT_DATE,
     category_id    UUID REFERENCES CATEGORY (id),
     event_owner_id UUID REFERENCES EVENT_OWNER (id),

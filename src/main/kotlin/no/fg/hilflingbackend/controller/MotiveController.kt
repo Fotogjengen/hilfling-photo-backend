@@ -25,7 +25,7 @@ class MotiveController {
   @PostMapping
   fun create(
     @RequestBody motive: Motive
-  ): Motive {
+  ): Int {
     return repository.create(
       motive
     )

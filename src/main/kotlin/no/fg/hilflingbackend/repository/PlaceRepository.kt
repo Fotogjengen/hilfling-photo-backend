@@ -24,11 +24,7 @@ open class PlaceRepository {
     return database.places.toList()
   }
 
-  fun create(place: Place): Place {
-    val placeFromDatabase = Place {
-      this.name = place.name
-    }
-    database.places.add(placeFromDatabase)
-    return placeFromDatabase
+  fun create(place: Place): Int{
+    return database.places.add(place)
   }
 }

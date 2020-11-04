@@ -1,7 +1,10 @@
 package no.fg.hilflingbackend
 
+import me.liuwj.ktorm.database.Database
+import me.liuwj.ktorm.dsl.deleteAll
+import me.liuwj.ktorm.expression.SqlExpression
 import no.fg.hilflingbackend.dto.*
-import no.fg.hilflingbackend.model.SecurityLevel
+import no.fg.hilflingbackend.model.*
 import no.fg.hilflingbackend.repository.*
 import no.fg.hilflingbackend.value_object.Email
 import org.springframework.beans.factory.annotation.Autowired
@@ -10,6 +13,12 @@ import java.util.*
 
 @Service
 class MockDataService {
+  @Autowired
+  lateinit var database: Database
+
+  @Autowired
+  lateinit var placeRepository: PlaceRepository
+
   @Autowired
   lateinit var albumRepository: AlbumRepository
 
@@ -31,8 +40,8 @@ class MockDataService {
   @Autowired
   lateinit var articleTagRepository: ArticleTagRepository
 
-  /*@Autowired
-  lateinit var category: CategoryRepository*/
+  @Autowired
+  lateinit var categoryRepository: CategoryRepository
 
   @Autowired
   lateinit var eventOwnerRepository: EventOwnerRepository
@@ -43,25 +52,114 @@ class MockDataService {
   @Autowired
   lateinit var motiveRepository: MotiveRepository
 
+  @Autowired
+  lateinit var securityLevelRepository: SecurityLevelRepository
+
+  @Autowired
+  lateinit var photoRepository: PhotoRepository
+
+  private fun generateSecurityLevelData(): List<SecurityLevel> =
+    listOf(
+      SecurityLevel {
+        id = UUID.fromString("8214142f-7c08-48ad-9130-fd7ac6b23e51")
+        type = "FG"
+      },
+        SecurityLevel {
+        id = UUID.fromString("8214142f-7c08-48ad-9130-fd7ac6b23e52")
+        type = "HUSFOLK"
+      }
+    )
+
+  private fun generateGangData(): List<Gang> =
+    listOf(
+      Gang{
+        id = UUID.fromString("b0bd026f-cc19-4474-989c-aec8d4a76bc9")
+        name = "Fotogjengen"
+      }
+    )
+
+  private fun generatePhoto(): List<PhotoDto> =
+    listOf(
+      PhotoDto(
+        photoId = PhotoId(UUID.fromString("8214142f-7c08-48ad-9130-fd7ac6b23e58")),
+        largeUrl = "https://i.redd.it/f00ixlwhmud21.png",
+        motive = generateMotiveData().first(),
+        place = generatePlaceData().first(),
+        // TODO: generateSecutyry level and finish generatePhoto
+        securityLevel = generateSecurityLevelData().first(),
+        gang = generateGangData().first(),
+        isGoodPicture = true,
+        photoGangBanger = generatePhotoGangBangerData().first().toEntity()
+      )
+    )
+  private fun generatePlaceData(): List<Place> =
+    listOf(
+      Place{
+        id = UUID.fromString("9f4fa5d6-ad7c-419c-be58-1ee73f212675")
+        name = "Klubben"
+      }
+    )
+
+  private fun generateMotiveData(): List<Motive> =
+    listOf(
+      Motive {
+        id = UUID.fromString("94540f3c-77b8-4bc5-acc7-4dd7d8cc4bcd")
+        title = "Amber Butts spiller på klubben"
+        album = generateAlbumData().first().toEntity()
+        eventOwner = generateEventOwnerData().first()
+        category = generateCategoryData().first()
+      }
+    )
+  private fun generateCategoryData(): List<Category> =
+    listOf(
+      Category{
+        id = UUID.fromString("2832ee5e-3f11-4f11-8189-56ca4f70f418")
+        name = "Gjengfoto"
+      }
+    )
+
+  private fun generateEventOwnerData(): List<EventOwner> =
+    listOf(
+      EventOwner{
+        id = UUID.fromString("afc308c4-06e2-47bb-b97b-70eb3f55e8d9")
+        name = "ISFIT"
+      },
+      EventOwner{
+        id = UUID.fromString("9265f73d-7b13-4673-9f3b-1db3b6c7d526")
+        name = "Samfundet"
+      },
+      EventOwner {
+        id = UUID.fromString("e91f1201-e0bf-4d25-8026-b2a2d44c37c3")
+        name = "UKA"
+      }
+  )
+
+
   private fun generateAlbumData(): List<AlbumDto> {
     return listOf(
       AlbumDto(
+        albumId = AlbumId(UUID.fromString("91fcac35-4e68-400a-a43e-e8d3f81d10f8")),
         title = "Vår 2017",
         isAnalog = true,
       ),
       AlbumDto(
+        albumId = AlbumId(UUID.fromString("91fcac35-4e68-400a-a43e-e8d3f81d10f1")),
         title = "Høst 2017"
       ),
       AlbumDto(
+        albumId = AlbumId(UUID.fromString("91fcac35-4e68-400a-a43e-e8d3f81d10f2")),
         title = "Vår 2018"
       ),
       AlbumDto(
+        albumId = AlbumId(UUID.fromString("91fcac35-4e68-400a-a43e-e8d3f81d10f3")),
         title = "Høst 2018"
       ),
       AlbumDto(
+        albumId = AlbumId(UUID.fromString("91fcac35-4e68-400a-a43e-e8d3f81d10f4")),
         title = "Vår 2019"
       ),
       AlbumDto(
+        albumId = AlbumId(UUID.fromString("91fcac35-4e68-400a-a43e-e8d3f81d10f5")),
         title = "Høst 2019",
         isAnalog = true
       )
@@ -242,24 +340,6 @@ class MockDataService {
 
   }
 
-  private fun generateMotiveData(): List<Motive> {
-    return listOf(
-      Motive {
-        title = "Bilder av Caroline"
-        dateCreated = LocalDate.parse("2020-09-29")
-        category = CategoryRepository.findById(1)
-        event_owner = EventOwner.findById(1)
-        album_id = AlbumRepository.findById(1)
-      }
-        MotiveData {
-        title = "Kjekke bilder av Oscar"
-        dateCreated = "1865-09-29"
-        category = CategoryRepository.findById(1)
-        event_owner = EventOwner.findById(1)
-        album_id = AlbumRepository.findById(1)
-      }
-    )
-  }
 
   private fun generateGangData(): List<Gang> {
     return listOf(
@@ -317,9 +397,6 @@ class MockDataService {
     )
   }
 
-  private fun generateMotiveData() {
-
-  }
 
 */
 
@@ -346,6 +423,31 @@ class MockDataService {
       photoGangBangerRepository.create(it)
     }
     println("PhotoGangBangers seeded")
-  }
+    generateCategoryData().forEach{
+      categoryRepository.create(it)
+    }
+    println("Category seeded")
 
+    generateEventOwnerData().forEach{
+      eventOwnerRepository.create(it)
+    }
+    println("Eventowner seeded")
+
+    generateMotiveData().forEach{
+      motiveRepository.create(it)
+    }
+     generatePlaceData().forEach{
+       placeRepository.create(it)
+     }
+    generateSecurityLevelData().forEach {
+      securityLevelRepository.create(it)
+    }
+    generateGangData().forEach {
+      gangRepository.create(it)
+    }
+    generatePhoto().forEach {
+      photoRepository.createPhoto(it.toEntity())
+    }
+
+  }
 }

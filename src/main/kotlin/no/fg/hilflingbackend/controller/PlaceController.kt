@@ -25,7 +25,7 @@ class PlaceController {
   @PostMapping
   fun create(
     @RequestBody place: Place
-  ): Place {
+  ): Int {
     return repository.create(place)
   }
 }

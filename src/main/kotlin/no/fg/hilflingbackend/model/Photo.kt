@@ -5,6 +5,7 @@ import me.liuwj.ktorm.entity.Entity
 import me.liuwj.ktorm.entity.sequenceOf
 import me.liuwj.ktorm.schema.boolean
 import me.liuwj.ktorm.schema.int
+import me.liuwj.ktorm.schema.uuid
 import me.liuwj.ktorm.schema.varchar
 
 interface Photo : BaseModel<Photo> {
@@ -32,11 +33,11 @@ object Photos : BaseTable<Photo>("photo") {
   val largeUrl = varchar("large_url").bindTo { it.largeUrl }
 
   // Foreign keys
-  val motiveId = int("motive_id").references(Motives) { it.motive }
-  val placeId = int("place_id").references(Places) { it.place }
-  val securityLevelId = int("security_level_id").references(SecurityLevels) { it.securityLevel }
-  val gangId = int("gang_id").references(Gangs) { it.gang }
-  val photoGangBangerId = int("photo_gang_banger_id").references(PhotoGangBangers) { it.photoGangBanger }
+  val motiveId = uuid("motive_id").references(Motives) { it.motive }
+  val placeId = uuid("place_id").references(Places) { it.place }
+  val securityLevelId = uuid("security_level_id").references(SecurityLevels) { it.securityLevel }
+  val gangId = uuid("gang_id").references(Gangs) { it.gang }
+  val photoGangBangerId = uuid("photo_gang_banger_id").references(PhotoGangBangers) { it.photoGangBanger }
 }
 
 val Database.photos get() = this.sequenceOf(Photos)
