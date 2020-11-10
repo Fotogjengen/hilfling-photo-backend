@@ -27,13 +27,12 @@ import java.util.UUID
 class PhotoController(
   val photoService: PhotoService
 
-) : GlobalExceptionHandler() {
-  // TODO: Remove not used anyMOre
+  @PostMapping("/profile")
   private fun uploadPhotoFile(
-    file: MultipartFile,
-    securityLevel: SecurityLevel
+    @RequestPart("file") file: MultipartFile,
+    //@RequestPart("type") type: String,
   ): String {
-    return photoService.store(file, securityLevel)
+    return photoService.store(file, "PROFILE")
   }
 
   @PostMapping
