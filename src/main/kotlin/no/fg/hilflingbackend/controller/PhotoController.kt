@@ -31,6 +31,7 @@ class PhotoController {
     return repository.findById(id)
   }
 
+
   @GetMapping
   fun getAll(): List<Photo> {
     return repository.findAll()
@@ -59,14 +60,12 @@ class PhotoController {
 
       return repository.createPhoto(photo)
   }*/
-
+  @PostMapping("/profile")
   private fun uploadPhotoFile(
-    file: MultipartFile,
-    securityLevelId: UUID
+    @RequestPart("file") file: MultipartFile,
+    //@RequestPart("type") type: String,
   ): String {
-    val securityLevel = securityLevelRepository.findById(securityLevelId)
-      ?: throw IllegalAccessError("Security level does not exist.")
-    return photoService.store(file, securityLevel)
+    return photoService.store(file, "PROFILE")
   }
 
   @PostMapping
@@ -74,7 +73,7 @@ class PhotoController {
     @RequestPart("photo") photo: Photo,
     @RequestPart("file") file: MultipartFile
   ): ResponseEntity<Photo> {
-    val path = uploadPhotoFile(file, photo.securityLevel.id)
+    val path = photoService.store(file, photo.securityLevel.type)
     photo.smallUrl = path
     photo.mediumUrl = path
     photo.largeUrl = path
@@ -94,7 +93,7 @@ class PhotoController {
     @RequestPart("photo") analogPhoto: AnalogPhoto,
     @RequestPart("file") file: MultipartFile
   ): ResponseEntity<AnalogPhoto> {
-    val path = uploadPhotoFile(file, analogPhoto.photo.securityLevel.id)
+    val path = photoService.store(file, analogPhoto.photo.securityLevel.type)
     analogPhoto.photo.smallUrl = path
     analogPhoto.photo.mediumUrl = path
     analogPhoto.photo.largeUrl = path

@@ -20,13 +20,15 @@ class PhotoService {
   val photoGangBangerLocation = Paths.get("filestorage/FG")
   val houseMemberLocation = Paths.get("filestorage/HUSFOLK")
   val allLocation = Paths.get("filestorage/ALLE")
+  val profileLocation = Paths.get("filestorage/PROFILE")
 
-  fun store(file: MultipartFile, securityLevel: SecurityLevel): String {
+  fun store(file: MultipartFile, type: String): String {
     val location: Path
-    when (securityLevel.type) {
+    when (type) {
       "FG" -> location = this.photoGangBangerLocation.resolve(file.originalFilename)
       "HUSFOLK" -> location = this.houseMemberLocation.resolve(file.originalFilename)
       "ALLE" -> location = this.allLocation.resolve(file.originalFilename)
+      "PROFILE" -> location = this.profileLocation.resolve(file.originalFilename)
       else -> throw IllegalArgumentException("Invalid security level")
     }
     return Files.copy(file.inputStream, location).toString()
@@ -57,6 +59,9 @@ class PhotoService {
     }
     if (!Files.exists(allLocation)) {
       Files.createDirectory(allLocation)
+    }
+    if(!Files.exists(profileLocation)) {
+      Files.createDirectory(profileLocation)
     }
   }
 
