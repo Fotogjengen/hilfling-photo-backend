@@ -3,9 +3,7 @@ package no.fg.hilflingbackend.repository
 import me.liuwj.ktorm.database.Database
 import me.liuwj.ktorm.dsl.*
 import me.liuwj.ktorm.entity.*
-import no.fg.hilflingbackend.dto.CategoryDto
-import no.fg.hilflingbackend.dto.CategoryId
-import no.fg.hilflingbackend.dto.toEntity
+import no.fg.hilflingbackend.dto.*
 import no.fg.hilflingbackend.model.*
 import org.springframework.stereotype.Repository
 
