@@ -28,10 +28,15 @@ open class BaseController<E, D>(open val repository: IRepository<E, D>) {
   fun create(
     @RequestBody dto: D
   ): Int {
-    print(dto.toString())
-    print("test")
     return repository.create(
       dto
     )
+  }
+
+  @PatchMapping
+  fun patch(
+    @RequestBody dto: D
+  ): Int {
+    return repository.patch(dto)
   }
 }
