@@ -51,7 +51,7 @@ CREATE TABLE SECURITY_LEVEL
 
 CREATE TABLE PLACE
 (
-    id           uuid PRIMARY KEY,
+    id           uuid PRIMARY KEY NOT NULL,
     date_created DATE NOT NULL DEFAULT CURRENT_DATE,
     name         VARCHAR(30)
 );

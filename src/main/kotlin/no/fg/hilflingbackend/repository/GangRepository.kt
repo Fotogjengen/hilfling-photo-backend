@@ -1,29 +1,34 @@
 package no.fg.hilflingbackend.repository
 
 import me.liuwj.ktorm.database.Database
+import me.liuwj.ktorm.dsl.QueryRowSet
 import me.liuwj.ktorm.dsl.eq
 import me.liuwj.ktorm.entity.add
 import me.liuwj.ktorm.entity.find
 import me.liuwj.ktorm.entity.toList
+import me.liuwj.ktorm.entity.update
+import no.fg.hilflingbackend.dto.GangDto
+import no.fg.hilflingbackend.dto.GangId
+import no.fg.hilflingbackend.dto.toEntity
 import no.fg.hilflingbackend.model.Gang
+import no.fg.hilflingbackend.model.Gangs
 import no.fg.hilflingbackend.model.gangs
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Repository
 import java.util.*
 
 @Repository
-open class GangRepository {
-  @Autowired
-  open lateinit var database: Database
+open class GangRepository(database: Database) : BaseRepository<Gang, GangDto>(table = Gangs, database) {
+  override fun convertToClass(qrs: QueryRowSet): GangDto = GangDto(
+    gangId = GangId(qrs[Gangs.id]!!),
+    name = qrs[Gangs.name]
+  )
 
-  fun findById(id: UUID): Gang? {
-    return database.gangs.find { it.id eq id }
+  override fun create(dto: GangDto): Int {
+    return database.gangs.add(dto.toEntity())
   }
 
-  fun findAll(): List<Gang> {
-    return database.gangs.toList()
+  override fun patch(dto: GangDto): Int {
+    return database.gangs.update(dto.toEntity())
   }
-
-  fun create(gang: Gang): Int =
-    database.gangs.add(gang)
 }

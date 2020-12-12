@@ -70,12 +70,12 @@ class MockDataService {
       }
     )
 
-  private fun generateGangData(): List<Gang> =
+  private fun generateGangData(): List<GangDto> =
     listOf(
-      Gang{
-        id = UUID.fromString("b0bd026f-cc19-4474-989c-aec8d4a76bc9")
+      GangDto(
+        gangId = GangId(UUID.fromString("b0bd026f-cc19-4474-989c-aec8d4a76bc9")),
         name = "Fotogjengen"
-      }
+      )
     )
 
   private fun generatePhoto(): List<PhotoDto> =
@@ -84,20 +84,20 @@ class MockDataService {
         photoId = PhotoId(UUID.fromString("8214142f-7c08-48ad-9130-fd7ac6b23e58")),
         largeUrl = "https://i.redd.it/f00ixlwhmud21.png",
         motive = generateMotiveData().first(),
-        place = generatePlaceData().first(),
+        place = generatePlaceData().first().toEntity(),
         // TODO: generateSecutyry level and finish generatePhoto
         securityLevel = generateSecurityLevelData().first(),
-        gang = generateGangData().first(),
+        gang = generateGangData().first().toEntity(),
         isGoodPicture = true,
         photoGangBanger = generatePhotoGangBangerData().first().toEntity()
       )
     )
-  private fun generatePlaceData(): List<Place> =
+  private fun generatePlaceData(): List<PlaceDto> =
     listOf(
-      Place{
-        id = UUID.fromString("9f4fa5d6-ad7c-419c-be58-1ee73f212675")
+      PlaceDto(
+        placeId = PlaceId(UUID.fromString("9f4fa5d6-ad7c-419c-be58-1ee73f212675")),
         name = "Klubben"
-      }
+      )
     )
 
   private fun generateMotiveData(): List<Motive> =
@@ -107,15 +107,15 @@ class MockDataService {
         title = "Amber Butts spiller på klubben"
         album = generateAlbumData().first().toEntity()
         eventOwner = generateEventOwnerData().first()
-        category = generateCategoryData().first()
+        category = generateCategoryData().first().toEntity()
       }
     )
-  private fun generateCategoryData(): List<Category> =
+  private fun generateCategoryData(): List<CategoryDto> =
     listOf(
-      Category{
-        id = UUID.fromString("2832ee5e-3f11-4f11-8189-56ca4f70f418")
+      CategoryDto(
+        categoryId = CategoryId(UUID.fromString("2832ee5e-3f11-4f11-8189-56ca4f70f418")),
         name = "Gjengfoto"
-      }
+      )
     )
 
   private fun generateEventOwnerData(): List<EventOwner> =

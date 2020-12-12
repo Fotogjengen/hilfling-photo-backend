@@ -8,7 +8,7 @@ import me.liuwj.ktorm.schema.varchar
 interface Place : BaseModel<Place> {
   companion object : Entity.Factory<Place>()
 
-  var name: String
+  var name: String?
 }
 
 object Places : BaseTable<Place>("place") {
