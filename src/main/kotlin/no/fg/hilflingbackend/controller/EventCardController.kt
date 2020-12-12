@@ -3,6 +3,7 @@ package no.fg.hilflingbackend.controller
 import no.fg.hilflingbackend.dto.EventCardDto
 import no.fg.hilflingbackend.dto.EventOwnerName
 import no.fg.hilflingbackend.dto.toEntity
+import no.fg.hilflingbackend.exceptions.GlobalExceptionHandler
 import no.fg.hilflingbackend.repository.EventCardRepository
 import no.fg.hilflingbackend.repository.EventOwnerRepository
 import org.springframework.web.bind.annotation.*
@@ -14,7 +15,7 @@ import javax.management.BadAttributeValueExpException
 class EventCardController(
   val eventCardRepository: EventCardRepository,
   val eventOwnerRepository: EventOwnerRepository
-) {
+): GlobalExceptionHandler() {
 
   @GetMapping()
   fun getNLatestEventCardsOfType(
