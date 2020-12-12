@@ -73,13 +73,13 @@ class PhotoController {
   fun uploadPhoto(
     @RequestPart("photo") photo: Photo,
     @RequestPart("file") file: MultipartFile
-  ): ResponseEntity<Photo> {
+  ): ResponseEntity<Int> {
     val path = uploadPhotoFile(file, photo.securityLevel.id)
     photo.smallUrl = path
     photo.mediumUrl = path
     photo.largeUrl = path
     val createdPhoto = repository.createPhoto(photo)
-    return ResponseEntity<Photo>(createdPhoto, HttpHeaders(), HttpStatus.CREATED)
+    return ResponseEntity<Int>(createdPhoto, HttpHeaders(), HttpStatus.CREATED)
   }
 
   @PostMapping("/analog")

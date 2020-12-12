@@ -1,5 +1,6 @@
 package no.fg.hilflingbackend.model
 
+import me.liuwj.ktorm.dsl.isNotNull
 import me.liuwj.ktorm.entity.Entity
 import me.liuwj.ktorm.schema.Column
 import me.liuwj.ktorm.schema.Table

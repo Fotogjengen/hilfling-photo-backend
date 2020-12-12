@@ -25,7 +25,7 @@ class SecurityLevelController {
   @PostMapping
   fun createSecurityLevel(
     @RequestBody securityLevel: SecurityLevel
-  ): SecurityLevel {
+  ): Int {
     return repository.create(securityLevel)
   }
 }

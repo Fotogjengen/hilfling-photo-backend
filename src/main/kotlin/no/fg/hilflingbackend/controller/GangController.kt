@@ -9,6 +9,6 @@ import java.util.*
 
 @RestController
 @RequestMapping("/gangs")
-open class GangController(override val repository: GangRepository): BaseController<Gang, GangDto>(repository) {
+open class GangController(override val repository: GangRepository): BaseController<Gang, GangDto>(repository)
 
-}
+

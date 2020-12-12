@@ -26,14 +26,6 @@ open class MotiveRepository {
 
   fun create(
     motive: Motive
-  ): Motive {
-    val motiveFromDatabase = Motive {
-      this.title = motive.title
-      this.category = motive.category
-      this.eventOwner = motive.eventOwner
-      this.album = motive.album
-    }
-    database.motives.add(motiveFromDatabase)
-    return motiveFromDatabase
-  }
+  ): Int = database.motives.add(motive)
+
 }

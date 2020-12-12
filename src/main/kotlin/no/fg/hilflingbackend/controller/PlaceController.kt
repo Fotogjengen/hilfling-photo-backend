@@ -9,6 +9,5 @@ import java.util.*
 
 @RestController
 @RequestMapping("/places")
-open class PlaceController(override val repository: PlaceRepository) : BaseController<Place, PlaceDto>(repository) {
+open class PlaceController(override val repository: PlaceRepository) : BaseController<Place, PlaceDto>(repository)
 
-}

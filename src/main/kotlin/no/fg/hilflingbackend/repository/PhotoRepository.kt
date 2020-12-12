@@ -54,28 +54,10 @@ open class PhotoRepository {
     }.toList()
   }
 
+  // TODO: Refactor to use DTO
   fun createPhoto(
     photo: Photo
-  ): Photo {
-    val photoFromDatabase = Photo {
-      this.isGoodPicture = photo.isGoodPicture
-      this.smallUrl = photo.smallUrl
-      this.mediumUrl = photo.mediumUrl
-      this.largeUrl = photo.largeUrl
-      this.motive = database.motives.find { it.id eq photo.motive.id }
-        ?: throw IllegalAccessError("Motive does not exist.")
-      this.place = database.places.find { it.id eq photo.place.id }
-        ?: throw IllegalAccessError("Place does not exist.")
-      this.securityLevel = database.security_levels.find { it.id eq photo.securityLevel.id }
-        ?: throw IllegalAccessError("Security level does not exist.")
-      this.gang = database.gangs.find { it.id eq photo.gang.id }
-        ?: throw IllegalAccessError("Gang does not exist.")
-      this.photoGangBanger = database.photo_gang_bangers.find { it.id eq photo.photoGangBanger.id }
-        ?: throw IllegalAccessError("Photo gang banger does not exist.")
-    }
-    database.photos.add(photoFromDatabase)
-    return photoFromDatabase
-  }
+  ): Int = database.photos.add(photo)
 
   fun createAnalogPhoto(
     analogPhoto: AnalogPhoto
@@ -86,7 +68,7 @@ open class PhotoRepository {
     val analogPhotoFromDatabase = AnalogPhoto {
       this.imageNumber = analogPhoto.imageNumber
       this.pageNumber = analogPhoto.pageNumber
-      this.photo = photoFromDatabase
+      this.photo = analogPhoto.photo
     }
     database.analog_photos.add(analogPhotoFromDatabase)
     return analogPhotoFromDatabase

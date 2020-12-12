@@ -25,7 +25,7 @@ class EventOwnerController {
   @PostMapping
   fun create(
     @RequestBody eventOwner: EventOwner
-  ): EventOwner {
+  ): Int {
     return repository.create(
       eventOwner
     )

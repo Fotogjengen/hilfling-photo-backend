@@ -4,6 +4,7 @@ import me.liuwj.ktorm.database.Database
 import me.liuwj.ktorm.entity.Entity
 import me.liuwj.ktorm.entity.sequenceOf
 import me.liuwj.ktorm.schema.int
+import me.liuwj.ktorm.schema.uuid
 import me.liuwj.ktorm.schema.varchar
 
 interface Motive : BaseModel<Motive> {
@@ -21,9 +22,9 @@ object Motives : BaseTable<Motive>("motive") {
   val title = varchar("title").bindTo { it.title }
 
   // Foreign keys
-  val categoryId = int("category_id").references(Categories) { it.category }
-  val eventOwnerId = int("event_owner_id").references(EventOwners) { it.eventOwner }
-  val albumId = int("album_id").references(Albums) { it.album }
+  val categoryId = uuid("category_id").references(Categories) { it.category }
+  val eventOwnerId = uuid("event_owner_id").references(EventOwners) { it.eventOwner }
+  val albumId = uuid("album_id").references(Albums) { it.album }
 }
 
 val Database.motives get() = this.sequenceOf(Motives)
