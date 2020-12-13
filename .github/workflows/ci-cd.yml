@@ -42,12 +42,13 @@ jobs:
      #   run: |
      #   echo Add other actions to build,
       #    echo test, and deploy your project.
-  test:
-    needs: build
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-      - run: mvn test
+  # Tests are ran as part of the build stage
+  #test:
+  #  needs: build
+  #  runs-on: ubuntu-latest
+  #  steps:
+  #    - uses: actions/checkout@v2
+  #    - run: mvn test
 
   lint:
       runs-on: ubuntu-latest
