@@ -6,6 +6,14 @@ networks:
   hilfling-network:
 
 services:
+  postgres:
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-hilfling}
+      POSTGRES_PASSWORD: "${POSTGRES_PASSWORD:-password}"
+    networks:
+      - traefik
+      - hilfling-network
+
   hilfling-backend:
     networks:
       - traefik
