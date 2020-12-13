@@ -12,7 +12,7 @@ import no.fg.hilflingbackend.model.PhotoGangBanger
 import no.fg.hilflingbackend.model.photo_gang_bangers
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Repository
-import java.util.*
+import java.util.UUID
 
 @Repository
 open class PhotoGangBangerRepository {

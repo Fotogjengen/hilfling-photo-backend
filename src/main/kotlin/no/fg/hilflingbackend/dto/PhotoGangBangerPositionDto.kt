@@ -12,7 +12,7 @@ data class PhotoGangBangerPositionDto(
 
 fun PhotoGangBangerPositionDto.toEntity(): PhotoGangBangerPosition {
   val dto = this
-  return PhotoGangBangerPosition{
+  return PhotoGangBangerPosition {
     id = dto.photoGangBangerPositionId.id
     position = dto.position.toEntity()
     isCurrent = dto.isCurrent

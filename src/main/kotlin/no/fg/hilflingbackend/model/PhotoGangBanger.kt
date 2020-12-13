@@ -38,7 +38,7 @@ object PhotoGangBangers : BaseTable<PhotoGangBanger>("photo_gang_banger") {
   val samfundetUserId = uuid("samfundet_user_id").references(SamfundetUsers) { it.samfundetUser }
 
   // From Position
-  val positionId = uuid("position_id").references(Positions) {it.position}
+  val positionId = uuid("position_id").references(Positions) { it.position }
 }
 
 val Database.photo_gang_bangers get() = this.sequenceOf(PhotoGangBangers)

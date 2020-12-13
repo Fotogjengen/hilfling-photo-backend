@@ -18,4 +18,3 @@ class SeedController {
     return "Mock data seeded"
   }
 }
-

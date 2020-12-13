@@ -1,15 +1,49 @@
 package no.fg.hilflingbackend
 
 import me.liuwj.ktorm.database.Database
-import me.liuwj.ktorm.dsl.deleteAll
-import me.liuwj.ktorm.expression.SqlExpression
-import no.fg.hilflingbackend.dto.*
-import no.fg.hilflingbackend.model.*
-import no.fg.hilflingbackend.repository.*
+import no.fg.hilflingbackend.dto.AlbumDto
+import no.fg.hilflingbackend.dto.AlbumId
+import no.fg.hilflingbackend.dto.CategoryDto
+import no.fg.hilflingbackend.dto.CategoryId
+import no.fg.hilflingbackend.dto.GangDto
+import no.fg.hilflingbackend.dto.GangId
+import no.fg.hilflingbackend.dto.PhotoDto
+import no.fg.hilflingbackend.dto.PhotoGangBangerDto
+import no.fg.hilflingbackend.dto.PhotoGangBangerId
+import no.fg.hilflingbackend.dto.PhotoGangBangerPositionDto
+import no.fg.hilflingbackend.dto.PhotoGangBangerPositionId
+import no.fg.hilflingbackend.dto.PhotoId
+import no.fg.hilflingbackend.dto.PhotoTagDto
+import no.fg.hilflingbackend.dto.PlaceDto
+import no.fg.hilflingbackend.dto.PlaceId
+import no.fg.hilflingbackend.dto.PositionDto
+import no.fg.hilflingbackend.dto.PositionId
+import no.fg.hilflingbackend.dto.RelationshipStatus
+import no.fg.hilflingbackend.dto.SamfundetUserDto
+import no.fg.hilflingbackend.dto.SamfundetUserId
+import no.fg.hilflingbackend.dto.SemesterStart
+import no.fg.hilflingbackend.dto.toEntity
+import no.fg.hilflingbackend.model.EventOwner
+import no.fg.hilflingbackend.model.Motive
+import no.fg.hilflingbackend.model.SecurityLevel
+import no.fg.hilflingbackend.repository.AlbumRepository
+import no.fg.hilflingbackend.repository.ArticleRepository
+import no.fg.hilflingbackend.repository.ArticleTagRepository
+import no.fg.hilflingbackend.repository.CategoryRepository
+import no.fg.hilflingbackend.repository.EventOwnerRepository
+import no.fg.hilflingbackend.repository.GangRepository
+import no.fg.hilflingbackend.repository.MotiveRepository
+import no.fg.hilflingbackend.repository.PhotoGangBangerRepository
+import no.fg.hilflingbackend.repository.PhotoRepository
+import no.fg.hilflingbackend.repository.PhotoTagRepository
+import no.fg.hilflingbackend.repository.PlaceRepository
+import no.fg.hilflingbackend.repository.PositionRepository
+import no.fg.hilflingbackend.repository.SamfundetUserRepository
+import no.fg.hilflingbackend.repository.SecurityLevelRepository
 import no.fg.hilflingbackend.value_object.Email
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
-import java.util.*
+import java.util.UUID
 
 @Service
 class MockDataService {
@@ -64,7 +98,7 @@ class MockDataService {
         id = UUID.fromString("8214142f-7c08-48ad-9130-fd7ac6b23e51")
         type = "FG"
       },
-        SecurityLevel {
+      SecurityLevel {
         id = UUID.fromString("8214142f-7c08-48ad-9130-fd7ac6b23e52")
         type = "HUSFOLK"
       }
@@ -120,11 +154,11 @@ class MockDataService {
 
   private fun generateEventOwnerData(): List<EventOwner> =
     listOf(
-      EventOwner{
+      EventOwner {
         id = UUID.fromString("afc308c4-06e2-47bb-b97b-70eb3f55e8d9")
         name = "ISFIT"
       },
-      EventOwner{
+      EventOwner {
         id = UUID.fromString("9265f73d-7b13-4673-9f3b-1db3b6c7d526")
         name = "Samfundet"
       },
@@ -132,8 +166,7 @@ class MockDataService {
         id = UUID.fromString("e91f1201-e0bf-4d25-8026-b2a2d44c37c3")
         name = "UKA"
       }
-  )
-
+    )
 
   private fun generateAlbumData(): List<AlbumDto> {
     return listOf(
@@ -164,7 +197,6 @@ class MockDataService {
         isAnalog = true
       )
     )
-
   }
 
   private fun generatePhotoTagData(): List<PhotoTagDto> {
@@ -423,22 +455,22 @@ class MockDataService {
       photoGangBangerRepository.create(it)
     }
     println("PhotoGangBangers seeded")
-    generateCategoryData().forEach{
+    generateCategoryData().forEach {
       categoryRepository.create(it)
     }
     println("Category seeded")
 
-    generateEventOwnerData().forEach{
+    generateEventOwnerData().forEach {
       eventOwnerRepository.create(it)
     }
     println("Eventowner seeded")
 
-    generateMotiveData().forEach{
+    generateMotiveData().forEach {
       motiveRepository.create(it)
     }
-     generatePlaceData().forEach{
-       placeRepository.create(it)
-     }
+    generatePlaceData().forEach {
+      placeRepository.create(it)
+    }
     generateSecurityLevelData().forEach {
       securityLevelRepository.create(it)
     }
@@ -448,6 +480,5 @@ class MockDataService {
     generatePhoto().forEach {
       photoRepository.createPhoto(it.toEntity())
     }
-
   }
 }

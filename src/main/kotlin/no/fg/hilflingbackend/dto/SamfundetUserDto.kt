@@ -24,13 +24,13 @@ data class SamfundetUserDto(
 fun SamfundetUserDto.toEntity(): SamfundetUser {
   val dto = this
   return SamfundetUser {
-        id = dto.samfundetUserId.id
-        email = dto.email.value
-        firstName = dto.firstName
-        lastName = dto.lastName
-        phoneNumber = dto.phoneNumber
-        profilePicture = dto.profilePicturePath
-}
+    id = dto.samfundetUserId.id
+    email = dto.email.value
+    firstName = dto.firstName
+    lastName = dto.lastName
+    phoneNumber = dto.phoneNumber
+    profilePicture = dto.profilePicturePath
+  }
 }
 
 data class SamfundetUserId(

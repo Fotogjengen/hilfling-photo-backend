@@ -2,15 +2,13 @@ package no.fg.hilflingbackend.repository
 
 import me.liuwj.ktorm.database.Database
 import me.liuwj.ktorm.dsl.eq
-import me.liuwj.ktorm.entity.add
 import me.liuwj.ktorm.entity.find
 import me.liuwj.ktorm.entity.toList
-import no.fg.hilflingbackend.dto.PhotoOnPurchaseOrderDto
 import no.fg.hilflingbackend.model.PhotoOnPurchaseOrder
 import no.fg.hilflingbackend.model.photo_on_purchase_orders
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Repository
-import java.util.*
+import java.util.UUID
 
 @Repository
 open class PhotoOnPurchaseOrderRepository {

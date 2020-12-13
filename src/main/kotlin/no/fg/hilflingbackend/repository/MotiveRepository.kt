@@ -9,7 +9,7 @@ import no.fg.hilflingbackend.model.Motive
 import no.fg.hilflingbackend.model.motives
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Repository
-import java.util.*
+import java.util.UUID
 
 @Repository
 open class MotiveRepository {
@@ -27,5 +27,4 @@ open class MotiveRepository {
   fun create(
     motive: Motive
   ): Int = database.motives.add(motive)
-
 }

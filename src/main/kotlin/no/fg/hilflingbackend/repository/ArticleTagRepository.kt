@@ -9,7 +9,7 @@ import no.fg.hilflingbackend.model.ArticleTag
 import no.fg.hilflingbackend.model.article_tags
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Repository
-import java.util.*
+import java.util.UUID
 
 @Repository
 open class ArticleTagRepository {

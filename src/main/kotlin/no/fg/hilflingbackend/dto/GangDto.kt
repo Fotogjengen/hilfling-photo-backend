@@ -1,7 +1,7 @@
 package no.fg.hilflingbackend.dto
 
 import no.fg.hilflingbackend.model.Gang
-import java.util.*
+import java.util.UUID
 
 data class GangDto(
   val gangId: GangId = GangId(),
@@ -16,7 +16,7 @@ data class GangId(
 
 fun GangDto.toEntity(): Gang {
   val dto = this
-  return Gang{
+  return Gang {
     id = dto.gangId.id
     name = dto.name
   }

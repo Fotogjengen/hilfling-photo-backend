@@ -11,7 +11,7 @@ import no.fg.hilflingbackend.model.Position
 import no.fg.hilflingbackend.model.positions
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Repository
-import java.util.*
+import java.util.UUID
 
 @Repository
 open class PositionRepository {

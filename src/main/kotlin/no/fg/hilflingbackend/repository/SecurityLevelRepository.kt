@@ -9,8 +9,7 @@ import no.fg.hilflingbackend.model.SecurityLevel
 import no.fg.hilflingbackend.model.security_levels
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Repository
-import java.time.LocalDate
-import java.util.*
+import java.util.UUID
 
 @Repository
 open class SecurityLevelRepository {

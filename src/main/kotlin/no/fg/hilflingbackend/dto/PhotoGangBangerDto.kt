@@ -1,7 +1,7 @@
 package no.fg.hilflingbackend.dto
 
 import no.fg.hilflingbackend.model.PhotoGangBanger
-import java.util.*
+import java.util.UUID
 
 data class PhotoGangBangerDto(
   val photoGangBangerId: PhotoGangBangerId = PhotoGangBangerId(),
@@ -19,7 +19,7 @@ data class PhotoGangBangerDto(
 )
 fun PhotoGangBangerDto.toEntity(): PhotoGangBanger {
   val dto = this
-  return PhotoGangBanger{
+  return PhotoGangBanger {
     id = dto.photoGangBangerId.id
     relationshipStatus = dto.relationShipStatus.status
     semesterStart = dto.semesterStart.value
@@ -53,9 +53,9 @@ data class SemesterStart private constructor(val value: String) {
     operator fun invoke(value: String): SemesterStart {
       // Validated
       return if (isValidSemesterStart(value))
-      SemesterStart(value)
+        SemesterStart(value)
       else
-      throw IllegalArgumentException(isValidSemesterStart(value).toString())
+        throw IllegalArgumentException(isValidSemesterStart(value).toString())
     }
 
     fun isValidSemesterStart(semesterStart: String): Boolean {
