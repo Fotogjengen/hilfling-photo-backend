@@ -7,7 +7,7 @@ import no.fg.hilflingbackend.model.BaseModel
 import no.fg.hilflingbackend.model.BaseTable
 import java.util.*
 
-abstract class BaseRepository<E: BaseModel<E>, D>(val table: BaseTable<E>, val database: Database): IRepository<E, D> {
+abstract class BaseRepository<E : BaseModel<E>, D>(val table: BaseTable<E>, val database: Database) : IRepository<E, D> {
   override fun findById(id: UUID): D? {
     // TODO: make a little bit less hacky wacky
     val resultSet = database.from(table)
@@ -30,6 +30,6 @@ abstract class BaseRepository<E: BaseModel<E>, D>(val table: BaseTable<E>, val d
 
   override fun delete(id: UUID): Int {
     // TODO: remember to test that this actually works
-    return database.delete(table){it.id eq id}
+    return database.delete(table) { it.id eq id }
   }
 }

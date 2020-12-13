@@ -8,7 +8,6 @@ import me.liuwj.ktorm.entity.toList
 import no.fg.hilflingbackend.dto.SamfundetUserDto
 import no.fg.hilflingbackend.dto.toEntity
 import no.fg.hilflingbackend.model.SamfundetUser
-import no.fg.hilflingbackend.model.SamfundetUsers
 import no.fg.hilflingbackend.model.samfundet_users
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Repository
@@ -29,7 +28,7 @@ open class SamfundetUserRepository {
 
   fun create(
     samfundetUserDto: SamfundetUserDto
-  ): Int{
+  ): Int {
     return database
       .samfundet_users
       .add(

@@ -2,7 +2,6 @@ package no.fg.hilflingbackend.exceptions
 
 import no.fg.hilflingbackend.exceptions.ErrorResponseEntity.Companion.badReqeust
 import no.fg.hilflingbackend.exceptions.ErrorResponseEntity.Companion.notFound
-import no.fg.hilflingbackend.exceptions.ErrorResponseEntity.Companion.serverError
 import org.springframework.core.Ordered
 import org.springframework.core.annotation.Order
 import org.springframework.http.HttpHeaders
@@ -12,13 +11,12 @@ import org.springframework.web.bind.MissingServletRequestParameterException
 import org.springframework.web.bind.annotation.ControllerAdvice
 import org.springframework.web.bind.annotation.ExceptionHandler
 import org.springframework.web.context.request.WebRequest
-import org.springframework.web.servlet.config.annotation.EnableWebMvc
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler
 import javax.persistence.EntityNotFoundException
 
 @Order(Ordered.HIGHEST_PRECEDENCE)
 @ControllerAdvice
-open class GlobalExceptionHandler: ResponseEntityExceptionHandler() {
+open class GlobalExceptionHandler : ResponseEntityExceptionHandler() {
 
   @ExceptionHandler(value = [(EntityNotFoundException::class)])
   fun globalExceptionHandler(

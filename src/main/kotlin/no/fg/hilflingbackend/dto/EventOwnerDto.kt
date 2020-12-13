@@ -8,16 +8,15 @@ data class EventOwnerDto(
   val name: EventOwnerName,
 ) {
   // Constructor for Entity
-  constructor(eventOwner: EventOwner): this(
-    EventOwnerId(eventOwner.id), EventOwnerName.valueOf(eventOwner.name))
-
+  constructor(eventOwner: EventOwner) : this(
+    EventOwnerId(eventOwner.id), EventOwnerName.valueOf(eventOwner.name)
+  )
 }
 // TODO: Move to value object?
 enum class EventOwnerName(val eventOwnerName: String) {
   ISFIT("ISFIT"),
   UKA("UKA"),
   Samfundet("Samfundet")
-
 }
 
 data class EventOwnerId(
@@ -33,4 +32,3 @@ fun EventOwnerDto.toEntity(): EventOwner {
     name = dto.name.eventOwnerName
   }
 }
-

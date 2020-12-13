@@ -16,7 +16,7 @@ data class GangId(
 
 fun GangDto.toEntity(): Gang {
   val dto = this
-  return Gang{
+  return Gang {
     id = dto.gangId.id
     name = dto.name
   }

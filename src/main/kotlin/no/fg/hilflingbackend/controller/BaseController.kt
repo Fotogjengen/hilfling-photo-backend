@@ -2,10 +2,8 @@ package no.fg.hilflingbackend.controller
 
 import no.fg.hilflingbackend.dto.Page
 import no.fg.hilflingbackend.repository.IRepository
-import org.springframework.stereotype.Component
 import org.springframework.web.bind.annotation.*
 import java.util.*
-
 
 open class BaseController<E, D>(open val repository: IRepository<E, D>) {
 

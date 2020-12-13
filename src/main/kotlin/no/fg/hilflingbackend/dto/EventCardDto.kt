@@ -8,7 +8,7 @@ data class EventCardDto(
   val date_crated: LocalDate?,
   // TODO: Need dto?
   val locationTaken: String?,
-  //val albumType: String?,
+  // val albumType: String?,
   val frontPageSmallPhotoUrl: String?,
   val eventOwnerName: String?,
 )

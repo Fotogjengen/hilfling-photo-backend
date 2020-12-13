@@ -27,5 +27,4 @@ open class MotiveRepository {
   fun create(
     motive: Motive
   ): Int = database.motives.add(motive)
-
 }

@@ -28,14 +28,13 @@ open class EventOwnerRepository {
         EventOwnerDto(it)
       }
 
-
   fun findAll(): List<EventOwner> {
     return database.event_owners.toList()
   }
 
   fun create(
     eventOwner: EventOwner
-  ): Int{
+  ): Int {
     return database.event_owners.add(eventOwner)
   }
 }
