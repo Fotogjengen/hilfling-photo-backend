@@ -35,7 +35,13 @@ jobs:
      #   run: |
      #   echo Add other actions to build,
       #    echo test, and deploy your project.
-  linting:
+  test:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - run: mvn test
+        
+  lint:
       runs-on: ubuntu-latest
       steps:
         - name: ktlint-pr-comments
