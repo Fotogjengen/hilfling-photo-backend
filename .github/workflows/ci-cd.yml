@@ -45,15 +45,7 @@ jobs:
   lint:
       runs-on: ubuntu-latest
       steps:
-        - uses: actions/checkout@v2
-        - name: ktlint-pr-comments
-          # You may pin to the exact commit or the version.
-          # uses: le0nidas/ktlint-pr-comments@9c214bb72beca5c73a7e82007865abb3e8f1a7da
-          uses: le0nidas/ktlint-pr-comments@v1
-          with:
-            # A token that grands access to read/write actions. Usually secrets.GITHUB_TOKEN.
-            repotoken: ${{ secrets.GITHUB_TOKEN }}
-            
+        - uses: actions/checkout@v2           
         - name: Run ktlint with reviewdog
           # You may pin to the exact commit or the version.
           # uses: ScaCap/action-ktlint@58b3c386f5160049b0a1d0f986c56e0d0717140a
