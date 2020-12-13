@@ -9,6 +9,7 @@ import no.fg.hilflingbackend.repository.EventOwnerRepository
 import org.springframework.web.bind.annotation.*
 import org.springframework.web.client.HttpClientErrorException
 import javax.management.BadAttributeValueExpException
+import javax.persistence.EntityNotFoundException
 
 @RestController
 @RequestMapping("/eventcards")
@@ -24,7 +25,7 @@ class EventCardController(
   ): List<EventCardDto> {
 
     val eventOwnerFromDb = eventOwnerRepository.findByType(
-      EventOwnerName.valueOf(eventOwnerName)) ?: throw BadAttributeValueExpException("Not found eventOwner")
+      EventOwnerName.valueOf(eventOwnerName)) ?: throw EntityNotFoundException("Did not find eventOwner")
 
     return eventCardRepository.getLatestEventCards(
       numberOfEventCards = numberOfEventCards,

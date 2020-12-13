@@ -2,7 +2,7 @@
 
 name: CI
 
-# Controls when the action will run. 
+# Controls when the action will run.
 on:
   # Triggers the workflow on push or pull request events but only for the master branch
   push:
@@ -41,10 +41,11 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - run: mvn test
-        
+
   lint:
       runs-on: ubuntu-latest
       steps:
+        - uses: actions/checkout@v2
         - name: ktlint-pr-comments
           # You may pin to the exact commit or the version.
           # uses: le0nidas/ktlint-pr-comments@9c214bb72beca5c73a7e82007865abb3e8f1a7da
