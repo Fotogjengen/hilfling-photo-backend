@@ -1,17 +1,23 @@
-version: "2"
+version: "3"
 
 networks:
   traefik:
     external: true
+  hilfling-network:
 
 services:
-  photo-api:
+  hilfling-backend:
     networks:
       - traefik
+      - hilfling-network
+
     labels:
+      - traefik.enable=true
       - traefik.port = 8080
-      - traefik.http.routers.photo-api.rule=Host("api.fg.carosa.no")
-      - traefik.http.routers.registry.service=photo-api
+      - traefik.http.routers.hilfling-backend.entrypoints=web # <== Defining the entrypoint for http, **ref: line 30
+      - traefik.http.routers.hilfling-backend.entrypoints=websecure # <== Defining the entrypoint for http, **ref: line 30
+      - traefik.http.routers.hilfling-backend.rule=Host(`fg-backend.nikzy.no`) # <== Your Domain Name goes here for the http rule
+      - traefik.http.routers.hilfling-backend.tls.certresolver=lets-encr # Adds SSL to App
 
   postgres:
     labels:

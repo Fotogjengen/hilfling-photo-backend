@@ -1,32 +1,39 @@
-version: "2"
+version: "3"
 
 services:
   hilfling-backend:
     container_name: hilfling-backend
-    build:
-      context: .
-      dockerfile: Dockerfile
-    ports:
-      - "8080:8080"
+    image: docker.io/library/hilfing:0.0.1-SNAPSHOT
+    #build:
+    #context: .
+    #dockerfile: Dockerfile
+      #    ports:
+      #- "8080:8080"
 
   postgres:
     container_name: hilflingdb
+    env_file:
+      - variables.env
     build:
       context: .
       dockerfile: postgres/Dockerfile
     restart: always
+    networks:
+      - traefik
+      - hilfling-network
     volumes:
       - "db-data:/var/lib/postgresql/data"
       - "./postgres/sql:/base-sql"
     ports:
       - "5432:5432"
     environment:
-      POSTGRES_USER: hilfling
-      POSTGRES_PASSWORD: password
+      POSTGRES_USER: ${POSTGRES_USER:-hilfling}
+      POSTGRES_PASSWORD: "${POSTGRES_PASSWORD:-password}"
 
 networks:
   traefik:
     external: true
+  hilfling-network:
 
 
 volumes:

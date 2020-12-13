@@ -113,3 +113,4 @@ $RECYCLE.BIN/
 
 .env
 # End of https://www.gitignore.io/api/linux,macos,windows
+variables.env
