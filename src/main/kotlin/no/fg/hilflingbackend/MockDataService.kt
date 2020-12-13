@@ -2,7 +2,9 @@ package no.fg.hilflingbackend
 
 import me.liuwj.ktorm.database.Database
 import no.fg.hilflingbackend.dto.*
-import no.fg.hilflingbackend.model.*
+import no.fg.hilflingbackend.model.EventOwner
+import no.fg.hilflingbackend.model.Motive
+import no.fg.hilflingbackend.model.SecurityLevel
 import no.fg.hilflingbackend.repository.*
 import no.fg.hilflingbackend.value_object.Email
 import org.springframework.beans.factory.annotation.Autowired

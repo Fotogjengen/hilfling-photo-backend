@@ -11,7 +11,6 @@ import no.fg.hilflingbackend.model.Gang
 import no.fg.hilflingbackend.model.Gangs
 import no.fg.hilflingbackend.model.gangs
 import org.springframework.stereotype.Repository
-import java.util.*
 
 @Repository
 open class GangRepository(database: Database) : BaseRepository<Gang, GangDto>(table = Gangs, database) {

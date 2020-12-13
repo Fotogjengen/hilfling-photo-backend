@@ -4,7 +4,6 @@ import me.liuwj.ktorm.database.Database
 import me.liuwj.ktorm.dsl.*
 import me.liuwj.ktorm.entity.filter
 import me.liuwj.ktorm.entity.map
-import me.liuwj.ktorm.entity.toList
 import no.fg.hilflingbackend.dto.EventCardDto
 import no.fg.hilflingbackend.model.*
 import org.springframework.beans.factory.annotation.Autowired

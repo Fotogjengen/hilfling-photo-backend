@@ -1,7 +1,7 @@
 package no.fg.hilflingbackend.dto
 
 import no.fg.hilflingbackend.model.Place
-import java.util.UUID
+import java.util.*
 
 data class PlaceDto(
   val placeId: PlaceId = PlaceId(),

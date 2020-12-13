@@ -1,7 +1,7 @@
 package no.fg.hilflingbackend.dto
 
 import no.fg.hilflingbackend.model.PhotoGangBangerPosition
-import java.util.UUID
+import java.util.*
 
 data class PhotoGangBangerPositionDto(
   val photoGangBangerPositionId: PhotoGangBangerPositionId = PhotoGangBangerPositionId(),

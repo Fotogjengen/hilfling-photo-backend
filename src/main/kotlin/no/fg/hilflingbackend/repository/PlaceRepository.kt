@@ -11,7 +11,6 @@ import no.fg.hilflingbackend.model.Place
 import no.fg.hilflingbackend.model.Places
 import no.fg.hilflingbackend.model.places
 import org.springframework.stereotype.Repository
-import java.util.*
 
 @Repository
 open class PlaceRepository(database: Database) : BaseRepository<Place, PlaceDto>(table = Places, database) {

@@ -1,7 +1,7 @@
 package no.fg.hilflingbackend.dto
 
 import no.fg.hilflingbackend.model.Album
-import java.util.UUID
+import java.util.*
 
 data class AlbumDto(
   val albumId: AlbumId = AlbumId(),

@@ -1,10 +1,15 @@
 package no.fg.hilflingbackend.repository
 
 import me.liuwj.ktorm.database.Database
-import me.liuwj.ktorm.dsl.*
-import me.liuwj.ktorm.entity.*
-import no.fg.hilflingbackend.dto.*
-import no.fg.hilflingbackend.model.*
+import me.liuwj.ktorm.dsl.QueryRowSet
+import me.liuwj.ktorm.entity.add
+import me.liuwj.ktorm.entity.update
+import no.fg.hilflingbackend.dto.CategoryDto
+import no.fg.hilflingbackend.dto.CategoryId
+import no.fg.hilflingbackend.dto.toEntity
+import no.fg.hilflingbackend.model.Categories
+import no.fg.hilflingbackend.model.Category
+import no.fg.hilflingbackend.model.categories
 import org.springframework.stereotype.Repository
 
 @Repository
