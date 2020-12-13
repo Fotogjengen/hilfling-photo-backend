@@ -22,5 +22,14 @@ To use prod database
 # Linting
 TODO
 
+# Build
+`mvn package`
+
+run the built package
+`java --jar target/hilfling-0.0.1.SNAPSHOT.jar`
+
+## Build docker image
+`mvn spring-boot:build-image`
+
 
 
