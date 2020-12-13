@@ -3,7 +3,7 @@ package no.fg.hilflingbackend.dto
 import no.fg.hilflingbackend.model.SamfundetUser
 import no.fg.hilflingbackend.model.SecurityLevel
 import no.fg.hilflingbackend.value_object.Email
-import java.util.*
+import java.util.UUID
 
 data class SamfundetUserDto(
   val samfundetUserId: SamfundetUserId = SamfundetUserId(),

@@ -1,7 +1,7 @@
 package no.fg.hilflingbackend.dto
 
 import no.fg.hilflingbackend.model.Gang
-import java.util.*
+import java.util.UUID
 
 data class GangDto(
   val gangId: GangId = GangId(),

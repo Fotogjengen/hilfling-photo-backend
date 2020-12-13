@@ -5,7 +5,7 @@ import me.liuwj.ktorm.schema.Table
 import me.liuwj.ktorm.schema.date
 import me.liuwj.ktorm.schema.uuid
 import java.time.LocalDate
-import java.util.*
+import java.util.UUID
 
 open interface BaseModel<E : Entity<E>> : Entity<E> {
   var id: UUID

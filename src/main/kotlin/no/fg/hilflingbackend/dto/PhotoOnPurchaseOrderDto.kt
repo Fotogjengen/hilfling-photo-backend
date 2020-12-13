@@ -1,6 +1,6 @@
 package no.fg.hilflingbackend.dto
 
-import java.util.*
+import java.util.UUID
 
 data class PhotoOnPurchaseOrderDto(
   val photoOnPurchaseOrderId: PhotoOnPurchaseOrderId = PhotoOnPurchaseOrderId(),

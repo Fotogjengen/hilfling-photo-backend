@@ -1,7 +1,12 @@
 package no.fg.hilflingbackend.dto
 
-import no.fg.hilflingbackend.model.*
-import java.util.*
+import no.fg.hilflingbackend.model.Gang
+import no.fg.hilflingbackend.model.Motive
+import no.fg.hilflingbackend.model.Photo
+import no.fg.hilflingbackend.model.PhotoGangBanger
+import no.fg.hilflingbackend.model.Place
+import no.fg.hilflingbackend.model.SecurityLevel
+import java.util.UUID
 
 data class PhotoDto(
   val photoId: PhotoId = PhotoId(),

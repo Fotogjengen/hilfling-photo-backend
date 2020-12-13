@@ -2,7 +2,7 @@ package no.fg.hilflingbackend.dto
 
 import no.fg.hilflingbackend.model.Position
 import no.fg.hilflingbackend.value_object.Email
-import java.util.*
+import java.util.UUID
 
 data class PositionDto(
   val positionId: PositionId = PositionId(),

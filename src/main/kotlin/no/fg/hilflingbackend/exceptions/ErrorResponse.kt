@@ -3,7 +3,8 @@ package no.fg.hilflingbackend.exceptions
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.util.MultiValueMap
-import java.util.*
+import java.util.ArrayList
+import java.util.Date
 
 data class ErrorResponse(
   val status: HttpStatus,

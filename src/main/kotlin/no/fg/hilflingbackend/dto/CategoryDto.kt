@@ -1,7 +1,7 @@
 package no.fg.hilflingbackend.dto
 
 import no.fg.hilflingbackend.model.Category
-import java.util.*
+import java.util.UUID
 
 data class CategoryDto(
   val categoryId: CategoryId = CategoryId(),

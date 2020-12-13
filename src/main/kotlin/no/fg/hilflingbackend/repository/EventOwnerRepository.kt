@@ -11,7 +11,7 @@ import no.fg.hilflingbackend.model.EventOwner
 import no.fg.hilflingbackend.model.event_owners
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Repository
-import java.util.*
+import java.util.UUID
 
 @Repository
 open class EventOwnerRepository {

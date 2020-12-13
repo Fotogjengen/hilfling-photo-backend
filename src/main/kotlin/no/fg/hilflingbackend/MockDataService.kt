@@ -1,15 +1,49 @@
 package no.fg.hilflingbackend
 
 import me.liuwj.ktorm.database.Database
-import no.fg.hilflingbackend.dto.*
+import no.fg.hilflingbackend.dto.AlbumDto
+import no.fg.hilflingbackend.dto.AlbumId
+import no.fg.hilflingbackend.dto.CategoryDto
+import no.fg.hilflingbackend.dto.CategoryId
+import no.fg.hilflingbackend.dto.GangDto
+import no.fg.hilflingbackend.dto.GangId
+import no.fg.hilflingbackend.dto.PhotoDto
+import no.fg.hilflingbackend.dto.PhotoGangBangerDto
+import no.fg.hilflingbackend.dto.PhotoGangBangerId
+import no.fg.hilflingbackend.dto.PhotoGangBangerPositionDto
+import no.fg.hilflingbackend.dto.PhotoGangBangerPositionId
+import no.fg.hilflingbackend.dto.PhotoId
+import no.fg.hilflingbackend.dto.PhotoTagDto
+import no.fg.hilflingbackend.dto.PlaceDto
+import no.fg.hilflingbackend.dto.PlaceId
+import no.fg.hilflingbackend.dto.PositionDto
+import no.fg.hilflingbackend.dto.PositionId
+import no.fg.hilflingbackend.dto.RelationshipStatus
+import no.fg.hilflingbackend.dto.SamfundetUserDto
+import no.fg.hilflingbackend.dto.SamfundetUserId
+import no.fg.hilflingbackend.dto.SemesterStart
+import no.fg.hilflingbackend.dto.toEntity
 import no.fg.hilflingbackend.model.EventOwner
 import no.fg.hilflingbackend.model.Motive
 import no.fg.hilflingbackend.model.SecurityLevel
-import no.fg.hilflingbackend.repository.*
+import no.fg.hilflingbackend.repository.AlbumRepository
+import no.fg.hilflingbackend.repository.ArticleRepository
+import no.fg.hilflingbackend.repository.ArticleTagRepository
+import no.fg.hilflingbackend.repository.CategoryRepository
+import no.fg.hilflingbackend.repository.EventOwnerRepository
+import no.fg.hilflingbackend.repository.GangRepository
+import no.fg.hilflingbackend.repository.MotiveRepository
+import no.fg.hilflingbackend.repository.PhotoGangBangerRepository
+import no.fg.hilflingbackend.repository.PhotoRepository
+import no.fg.hilflingbackend.repository.PhotoTagRepository
+import no.fg.hilflingbackend.repository.PlaceRepository
+import no.fg.hilflingbackend.repository.PositionRepository
+import no.fg.hilflingbackend.repository.SamfundetUserRepository
+import no.fg.hilflingbackend.repository.SecurityLevelRepository
 import no.fg.hilflingbackend.value_object.Email
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
-import java.util.*
+import java.util.UUID
 
 @Service
 class MockDataService {

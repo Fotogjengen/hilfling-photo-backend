@@ -1,7 +1,7 @@
 package no.fg.hilflingbackend.dto
 
 import no.fg.hilflingbackend.model.EventOwner
-import java.util.*
+import java.util.UUID
 
 data class EventOwnerDto(
   val eventOwnerId: EventOwnerId = EventOwnerId(),
