@@ -31,5 +31,8 @@ run the built package
 ## Build docker image
 `mvn spring-boot:build-image`
 
+# Testing
+https://www.baeldung.com/kotlin-spee
+
 
 
