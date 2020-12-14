@@ -7,5 +7,5 @@ import org.springframework.boot.runApplication
 class HilflingApplication
 
 fun main(args: Array<String>) {
-	runApplication<HilflingApplication>(*args)
+  runApplication<HilflingApplication>(*args)
 }
