@@ -31,3 +31,5 @@ services:
   postgres:
     labels:
       - traefik.enable=false
+  # Automaticly pulls new images
+

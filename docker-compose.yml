@@ -3,7 +3,7 @@ version: "3"
 services:
   hilfling-backend:
     container_name: hilfling-backend
-    # image: docker.io/library/hilfing:0.0.1-SNAPSHOT
+    image: fotogjengen/hilfling-backend
     depends_on:
       - postgres
     build:
