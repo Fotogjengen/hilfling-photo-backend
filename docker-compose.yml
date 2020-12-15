@@ -42,7 +42,6 @@ services:
 networks:
   hilfling-network:
 
-
 volumes:
   db-data:
 

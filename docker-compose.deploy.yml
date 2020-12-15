@@ -11,10 +11,11 @@ services:
       POSTGRES_USER: ${POSTGRES_USER:-hilfling}
       POSTGRES_PASSWORD: "${POSTGRES_PASSWORD:-password}"
     networks:
-      - traefik
       - hilfling-network
 
   hilfling-backend:
+    ports:
+      - 8484:8080
     expose:
       - 8080
     networks:
