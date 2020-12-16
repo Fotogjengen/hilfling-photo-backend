@@ -1,4 +1,6 @@
 spring:
+  server:
+    port: ${LISTENING_PORT:8080}
   datasource:
     hikari:
       connection-timeout: 20000
