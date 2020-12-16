@@ -9,7 +9,7 @@ volumes:
 services:
   hilfling-backend:
     container_name: hilfling-backend
-    #image: fotogjengen/hilfling-backend
+    image: fotogjengen/hilfling-backend
     depends_on:
       - postgres
     build:
