@@ -26,8 +26,9 @@ services:
       - "5432:5432"
     environment:
       # Use env variable if exists, fallback to hilfling
-      POSTGRES_USER: ${DATABASE_USERNAME:-hilfling} 
+      POSTGRES_USER: ${DATABASE_USERNAME:-hilfling}
       POSTGRES_PASSWORD: ${DATABASE_PASSWORD:-password}
+      LISTENING_PORT: ${LISTENING_PORT}
 
     networks:
       - hilfling-network
@@ -57,5 +58,6 @@ services:
       - traefik.http.routers.hilfling-backend.entrypoints=websecure # <== Defining the entrypoint for http, **ref: line 30
       - traefik.http.routers.hilfling-backend.rule=Host(`fg-backend.nikzy.no`) # <== Your Domain Name goes here for the http rule
       - traefik.http.routers.hilfling-backend.tls.certresolver=lets-encr # Adds SSL to App
+      - traefik.docker.network=traefik
 
 
