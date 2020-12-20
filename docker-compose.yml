@@ -1,31 +1,15 @@
+# This file uses environment variables
+# to override any settings add a file called '.env'
+# with new environment variable values
+# example: "DATABASE_USERNAME=NikZy"
 version: "3"
-
 networks:
-  hilfling-network:
+  hilfling-network: # Used for internal networking
 
 volumes:
-  db-data:
+  db-data: # Data volume for the database
 
 services:
-  hilfling-backend:
-    container_name: hilfling-backend
-    image: fotogjengen/hilfling-backend
-    depends_on:
-      - postgres
-    build:
-      context: .
-      dockerfile: Dockerfile
-      #    ports:
-      #- "8080:8080"
-      #    env_file:
-      #- variables.env
-    networks:
-      - hilfling-network
-    environment:
-      DATABASE_USERNAME: $DATABASE_USERNAME
-      DATABASE_PASSWORD: $DATABASE_PASSWORD
-      DATABASE_URL:  "jdbc:postgresql://postgres:5432/hilflingdb" #"jdbc:postgresql://postgres:5432/hilflingdb?createDatabaseIfNotExist=true"
-
   postgres:
     container_name: hilflingdb
     build:
@@ -35,13 +19,34 @@ services:
     networks:
       - hilfling-network
     volumes:
-      - "db-data:/var/lib/postgresql/data"
-        #- "./postgres/sql:/base-sql"
+      - "db-data:/var/lib/postgresql/data" # Database volume
+        #- "./postgres/sql:/base-sql" # Think this was init sql schema?
     expose:
       - 5432
     ports:
       - "5432:5432"
     environment:
-      POSTGRES_USER: ${DATABASE_USERNAME:-hilfling} # Use env variable if exists, fallback to hilfling
+      # Use env variable if exists, fallback to hilfling
+      POSTGRES_USER: ${DATABASE_USERNAME:-hilfling}
       POSTGRES_PASSWORD: ${DATABASE_PASSWORD:-password}
+      LISTENING_PORT: ${LISTENING_PORT-8080}
+
+    networks:
+      - hilfling-network
+
+  fg-static:
+    container_name: hilfling-static
+    #image: fotogjengen/hilfling-static # Don't need to push this to a registry
+    build:
+      context: ./static-files
+      dockerfile: Dockerfile
+    environment:
+      NGINX_HOST: ${NGINX_HOST:-fg-static.nikzy.no}
+      NGINX_PORT: ${NGINX_PORT:-80}
+    ports:
+      - 8181:${NGINX_PORT:-80}
+    volumes:
+      - ./static-files/static:/usr/share/nginx/html
+
+
 
