@@ -123,6 +123,8 @@ class MockDataService {
         securityLevel = generateSecurityLevelData().first(),
         gang = generateGangData().first().toEntity(),
         isGoodPicture = true,
+        smallUrl = "https://i.redd.it/f00ixlwhmud21.png",
+        mediumUrl = "https://i.redd.it/f00ixlwhmud21.png",
         photoGangBanger = generatePhotoGangBangerData().first().toEntity()
       )
     )

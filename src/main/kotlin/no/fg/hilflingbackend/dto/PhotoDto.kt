@@ -11,12 +11,9 @@ import java.util.UUID
 data class PhotoDto(
   val photoId: PhotoId = PhotoId(),
   val isGoodPicture: Boolean = false,
-  // TODO: Fix
-  val smallUrl: String = "",
-  // TODO: Fix
-  val mediumUrl: String = "",
-  // TODO: Fix
-  val largeUrl: String = "",
+  val smallUrl: String,
+  val mediumUrl: String,
+  val largeUrl: String,
 
   val motive: Motive,
   val place: Place,

@@ -105,7 +105,33 @@ class PhotoController {
     analogPhoto.photo.smallUrl = path
     analogPhoto.photo.mediumUrl = path
     analogPhoto.photo.largeUrl = path
-    val updatedAnalogPhoto = repository.patchAnalogPhoto(analogPhoto)
+    val updatedAnalogPhoto = photoRepository.patchAnalogPhoto(analogPhoto)
     return ResponseEntity<AnalogPhoto>(updatedAnalogPhoto, HttpHeaders(), HttpStatus.ACCEPTED)
   }
+
+  @GetMapping("/{id}")
+  fun getById(@PathVariable("id") id: UUID): PhotoDto {
+    return photoRepository?.findById(id) ?: throw EntityNotFoundException("Dit not find photo")
+  }
+
+  @GetMapping
+  fun getAll(): List<PhotoDto> {
+    return photoRepository.findAll()
+  }
+
+  @GetMapping("/carousel")
+  fun getCarouselPhotos(): List<PhotoDto> {
+    return photoRepository.findCarouselPhotos()
+  }
+
+  @GetMapping("/analog")
+  fun getAllAnalogPhotos(): List<PhotoDto> {
+    return photoRepository.findAllAnalogPhotos()
+  }
+
+  @GetMapping("/digital")
+  fun getAllDigitalPhotos(): List<PhotoDto> {
+    return photoRepository.findAllDigitalPhotos()
+  }
 }
+

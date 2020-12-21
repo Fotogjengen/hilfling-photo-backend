@@ -6,6 +6,8 @@ import me.liuwj.ktorm.entity.sequenceOf
 import me.liuwj.ktorm.schema.boolean
 import me.liuwj.ktorm.schema.uuid
 import me.liuwj.ktorm.schema.varchar
+import no.fg.hilflingbackend.dto.PhotoDto
+import no.fg.hilflingbackend.dto.PhotoId
 
 interface Photo : BaseModel<Photo> {
   companion object : Entity.Factory<Photo>()
@@ -23,6 +25,19 @@ interface Photo : BaseModel<Photo> {
   var gang: Gang
   var photoGangBanger: PhotoGangBanger
 }
+
+fun Photo.toDto(): PhotoDto = PhotoDto(
+  photoId = PhotoId(this.id),
+  isGoodPicture = this.isGoodPicture,
+  smallUrl = this.smallUrl,
+  mediumUrl = this.mediumUrl,
+  largeUrl = this.largeUrl,
+  motive = this.motive,
+  place = this.place,
+  securityLevel = this.securityLevel,
+  gang = this.gang,
+  photoGangBanger = this.photoGangBanger
+)
 
 object Photos : BaseTable<Photo>("photo") {
   val isGoodPicture = boolean("is_good_picture").bindTo { it.isGoodPicture }

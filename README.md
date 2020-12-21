@@ -32,7 +32,7 @@ run the built package
 `mvn spring-boot:build-image`
 
 # Testing
-https://www.baeldung.com/kotlin-spee
+https://www.baeldung.com/kotlin-speek
 
 
 
