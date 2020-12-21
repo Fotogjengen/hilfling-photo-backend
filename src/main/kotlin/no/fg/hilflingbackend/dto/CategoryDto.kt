@@ -5,7 +5,7 @@ import java.util.UUID
 
 data class CategoryDto(
   val categoryId: CategoryId = CategoryId(),
-  val name: String?,
+  val name: String,
 )
 
 data class CategoryId(

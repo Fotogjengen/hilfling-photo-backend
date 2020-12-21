@@ -47,10 +47,10 @@ open class PhotoRepository {
     return database
       .photos
       .filter {
-      val motive = it.motiveId.referenceTable as Motives
-      val album = motive.albumId.referenceTable as Albums
-      album.isAnalog eq true
-    }
+        val motive = it.motiveId.referenceTable as Motives
+        val album = motive.albumId.referenceTable as Albums
+        album.isAnalog eq true
+      }
       .toList()
       .map { it.toDto() }
   }
@@ -59,10 +59,10 @@ open class PhotoRepository {
     return database
       .photos
       .filter {
-      val motive = it.motiveId.referenceTable as Motives
-      val album = motive.albumId.referenceTable as Albums
-      album.isAnalog eq false
-    }.toList()
+        val motive = it.motiveId.referenceTable as Motives
+        val album = motive.albumId.referenceTable as Albums
+        album.isAnalog eq false
+      }.toList()
       .map { it.toDto() }
   }
 
@@ -78,9 +78,9 @@ open class PhotoRepository {
     return database
       .photos
       .filter {
-      val securityLevelFromDatabase = it.securityLevelId.referenceTable as SecurityLevels
-      securityLevelFromDatabase.id eq securityLevel.id
-    }.toList()
+        val securityLevelFromDatabase = it.securityLevelId.referenceTable as SecurityLevels
+        securityLevelFromDatabase.id eq securityLevel.id
+      }.toList()
       .map { it.toDto() }
   }
 
