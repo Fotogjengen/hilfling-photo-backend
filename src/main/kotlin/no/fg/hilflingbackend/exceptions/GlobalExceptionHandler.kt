@@ -2,6 +2,8 @@ package no.fg.hilflingbackend.exceptions
 
 import no.fg.hilflingbackend.exceptions.ErrorResponseEntity.Companion.badReqeust
 import no.fg.hilflingbackend.exceptions.ErrorResponseEntity.Companion.notFound
+import org.apache.tomcat.util.http.fileupload.impl.InvalidContentTypeException
+import org.slf4j.LoggerFactory
 import org.springframework.core.Ordered
 import org.springframework.core.annotation.Order
 import org.springframework.http.HttpHeaders

@@ -104,7 +104,7 @@ class MockDataService {
       }
     )
 
-  private fun generateGangData(): List<GangDto> =
+  fun generateGangData(): List<GangDto> =
     listOf(
       GangDto(
         gangId = GangId(UUID.fromString("b0bd026f-cc19-4474-989c-aec8d4a76bc9")),
@@ -112,7 +112,7 @@ class MockDataService {
       )
     )
 
-  private fun generatePhoto(): List<PhotoDto> =
+  fun generatePhoto(): List<PhotoDto> =
     listOf(
       PhotoDto(
         photoId = PhotoId(UUID.fromString("8214142f-7c08-48ad-9130-fd7ac6b23e58")),
@@ -128,7 +128,7 @@ class MockDataService {
         photoGangBanger = generatePhotoGangBangerData().first().toEntity()
       )
     )
-  private fun generatePlaceData(): List<PlaceDto> =
+  fun generatePlaceData(): List<PlaceDto> =
     listOf(
       PlaceDto(
         placeId = PlaceId(UUID.fromString("9f4fa5d6-ad7c-419c-be58-1ee73f212675")),
@@ -136,7 +136,7 @@ class MockDataService {
       )
     )
 
-  private fun generateMotiveData(): List<Motive> =
+  fun generateMotiveData(): List<Motive> =
     listOf(
       Motive {
         id = UUID.fromString("94540f3c-77b8-4bc5-acc7-4dd7d8cc4bcd")
@@ -146,7 +146,7 @@ class MockDataService {
         category = generateCategoryData().first().toEntity()
       }
     )
-  private fun generateCategoryData(): List<CategoryDto> =
+  fun generateCategoryData(): List<CategoryDto> =
     listOf(
       CategoryDto(
         categoryId = CategoryId(UUID.fromString("2832ee5e-3f11-4f11-8189-56ca4f70f418")),
@@ -154,7 +154,7 @@ class MockDataService {
       )
     )
 
-  private fun generateEventOwnerData(): List<EventOwner> =
+  fun generateEventOwnerData(): List<EventOwner> =
     listOf(
       EventOwner {
         id = UUID.fromString("afc308c4-06e2-47bb-b97b-70eb3f55e8d9")
@@ -170,7 +170,7 @@ class MockDataService {
       }
     )
 
-  private fun generateAlbumData(): List<AlbumDto> {
+  fun generateAlbumData(): List<AlbumDto> {
     return listOf(
       AlbumDto(
         albumId = AlbumId(UUID.fromString("91fcac35-4e68-400a-a43e-e8d3f81d10f8")),
@@ -201,7 +201,7 @@ class MockDataService {
     )
   }
 
-  private fun generatePhotoTagData(): List<PhotoTagDto> {
+  fun generatePhotoTagData(): List<PhotoTagDto> {
     return listOf(
       PhotoTagDto(
         name = "WowFactor100"
@@ -215,7 +215,7 @@ class MockDataService {
     )
   }
 
-  private fun generateSamfundetUserData(): List<SamfundetUserDto> =
+  fun generateSamfundetUserData(): List<SamfundetUserDto> =
     listOf(
       SamfundetUserDto(
         samfundetUserId = SamfundetUserId(UUID.fromString("6a89444f-25f6-44d9-8a73-94587d72b822")),
@@ -232,7 +232,7 @@ class MockDataService {
       )
     )
 
-  private fun generatePhotoGangBangerData(): List<PhotoGangBangerDto> =
+  fun generatePhotoGangBangerData(): List<PhotoGangBangerDto> =
     listOf(
       PhotoGangBangerDto(
         photoGangBangerId = PhotoGangBangerId(UUID.fromString("6a89444f-25f6-44d9-8a73-94587d72b839")),
@@ -248,7 +248,7 @@ class MockDataService {
       )
     )
 
-  private fun generatePhotoGangBangerPositionData(): List<PhotoGangBangerPositionDto> =
+  fun generatePhotoGangBangerPositionData(): List<PhotoGangBangerPositionDto> =
     listOf(
       PhotoGangBangerPositionDto(
         photoGangBangerPositionId = PhotoGangBangerPositionId(UUID.fromString("6a89444f-25f6-44d9-8a73-94587d72b831")),
@@ -264,7 +264,7 @@ class MockDataService {
       )
     )
 
-  private fun generatePositionData(): List<PositionDto> =
+  fun generatePositionData(): List<PositionDto> =
     listOf(
       PositionDto(
         positionId = PositionId((UUID.fromString("bdd0cf5a-c952-41b8-8b83-c071da51f946"))),
