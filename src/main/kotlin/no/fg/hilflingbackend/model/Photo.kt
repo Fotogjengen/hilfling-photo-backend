@@ -36,7 +36,7 @@ fun Photo.toDto(): PhotoDto = PhotoDto(
   place = this.place,
   securityLevel = this.securityLevel,
   gang = this.gang,
-  photoGangBanger = this.photoGangBanger
+  photoGangBangerDto = this.photoGangBanger.toDto()
 )
 
 object Photos : BaseTable<Photo>("photo") {

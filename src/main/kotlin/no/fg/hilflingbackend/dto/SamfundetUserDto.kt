@@ -3,6 +3,7 @@ package no.fg.hilflingbackend.dto
 import no.fg.hilflingbackend.model.SamfundetUser
 import no.fg.hilflingbackend.model.SecurityLevel
 import no.fg.hilflingbackend.value_object.Email
+import no.fg.hilflingbackend.value_object.PhoneNumber
 import java.util.UUID
 
 data class SamfundetUserDto(
@@ -10,8 +11,7 @@ data class SamfundetUserDto(
   val firstName: String,
   val lastName: String,
   val username: String,
-  // TODO: Make value object
-  val phoneNumber: String,
+  val phoneNumber: PhoneNumber,
   val email: Email,
   // TODO: Rename SQL-scheme and interface to match this variablename
   val profilePicturePath: String,
@@ -28,7 +28,7 @@ fun SamfundetUserDto.toEntity(): SamfundetUser {
     email = dto.email.value
     firstName = dto.firstName
     lastName = dto.lastName
-    phoneNumber = dto.phoneNumber
+    phoneNumber = dto.phoneNumber.value
     profilePicture = dto.profilePicturePath
   }
 }

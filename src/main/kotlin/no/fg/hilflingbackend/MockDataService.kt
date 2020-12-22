@@ -41,6 +41,7 @@ import no.fg.hilflingbackend.repository.PositionRepository
 import no.fg.hilflingbackend.repository.SamfundetUserRepository
 import no.fg.hilflingbackend.repository.SecurityLevelRepository
 import no.fg.hilflingbackend.value_object.Email
+import no.fg.hilflingbackend.value_object.PhoneNumber
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import java.util.UUID
@@ -92,7 +93,7 @@ class MockDataService {
   @Autowired
   lateinit var photoRepository: PhotoRepository
 
-  private fun generateSecurityLevelData(): List<SecurityLevel> =
+  fun generateSecurityLevelData(): List<SecurityLevel> =
     listOf(
       SecurityLevel {
         id = UUID.fromString("8214142f-7c08-48ad-9130-fd7ac6b23e51")
@@ -104,11 +105,17 @@ class MockDataService {
       }
     )
 
+
   fun generateGangData(): List<GangDto> =
     listOf(
       GangDto(
         gangId = GangId(UUID.fromString("b0bd026f-cc19-4474-989c-aec8d4a76bc9")),
         name = "Fotogjengen"
+      ),
+
+      GangDto(
+        gangId = GangId(UUID.fromString("b1bd026f-cc19-4474-989c-aec8d4a76bc9")),
+        name = "Diversegjengen"
       )
     )
 
@@ -125,7 +132,7 @@ class MockDataService {
         isGoodPicture = true,
         smallUrl = "https://i.redd.it/f00ixlwhmud21.png",
         mediumUrl = "https://i.redd.it/f00ixlwhmud21.png",
-        photoGangBanger = generatePhotoGangBangerData().first().toEntity()
+        photoGangBangerDto = generatePhotoGangBangerData().first()
       )
     )
   fun generatePlaceData(): List<PlaceDto> =
@@ -133,6 +140,11 @@ class MockDataService {
       PlaceDto(
         placeId = PlaceId(UUID.fromString("9f4fa5d6-ad7c-419c-be58-1ee73f212675")),
         name = "Klubben"
+      ),
+
+      PlaceDto(
+        placeId = PlaceId(UUID.fromString("8f4fa5d6-ad7c-419c-be58-1ee73f212675")),
+        name = "Storsalen"
       )
     )
 
@@ -144,6 +156,14 @@ class MockDataService {
         album = generateAlbumData().first().toEntity()
         eventOwner = generateEventOwnerData().first()
         category = generateCategoryData().first().toEntity()
+      },
+
+      Motive {
+        id = UUID.fromString("94540f3c-77b8-4bc5-acc7-4dd7d8cc5bcd")
+        title = "High As a Kite 2020"
+        album = generateAlbumData().first().toEntity()
+        eventOwner = generateEventOwnerData().first()
+        category = generateCategoryData().first().toEntity()
       }
     )
   fun generateCategoryData(): List<CategoryDto> =
@@ -151,6 +171,11 @@ class MockDataService {
       CategoryDto(
         categoryId = CategoryId(UUID.fromString("2832ee5e-3f11-4f11-8189-56ca4f70f418")),
         name = "Gjengfoto"
+      ),
+
+      CategoryDto(
+        categoryId = CategoryId(UUID.fromString("3832ee5e-3f11-4f11-8189-56ca4f70f418")),
+        name = "Konsert"
       )
     )
 
@@ -219,16 +244,25 @@ class MockDataService {
     listOf(
       SamfundetUserDto(
         samfundetUserId = SamfundetUserId(UUID.fromString("6a89444f-25f6-44d9-8a73-94587d72b822")),
-        email = Email.create("emailtest@gmail.com"),
+        email = Email("emailtest@gmail.com"),
         firstName = "Sindre",
         lastName = "Sivertsen",
         profilePicturePath = "https://media1.tenor.com/images/79f8be09f39791c6462d30c5ce42e3be/tenor.gif?itemid=18386674",
         sex = "Mann",
         username = "sjsivert",
-        securituLevel = SecurityLevel {
-          type = "1"
-        },
-        phoneNumber = "91382506"
+        securituLevel = generateSecurityLevelData().first(),
+        phoneNumber = PhoneNumber("91382506")
+      ),
+      SamfundetUserDto(
+        samfundetUserId = SamfundetUserId(UUID.fromString("7a89444f-25f6-44d9-8a73-94587d72b822")),
+        email = Email("emailtest@gmail.com"),
+        firstName = "Carolin",
+        lastName = "Sandbråten",
+        profilePicturePath = "https://media1.tenor.com/images/79f8be09f39791c6462d30c5ce42e3be/tenor.gif?itemid=18386674",
+        sex = "Kvinne",
+        username = "Carossa",
+        securituLevel = generateSecurityLevelData().first(),
+        phoneNumber = PhoneNumber("91382506")
       )
     )
 
@@ -245,6 +279,19 @@ class MockDataService {
         semesterStart = SemesterStart("H2018"),
         samfundetUser = generateSamfundetUserData().first(),
         position = generatePositionData().first()
+      ),
+
+      PhotoGangBangerDto(
+        photoGangBangerId = PhotoGangBangerId(UUID.fromString("7a89444f-25f6-44d9-8a73-94587d72b839")),
+        address = "Odd Brochmanns Veg 52",
+        city = "Trondheim",
+        isActive = true,
+        isPang = true,
+        relationShipStatus = RelationshipStatus.SINGLE,
+        zipCode = "7051",
+        semesterStart = SemesterStart("H2018"),
+        samfundetUser = generateSamfundetUserData()[1],
+        position = generatePositionData()[1]
       )
     )
 
@@ -269,12 +316,12 @@ class MockDataService {
       PositionDto(
         positionId = PositionId((UUID.fromString("bdd0cf5a-c952-41b8-8b83-c071da51f946"))),
         title = "Gjengsjef",
-        email = Email.create("fg-web@samfundet.no")
+        email = Email("fg-web@samfundet.no")
       ),
       PositionDto(
         positionId = PositionId((UUID.fromString("bdd0cf5a-c952-41b8-8b83-c071da51f945"))),
         title = "Web",
-        email = Email.create("fg-web@samfundet.no")
+        email = Email("fg-web@samfundet.no")
       )
     )
   /*

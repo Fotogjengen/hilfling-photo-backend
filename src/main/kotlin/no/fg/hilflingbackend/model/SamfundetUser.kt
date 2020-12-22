@@ -5,6 +5,9 @@ import me.liuwj.ktorm.entity.Entity
 import me.liuwj.ktorm.entity.sequenceOf
 import me.liuwj.ktorm.schema.int
 import me.liuwj.ktorm.schema.varchar
+import no.fg.hilflingbackend.dto.SamfundetUserDto
+import no.fg.hilflingbackend.value_object.Email
+import no.fg.hilflingbackend.value_object.PhoneNumber
 
 interface SamfundetUser : BaseModel<SamfundetUser> {
   companion object : Entity.Factory<SamfundetUser>()
@@ -21,6 +24,16 @@ interface SamfundetUser : BaseModel<SamfundetUser> {
 
   var securityLevel: SecurityLevel
 }
+fun SamfundetUser.toDto() = SamfundetUserDto(
+  firstName = this.firstName,
+  lastName = this.lastName,
+  username = this.username,
+  email = Email(this.email),
+  profilePicturePath = this.profilePicture,
+  phoneNumber = PhoneNumber(this.phoneNumber),
+  securituLevel = this.securityLevel,
+  sex = this.sex
+)
 
 object SamfundetUsers : BaseTable<SamfundetUser>("samfundet_user") {
   val firstName = varchar("first_name").bindTo { it.firstName }

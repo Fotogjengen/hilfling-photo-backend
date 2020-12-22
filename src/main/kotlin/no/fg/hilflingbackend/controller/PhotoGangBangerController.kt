@@ -1,7 +1,6 @@
 package no.fg.hilflingbackend.controller
 
 import no.fg.hilflingbackend.dto.PhotoGangBangerDto
-import no.fg.hilflingbackend.model.PhotoGangBanger
 import no.fg.hilflingbackend.repository.PhotoGangBangerRepository
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.web.bind.annotation.GetMapping
@@ -15,37 +14,38 @@ import java.util.UUID
 @RestController
 @RequestMapping("/photo_gang_bangers")
 class PhotoGangBangerController {
+  // TODO: Refactor to use BaseController
   @Autowired
   lateinit var repository: PhotoGangBangerRepository
 
   @GetMapping("/{id}")
-  fun getById(@PathVariable("id") id: UUID): PhotoGangBanger? {
+  fun getById(@PathVariable("id") id: UUID): PhotoGangBangerDto? {
     return repository.findById(id)
   }
 
   @GetMapping
-  fun getAll(): List<PhotoGangBanger> {
+  fun getAll(): List<PhotoGangBangerDto> {
     return repository.findAll()
   }
 
   @GetMapping("/actives")
-  fun getActives(): List<PhotoGangBanger> {
+  fun getActives(): List<PhotoGangBangerDto> {
     return repository.findAllActives()
   }
 
   @GetMapping("/active_pangs")
-  fun getActivePangs(): List<PhotoGangBanger> {
+  fun getActivePangs(): List<PhotoGangBangerDto> {
     return repository.findAllActivePangs()
   }
 
   @GetMapping("/inactive_pangs")
-  fun getInActivePangs(): List<PhotoGangBanger> {
+  fun getInActivePangs(): List<PhotoGangBangerDto> {
     return repository.findAllInActivePangs()
   }
 
   @PostMapping
   fun create(
-    @RequestBody photoGangBanger: PhotoGangBangerDto
+    @RequestBody photoGangBangerDto:PhotoGangBangerDto
   ): Int =
-    repository.create(photoGangBanger)
+    repository.create(photoGangBangerDto)
 }
