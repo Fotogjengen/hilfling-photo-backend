@@ -105,7 +105,6 @@ class MockDataService {
       }
     )
 
-
   fun generateGangData(): List<GangDto> =
     listOf(
       GangDto(
@@ -123,16 +122,28 @@ class MockDataService {
     listOf(
       PhotoDto(
         photoId = PhotoId(UUID.fromString("8214142f-7c08-48ad-9130-fd7ac6b23e58")),
-        largeUrl = "https://i.redd.it/f00ixlwhmud21.png",
+        largeUrl = "img/FG/8214142f-7c08-48ad-9130-fd7ac6b23e58.jpg",
         motive = generateMotiveData().first(),
         place = generatePlaceData().first().toEntity(),
-        // TODO: generateSecutyry level and finish generatePhoto
         securityLevel = generateSecurityLevelData().first(),
-        gang = generateGangData().first().toEntity(),
+        gang = generateGangData().first(),
         isGoodPicture = true,
-        smallUrl = "https://i.redd.it/f00ixlwhmud21.png",
-        mediumUrl = "https://i.redd.it/f00ixlwhmud21.png",
+        smallUrl = "img/FG/8214142f-7c08-48ad-9130-fd7ac6b23e58.jpg",
+        mediumUrl = "img/FG/8214142f-7c08-48ad-9130-fd7ac6b23e58.jpg",
         photoGangBangerDto = generatePhotoGangBangerData().first()
+      ),
+
+      PhotoDto(
+        photoId = PhotoId(UUID.fromString("7214142f-7c08-48ad-9130-fd7ac6b23e58")),
+        motive = generateMotiveData().first(),
+        place = generatePlaceData().first().toEntity(),
+        securityLevel = generateSecurityLevelData().first(),
+        gang = generateGangData().first(),
+        isGoodPicture = false,
+        smallUrl = "img/FG/7214142f-7c08-48ad-9130-fd7ac6b23e58.jpg",
+        mediumUrl = "img/FG/7214142f-7c08-48ad-9130-fd7ac6b23e58.jpg",
+        largeUrl = "img/FG/7214142f-7c08-48ad-9130-fd7ac6b23e58.jpg",
+        photoGangBangerDto = generatePhotoGangBangerData()[0]
       )
     )
   fun generatePlaceData(): List<PlaceDto> =
@@ -274,7 +285,7 @@ class MockDataService {
         city = "Trondheim",
         isActive = true,
         isPang = true,
-        relationShipStatus = RelationshipStatus.SINGLE,
+        relationShipStatus = RelationshipStatus.valueOf("single"),
         zipCode = "7051",
         semesterStart = SemesterStart("H2018"),
         samfundetUser = generateSamfundetUserData().first(),
@@ -287,7 +298,7 @@ class MockDataService {
         city = "Trondheim",
         isActive = true,
         isPang = true,
-        relationShipStatus = RelationshipStatus.SINGLE,
+        relationShipStatus = RelationshipStatus.single,
         zipCode = "7051",
         semesterStart = SemesterStart("H2018"),
         samfundetUser = generateSamfundetUserData()[1],

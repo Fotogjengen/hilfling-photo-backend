@@ -221,8 +221,7 @@
 					<dependency>
 						<groupId>org.jetbrains.kotlin</groupId>
 						<artifactId>kotlin-maven-plugin</artifactId>
-						<version>${kotlin.versionl}</version>
-						<scope>provided</scope>
+						<version>${kotlin.version}</version>
 					</dependency>
 					<dependency>
 						<groupId>org.jetbrains.kotlin</groupId>

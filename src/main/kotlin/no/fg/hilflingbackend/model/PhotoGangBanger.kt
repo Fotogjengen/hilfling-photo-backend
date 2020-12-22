@@ -7,6 +7,7 @@ import me.liuwj.ktorm.schema.boolean
 import me.liuwj.ktorm.schema.uuid
 import me.liuwj.ktorm.schema.varchar
 import no.fg.hilflingbackend.dto.PhotoGangBangerDto
+import no.fg.hilflingbackend.dto.PhotoGangBangerId
 import no.fg.hilflingbackend.dto.RelationshipStatus
 import no.fg.hilflingbackend.dto.SemesterStart
 
@@ -28,8 +29,9 @@ interface PhotoGangBanger : BaseModel<PhotoGangBanger> {
   var position: Position
 }
 fun PhotoGangBanger.toDto(): PhotoGangBangerDto = PhotoGangBangerDto(
+  photoGangBangerId = PhotoGangBangerId(this.id),
   relationShipStatus = RelationshipStatus.valueOf(this.relationshipStatus),
-  semesterStart =  SemesterStart(this.semesterStart),
+  semesterStart = SemesterStart(this.semesterStart),
   isActive = this.isActive,
   isPang = this.isPang,
   address = this.address,

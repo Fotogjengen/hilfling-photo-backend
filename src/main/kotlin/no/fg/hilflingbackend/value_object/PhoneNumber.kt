@@ -4,7 +4,7 @@ import java.util.regex.Pattern
 
 data class PhoneNumber private constructor(val value: String) {
   companion object {
-    operator fun invoke(value: String): PhoneNumber{
+    operator fun invoke(value: String): PhoneNumber {
       if (value != null && isValidPhoneNumber(value)) {
         return PhoneNumber(value = value)
       }

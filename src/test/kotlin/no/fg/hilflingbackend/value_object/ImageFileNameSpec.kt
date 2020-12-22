@@ -6,13 +6,16 @@ import java.lang.IllegalArgumentException
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
 
-
-class ImageFileNameSpec: Spek({
+class ImageFileNameSpec : Spek({
   describe("ImageFileName") {
+    val fileName = ImageFileName("picture.jpg")
     it("Correctly adds creates a valid filename") {
-      val fileName = ImageFileName("picture.jpg")
       assertEquals("picture.jpg", fileName.filename)
+      assertEquals("digfø3652.jpg", ImageFileName("digfø3652.jpg").filename)
       assertEquals("picture.png", ImageFileName("picture.png").filename)
+    }
+    it("Generates the right fileExtension") {
+      assertEquals(".jpg", fileName.getFileExtension())
     }
     it("Fails on wrong input") {
       assertFailsWith<IllegalArgumentException> {

@@ -1,5 +1,10 @@
 server:
   port: ${LISTENING_PORT:8080}
+  error:
+    include-message: always
+    include-stacktrace: always
+    include-exception: true
+    include-binding-errors: always
 spring:
   datasource:
     hikari:
@@ -12,8 +17,10 @@ spring:
 
   logging:
     level:
-      root: error
+      root: debug
       me.liuwj.ktorm: debug
+      org.springframework.web: DEBUG
+
 
   flyway:
     user: ${DATABASE_USERNAME:hilfling}
