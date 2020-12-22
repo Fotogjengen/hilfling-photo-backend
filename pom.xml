@@ -95,6 +95,12 @@
 			<artifactId>spring-boot-starter-test</artifactId>
 			<scope>test</scope>
 		</dependency>
+		<!-- Documentation -->
+		<dependency>
+		  <groupId>org.springdoc</groupId>
+		  <artifactId>springdoc-openapi-ui</artifactId>
+		  <version>1.5.2</version>
+	   </dependency>
         <!-- Image scaler -->
 		<dependency>
 			<groupId>org.imgscalr</groupId>
