@@ -147,9 +147,9 @@ CREATE TABLE PHOTO
 (
     id                   uuid PRIMARY KEY,
     date_created         DATE NOT NULL DEFAULT CURRENT_DATE,
-    small_url            VARCHAR(40),
-    medium_url           VARCHAR(40),
-    large_url            VARCHAR(40),
+    small_url            VARCHAR(255),
+    medium_url           VARCHAR(255),
+    large_url            VARCHAR(255),
     is_good_picture      BOOLEAN,
     motive_id            UUID REFERENCES MOTIVE (id),
     place_id             UUID REFERENCES PLACE (id),
