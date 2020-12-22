@@ -4,7 +4,7 @@ import java.util.regex.Pattern
 
 data class Email private constructor(val value: String) {
   companion object {
-    fun create(value: String): Email {
+    operator fun invoke(value: String): Email {
       if (value != null && isEmailValid(value)) {
         return Email(value = value)
       }
