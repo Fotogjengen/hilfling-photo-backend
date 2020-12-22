@@ -7,15 +7,15 @@ import kotlin.test.assertEquals
 class EmailSpec : Spek({
   describe("Create Email test") {
     it("Should fail on not email") {
-      assertThrows<IllegalArgumentException> { Email.create("this is not an email") }
+      assertThrows<IllegalArgumentException> { Email("this is not an email") }
     }
     it("Should succeed on email") {
-      val email = Email.create("sindresinemail@gmail.com")
+      val email = Email("sindresinemail@gmail.com")
       assertEquals(email.value, "sindresinemail@gmail.com")
     }
     it("Works with all domains") {
       val emailString = "a@a.com"
-      assertThrows<IllegalArgumentException> { Email.create("this is not an email") }
+      assertThrows<IllegalArgumentException> { Email("this is not an email") }
     }
     it("Works with + sign") {
       // TODO: This should work. Fix Regex
