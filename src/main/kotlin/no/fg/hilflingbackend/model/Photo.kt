@@ -35,7 +35,7 @@ fun Photo.toDto(): PhotoDto = PhotoDto(
   motive = this.motive,
   place = this.place,
   securityLevel = this.securityLevel,
-  gang = this.gang,
+  gang = this.gang.toDto(),
   photoGangBangerDto = this.photoGangBanger.toDto()
 )
 

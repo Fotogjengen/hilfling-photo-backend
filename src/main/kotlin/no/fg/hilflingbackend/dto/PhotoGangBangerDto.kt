@@ -41,9 +41,9 @@ data class PhotoGangBangerId(
 
 // TODO: Move to value objects
 enum class RelationshipStatus(val status: String) {
-  SINGLE("single"),
-  MARRIED("married"),
-  IN_A_RELATIONSHIP("relationship")
+  single("single"),
+  relationship("relationship"),
+  married("married")
 }
 
 // TODO: Move to value objects

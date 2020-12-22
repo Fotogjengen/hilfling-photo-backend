@@ -46,7 +46,7 @@ services:
     ports:
       - 8181:${NGINX_PORT:-80}
     volumes:
-      - ./static-files/static:/usr/share/nginx/html
+      - ./static-files/static/:/usr/share/nginx/html
 
 
 

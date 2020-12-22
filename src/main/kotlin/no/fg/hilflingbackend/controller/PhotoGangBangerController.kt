@@ -45,7 +45,7 @@ class PhotoGangBangerController {
 
   @PostMapping
   fun create(
-    @RequestBody photoGangBangerDto:PhotoGangBangerDto
+    @RequestBody photoGangBangerDto: PhotoGangBangerDto
   ): Int =
     repository.create(photoGangBangerDto)
 }
