@@ -1,8 +1,8 @@
 # demoPhotos
 src/main/resources/demoPhotos/
-img/FG/*
-img/HUSFOLK/*
-img/ALLE/*
+static-files/static/img/FG/*
+static-files/static/img/HUSFOLK/*
+static-files/static/img/ALLE/*
 
 HELP.md
 target/

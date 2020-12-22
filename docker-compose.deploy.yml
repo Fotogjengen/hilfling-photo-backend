@@ -1,4 +1,4 @@
-# This file is not designed to be used a lone, but 
+# This file is not designed to be used a lone, but
 # As an addition to './docker-compose.yml' ex: 'docker-compose -f ./docker-compose.yml -f ./docker-compose.deploy.yml up -d'
 version: "3"
 networks:
@@ -14,6 +14,8 @@ services:
   hilfling-backend:
     container_name: hilfling-backend
     image: fotogjengen/hilfling-backend
+    volumes:
+      - ./static-files/:/app/static-files/
     depends_on:
       - postgres
     ports:

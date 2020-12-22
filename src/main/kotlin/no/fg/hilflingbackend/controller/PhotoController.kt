@@ -34,6 +34,7 @@ import java.nio.file.Files
 import java.security.InvalidParameterException
 import java.util.UUID
 import javax.persistence.EntityNotFoundException
+import kotlin.io.path.relativeToOrSelf
 
 @RestController
 @RequestMapping("/photos")
@@ -116,6 +117,9 @@ class PhotoController(
         logger.info("Saving file to disk $filePath")
         Files.copy(file.inputStream, filePath).toString()
       } catch (ex: IOException) {
+        logger.error(filePath.toString())
+        logger.error(filePath.toAbsolutePath())
+        logger.error(ex)
         throw IOException("Something went wrong when saving image file to disk")
       }
       // Add PhotoModel to Database
