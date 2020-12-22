@@ -5,6 +5,7 @@ import me.liuwj.ktorm.entity.Entity
 import me.liuwj.ktorm.entity.sequenceOf
 import me.liuwj.ktorm.schema.int
 import me.liuwj.ktorm.schema.varchar
+import no.fg.hilflingbackend.dto.PhotoGangBangerDto
 
 interface Article : BaseModel<Article> {
   companion object : Entity.Factory<Article>()

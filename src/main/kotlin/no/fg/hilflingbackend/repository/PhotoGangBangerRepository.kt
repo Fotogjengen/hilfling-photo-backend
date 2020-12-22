@@ -8,45 +8,50 @@ import me.liuwj.ktorm.entity.find
 import me.liuwj.ktorm.entity.toList
 import no.fg.hilflingbackend.dto.PhotoGangBangerDto
 import no.fg.hilflingbackend.dto.toEntity
-import no.fg.hilflingbackend.model.PhotoGangBanger
 import no.fg.hilflingbackend.model.photo_gang_bangers
+import no.fg.hilflingbackend.model.toDto
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Repository
 import java.util.UUID
 
 @Repository
 open class PhotoGangBangerRepository {
-  // TODO: Join with PhotoGangBangerPositions
+  // TODO: Join with PhotoGangBangerDtoPositions
   @Autowired
   open lateinit var database: Database
 
-  fun findById(id: UUID): PhotoGangBanger? {
-    return database.photo_gang_bangers.find { it.id eq id }
+  fun findById(id: UUID): PhotoGangBangerDto? {
+    return database.photo_gang_bangers.find { it.id eq id }?.toDto()
   }
 
-  fun findAll(): List<PhotoGangBanger> {
-    return database.photo_gang_bangers.toList()
+  fun findAll(): List<PhotoGangBangerDto> {
+    return database.photo_gang_bangers
+      .toList()
+      .map { it.toDto() }
   }
 
-  fun findAllActives(): List<PhotoGangBanger> {
+  fun findAllActives(): List<PhotoGangBangerDto> {
     return database.photo_gang_bangers.filter {
       it.isActive eq true
       it.isPang eq false
     }.toList()
+      .map { it.toDto() }
   }
 
-  fun findAllActivePangs(): List<PhotoGangBanger> {
+  fun findAllActivePangs(): List<PhotoGangBangerDto> {
     return database.photo_gang_bangers.filter {
       it.isActive eq true
       it.isPang eq true
     }.toList()
+      .map { it.toDto() }
   }
 
-  fun findAllInActivePangs(): List<PhotoGangBanger> {
+  fun findAllInActivePangs(): List<PhotoGangBangerDto> {
     return database.photo_gang_bangers.filter {
       it.isActive eq false
       it.isPang eq true
     }.toList()
+      .map { it.toDto() }
   }
 
   fun create(
