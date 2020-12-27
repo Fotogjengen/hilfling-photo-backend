@@ -24,6 +24,7 @@ data class PhotoDto(
   val photoGangBangerDto: PhotoGangBangerDto
 ) {
   val logger = LoggerFactory.getLogger(this::class.java)
+
   fun toEntity(): Photo {
     val photo = this
     return Photo {
@@ -72,7 +73,7 @@ data class PhotoDto(
         ) to filePath
         )
     }
-    private fun generateFilePath(fileName: ImageFileName, securityLevel: SecurityLevel): Path {
+    fun generateFilePath(fileName: ImageFileName, securityLevel: SecurityLevel): Path {
       // TODO: Move rootLocation to a config
       val rootLocation = Paths.get("static-files/static/img/")
       val photoGangBangerLocation = Paths.get("static-files/static/img//FG")
