@@ -8,9 +8,9 @@ import java.util.UUID
 @Component
 interface IRepository<E, D> {
   fun convertToClass(qrs: QueryRowSet): D
-  fun findById(id: UUID): D?
+  suspend fun findById(id: UUID): D?
   fun create(dto: D): Int
-  fun findAll(offset: Int, limit: Int): Page<D>
-  fun delete(id: UUID): Int
+  suspend fun findAll(offset: Int, limit: Int): Page<D>
+  suspend fun delete(id: UUID): Int
   fun patch(dto: D): Int
 }
