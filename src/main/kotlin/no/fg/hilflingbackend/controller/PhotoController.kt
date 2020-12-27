@@ -87,7 +87,8 @@ class PhotoController(
     val cachedPlace = { id: UUID ->
       runBlocking {
         placeRepository
-          .findById(id) ?: throw EntityNotFoundException("Did not find place")
+          .findById(id)
+          ?: throw EntityNotFoundException("Did not find place")
       }
     }.memoize()
 
@@ -110,12 +111,12 @@ class PhotoController(
       val validatedFileName = ImageFileName(file.originalFilename ?: "")
 
       // Generate Objects
-      val (photoDto, filePath) = PhotoDto.createPhotoDtoAndGeneratePaths(
+      val (photoDto, filePath) = PhotoDto.createPhotoDtoAndSaveToDisk(
         isGoodPicture = isGoodPictureList.get(index),
         gang = gang,
         motive = cachedMotive(motiveIdList.get(index)),
         securityLevel = securityLevel,
-        place = cachedPlace(placeIdList.get(index)).toEntity(),
+        placeDto = cachedPlace(placeIdList.get(index)),
         photoGangBangerDto = photoGangBanger,
         fileName = validatedFileName,
       )

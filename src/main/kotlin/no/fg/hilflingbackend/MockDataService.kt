@@ -124,7 +124,7 @@ class MockDataService {
         photoId = PhotoId(UUID.fromString("8214142f-7c08-48ad-9130-fd7ac6b23e58")),
         largeUrl = "img/FG/8214142f-7c08-48ad-9130-fd7ac6b23e58.jpg",
         motive = generateMotiveData().first(),
-        place = generatePlaceData().first().toEntity(),
+        placeDto = generatePlaceData().first(),
         securityLevel = generateSecurityLevelData().first(),
         gang = generateGangData().first(),
         isGoodPicture = true,
@@ -136,7 +136,7 @@ class MockDataService {
       PhotoDto(
         photoId = PhotoId(UUID.fromString("7214142f-7c08-48ad-9130-fd7ac6b23e58")),
         motive = generateMotiveData().first(),
-        place = generatePlaceData().first().toEntity(),
+        placeDto = generatePlaceData().first(),
         securityLevel = generateSecurityLevelData().first(),
         gang = generateGangData().first(),
         isGoodPicture = false,

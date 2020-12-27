@@ -18,7 +18,7 @@ data class PhotoDto(
   val largeUrl: String,
 
   val motive: Motive,
-  val place: Place,
+  val placeDto: PlaceDto,
   val securityLevel: SecurityLevel,
   val gang: GangDto,
   val photoGangBangerDto: PhotoGangBangerDto
@@ -34,18 +34,18 @@ data class PhotoDto(
       this.mediumUrl = photo.mediumUrl
       this.largeUrl = photo.largeUrl
       this.motive = photo.motive
-      this.place = photo.place
+      this.place = photo.placeDto.toEntity()
       this.securityLevel = photo.securityLevel
       this.gang = photo.gang.toEntity()
       this.photoGangBanger = photo.photoGangBangerDto.toEntity()
     }
   }
   companion object {
-    fun createPhotoDtoAndGeneratePaths(
+    fun createPhotoDtoAndSaveToDisk(
       fileName: ImageFileName,
       isGoodPicture: Boolean,
       motive: Motive,
-      place: Place,
+      placeDto: PlaceDto,
       securityLevel: SecurityLevel,
       gang: GangDto,
       photoGangBangerDto: PhotoGangBangerDto
@@ -66,7 +66,7 @@ data class PhotoDto(
           mediumUrl = relativeFilePath,
           largeUrl = relativeFilePath,
           motive = motive,
-          place = place,
+          placeDto = placeDto,
           gang = gang,
           securityLevel = securityLevel,
           photoGangBangerDto = photoGangBangerDto
