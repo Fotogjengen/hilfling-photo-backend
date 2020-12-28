@@ -164,7 +164,7 @@
 		<dependency>
 			<groupId>org.jetbrains.kotlinx</groupId>
 			<artifactId>kotlinx-coroutines-test</artifactId>
-			<version>1.4.2</version>
+			<version>1.4.2-native-mt</version>
 			<scope>test</scope>
 		</dependency>
 		<!-- END TESTING -->
