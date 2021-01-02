@@ -13,14 +13,14 @@ import java.util.UUID
 open class BaseController<E, D>(open val repository: IRepository<E, D>) {
 
   @GetMapping("/{id}")
-  suspend fun getById(
+  fun getById(
     @PathVariable("id") id: UUID
   ): D? {
     return repository.findById(id)
   }
 
   @GetMapping
-  suspend fun getAll(
+  fun getAll(
     @RequestParam("offset", required = false) offset: Int?,
     @RequestParam("limit", required = false) limit: Int?
   ): Page<D> {
@@ -28,7 +28,7 @@ open class BaseController<E, D>(open val repository: IRepository<E, D>) {
   }
 
   @PostMapping
-  suspend fun create(
+  fun create(
     @RequestBody dto: D
   ): Int {
     return repository.create(
@@ -37,7 +37,7 @@ open class BaseController<E, D>(open val repository: IRepository<E, D>) {
   }
 
   @PatchMapping
-  suspend fun patch(
+ fun patch(
     @RequestBody dto: D
   ): Int {
     return repository.patch(dto)

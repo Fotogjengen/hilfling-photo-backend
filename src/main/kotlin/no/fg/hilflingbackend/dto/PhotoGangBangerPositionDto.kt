@@ -7,7 +7,7 @@ data class PhotoGangBangerPositionDto(
   val photoGangBangerPositionId: PhotoGangBangerPositionId = PhotoGangBangerPositionId(),
   val photoGangBangerDto: PhotoGangBangerDto,
   val position: PositionDto,
-  val isCurrent: Boolean,
+  val isCurrent: Boolean
 )
 
 fun PhotoGangBangerPositionDto.toEntity(): PhotoGangBangerPosition {

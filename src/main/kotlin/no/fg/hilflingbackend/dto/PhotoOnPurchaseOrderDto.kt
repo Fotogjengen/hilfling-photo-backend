@@ -5,7 +5,7 @@ import java.util.UUID
 data class PhotoOnPurchaseOrderDto(
   val photoOnPurchaseOrderId: PhotoOnPurchaseOrderId = PhotoOnPurchaseOrderId(),
   val size: String,
-  val amount: Int,
+  val amount: Int
   // val purchaseOrder: PurchaseOrderDto,
   // val photo: PhotoDto,
 )

@@ -15,7 +15,7 @@ import no.fg.hilflingbackend.model.BaseTable
 import java.util.UUID
 
 abstract class BaseRepository<E : BaseModel<E>, D>(val table: BaseTable<E>, val database: Database) : IRepository<E, D> {
-  override suspend fun findById(id: UUID): D? {
+  override fun findById(id: UUID): D? {
     // TODO: make a little bit less hacky wacky
     val resultSet = database.from(table)
       .select()
@@ -25,7 +25,7 @@ abstract class BaseRepository<E : BaseModel<E>, D>(val table: BaseTable<E>, val 
     return t
   }
 
-  override suspend fun findAll(offset: Int, limit: Int): Page<D> {
+  override fun findAll(offset: Int, limit: Int): Page<D> {
     val resultSet = database.from(table).select().limit(offset, limit)
     return Page(
       offset,
@@ -35,7 +35,7 @@ abstract class BaseRepository<E : BaseModel<E>, D>(val table: BaseTable<E>, val 
     )
   }
 
-  override suspend fun delete(id: UUID): Int {
+  override fun delete(id: UUID): Int {
     // TODO: remember to test that this actually works
     return database.delete(table) { it.id eq id }
   }

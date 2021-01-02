@@ -13,7 +13,7 @@ import no.fg.hilflingbackend.model.gangs
 import org.springframework.stereotype.Repository
 
 @Repository
-open class GangRepository(database: Database) : BaseRepository<Gang, GangDto>(table = Gangs, database) {
+open class GangRepository(database: Database) : BaseRepository<Gang, GangDto>(table = Gangs, database = database) {
   override fun convertToClass(qrs: QueryRowSet): GangDto = GangDto(
     gangId = GangId(qrs[Gangs.id]!!),
     name = qrs[Gangs.name]

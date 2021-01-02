@@ -10,5 +10,5 @@ data class EventCardDto(
   val locationTaken: String?,
   // val albumType: String?,
   val frontPageSmallPhotoUrl: String?,
-  val eventOwnerName: String?,
+  val eventOwnerName: String?
 )

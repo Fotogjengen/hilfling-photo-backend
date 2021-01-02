@@ -5,7 +5,7 @@ import java.util.UUID
 
 data class PlaceDto(
   val placeId: PlaceId = PlaceId(),
-  val name: String?,
+  val name: String?
 )
 
 data class PlaceId(

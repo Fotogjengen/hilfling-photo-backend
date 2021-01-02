@@ -25,7 +25,7 @@ open class GlobalExceptionHandler : ResponseEntityExceptionHandler() {
 
   @ExceptionHandler(value = [(EntityNotFoundException::class)])
   fun globalExceptionHandler(
-    ex: EntityNotFoundException,
+    ex: EntityNotFoundException
   ): ResponseEntity<Any> {
     log.error(ex.localizedMessage)
     return notFound(ex?.message ?: "Something went wrong")

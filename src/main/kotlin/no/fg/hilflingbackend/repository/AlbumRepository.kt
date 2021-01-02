@@ -13,7 +13,7 @@ import no.fg.hilflingbackend.model.albums
 import org.springframework.stereotype.Repository
 
 @Repository
-open class AlbumRepository(database: Database) : BaseRepository<Album, AlbumDto>(table = Albums, database) {
+open class AlbumRepository(database: Database) : BaseRepository<Album, AlbumDto>(table = Albums, database = database) {
   override fun convertToClass(qrs: QueryRowSet): AlbumDto = AlbumDto(
     albumId = AlbumId(qrs[Albums.id]!!),
     title = qrs[Albums.title]!!,

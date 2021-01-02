@@ -5,7 +5,7 @@ import java.util.UUID
 
 data class EventOwnerDto(
   val eventOwnerId: EventOwnerId = EventOwnerId(),
-  val name: EventOwnerName,
+  val name: EventOwnerName
 ) {
   // Constructor for Entity
   constructor(eventOwner: EventOwner) : this(

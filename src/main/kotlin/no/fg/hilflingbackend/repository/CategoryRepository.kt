@@ -13,7 +13,7 @@ import no.fg.hilflingbackend.model.categories
 import org.springframework.stereotype.Repository
 
 @Repository
-open class CategoryRepository(database: Database) : BaseRepository<Category, CategoryDto>(table = Categories, database) {
+open class CategoryRepository(database: Database) : BaseRepository<Category, CategoryDto>(table = Categories, database = database) {
   override fun convertToClass(qrs: QueryRowSet): CategoryDto = CategoryDto(
     categoryId = CategoryId(qrs[Categories.id]!!),
     name = qrs[Categories.name]!!

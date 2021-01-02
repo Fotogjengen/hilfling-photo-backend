@@ -1,9 +1,7 @@
 package no.fg.hilflingbackend.controller
 
-import kotlinx.coroutines.runBlocking
 import no.fg.hilflingbackend.dto.GangDto
 import no.fg.hilflingbackend.dto.PhotoDto
-import no.fg.hilflingbackend.dto.toEntity
 import no.fg.hilflingbackend.exceptions.GlobalExceptionHandler
 import no.fg.hilflingbackend.model.AnalogPhoto
 import no.fg.hilflingbackend.model.SecurityLevel
@@ -14,7 +12,6 @@ import no.fg.hilflingbackend.repository.PhotoRepository
 import no.fg.hilflingbackend.repository.PlaceRepository
 import no.fg.hilflingbackend.repository.SecurityLevelRepository
 import no.fg.hilflingbackend.service.PhotoService
-import no.fg.hilflingbackend.utils.memoize
 import no.fg.hilflingbackend.value_object.ImageFileName
 import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpStatus
@@ -56,14 +53,14 @@ class PhotoController(
   }
 
   @PostMapping
-  suspend fun uploadPhoto(
+  fun uploadPhoto(
     @RequestParam("isGoodPictureList") isGoodPictureList: List<Boolean>,
     @RequestParam("motiveIdList") motiveIdList: List<UUID>,
     @RequestParam("placeIdList") placeIdList: List<UUID>,
     @RequestParam("securityLevelIdList") securityLevelIdList: List<UUID>,
     @RequestParam("gangIdList") gangIdList: List<UUID>,
     @RequestParam("photoGangBangerIdList") photoGangBangerIdList: List<UUID>,
-    @RequestParam("fileList") fileList: List<MultipartFile>,
+    @RequestParam("fileList") fileList: List<MultipartFile>
   ): ResponseEntity<List<String>> {
     // Assert all fields are populated
     if (
@@ -77,21 +74,15 @@ class PhotoController(
       logger.error("Parameter lists are unequal")
       throw InvalidParameterException("Parameter lists are unequal")
     }
-
-    val cachedMotive = { id: UUID ->
-      motiveRepository
-        .findById(id) ?: throw EntityNotFoundException("Did not find motive")
-    }.memoize()
-
+    /*
     // TODO: Test speed
+    // This is a test cache results. Not in use at the moment
     val cachedPlace = { id: UUID ->
-      runBlocking {
         placeRepository
           .findById(id)
           ?: throw EntityNotFoundException("Did not find place")
-      }
     }.memoize()
-
+     */
     val createdPhotoList = fileList.mapIndexed { index, file ->
       logger.info("Request with parameters: ${fileList.get(index).originalFilename}  ${isGoodPictureList.get(index)}, ${motiveIdList.get(index)}")
 
@@ -107,6 +98,9 @@ class PhotoController(
 
       val photoGangBanger = photoGangBangerRepository
         .findById(photoGangBangerIdList.get(index)) ?: throw EntityNotFoundException("Did not find photoGangBanger")
+      val motive = motiveRepository
+        .findById(motiveIdList[index])
+        ?: throw EntityNotFoundException("Did not found motive")
 
       val validatedFileName = ImageFileName(file.originalFilename ?: "")
 
@@ -114,11 +108,11 @@ class PhotoController(
       val (photoDto, filePath) = PhotoDto.createPhotoDtoAndSaveToDisk(
         isGoodPicture = isGoodPictureList.get(index),
         gang = gang,
-        motive = cachedMotive(motiveIdList.get(index)),
+        motive = motive,
         securityLevel = securityLevel,
-        placeDto = cachedPlace(placeIdList.get(index)),
+        placeDto = place,
         photoGangBangerDto = photoGangBanger,
-        fileName = validatedFileName,
+        fileName = validatedFileName
       )
       // Save file to disk
       try {
@@ -146,14 +140,14 @@ class PhotoController(
   }
 
   @PostMapping("/analog")
-  suspend fun createAnalogPhoto(
+  fun createAnalogPhoto(
     @RequestBody analogPhoto: AnalogPhoto
   ): AnalogPhoto {
     return photoRepository.createAnalogPhoto(analogPhoto)
   }
 
   @PatchMapping("/analog")
-  suspend fun uploadAnalogPhoto(
+  fun uploadAnalogPhoto(
     @RequestPart("photo") analogPhoto: AnalogPhoto,
     @RequestPart("file") file: MultipartFile
   ): ResponseEntity<AnalogPhoto> {
@@ -169,27 +163,27 @@ class PhotoController(
   }
 
   @GetMapping("/{id}")
-  suspend fun getById(@PathVariable("id") id: UUID): PhotoDto {
+  fun getById(@PathVariable("id") id: UUID): PhotoDto {
     return photoRepository.findById(id) ?: throw EntityNotFoundException("Dit not find photo")
   }
 
   @GetMapping
-  suspend fun getAll(): List<PhotoDto> {
+  fun getAll(): List<PhotoDto> {
     return photoRepository.findAll()
   }
 
   @GetMapping("/carousel")
-  suspend fun getCarouselPhotos(): List<PhotoDto> {
+  fun getCarouselPhotos(): List<PhotoDto> {
     return photoRepository.findCarouselPhotos()
   }
 
   @GetMapping("/analog")
-  suspend fun getAllAnalogPhotos(): List<PhotoDto> {
+  fun getAllAnalogPhotos(): List<PhotoDto> {
     return photoRepository.findAllAnalogPhotos()
   }
 
   @GetMapping("/digital")
-  suspend fun getAllDigitalPhotos(): List<PhotoDto> {
+  fun getAllDigitalPhotos(): List<PhotoDto> {
     return photoRepository.findAllDigitalPhotos()
   }
 }

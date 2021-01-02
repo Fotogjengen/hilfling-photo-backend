@@ -27,12 +27,6 @@
 	</properties>
 
 	<dependencies>
-		<!-- Ensure all kotlinx coroutines packages uses same version. -->
-		<dependency>
-			<groupId>org.jetbrains.kotlinx</groupId>
-			<artifactId>kotlinx-coroutines-core</artifactId>
-			<version>${kotlinx-coroutines.version}</version>
-		</dependency>
 		<!-- https://mvnrepository.com/artifact/org.jetbrains.kotlin/kotlin-contracts -->
 		<dependency>
 			<groupId>org.jetbrains.kotlin</groupId>
@@ -160,13 +154,6 @@
 			<version>1.4.21-2</version>
 		</dependency>
 
-		<!-- https://mvnrepository.com/artifact/org.jetbrains.kotlinx/kotlinx-coroutines-test -->
-		<dependency>
-			<groupId>org.jetbrains.kotlinx</groupId>
-			<artifactId>kotlinx-coroutines-test</artifactId>
-			<version>1.4.2</version>
-			<scope>test</scope>
-		</dependency>
 		<!-- END TESTING -->
 	</dependencies>
 
@@ -207,11 +194,6 @@
 			<plugin>
 				<groupId>org.jetbrains.kotlin</groupId>
 				<artifactId>kotlin-maven-plugin</artifactId>
-				<configuration>
-					<args>
-						<arg>-Xcoroutines=enable</arg>
-					</args>
-				</configuration>
 			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>

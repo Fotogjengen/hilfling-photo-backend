@@ -1,8 +1,6 @@
 import com.nhaarman.mockitokotlin2.anyVararg
 import com.nhaarman.mockitokotlin2.doReturn
 import com.nhaarman.mockitokotlin2.mock
-import kotlinx.coroutines.runBlocking
-import kotlinx.coroutines.test.runBlockingTest
 import no.fg.hilflingbackend.MockDataService
 import no.fg.hilflingbackend.controller.PhotoController
 import no.fg.hilflingbackend.repository.AlbumRepository
@@ -35,7 +33,7 @@ class PhotoControllerSpec : Spek({
 
   describe("PhotoChontroller") {
     val albumRepository: AlbumRepository = mock {
-      on { runBlocking { findById(UUID.fromString("91fcac35-4e68-400a-a43e-e8d3f81d10f8")) } } doReturn MockDataService()
+      on {  findById(UUID.fromString("91fcac35-4e68-400a-a43e-e8d3f81d10f8"))  } doReturn MockDataService()
         .generateAlbumData()
         .first()
     }
@@ -58,12 +56,12 @@ class PhotoControllerSpec : Spek({
     val categoryRepository = mock<CategoryRepository> {}
     val eventOwnerRepository = mock<EventOwnerRepository> {}
     val placeRepository = mock<PlaceRepository> {
-      on { runBlocking { findById(mockDataService.generatePlaceData()[0].placeId.id) } } doReturn mockDataService.generatePlaceData()[0]
-      on { runBlocking { findById(mockDataService.generatePlaceData()[1].placeId.id) } } doReturn mockDataService.generatePlaceData()[1]
+      on {  findById(mockDataService.generatePlaceData()[0].placeId.id)  } doReturn mockDataService.generatePlaceData()[0]
+      on {  findById(mockDataService.generatePlaceData()[1].placeId.id)  } doReturn mockDataService.generatePlaceData()[1]
     }
     val gangRepository = mock<GangRepository> {
-      on { runBlocking { findById(mockDataService.generateGangData()[0].gangId.id) } } doReturn mockDataService.generateGangData()[0]
-      on { runBlocking { findById(mockDataService.generateGangData()[1].gangId.id) } } doReturn mockDataService.generateGangData()[1]
+      on {  findById(mockDataService.generateGangData()[0].gangId.id)  } doReturn mockDataService.generateGangData()[0]
+      on {  findById(mockDataService.generateGangData()[1].gangId.id)  } doReturn mockDataService.generateGangData()[1]
     }
     val photoRepository = mock<PhotoRepository> {
       on { findById(mockPhoto.photoId.id) } doReturn mockPhoto
@@ -92,22 +90,18 @@ class PhotoControllerSpec : Spek({
       placeRepository,
       securityLevelRepository,
       photoGangBangerRepository,
-      photoService,
+      photoService
     )
     describe("getById()") {
-      runBlockingTest {
-        // Act
         val photo = photoController.getById(mockPhoto.photoId.id)
 
         it("Returns photo on request") {
           // Assert
           assertEquals(photo, mockPhoto)
         }
-      }
     }
 
     describe("uploadPhoto()") {
-      runBlockingTest {
         // Arrange
         try {
 
@@ -134,7 +128,7 @@ class PhotoControllerSpec : Spek({
               mockDataService.generatePhotoGangBangerData()[0].photoGangBangerId.id,
               mockDataService.generatePhotoGangBangerData()[1].photoGangBangerId.id
             ),
-            fileList = multiPartFiles,
+            fileList = multiPartFiles
           )
 
           // Assert
@@ -151,7 +145,6 @@ class PhotoControllerSpec : Spek({
           log.error(ex.localizedMessage)
         }
         it("Fails when file is not an image") {
-          runBlockingTest {
             val notAPhotoFile = ClassPathResource("demoPhotos/not-an-image.exe")
               .file
             val multipartFile =
@@ -164,13 +157,11 @@ class PhotoControllerSpec : Spek({
                 securityLevelIdList = listOf(UUID.fromString("8214142f-7c08-48ad-9130-fd7ac6b23e51")),
                 gangIdList = listOf(UUID.fromString("b1bd026f-cc19-4474-989c-aec8d4a76bc9")),
                 photoGangBangerIdList = listOf(UUID.fromString("7a89444f-25f6-44d9-8a73-94587d72b839")),
-                fileList = listOf(multipartFile),
+                fileList = listOf(multipartFile)
               )
             }
-          }
         }
         it("Fails when parameter list are unequal") {
-          runBlockingTest {
             val notAPhotoFile = ClassPathResource("demoPhotos/not-an-image.exe")
               .file
             val multipartFile =
@@ -183,12 +174,10 @@ class PhotoControllerSpec : Spek({
                 securityLevelIdList = listOf(UUID.fromString("8214142f-7c08-48ad-9130-fd7ac6b23e51")),
                 gangIdList = listOf(UUID.fromString("b1bd026f-cc19-4474-989c-aec8d4a76bc9")),
                 photoGangBangerIdList = listOf(UUID.fromString("7a89444f-25f6-44d9-8a73-94587d72b839")),
-                fileList = listOf(multipartFile),
+                fileList = listOf(multipartFile)
               )
             }
-          }
         }
-      }
     }
   }
 })

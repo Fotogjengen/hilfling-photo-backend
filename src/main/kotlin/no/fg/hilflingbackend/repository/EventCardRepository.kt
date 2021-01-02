@@ -26,7 +26,7 @@ open class EventCardRepository() {
 
   fun getLatestEventCards(
     numberOfEventCards: Int,
-    eventOwner: EventOwner,
+    eventOwner: EventOwner
   ): List<EventCardDto> {
     // TODO: Test if this works
     return database
