@@ -211,7 +211,7 @@ class MockDataService {
       AlbumDto(
         albumId = AlbumId(UUID.fromString("91fcac35-4e68-400a-a43e-e8d3f81d10f8")),
         title = "Vår 2017",
-        isAnalog = true,
+        isAnalog = true
       ),
       AlbumDto(
         albumId = AlbumId(UUID.fromString("91fcac35-4e68-400a-a43e-e8d3f81d10f1")),
@@ -312,13 +312,13 @@ class MockDataService {
         photoGangBangerPositionId = PhotoGangBangerPositionId(UUID.fromString("6a89444f-25f6-44d9-8a73-94587d72b831")),
         isCurrent = true,
         photoGangBangerDto = generatePhotoGangBangerData().first(),
-        position = generatePositionData().first(),
+        position = generatePositionData().first()
       ),
       PhotoGangBangerPositionDto(
         photoGangBangerPositionId = PhotoGangBangerPositionId(UUID.fromString("6a89444f-25f6-44d9-8a73-94587d72b832")),
         isCurrent = false,
         photoGangBangerDto = generatePhotoGangBangerData().first(),
-        position = generatePositionData().first(),
+        position = generatePositionData().first()
       )
     )
 

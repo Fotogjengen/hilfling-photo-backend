@@ -38,7 +38,7 @@ fun PhotoGangBanger.toDto(): PhotoGangBangerDto = PhotoGangBangerDto(
   zipCode = this.zipCode,
   city = this.city,
   samfundetUser = this.samfundetUser.toDto(),
-  position = this.position.toDto(),
+  position = this.position.toDto()
 )
 
 object PhotoGangBangers : BaseTable<no.fg.hilflingbackend.model.PhotoGangBanger>("photo_gang_banger") {

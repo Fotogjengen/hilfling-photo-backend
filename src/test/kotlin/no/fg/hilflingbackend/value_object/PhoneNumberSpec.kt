@@ -9,7 +9,7 @@ class PhoneNumberSpec : Spek({
 
   describe("PhoneNumber") {
     mapOf(
-      "96518405" to "96518405",
+      "96518405" to "96518405"
     ).forEach { input, expected ->
       describe("Testing input $input") {
         it("Correctly returns $expected") {

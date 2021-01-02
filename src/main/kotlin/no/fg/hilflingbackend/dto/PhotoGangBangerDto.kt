@@ -15,7 +15,7 @@ data class PhotoGangBangerDto(
   val zipCode: String,
   val city: String,
   val samfundetUser: SamfundetUserDto,
-  val position: PositionDto,
+  val position: PositionDto
 )
 fun PhotoGangBangerDto.toEntity(): PhotoGangBanger {
   val dto = this

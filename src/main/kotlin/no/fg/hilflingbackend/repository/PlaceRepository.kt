@@ -13,7 +13,7 @@ import no.fg.hilflingbackend.model.places
 import org.springframework.stereotype.Repository
 
 @Repository
-open class PlaceRepository(database: Database) : BaseRepository<Place, PlaceDto>(table = Places, database) {
+open class PlaceRepository(database: Database) : BaseRepository<Place, PlaceDto>(table = Places, database = database) {
   override fun convertToClass(qrs: QueryRowSet): PlaceDto = PlaceDto(
     placeId = PlaceId(qrs[Places.id]!!),
     name = qrs[Places.name]
