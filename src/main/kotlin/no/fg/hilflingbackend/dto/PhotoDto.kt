@@ -3,7 +3,6 @@ package no.fg.hilflingbackend.dto
 import no.fg.hilflingbackend.model.Motive
 import no.fg.hilflingbackend.model.Photo
 import no.fg.hilflingbackend.value_object.ImageFileName
-import org.slf4j.LoggerFactory
 import java.util.UUID
 
 data class PhotoDto(

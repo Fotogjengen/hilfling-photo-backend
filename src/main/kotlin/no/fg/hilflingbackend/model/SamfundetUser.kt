@@ -3,7 +3,6 @@ package no.fg.hilflingbackend.model
 import me.liuwj.ktorm.database.Database
 import me.liuwj.ktorm.entity.Entity
 import me.liuwj.ktorm.entity.sequenceOf
-import me.liuwj.ktorm.schema.int
 import me.liuwj.ktorm.schema.uuid
 import me.liuwj.ktorm.schema.varchar
 import no.fg.hilflingbackend.dto.SamfundetUserDto
