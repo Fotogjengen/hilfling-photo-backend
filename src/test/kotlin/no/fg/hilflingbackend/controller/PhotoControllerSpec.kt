@@ -1,43 +1,27 @@
-import com.nhaarman.mockitokotlin2.anyVararg
-import com.nhaarman.mockitokotlin2.doReturn
+
 import com.nhaarman.mockitokotlin2.mock
 import no.fg.hilflingbackend.MockDataService
 import no.fg.hilflingbackend.controller.PhotoController
-import no.fg.hilflingbackend.repository.AlbumRepository
-import no.fg.hilflingbackend.repository.CategoryRepository
-import no.fg.hilflingbackend.repository.EventOwnerRepository
-import no.fg.hilflingbackend.repository.GangRepository
-import no.fg.hilflingbackend.repository.MotiveRepository
-import no.fg.hilflingbackend.repository.PhotoGangBangerRepository
-import no.fg.hilflingbackend.repository.PhotoRepository
-import no.fg.hilflingbackend.repository.PhotoTagRepository
-import no.fg.hilflingbackend.repository.PlaceRepository
-import no.fg.hilflingbackend.repository.SecurityLevelRepository
 import no.fg.hilflingbackend.service.PhotoService
 import org.junit.jupiter.api.assertThrows
 import org.slf4j.LoggerFactory
 import org.spekframework.spek2.Spek
 import org.spekframework.spek2.style.specification.describe
 import org.springframework.core.io.ClassPathResource
-import org.springframework.http.HttpStatus
 import org.springframework.mock.web.MockMultipartFile
-import org.springframework.validation.BindingResult
-import java.io.IOException
 import java.security.InvalidParameterException
 import java.util.UUID
-import kotlin.test.assertEquals
-import kotlin.test.assertTrue
 
 class PhotoControllerSpec : Spek({
   val log = LoggerFactory.getLogger(this::class.java)
-
 
   describe("PhotoChontroller") {
     val mockDataService = MockDataService()
     val photoFile = ClassPathResource("demoPhotos/digfø3652.jpg")
     val mockPhotoService = mock<PhotoService> {
-      on {  saveDigitalPhotos(
-                  isGoodPictureList = listOf(true, true),
+      on {
+        saveDigitalPhotos(
+          isGoodPictureList = listOf(true, true),
           motiveIdList = listOf(
             mockDataService.generateMotiveData()[0].id,
             mockDataService.generateMotiveData()[1].id
@@ -59,10 +43,11 @@ class PhotoControllerSpec : Spek({
             mockDataService.generatePhotoGangBangerData()[1].photoGangBangerId.id
           ),
           fileList = listOf(
-             MockMultipartFile("file", photoFile.filename, "text/plain", photoFile.inputStream),
-             MockMultipartFile("file", photoFile.filename, "text/plain", photoFile.inputStream)
+            MockMultipartFile("file", photoFile.filename, "text/plain", photoFile.inputStream),
+            MockMultipartFile("file", photoFile.filename, "text/plain", photoFile.inputStream)
           )
-      ) }
+        )
+      }
     }
     val photoController = PhotoController(
       photoService = mockPhotoService
@@ -70,22 +55,21 @@ class PhotoControllerSpec : Spek({
 
     it("Fails when parameter list are unequal") {
 
-        val notAPhotoFile = ClassPathResource("demoPhotos/not-an-image.exe")
-          .file
-        val multipartFile =
-          MockMultipartFile("file", notAPhotoFile.name, "text/plain", notAPhotoFile.inputStream())
-        assertThrows<InvalidParameterException> {
-          photoController.uploadPhoto(
-            isGoodPictureList = listOf(false, true),
-            motiveIdList = listOf(UUID.fromString("94540f3c-77b8-4bc5-acc7-4dd7d8cc4bcd")),
-            placeIdList = listOf(UUID.fromString("9f4fa5d6-ad7c-419c-be58-1ee73f212675")),
-            securityLevelIdList = listOf(UUID.fromString("8214142f-7c08-48ad-9130-fd7ac6b23e51")),
-            gangIdList = listOf(UUID.fromString("b1bd026f-cc19-4474-989c-aec8d4a76bc9")),
-            photoGangBangerIdList = listOf(UUID.fromString("7a89444f-25f6-44d9-8a73-94587d72b839")),
-            fileList = listOf(multipartFile),
-          )
+      val notAPhotoFile = ClassPathResource("demoPhotos/not-an-image.exe")
+        .file
+      val multipartFile =
+        MockMultipartFile("file", notAPhotoFile.name, "text/plain", notAPhotoFile.inputStream())
+      assertThrows<InvalidParameterException> {
+        photoController.uploadPhoto(
+          isGoodPictureList = listOf(false, true),
+          motiveIdList = listOf(UUID.fromString("94540f3c-77b8-4bc5-acc7-4dd7d8cc4bcd")),
+          placeIdList = listOf(UUID.fromString("9f4fa5d6-ad7c-419c-be58-1ee73f212675")),
+          securityLevelIdList = listOf(UUID.fromString("8214142f-7c08-48ad-9130-fd7ac6b23e51")),
+          gangIdList = listOf(UUID.fromString("b1bd026f-cc19-4474-989c-aec8d4a76bc9")),
+          photoGangBangerIdList = listOf(UUID.fromString("7a89444f-25f6-44d9-8a73-94587d72b839")),
+          fileList = listOf(multipartFile),
+        )
       }
-
     }
   }
 })

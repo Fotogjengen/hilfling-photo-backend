@@ -1,6 +1,6 @@
 package no.fg.hilflingbackend.service
 
-import no.fg.hilflingbackend.configurations.ImageStaticFilesProperties
+import no.fg.hilflingbackend.configurations.ImageFileStorageProperties
 import no.fg.hilflingbackend.dto.GangDto
 import no.fg.hilflingbackend.dto.PhotoDto
 import no.fg.hilflingbackend.dto.SecurityLevelDto
@@ -30,8 +30,8 @@ import java.util.stream.Stream
 import javax.persistence.EntityNotFoundException
 
 @Service
-class PhotoService (
-  val imageStaticFilesProperties: ImageStaticFilesProperties,
+class PhotoService(
+  val imageFileStorageProperties: ImageFileStorageProperties,
   val environment: Environment,
   val photoRepository: PhotoRepository,
   val gangRepository: GangRepository,
@@ -39,7 +39,7 @@ class PhotoService (
   val placeRepository: PlaceRepository,
   val securityLevelRepository: SecurityLevelRepository,
   val photoGangBangerRepository: PhotoGangBangerRepository,
-  ): IPhotoService {
+) : IPhotoService {
 
   val logger = LoggerFactory.getLogger(this::class.java)
 
@@ -62,7 +62,7 @@ class PhotoService (
     size: PhotoSize,
   ): Path {
     // BasePath
-    val basePath = imageStaticFilesProperties.savedPhotosPath
+    val basePath = imageFileStorageProperties.savedPhotosPath
     println("BaseBath from config: $basePath")
     val fullFilePath = Paths.get("$basePath/${securityLevel.securityLevelType}/$size-$fileName")
     println(fullFilePath)
@@ -120,7 +120,7 @@ class PhotoService (
       .map(this.rootLocation::relativize)
   }
 
-  override suspend fun saveDigitalPhotos(
+  override fun saveDigitalPhotos(
     isGoodPictureList: List<Boolean>,
     motiveIdList: List<UUID>,
     placeIdList: List<UUID>,
@@ -130,8 +130,8 @@ class PhotoService (
     fileList: List<MultipartFile>
   ): List<String> {
 
-    return fileList.mapIndexed{
-        index, file ->
+    return fileList.mapIndexed {
+      index, file ->
       /*
       val cachedMotive = { id: UUID ->
         motiveRepository
@@ -161,9 +161,9 @@ class PhotoService (
         .findById(securityLevelIdList.get(index))
         ?.toDto()
         ?: throw EntityNotFoundException("Did not find securitulevel")
-      val motive =  motiveRepository
-          .findById(motiveIdList.get(index))
-          ?: throw EntityNotFoundException("Did not find motive")
+      val motive = motiveRepository
+        .findById(motiveIdList.get(index))
+        ?: throw EntityNotFoundException("Did not find motive")
 
       val gang: GangDto = gangRepository
         .findById(gangIdList.get(index))
@@ -183,7 +183,7 @@ class PhotoService (
         placeDto = place,
         securityLevel = securityLevelDto,
         gang = gang,
-        photoGangBangerDto= photoGangBanger
+        photoGangBangerDto = photoGangBanger
       )
       val filePath = generateFilePath(
         // TODO: Rename to fileName
@@ -216,7 +216,7 @@ class PhotoService (
     }
   }
 
-  override suspend fun saveAnalogPhotos(
+  override fun saveAnalogPhotos(
     isGoodPictureList: List<Boolean>,
     motiveIdList: List<UUID>,
     placeIdList: List<UUID>,
@@ -228,19 +228,19 @@ class PhotoService (
     TODO("Not implemented yet")
   }
 
-  override suspend fun getCarouselPhotos(): List<PhotoDto> = photoRepository
+  override fun getCarouselPhotos(): List<PhotoDto> = photoRepository
     .findCarouselPhotos()
 
-  override suspend fun getAllAnalogPhotos(): List<PhotoDto> = photoRepository
+  override fun getAllAnalogPhotos(): List<PhotoDto> = photoRepository
     .findAllAnalogPhotos()
 
-  override suspend fun getAllDigitalPhotos(): List<PhotoDto> = photoRepository
+  override fun getAllDigitalPhotos(): List<PhotoDto> = photoRepository
     .findAllDigitalPhotos()
 
-  override suspend fun getById(id: UUID): PhotoDto = photoRepository
+  override fun getById(id: UUID): PhotoDto = photoRepository
     ?.findById(id)
     ?: throw EntityNotFoundException("Did not find photo")
 
-  override suspend fun getAll(): List<PhotoDto> = photoRepository
+  override fun getAll(): List<PhotoDto> = photoRepository
     .findAll()
 }

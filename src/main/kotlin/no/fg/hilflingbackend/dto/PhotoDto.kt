@@ -1,16 +1,9 @@
 package no.fg.hilflingbackend.dto
 
-import no.fg.hilflingbackend.configurations.ImageStaticFilesProperties
 import no.fg.hilflingbackend.model.Motive
 import no.fg.hilflingbackend.model.Photo
-import no.fg.hilflingbackend.model.SecurityLevel
 import no.fg.hilflingbackend.value_object.ImageFileName
 import org.slf4j.LoggerFactory
-import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.context.annotation.Bean
-import org.springframework.stereotype.Service
-import java.nio.file.Path
-import java.nio.file.Paths
 import java.util.UUID
 
 data class PhotoDto(
@@ -57,18 +50,18 @@ data class PhotoDto(
       val photoId = PhotoId()
       val newUniqueFileName = ImageFileName("${photoId}${fileName.getFileExtension()}")
 
-      return  PhotoDto(
-          photoId = photoId,
-          isGoodPicture = isGoodPicture,
-          smallUrl = newUniqueFileName.filename,
-          mediumUrl = newUniqueFileName.filename,
-          largeUrl =  newUniqueFileName.filename,
-          motive = motive,
-          placeDto = placeDto,
-          gang = gang,
-          securityLevel = securityLevel,
-          photoGangBangerDto = photoGangBangerDto
-        )
+      return PhotoDto(
+        photoId = photoId,
+        isGoodPicture = isGoodPicture,
+        smallUrl = newUniqueFileName.filename,
+        mediumUrl = newUniqueFileName.filename,
+        largeUrl = newUniqueFileName.filename,
+        motive = motive,
+        placeDto = placeDto,
+        gang = gang,
+        securityLevel = securityLevel,
+        photoGangBangerDto = photoGangBangerDto
+      )
     }
   }
 }

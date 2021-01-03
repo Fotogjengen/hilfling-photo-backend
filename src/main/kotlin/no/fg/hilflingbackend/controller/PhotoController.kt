@@ -1,13 +1,11 @@
 package no.fg.hilflingbackend.controller
 
-import no.fg.hilflingbackend.dto.GangDto
 import no.fg.hilflingbackend.dto.PhotoDto
 import no.fg.hilflingbackend.exceptions.GlobalExceptionHandler
 import no.fg.hilflingbackend.model.AnalogPhoto
 import no.fg.hilflingbackend.model.SecurityLevel
 import no.fg.hilflingbackend.service.PhotoService
 import no.fg.hilflingbackend.utils.ResponseOk
-import no.fg.hilflingbackend.value_object.ImageFileName
 import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
@@ -23,7 +21,6 @@ import org.springframework.web.bind.annotation.RestController
 import org.springframework.web.multipart.MultipartFile
 import java.security.InvalidParameterException
 import java.util.UUID
-import javax.persistence.EntityNotFoundException
 
 @RestController
 @RequestMapping("/photos")
@@ -85,7 +82,8 @@ class PhotoController(
     return ResponseEntity<List<String>>(
       createdPhotoList,
       HttpHeaders(),
-      HttpStatus.CREATED)
+      HttpStatus.CREATED
+    )
   }
 
   @PostMapping("/analog")
@@ -106,30 +104,29 @@ class PhotoController(
   @GetMapping("/{id}")
   fun getById(@PathVariable("id") id: UUID): ResponseEntity<PhotoDto> = ResponseOk(
     photoService
-    .getById(id)
+      .getById(id)
   )
 
   @GetMapping
   fun getAll(): ResponseEntity<List<PhotoDto>> = ResponseOk(
     photoService
-    .getAll(),
+      .getAll(),
   )
-
 
   @GetMapping("/carousel")
   fun getCarouselPhotos(): ResponseEntity<List<PhotoDto>> = ResponseOk(
     photoService
-    .getCarouselPhotos()
+      .getCarouselPhotos()
   )
 
   @GetMapping("/analog")
   fun getAllAnalogPhotos(): ResponseEntity<List<PhotoDto>> = ResponseOk(
     photoService
-    .getAllAnalogPhotos()
+      .getAllAnalogPhotos()
   )
 
-  fun getAllDigitalPhotos(): ResponseEntity<List<PhotoDto>>  = ResponseOk(
+  fun getAllDigitalPhotos(): ResponseEntity<List<PhotoDto>> = ResponseOk(
     photoService
-    .getAllDigitalPhotos()
+      .getAllDigitalPhotos()
   )
 }

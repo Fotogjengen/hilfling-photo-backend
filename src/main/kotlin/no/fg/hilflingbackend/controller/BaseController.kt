@@ -37,7 +37,7 @@ open class BaseController<E, D>(open val repository: IRepository<E, D>) {
   }
 
   @PatchMapping
- fun patch(
+  fun patch(
     @RequestBody dto: D
   ): Int {
     return repository.patch(dto)
