@@ -17,6 +17,7 @@ open class PlaceRepository(database: Database) : BaseRepository<Place, PlaceDto>
   override fun convertToClass(qrs: QueryRowSet): PlaceDto = PlaceDto(
     placeId = PlaceId(qrs[Places.id]!!),
     name = qrs[Places.name]
+
   )
 
   override fun create(dto: PlaceDto): Int {

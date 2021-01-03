@@ -152,10 +152,12 @@ class PhotoService(
       }.memoize()
 
        */
-      logger.info("Request with parameters: ${fileList.get(index).originalFilename}  ${isGoodPictureList.get(index)}, ${motiveIdList.get(index)}")
+      logger.info("Request with parameters: ${fileList.get(index).originalFilename}  ${isGoodPictureList.get(index)}, ${motiveIdList.get(index)}" +
+        "PlaceId: $placeIdList")
 
       val place = placeRepository
-        .findById(placeIdList.get(index)) ?: throw EntityNotFoundException("Did not find place")
+        .findById(placeIdList.get(index))
+        ?: throw EntityNotFoundException("Did not find place")
 
       val securityLevelDto: SecurityLevelDto = securityLevelRepository
         .findById(securityLevelIdList.get(index))
