@@ -7,7 +7,7 @@ import me.liuwj.ktorm.schema.varchar
 import no.fg.hilflingbackend.dto.PlaceDto
 import no.fg.hilflingbackend.dto.PlaceId
 
-interface Place : BaseModel<Place>, IDto<PlaceDto> {
+interface Place : BaseModel<Place> {
   companion object : Entity.Factory<Place>()
 
   var name: String?
