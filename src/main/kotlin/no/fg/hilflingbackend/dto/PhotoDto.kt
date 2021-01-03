@@ -19,8 +19,6 @@ data class PhotoDto(
   val gang: GangDto,
   val photoGangBangerDto: PhotoGangBangerDto
 ) {
-  val logger = LoggerFactory.getLogger(this::class.java)
-
   fun toEntity(): Photo {
     val photo = this
     return Photo {
