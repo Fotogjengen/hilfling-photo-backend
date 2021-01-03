@@ -42,6 +42,10 @@ springdoc:
     enabled: true
   swagger-ui:
     path: "/"
+static-files:
+  img:
+    saved-photos-path: "static-files/static/img"
+
 file:
   large-upload-dir: photos/large/
   medium-upload-dir: photos/medium/

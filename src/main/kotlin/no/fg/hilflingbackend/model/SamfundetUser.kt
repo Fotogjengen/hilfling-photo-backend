@@ -6,6 +6,7 @@ import me.liuwj.ktorm.entity.sequenceOf
 import me.liuwj.ktorm.schema.int
 import me.liuwj.ktorm.schema.varchar
 import no.fg.hilflingbackend.dto.SamfundetUserDto
+import no.fg.hilflingbackend.dto.toDto
 import no.fg.hilflingbackend.value_object.Email
 import no.fg.hilflingbackend.value_object.PhoneNumber
 
@@ -31,7 +32,7 @@ fun SamfundetUser.toDto() = SamfundetUserDto(
   email = Email(this.email),
   profilePicturePath = this.profilePicture,
   phoneNumber = PhoneNumber(this.phoneNumber),
-  securituLevel = this.securityLevel,
+  securituLevel = this.securityLevel.toDto(),
   sex = this.sex
 )
 

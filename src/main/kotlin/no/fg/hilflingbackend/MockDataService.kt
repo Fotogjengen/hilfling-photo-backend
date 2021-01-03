@@ -21,6 +21,8 @@ import no.fg.hilflingbackend.dto.PositionId
 import no.fg.hilflingbackend.dto.RelationshipStatus
 import no.fg.hilflingbackend.dto.SamfundetUserDto
 import no.fg.hilflingbackend.dto.SamfundetUserId
+import no.fg.hilflingbackend.dto.SecurityLevelDto
+import no.fg.hilflingbackend.dto.SecurityLevelId
 import no.fg.hilflingbackend.dto.SemesterStart
 import no.fg.hilflingbackend.dto.toEntity
 import no.fg.hilflingbackend.model.EventOwner
@@ -42,6 +44,7 @@ import no.fg.hilflingbackend.repository.SamfundetUserRepository
 import no.fg.hilflingbackend.repository.SecurityLevelRepository
 import no.fg.hilflingbackend.value_object.Email
 import no.fg.hilflingbackend.value_object.PhoneNumber
+import no.fg.hilflingbackend.value_object.SecurityLevelType
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import java.util.UUID
@@ -93,16 +96,20 @@ class MockDataService {
   @Autowired
   lateinit var photoRepository: PhotoRepository
 
-  fun generateSecurityLevelData(): List<SecurityLevel> =
+  fun generateSecurityLevelData(): List<SecurityLevelDto> =
     listOf(
-      SecurityLevel {
-        id = UUID.fromString("8214142f-7c08-48ad-9130-fd7ac6b23e51")
-        type = "FG"
-      },
-      SecurityLevel {
-        id = UUID.fromString("8214142f-7c08-48ad-9130-fd7ac6b23e52")
-        type = "HUSFOLK"
-      }
+      SecurityLevelDto(
+        securityLevelId = SecurityLevelId( UUID.fromString("8214142f-7c08-48ad-9130-fd7ac6b23e51")),
+        securityLevelType = SecurityLevelType.FG
+      ),
+      SecurityLevelDto(
+        securityLevelId = SecurityLevelId(UUID.fromString("8214142f-7c08-48ad-9130-fd7ac6b23e52")),
+        securityLevelType = SecurityLevelType.HUSFOLK
+      ),
+      SecurityLevelDto(
+        securityLevelId = SecurityLevelId(UUID.fromString("8314142f-7c08-48ad-9130-fd7ac6b23e52")),
+        securityLevelType = SecurityLevelType.ALLE
+      )
     )
 
   fun generateGangData(): List<GangDto> =
@@ -532,7 +539,7 @@ class MockDataService {
       placeRepository.create(it)
     }
     generateSecurityLevelData().forEach {
-      securityLevelRepository.create(it)
+      securityLevelRepository.create(it.toEntity())
     }
     generateGangData().forEach {
       gangRepository.create(it)
