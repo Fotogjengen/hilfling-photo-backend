@@ -8,7 +8,7 @@ import me.liuwj.ktorm.schema.uuid
 import me.liuwj.ktorm.schema.varchar
 import no.fg.hilflingbackend.dto.PhotoDto
 import no.fg.hilflingbackend.dto.PhotoId
-import no.fg.hilflingbackend.dto.PlaceDto
+import no.fg.hilflingbackend.dto.toDto
 
 interface Photo : BaseModel<Photo> {
   companion object : Entity.Factory<Photo>()
@@ -36,7 +36,7 @@ fun Photo.toDto(): PhotoDto = PhotoDto(
   motive = this.motive,
   placeDto = this.place
     .toDto(),
-  securityLevel = this.securityLevel,
+  securityLevel = this.securityLevel.toDto(),
   gang = this.gang.toDto(),
   photoGangBangerDto = this.photoGangBanger.toDto()
 )

@@ -16,8 +16,7 @@ data class SamfundetUserDto(
   // TODO: Rename SQL-scheme and interface to match this variablename
   val profilePicturePath: String,
   val sex: String,
-  // TODO: Do i have to make dto?
-  val securituLevel: SecurityLevel
+  val securituLevel: SecurityLevelDto
 )
 
 // Extend Dto object with a converter to ktorm interface
@@ -29,6 +28,9 @@ fun SamfundetUserDto.toEntity(): SamfundetUser {
     firstName = dto.firstName
     lastName = dto.lastName
     phoneNumber = dto.phoneNumber.value
+    email = dto.email.value
+    sex = dto.sex
+    securityLevel = dto.securituLevel.toEntity()
     profilePicture = dto.profilePicturePath
   }
 }
