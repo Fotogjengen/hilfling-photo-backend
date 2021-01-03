@@ -27,7 +27,6 @@ import no.fg.hilflingbackend.dto.SemesterStart
 import no.fg.hilflingbackend.dto.toEntity
 import no.fg.hilflingbackend.model.EventOwner
 import no.fg.hilflingbackend.model.Motive
-import no.fg.hilflingbackend.model.SecurityLevel
 import no.fg.hilflingbackend.repository.AlbumRepository
 import no.fg.hilflingbackend.repository.ArticleRepository
 import no.fg.hilflingbackend.repository.ArticleTagRepository
@@ -99,7 +98,7 @@ class MockDataService {
   fun generateSecurityLevelData(): List<SecurityLevelDto> =
     listOf(
       SecurityLevelDto(
-        securityLevelId = SecurityLevelId( UUID.fromString("8214142f-7c08-48ad-9130-fd7ac6b23e51")),
+        securityLevelId = SecurityLevelId(UUID.fromString("8214142f-7c08-48ad-9130-fd7ac6b23e51")),
         securityLevelType = SecurityLevelType.FG
       ),
       SecurityLevelDto(

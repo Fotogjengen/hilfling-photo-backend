@@ -1,7 +1,6 @@
 package no.fg.hilflingbackend.dto
 
 import no.fg.hilflingbackend.model.SamfundetUser
-import no.fg.hilflingbackend.model.SecurityLevel
 import no.fg.hilflingbackend.value_object.Email
 import no.fg.hilflingbackend.value_object.PhoneNumber
 import java.util.UUID
