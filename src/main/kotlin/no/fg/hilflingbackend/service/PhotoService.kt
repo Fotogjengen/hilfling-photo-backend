@@ -64,7 +64,7 @@ class PhotoService(
     // BasePath
     val basePath = imageFileStorageProperties.savedPhotosPath
     println("BaseBath from config: $basePath")
-    val fullFilePath = Paths.get("$basePath/${securityLevel.securityLevelType}/$size-$fileName")
+    val fullFilePath = Paths.get("$basePath/${securityLevel.securityLevelType}/$size-${fileName.filename}")
     println(fullFilePath)
     // TODO: Check if directories exiist before continou
     // Files.isDirectory()
@@ -152,8 +152,10 @@ class PhotoService(
       }.memoize()
 
        */
-      logger.info("Request with parameters: ${fileList.get(index).originalFilename}  ${isGoodPictureList.get(index)}, ${motiveIdList.get(index)}" +
-        "PlaceId: $placeIdList")
+      logger.info(
+        "Request with parameters: ${fileList.get(index).originalFilename}  ${isGoodPictureList.get(index)}, ${motiveIdList.get(index)}" +
+          "PlaceId: $placeIdList"
+      )
 
       val place = placeRepository
         .findById(placeIdList.get(index))
