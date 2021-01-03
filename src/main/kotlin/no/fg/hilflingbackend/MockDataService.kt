@@ -506,6 +506,9 @@ class MockDataService {
     generatePhotoTagData().forEach {
       photoTagRepository.create(it)
     }
+    generateSecurityLevelData().forEach {
+      securityLevelRepository.create(it.toEntity())
+    }
     generateSamfundetUserData().forEach {
       samfundetUserRepository.create(it)
     }
@@ -536,9 +539,6 @@ class MockDataService {
     }
     generatePlaceData().forEach {
       placeRepository.create(it)
-    }
-    generateSecurityLevelData().forEach {
-      securityLevelRepository.create(it.toEntity())
     }
     generateGangData().forEach {
       gangRepository.create(it)

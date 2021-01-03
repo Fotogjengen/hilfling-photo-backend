@@ -4,6 +4,7 @@ import me.liuwj.ktorm.database.Database
 import me.liuwj.ktorm.entity.Entity
 import me.liuwj.ktorm.entity.sequenceOf
 import me.liuwj.ktorm.schema.int
+import me.liuwj.ktorm.schema.uuid
 import me.liuwj.ktorm.schema.varchar
 import no.fg.hilflingbackend.dto.SamfundetUserDto
 import no.fg.hilflingbackend.dto.toDto
@@ -46,7 +47,7 @@ object SamfundetUsers : BaseTable<SamfundetUser>("samfundet_user") {
   val phoneNumber = varchar("phone_number").bindTo { it.phoneNumber }
   val sex = varchar("sex").bindTo { it.sex }
 
-  val securityLevelId = int("security_level_id").references(SecurityLevels) { it.securityLevel }
+  val securityLevelId = uuid("security_level_id").references(SecurityLevels) { it.securityLevel }
 }
 
 val Database.samfundet_users get() = this.sequenceOf(SamfundetUsers)
