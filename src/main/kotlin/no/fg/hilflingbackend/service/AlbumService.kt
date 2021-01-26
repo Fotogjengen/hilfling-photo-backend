@@ -11,6 +11,6 @@ class AlbumService {
     if (!Files.exists(location)) {
       Files.createDirectory(location)
     }
-    return location.toString();
+    return location.toString()
   }
 }
