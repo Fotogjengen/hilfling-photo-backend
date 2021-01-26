@@ -15,6 +15,7 @@ import no.fg.hilflingbackend.repository.PhotoRepository
 import no.fg.hilflingbackend.repository.PhotoTagRepository
 import no.fg.hilflingbackend.repository.PlaceRepository
 import no.fg.hilflingbackend.repository.SecurityLevelRepository
+import no.fg.hilflingbackend.value_object.ImageFileName
 import org.junit.jupiter.api.assertThrows
 import org.slf4j.LoggerFactory
 import org.spekframework.spek2.Spek
@@ -23,7 +24,8 @@ import org.springframework.core.env.Environment
 import org.springframework.core.io.ClassPathResource
 import org.springframework.mock.web.MockMultipartFile
 import org.springframework.validation.BindingResult
-import java.io.IOException
+import java.nio.file.Files
+import java.nio.file.Paths
 import java.util.UUID
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
@@ -101,49 +103,85 @@ class PhotoServiceSpec : Spek({
       val photo = photoService.getById(mockPhoto.photoId.id)
 
       it("Returns photo on request") {
-        // Assert
+       // Assert
         assertEquals(photo, mockPhoto)
       }
     }
 
     describe("uploadPhoto()") {
-      // Arrange
-      try {
+      describe("Can upload multiple photos in one request") {
+        // Arrange
+        val isGoodPictureList = listOf(true, true)
+        val motiveIdList = listOf(
+          mockDataService.generateMotiveData()[0].id,
+          mockDataService.generateMotiveData()[1].id
+        )
+        val placeIdList = listOf(
+          mockDataService.generatePlaceData().first().placeId.id,
+          mockDataService.generatePlaceData()[1].placeId.id
+        )
+        val securityLevelIdList = listOf(
+          mockDataService.generateSecurityLevelData().first().securityLevelId.id,
+          mockDataService.generateSecurityLevelData()[1].securityLevelId.id
 
+        )
+        val gangIdList = listOf(
+          mockDataService.generateGangData()[0].gangId.id,
+          mockDataService.generateGangData()[1].gangId.id
+        )
+        val photoGangBangerIdList = listOf(
+          mockDataService.generatePhotoGangBangerData()[0].photoGangBangerId.id,
+          mockDataService.generatePhotoGangBangerData()[1].photoGangBangerId.id
+        )
+        val fileList = multiPartFiles
         // Act
-        val response = photoService.saveDigitalPhotos(
-          isGoodPictureList = listOf(true, true),
-          motiveIdList = listOf(
-            mockDataService.generateMotiveData()[0].id,
-            mockDataService.generateMotiveData()[1].id
-          ),
-          placeIdList = listOf(
-            mockDataService.generatePlaceData().first().placeId.id,
-            mockDataService.generatePlaceData()[1].placeId.id
-          ),
-          securityLevelIdList = listOf(
-            mockDataService.generateSecurityLevelData().first().securityLevelId.id,
-            mockDataService.generateSecurityLevelData()[1].securityLevelId.id
-          ),
-          gangIdList = listOf(
-            mockDataService.generateGangData()[0].gangId.id,
-            mockDataService.generateGangData()[1].gangId.id
-          ),
-          photoGangBangerIdList = listOf(
-            mockDataService.generatePhotoGangBangerData()[0].photoGangBangerId.id,
-            mockDataService.generatePhotoGangBangerData()[1].photoGangBangerId.id
-          ),
-          fileList = multiPartFiles,
+        val fileTitleList= photoService.saveDigitalPhotos(
+          isGoodPictureList,
+          motiveIdList,
+          placeIdList,
+          securityLevelIdList,
+          gangIdList,
+          photoGangBangerIdList,
+          fileList,
         )
 
         // Assert
-        it("Can create photo") {
-          assertEquals(response.size, 2)
-          assertTrue(response[0].contains(".jpg"))
-          assertTrue(response[1].contains(".jpg"))
+        assertEquals(fileTitleList.size, 2)
+        assertTrue(fileTitleList[0].contains(".jpg"))
+        assertTrue(fileTitleList[1].contains(".jpg"))
+        assertTrue(ImageFileName.isValidImageFileName(fileTitleList[1]))
+
+        it("Saves the photo to disk") {
+          // TODO: Implement
+          // Assert
+          // Saves file on diskk
+          /*
+          log.warn(
+            """
+              ${
+              imageStaticFilesProperties
+                .savedPhotosPath
+            }
+                /FG/Large-${fileTitleList[0]}
+              """.trimIndent()
+          )
+          assertTrue(
+            Files.exists(
+              Paths.get(
+                """
+              ${
+                  imageStaticFilesProperties
+                    .savedPhotosPath
+                }
+                /FG/Large-
+              """.trimIndent()
+              )
+            )
+          )
+
+           */
+
         }
-      } catch (ex: IOException) {
-        log.error(ex.localizedMessage)
       }
       it("Fails when file is not an image") {
         val notAPhotoFile = ClassPathResource("demoPhotos/not-an-image.exe")

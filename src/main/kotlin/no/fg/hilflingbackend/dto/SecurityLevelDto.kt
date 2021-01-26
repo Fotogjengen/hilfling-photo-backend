@@ -5,7 +5,7 @@ import no.fg.hilflingbackend.value_object.SecurityLevelType
 import java.util.UUID
 
 data class SecurityLevelDto(
-  val securityLevelId: SecurityLevelId,
+  val securityLevelId: SecurityLevelId = SecurityLevelId(),
   val securityLevelType: SecurityLevelType
 ) {
   fun toEntity(): SecurityLevel {

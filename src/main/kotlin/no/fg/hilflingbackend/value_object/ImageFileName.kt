@@ -8,7 +8,7 @@ data class ImageFileName private constructor(val filename: String) {
       return if (!isValidImageFileName(filename)) throw IllegalArgumentException("Not valid filename")
       else ImageFileName(filename)
     }
-    private fun isValidImageFileName(filename: String): Boolean {
+    fun isValidImageFileName(filename: String): Boolean {
       // Must have a valid file extension
       return filename.split(".").size == 2 &&
         (
