@@ -28,7 +28,7 @@ open class BaseController<E, D>(open val repository: IRepository<E, D>) {
   }
 
   @PostMapping
-  fun create(
+  open fun create(
     @RequestBody dto: D
   ): Int {
     return repository.create(
