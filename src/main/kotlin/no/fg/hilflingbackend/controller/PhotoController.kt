@@ -60,7 +60,7 @@ class PhotoController {
 
       return repository.createPhoto(photo)
   }*/
-  @PostMapping("/profile")
+  @PostMapping("/profile", consumes=["multipart/form-data"])
   private fun uploadPhotoFile(
     @RequestPart("file") file: MultipartFile,
     //@RequestPart("type") type: String,
