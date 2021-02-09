@@ -6,6 +6,7 @@ import no.fg.hilflingbackend.model.AnalogPhoto
 import no.fg.hilflingbackend.model.SecurityLevel
 import no.fg.hilflingbackend.service.PhotoService
 import no.fg.hilflingbackend.utils.ResponseOk
+import no.fg.hilflingbackend.value_object.SecurityLevelType
 import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
@@ -27,12 +28,14 @@ import java.util.UUID
 class PhotoController(
   val photoService: PhotoService
 
-  @PostMapping("/profile")
+) : GlobalExceptionHandler() {
+  // TODO: Remove not used anyMOre
+  @PostMapping("/profile", consumes=["multipart/form-data"])
   private fun uploadPhotoFile(
     @RequestPart("file") file: MultipartFile,
     //@RequestPart("type") type: String,
   ): String {
-    return photoService.store(file, "PROFILE")
+    return photoService.store(file, SecurityLevelType.valueOf("PROFILE"))
   }
 
   @PostMapping
