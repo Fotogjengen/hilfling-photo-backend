@@ -5,7 +5,7 @@ import java.util.UUID
 data class PhotoTagDto(
 
   val photoTagId: PhotoTagId = PhotoTagId(),
-  val name: String,
+  val name: String
 )
 
 data class PhotoTagId(

@@ -3,32 +3,23 @@ package no.fg.hilflingbackend.controller
 import no.fg.hilflingbackend.dto.AlbumDto
 import no.fg.hilflingbackend.model.Album
 import no.fg.hilflingbackend.repository.AlbumRepository
-import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.web.bind.annotation.*
-import java.util.*
+import no.fg.hilflingbackend.service.AlbumService
+import org.springframework.web.bind.annotation.PostMapping
+import org.springframework.web.bind.annotation.RequestBody
+import org.springframework.web.bind.annotation.RequestMapping
+import org.springframework.web.bind.annotation.RestController
 
 @RestController
 @RequestMapping("/albums")
-class AlbumController {
-  @Autowired
-  lateinit var repository: AlbumRepository
-
-  @GetMapping("/{id}")
-  fun getById(@PathVariable("id") id: UUID): Album? {
-    return repository.findById(id)
-  }
-
-  @GetMapping
-  fun getAll(): List<Album> {
-    return repository.findAll()
-  }
-
+class AlbumController(override val repository: AlbumRepository, val service: AlbumService) : BaseController<Album, AlbumDto>(repository) {
   @PostMapping
-  fun create(
-    @RequestBody albumDto: AlbumDto
+  override fun create(
+    @RequestBody dto: AlbumDto
   ): Int {
+    val directoryPath = service.createDirectory(dto.title)
+    println(directoryPath)
     return repository.create(
-      albumDto
+      dto
     )
   }
 }

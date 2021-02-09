@@ -51,7 +51,7 @@ CREATE TABLE SECURITY_LEVEL
 
 CREATE TABLE PLACE
 (
-    id           uuid PRIMARY KEY,
+    id           uuid PRIMARY KEY NOT NULL,
     date_created DATE NOT NULL DEFAULT CURRENT_DATE,
     name         VARCHAR(30)
 );
@@ -136,7 +136,7 @@ CREATE TABLE ARTICLE
 CREATE TABLE MOTIVE
 (
     id             uuid PRIMARY KEY,
-    title          VARCHAR(20),
+    title          VARCHAR(100),
     date_created   DATE NOT NULL DEFAULT CURRENT_DATE,
     category_id    UUID REFERENCES CATEGORY (id),
     event_owner_id UUID REFERENCES EVENT_OWNER (id),
@@ -147,9 +147,9 @@ CREATE TABLE PHOTO
 (
     id                   uuid PRIMARY KEY,
     date_created         DATE NOT NULL DEFAULT CURRENT_DATE,
-    small_url            VARCHAR(40),
-    medium_url           VARCHAR(40),
-    large_url            VARCHAR(40),
+    small_url            VARCHAR(255),
+    medium_url           VARCHAR(255),
+    large_url            VARCHAR(255),
     is_good_picture      BOOLEAN,
     motive_id            UUID REFERENCES MOTIVE (id),
     place_id             UUID REFERENCES PLACE (id),

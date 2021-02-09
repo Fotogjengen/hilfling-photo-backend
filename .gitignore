@@ -1,5 +1,8 @@
 # demoPhotos
 src/main/resources/demoPhotos/
+static-files/static/img/FG/*
+static-files/static/img/HUSFOLK/*
+static-files/static/img/ALLE/*
 
 HELP.md
 target/
@@ -113,3 +116,4 @@ $RECYCLE.BIN/
 
 .env
 # End of https://www.gitignore.io/api/linux,macos,windows
+variables.env

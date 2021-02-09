@@ -9,7 +9,7 @@ import no.fg.hilflingbackend.model.PurchaseOrder
 import no.fg.hilflingbackend.model.purchase_orders
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Repository
-import java.util.*
+import java.util.UUID
 
 @Repository
 open class PurchaseOrderRepository {

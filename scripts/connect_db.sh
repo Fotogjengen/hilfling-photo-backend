@@ -1,1 +1,1 @@
-docker-compose exec postgres psql hilflingdb postgres
+docker-compose exec postgres psql -U hilfling -d hilflingdb

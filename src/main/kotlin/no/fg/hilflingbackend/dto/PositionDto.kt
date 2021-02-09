@@ -7,7 +7,7 @@ import java.util.UUID
 data class PositionDto(
   val positionId: PositionId = PositionId(),
   val title: String,
-  val email: Email,
+  val email: Email
 )
 
 fun PositionDto.toEntity(): Position {

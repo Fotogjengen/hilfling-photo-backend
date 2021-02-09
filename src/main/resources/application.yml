@@ -1,3 +1,10 @@
+server:
+  port: ${LISTENING_PORT:8080}
+  error:
+    include-message: always
+    include-stacktrace: always
+    include-exception: true
+    include-binding-errors: always
 spring:
   datasource:
     hikari:
@@ -10,8 +17,10 @@ spring:
 
   logging:
     level:
-      root: error
+      root: debug
       me.liuwj.ktorm: debug
+      org.springframework.web: DEBUG
+
 
   flyway:
     user: ${DATABASE_USERNAME:hilfling}
@@ -27,6 +36,16 @@ spring:
       file-size-threshold: 2KB
       max-file-size: 50MB
       max-request-size: 60MB
+springdoc:
+  api-docs:
+    #path: "/"
+    enabled: true
+  swagger-ui:
+    path: "/"
+static-files:
+  img:
+    saved-photos-path: "static-files/static/img"
+
 file:
   large-upload-dir: photos/large/
   medium-upload-dir: photos/medium/

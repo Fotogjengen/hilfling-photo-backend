@@ -5,6 +5,8 @@ import me.liuwj.ktorm.entity.Entity
 import me.liuwj.ktorm.entity.sequenceOf
 import me.liuwj.ktorm.schema.boolean
 import me.liuwj.ktorm.schema.varchar
+import no.fg.hilflingbackend.dto.AlbumDto
+import no.fg.hilflingbackend.dto.AlbumId
 
 interface Album : BaseModel<Album> {
   companion object : Entity.Factory<Album>()
@@ -12,6 +14,12 @@ interface Album : BaseModel<Album> {
   var title: String
   var isAnalog: Boolean
 }
+
+fun Album.toDto(): AlbumDto = AlbumDto(
+  albumId = AlbumId(this.id),
+  title = this.title,
+  isAnalog = this.isAnalog
+)
 
 object Albums : BaseTable<Album>("album") {
   val title = varchar("title").bindTo { it.title }
