@@ -21,20 +21,15 @@ open class EventOwnerRepository {
   fun findById(id: UUID): EventOwner? {
     return database.event_owners.find { it.id eq id }
   }
+
+  @Deprecated("Will be removed when MockDataService is updated. Use findByEventOwnerName instead.")
   fun findByType(eventOwnerName: EventOwnerName): EventOwnerDto? =
-    database
-      .event_owners
-      .find { it.name eq eventOwnerName.eventOwnerName }?.let {
-        EventOwnerDto(it)
-      }
+    database.event_owners.find { it.name eq eventOwnerName.eventOwnerName }?.let {
+      EventOwnerDto(it)
+    }
 
-  fun findAll(): List<EventOwner> {
-    return database.event_owners.toList()
-  }
-
-  fun create(
-    eventOwner: EventOwner
-  ): Int {
-    return database.event_owners.add(eventOwner)
-  }
+  fun findByEventOwnerName(name: EventOwnerName): EventOwnerDto? =
+    database.event_owners.find { it.name eq name.eventOwnerName }?.let {
+      EventOwnerDto(it)
+    }
 }
