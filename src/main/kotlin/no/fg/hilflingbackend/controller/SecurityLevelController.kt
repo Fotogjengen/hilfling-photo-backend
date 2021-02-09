@@ -1,5 +1,7 @@
 package no.fg.hilflingbackend.controller
 
+import no.fg.hilflingbackend.dto.SecurityLevelDto
+import no.fg.hilflingbackend.model.PurchaseOrder
 import no.fg.hilflingbackend.model.SecurityLevel
 import no.fg.hilflingbackend.repository.SecurityLevelRepository
 import org.springframework.beans.factory.annotation.Autowired
@@ -13,24 +15,4 @@ import java.util.UUID
 
 @RestController
 @RequestMapping("/security_levels")
-class SecurityLevelController {
-  @Autowired
-  lateinit var repository: SecurityLevelRepository
-
-  @GetMapping("/{id}")
-  fun getSecurityLevelById(@PathVariable("id") id: UUID): SecurityLevel? {
-    return repository.findById(id)
-  }
-
-  @GetMapping
-  fun getAllSecurityLevels(): List<SecurityLevel> {
-    return repository.findAll()
-  }
-
-  @PostMapping
-  fun createSecurityLevel(
-    @RequestBody securityLevel: SecurityLevel
-  ): Int {
-    return repository.create(securityLevel)
-  }
-}
+open class SecurityLevelController(override val repository: SecurityLevelRepository) : BaseController<SecurityLevel, SecurityLevelDto>(repository)
