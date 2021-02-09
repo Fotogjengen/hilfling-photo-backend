@@ -163,7 +163,6 @@ class PhotoService(
 
       val securityLevelDto: SecurityLevelDto = securityLevelRepository
         .findById(securityLevelIdList.get(index))
-        ?.toDto()
         ?: throw EntityNotFoundException("Did not find securitulevel")
       val motive = motiveRepository
         .findById(motiveIdList.get(index))
