@@ -10,7 +10,7 @@ interface IRepository<E, D> {
   fun convertToClass(qrs: QueryRowSet): D
   fun findById(id: UUID): D?
   fun create(dto: D): Int
-  fun findAll(offset: Int, limit: Int): Page<D>
+  fun findAll(offset: Int = 0, limit: Int = 100): Page<D>
   fun delete(id: UUID): Int
   fun patch(dto: D): Int
 }
