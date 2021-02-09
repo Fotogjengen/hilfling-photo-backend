@@ -114,7 +114,7 @@ class PhotoService(
     if (!Files.exists(allLocation)) {
       Files.createDirectory(allLocation)
     }
-    if(!Files.exists(profileLocation)) {
+    if (!Files.exists(profileLocation)) {
       Files.createDirectory(profileLocation)
     }
   }

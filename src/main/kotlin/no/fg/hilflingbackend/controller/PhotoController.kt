@@ -30,10 +30,10 @@ class PhotoController(
 
 ) : GlobalExceptionHandler() {
   // TODO: Remove not used anyMOre
-  @PostMapping("/profile", consumes=["multipart/form-data"])
+  @PostMapping("/profile", consumes = ["multipart/form-data"])
   private fun uploadPhotoFile(
     @RequestPart("file") file: MultipartFile,
-    //@RequestPart("type") type: String,
+    // @RequestPart("type") type: String,
   ): String {
     return photoService.store(file, SecurityLevelType.valueOf("PROFILE"))
   }
