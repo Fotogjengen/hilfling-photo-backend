@@ -5,17 +5,15 @@ import me.liuwj.ktorm.dsl.QueryRowSet
 import me.liuwj.ktorm.dsl.eq
 import me.liuwj.ktorm.entity.add
 import me.liuwj.ktorm.entity.find
-import me.liuwj.ktorm.entity.toList
 import me.liuwj.ktorm.entity.update
-import no.fg.hilflingbackend.dto.*
-import no.fg.hilflingbackend.model.Categories
+import no.fg.hilflingbackend.dto.EventOwnerDto
+import no.fg.hilflingbackend.dto.EventOwnerId
+import no.fg.hilflingbackend.dto.EventOwnerName
+import no.fg.hilflingbackend.dto.toEntity
 import no.fg.hilflingbackend.model.EventOwner
 import no.fg.hilflingbackend.model.EventOwners
 import no.fg.hilflingbackend.model.event_owners
-import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Repository
-import java.util.UUID
-
 
 @Repository
 open class EventOwnerRepository(database: Database) : BaseRepository<EventOwner, EventOwnerDto>(table = EventOwners, database = database) {

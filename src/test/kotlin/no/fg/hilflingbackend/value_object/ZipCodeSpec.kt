@@ -11,7 +11,7 @@ class ZipCodeSpec : Spek({
       assertThrows<IllegalArgumentException> { ZipCode("12345") }
     }
     it("Should fail, not a zip code") {
-      assertThrows<IllegalArgumentException> {ZipCode("oh no")}
+      assertThrows<IllegalArgumentException> { ZipCode("oh no") }
     }
     it("Should succeed, is a zip code") {
       val zipCode = ZipCode("1472")

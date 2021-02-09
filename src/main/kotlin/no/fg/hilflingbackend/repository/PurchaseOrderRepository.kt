@@ -2,10 +2,7 @@ package no.fg.hilflingbackend.repository
 
 import me.liuwj.ktorm.database.Database
 import me.liuwj.ktorm.dsl.QueryRowSet
-import me.liuwj.ktorm.dsl.eq
 import me.liuwj.ktorm.entity.add
-import me.liuwj.ktorm.entity.find
-import me.liuwj.ktorm.entity.toList
 import me.liuwj.ktorm.entity.update
 import no.fg.hilflingbackend.dto.PurchaseOrderDto
 import no.fg.hilflingbackend.dto.PurchaseOrderId
@@ -15,10 +12,7 @@ import no.fg.hilflingbackend.model.PurchaseOrders
 import no.fg.hilflingbackend.model.purchase_orders
 import no.fg.hilflingbackend.value_object.Email
 import no.fg.hilflingbackend.value_object.ZipCode
-import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Repository
-import java.util.UUID
-
 
 @Repository
 open class PurchaseOrderRepository(database: Database) : BaseRepository<PurchaseOrder, PurchaseOrderDto>(table = PurchaseOrders, database = database) {

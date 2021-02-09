@@ -3,7 +3,7 @@ package no.fg.hilflingbackend.dto
 import no.fg.hilflingbackend.model.PurchaseOrder
 import no.fg.hilflingbackend.value_object.Email
 import no.fg.hilflingbackend.value_object.ZipCode
-import java.util.*
+import java.util.UUID
 
 data class PurchaseOrderDto(
   val purchaseOrderId: PurchaseOrderId = PurchaseOrderId(),
@@ -19,7 +19,7 @@ data class PurchaseOrderDto(
 
 fun PurchaseOrderDto.toEntity(): PurchaseOrder {
   val dto = this
-  return PurchaseOrder{
+  return PurchaseOrder {
     id = dto.purchaseOrderId.id
     name = dto.name
     email = dto.email.value
