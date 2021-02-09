@@ -14,24 +14,4 @@ import java.util.UUID
 
 @RestController
 @RequestMapping("/positions")
-class PositionController {
-  @Autowired
-  lateinit var repository: PositionRepository
-
-  @GetMapping("/{id}")
-  fun getById(@PathVariable("id") id: UUID): Position? {
-    return repository.findById(id)
-  }
-
-  @GetMapping
-  fun getAll(): List<Position> {
-    return repository.findAll()
-  }
-
-  @PostMapping
-  fun create(
-    @RequestBody positionDto: PositionDto
-  ): Int {
-    return repository.create(positionDto)
-  }
-}
+open class PositionController(override val repository: PositionRepository) : BaseController<Position, PositionDto>(repository)
