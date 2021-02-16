@@ -2,7 +2,11 @@ package no.fg.hilflingbackend.dto
 
 import no.fg.hilflingbackend.model.Motive
 import no.fg.hilflingbackend.model.Photo
+import no.fg.hilflingbackend.service.PhotoService
 import no.fg.hilflingbackend.value_object.ImageFileName
+import no.fg.hilflingbackend.value_object.PhotoSize
+import java.nio.file.Path
+import java.nio.file.Paths
 import java.util.UUID
 
 data class PhotoDto(
@@ -33,6 +37,17 @@ data class PhotoDto(
       this.photoGangBanger = photo.photoGangBangerDto.toEntity()
     }
   }
+
+  fun getFilePath(
+    fileName: ImageFileName = ImageFileName(this.largeUrl),
+    securityLevel: SecurityLevelDto = this.securityLevel,
+    basePath: String,
+    size: PhotoSize,
+  ): Path  =  PhotoService.generateFilePath(
+      fileName,
+      securityLevel,
+      size
+    )
   companion object {
     fun createWithFileName(
       fileName: ImageFileName,

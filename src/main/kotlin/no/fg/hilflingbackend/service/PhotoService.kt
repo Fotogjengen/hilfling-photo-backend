@@ -57,20 +57,6 @@ class PhotoService(
    * FilePath is generated as follows:
    * /basePath/securitylevel/fileSize-+filename.fileExtension
    */
-  fun generateFilePath(
-    fileName: ImageFileName,
-    securityLevel: SecurityLevelDto,
-    size: PhotoSize,
-  ): Path {
-    // BasePath
-    val basePath = imageFileStorageProperties.savedPhotosPath
-    println("BaseBath from config: $basePath")
-    val fullFilePath = Paths.get("$basePath/${securityLevel.securityLevelType}/$size-${fileName.filename}")
-    println(fullFilePath)
-    // TODO: Check if directories exiist before continou
-    // Files.isDirectory()
-    return fullFilePath
-  }
 
   fun store(file: MultipartFile, securityLevelType: SecurityLevelType): String {
     val newFileName = "${UUID.randomUUID()}.${file.originalFilename!!.split('.').get(1)}"
@@ -124,6 +110,21 @@ class PhotoService(
       .map(this.rootLocation::relativize)
   }
 
+  companion object {
+    fun generateFilePath(
+      fileName: ImageFileName,
+      securityLevel: SecurityLevelDto,
+      size: PhotoSize,
+      basePath: Path= Paths.get(ImageFileStorageProperties().savedPhotosPath)
+    ): Path {
+      println("BaseBath from config: $basePath")
+      val fullFilePath = Paths.get("${basePath.toString()}/${securityLevel.securityLevelType}/$size-${fileName.filename}")
+      println(fullFilePath)
+      // TODO: Check if directories exiist before continou
+      // Files.isDirectory()
+      return fullFilePath
+    }
+  }
   override fun saveDigitalPhotos(
     isGoodPictureList: List<Boolean>,
     motiveIdList: List<UUID>,
@@ -133,7 +134,6 @@ class PhotoService(
     photoGangBangerIdList: List<UUID>,
     fileList: List<MultipartFile>
   ): List<String> {
-
     return fileList.mapIndexed {
       index, file ->
       /*
@@ -192,17 +192,20 @@ class PhotoService(
         gang = gang,
         photoGangBangerDto = photoGangBanger
       )
+      // BasePath
       val filePath = generateFilePath(
         // TODO: Rename to fileName
         fileName = ImageFileName(photoDto.largeUrl),
         securityLevel = photoDto.securityLevel,
-        // TODO: Fix this
-        size = PhotoSize.Large
+        size = PhotoSize.Large,
       )
       // Save file to disk
       try {
         logger.info("Saving file to disk $filePath")
         Files.copy(file.inputStream, filePath).toString()
+        // TODO: uncomment this when we get basepath from properties
+        // assert(Files.exists(filePath))
+
       } catch (ex: IOException) {
         logger.error(filePath.toString())
         logger.error(filePath.toAbsolutePath().toString())
