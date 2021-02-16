@@ -25,7 +25,7 @@ class EventCardController(
     @RequestParam("number_of_eventcards") numberOfEventCards: Int
   ): List<EventCardDto> {
 
-    val eventOwnerFromDb = eventOwnerRepository.findByType(
+    val eventOwnerFromDb = eventOwnerRepository.findByEventOwnerName(
       EventOwnerName.valueOf(eventOwnerName)
     ) ?: throw EntityNotFoundException("Did not find eventOwner")
 

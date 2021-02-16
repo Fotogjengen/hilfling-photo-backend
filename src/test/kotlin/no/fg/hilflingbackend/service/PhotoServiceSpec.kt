@@ -70,8 +70,8 @@ class PhotoServiceSpec : Spek({
       on { findById(mockPhoto.photoId.id) } doReturn mockPhoto
     }
     val securityLevelRepository = mock<SecurityLevelRepository> {
-      on { findById(mockDataService.generateSecurityLevelData()[0].securityLevelId.id) } doReturn mockDataService.generateSecurityLevelData()[0].toEntity()
-      on { findById(mockDataService.generateSecurityLevelData()[1].securityLevelId.id) } doReturn mockDataService.generateSecurityLevelData()[1].toEntity()
+      on { findById(mockDataService.generateSecurityLevelData()[0].securityLevelId.id) } doReturn mockDataService.generateSecurityLevelData()[0]
+      on { findById(mockDataService.generateSecurityLevelData()[1].securityLevelId.id) } doReturn mockDataService.generateSecurityLevelData()[1]
     }
 
     val photoFile = ClassPathResource("demoPhotos/digfø3652.jpg")

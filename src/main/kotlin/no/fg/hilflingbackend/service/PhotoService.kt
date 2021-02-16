@@ -4,7 +4,6 @@ import no.fg.hilflingbackend.configurations.ImageFileStorageProperties
 import no.fg.hilflingbackend.dto.GangDto
 import no.fg.hilflingbackend.dto.PhotoDto
 import no.fg.hilflingbackend.dto.SecurityLevelDto
-import no.fg.hilflingbackend.dto.toDto
 import no.fg.hilflingbackend.model.SecurityLevel
 import no.fg.hilflingbackend.repository.GangRepository
 import no.fg.hilflingbackend.repository.MotiveRepository
@@ -168,7 +167,6 @@ class PhotoService(
 
       val securityLevelDto: SecurityLevelDto = securityLevelRepository
         .findById(securityLevelIdList.get(index))
-        ?.toDto()
         ?: throw EntityNotFoundException("Did not find securitulevel")
       val motive = motiveRepository
         .findById(motiveIdList.get(index))
