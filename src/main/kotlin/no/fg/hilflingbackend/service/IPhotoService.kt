@@ -27,6 +27,15 @@ interface IPhotoService : IBaseService<PhotoDto> {
     photoGangBangerIdList: List<UUID>,
     fileList: List<MultipartFile>
   ): List<String>
+  fun createNewMotiveAndSaveDigitalPhotos(
+    motiveString: String,
+    placeString: String,
+    securityLevelId: UUID,
+    photoGangBangerId: UUID,
+    photoFileList: List<MultipartFile>,
+    isGoodPhotoList: List<Boolean>,
+    tagList: List<List<String>>
+  ): List<String>
   fun getCarouselPhotos(): List<PhotoDto>
   fun getAllAnalogPhotos(): List<PhotoDto> // TODO: Need different DTO for analog
   fun getAllDigitalPhotos(): List<PhotoDto>

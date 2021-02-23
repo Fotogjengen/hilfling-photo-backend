@@ -53,7 +53,7 @@ CREATE TABLE PLACE
 (
     id           uuid PRIMARY KEY NOT NULL,
     date_created DATE NOT NULL DEFAULT CURRENT_DATE,
-    name         VARCHAR(30)
+    name         VARCHAR(30) UNIQUE
 );
 
 CREATE TABLE EVENT_OWNER
@@ -149,7 +149,7 @@ CREATE TABLE PHOTO
     date_created         DATE NOT NULL DEFAULT CURRENT_DATE,
     small_url            VARCHAR(255),
     medium_url           VARCHAR(255),
-    large_url            VARCHAR(255),
+    large_url            VARCHAR(255) NOT NULL,
     is_good_picture      BOOLEAN,
     motive_id            UUID REFERENCES MOTIVE (id),
     place_id             UUID REFERENCES PLACE (id),

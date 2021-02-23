@@ -21,20 +21,22 @@ class FolderPathUtilsSpec : Spek({
       }
     }
 
-    describe("createFolder"){
+    describe("createFolder") {
       val basePath = "static-files/static/img/"
-      it("can create folder"){
+      it("can create folder") {
         val returnedPath = createFolder(basePath, "test")
-        assertTrue(Files.isDirectory(
-          Paths.get(basePath + "test")
-        ))
+        assertTrue(
+          Files.isDirectory(
+            Paths.get(basePath + "test")
+          )
+        )
         Files.delete(
           Paths.get(basePath + "test")
         )
       }
-      it("Can not create folder if folder exist"){
+      it("Can not create folder if folder exist") {
         val returnedPath = createFolder(basePath, "test")
-        assertThrows<IOException>{
+        assertThrows<IOException> {
           createFolder(basePath, "test")
         }
         Files.delete(

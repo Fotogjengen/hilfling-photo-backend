@@ -36,6 +36,30 @@ class PhotoController(
     return photoService.store(file, securityLevel)
   }
 
+  // The main photo-upload endpoint used most of the time
+  @PostMapping("/upload")
+  fun uploadPhotos(
+    @RequestParam("motiveString") motiveString: String,
+    @RequestParam("placeString") placeString: String,
+    @RequestParam("securityLevelId") securityLevelId: UUID,
+    @RequestParam("photoGangBangerId") photoGangBangerId: UUID,
+    @RequestParam("photoFileList") photoFileList: List<MultipartFile>,
+    @RequestParam("isGoodPhotoList") isGoodPhotoList: List<Boolean>,
+    @RequestParam("tagList")tagList: List<List<String>>
+  ): ResponseEntity<List<String>> =
+    ResponseEntity(
+      photoService.createNewMotiveAndSaveDigitalPhotos(
+        motiveString = motiveString,
+        placeString = placeString,
+        securityLevelId = securityLevelId,
+        photoGangBangerId = photoGangBangerId,
+        photoFileList = photoFileList,
+        tagList = tagList,
+        isGoodPhotoList = isGoodPhotoList
+      ),
+      HttpStatus.CREATED,
+    )
+
   @PostMapping
   fun uploadPhoto(
     @RequestParam("isGoodPictureList") isGoodPictureList: List<Boolean>,

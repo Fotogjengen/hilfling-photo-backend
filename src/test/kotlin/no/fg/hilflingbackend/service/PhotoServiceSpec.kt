@@ -8,23 +8,22 @@ import no.fg.hilflingbackend.repository.PhotoGangBangerRepository
 import no.fg.hilflingbackend.repository.PhotoRepository
 import no.fg.hilflingbackend.repository.PlaceRepository
 import no.fg.hilflingbackend.repository.SecurityLevelRepository
-import org.junit.jupiter.api.Assertions.*
 import org.spekframework.spek2.Spek
 import org.spekframework.spek2.style.specification.describe
 import org.springframework.core.env.Environment
 
 class PhotoServiceSpec : Spek({
-  val motiveRepository = mock<MotiveRepository>{
+  val motiveRepository = mock<MotiveRepository> {
   }
   // Arrange mocks
-  val imageFileStorageProperties = mock<ImageFileStorageProperties>{}
-  val photoRepository = mock<PhotoRepository>{}
-  val gangRepository = mock<GangRepository>{}
-  val placeRepository = mock<PlaceRepository>{}
-  val securityLevelRepository = mock<SecurityLevelRepository>{}
-  val photoGangBangerRepository = mock<PhotoGangBangerRepository>{}
-  val environment = mock<Environment>{}
-  describe("PhotoServiceSpec"){
+  val imageFileStorageProperties = mock<ImageFileStorageProperties> {}
+  val photoRepository = mock<PhotoRepository> {}
+  val gangRepository = mock<GangRepository> {}
+  val placeRepository = mock<PlaceRepository> {}
+  val securityLevelRepository = mock<SecurityLevelRepository> {}
+  val photoGangBangerRepository = mock<PhotoGangBangerRepository> {}
+  val environment = mock<Environment> {}
+  describe("PhotoServiceSpec") {
     val photoService = PhotoService(
       imageFileStorageProperties = imageFileStorageProperties,
       environment = environment,
@@ -35,6 +34,5 @@ class PhotoServiceSpec : Spek({
       photoGangBangerRepository = photoGangBangerRepository,
       motiveRepository = motiveRepository
     )
-
   }
 })

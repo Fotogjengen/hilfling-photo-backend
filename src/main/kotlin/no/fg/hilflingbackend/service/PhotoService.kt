@@ -1,7 +1,6 @@
 package no.fg.hilflingbackend.service
 
 import no.fg.hilflingbackend.configurations.ImageFileStorageProperties
-import no.fg.hilflingbackend.dto.AlbumDto
 import no.fg.hilflingbackend.dto.GangDto
 import no.fg.hilflingbackend.dto.PhotoDto
 import no.fg.hilflingbackend.dto.SecurityLevelDto
@@ -68,11 +67,13 @@ class PhotoService(
     // BasePath
     val basePath = imageFileStorageProperties.savedPhotosPath
     println("BaseBath from config: $basePath")
-    val fullFilePath = Paths.get("$basePath/" +
-      "${securityLevel.securityLevelType}/" +
-      "${convertToValidFolderName(motive.album.title)}/" +
-      "${convertToValidFolderName(motive.title)}" +
-      "$size-${fileName.filename}")
+    val fullFilePath = Paths.get(
+      "$basePath/" +
+        "${securityLevel.securityLevelType}/" +
+        "${convertToValidFolderName(motive.album.title)}/" +
+        "${convertToValidFolderName(motive.title)}" +
+        "$size-${fileName.filename}"
+    )
     println(fullFilePath)
     // TODO: Check if directories exiist before continou
     if (!Files.isDirectory(fullFilePath)) throw IllegalStateException("The file path does not exist")
@@ -241,6 +242,18 @@ class PhotoService(
     fileList: List<MultipartFile>
   ): List<String> {
     TODO("Not implemented yet")
+  }
+
+  override fun createNewMotiveAndSaveDigitalPhotos(
+    motiveString: String,
+    placeString: String,
+    securityLevelId: UUID,
+    photoGangBangerId: UUID,
+    photoFileList: List<MultipartFile>,
+    isGoodPhotoList: List<Boolean>,
+    tagList: List<List<String>>
+  ): List<String> {
+    TODO("Not yet implemented")
   }
 
   override fun getCarouselPhotos(): List<PhotoDto> = photoRepository
