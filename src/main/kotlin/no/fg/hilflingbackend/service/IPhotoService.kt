@@ -33,6 +33,8 @@ interface IPhotoService : IBaseService<PhotoDto> {
     securityLevelId: UUID,
     photoGangBangerId: UUID,
     albumId: UUID,
+    categoryName: String,
+    eventOwnerString: String,
     photoFileList: List<MultipartFile>,
     isGoodPhotoList: List<Boolean>,
     tagList: List<List<String>>

@@ -44,6 +44,8 @@ class PhotoController(
     @RequestParam("securityLevelId") securityLevelId: UUID,
     @RequestParam("photoGangBangerId") photoGangBangerId: UUID,
     @RequestParam("albumId") albumId: UUID,
+    @RequestParam("categoryName") categoryName: String,
+    @RequestParam("EventOwnerString") eventOwnerString: String,
     @RequestParam("photoFileList") photoFileList: List<MultipartFile>,
     @RequestParam("isGoodPhotoList") isGoodPhotoList: List<Boolean>,
     @RequestParam("tagList")tagList: List<List<String>>
@@ -52,11 +54,13 @@ class PhotoController(
       photoService.createNewMotiveAndSaveDigitalPhotos(
         motiveString = motiveString,
         placeString = placeString,
+        eventOwnerString = eventOwnerString,
         securityLevelId = securityLevelId,
         albumId = albumId,
         photoGangBangerId = photoGangBangerId,
         photoFileList = photoFileList,
         tagList = tagList,
+        categoryName = categoryName,
         isGoodPhotoList = isGoodPhotoList
       ),
       HttpStatus.CREATED,

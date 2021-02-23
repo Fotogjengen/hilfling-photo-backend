@@ -69,8 +69,10 @@ class PhotoControllerSpec : Spek({
             mock<MultipartFile> {}
           ),
           isGoodPhotoList = listOf(true, true),
-          tagList = listOf(listOf("big dick!"))
+          tagList = listOf(listOf("big dick!")),
           // TODO: Return full url instead?
+          categoryName = "Gjengfoto",
+          eventOwnerString = "Samfundet"
         )
       )
         .thenReturn(listOf("bildeUrl1.jpg", "bildeUrl2.jpg"))
@@ -86,7 +88,9 @@ class PhotoControllerSpec : Spek({
         tagList = listOf<List<String>>(
           listOf("Sindre"),
           listOf("Enorm!")
-        )
+        ),
+        categoryName = "Gjengfoto",
+        eventOwnerString = "Samfundet"
       )
       assertEquals(HttpStatus.CREATED, response.statusCode)
     }

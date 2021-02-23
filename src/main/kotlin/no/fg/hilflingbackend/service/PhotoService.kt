@@ -4,14 +4,18 @@ import no.fg.hilflingbackend.configurations.ImageFileStorageProperties
 import no.fg.hilflingbackend.dto.AlbumDto
 import no.fg.hilflingbackend.dto.CategoryDto
 import no.fg.hilflingbackend.dto.EventOwnerDto
+import no.fg.hilflingbackend.dto.EventOwnerName
 import no.fg.hilflingbackend.dto.GangDto
 import no.fg.hilflingbackend.dto.MotiveDto
 import no.fg.hilflingbackend.dto.PhotoDto
+import no.fg.hilflingbackend.dto.PlaceDto
 import no.fg.hilflingbackend.dto.SecurityLevelDto
 import no.fg.hilflingbackend.dto.toDto
 import no.fg.hilflingbackend.model.Motive
 import no.fg.hilflingbackend.model.SecurityLevel
 import no.fg.hilflingbackend.model.toDto
+import no.fg.hilflingbackend.repository.AlbumRepository
+import no.fg.hilflingbackend.repository.CategoryRepository
 import no.fg.hilflingbackend.repository.GangRepository
 import no.fg.hilflingbackend.repository.MotiveRepository
 import no.fg.hilflingbackend.repository.PhotoGangBangerRepository
@@ -44,6 +48,8 @@ class PhotoService(
   val gangRepository: GangRepository,
   val motiveRepository: MotiveRepository,
   val placeRepository: PlaceRepository,
+  val categoryRepository: CategoryRepository,
+  val albumRepository: AlbumRepository,
   val securityLevelRepository: SecurityLevelRepository,
   val photoGangBangerRepository: PhotoGangBangerRepository,
 ) : IPhotoService {
@@ -255,28 +261,65 @@ class PhotoService(
     securityLevelId: UUID,
     photoGangBangerId: UUID,
     albumId: UUID,
+    categoryName: String,
+    eventOwnerString: String,
     photoFileList: List<MultipartFile>,
     isGoodPhotoList: List<Boolean>,
     tagList: List<List<String>>
   ): List<String> {
-    TODO("Not yet implemented")
+    val eventOwner = EventOwnerName.valueOf(eventOwnerString)
 
-    // Fetch or generate Place
+    val albumDto = albumRepository
+      .findById(albumId)
+      ?: throw EntityNotFoundException("Did not find album")
+
+    val photoGangBangerDto = photoRepository
+      .findById(photoGangBangerId)
+      ?: throw EntityNotFoundException("Did not find photoGangBanger")
+
+    val securityLevelDto = securityLevelRepository
+      .findById(securityLevelId)
+      ?: throw EntityNotFoundException("SecurityLevelNotFound")
+
+    val categoryDto = categoryRepository
+      .findByName(categoryName)
+      // Should we use categoryId instead of categoryName??
+      ?: throw EntityNotFoundException("Did not find category")
+
+    // Fetch object from database, if not exist create object
+    // and save to database
+    // TODO: Wait with saving place to database to later?
+    val placeDto = fetchOrCreatePlaceDto(placeString)
+
+    TODO("GenerateTags")
 
     // Fetch or create Motive
-
-    // Fetch SecurityLevel
-
-    // Fetch PhotoGangBanger
-
-    // fetch or generateTags
+    /*
+    val motiveDto = fetchOrCreateMotive(
+      motiveString = motiveString,
+      eventOwnerDto = eventOwnerDto,
+      categoryDto = cateGoryDto,
+      albumDto = albumDto
+    )
+     */
 
     // Generate PhotoDto
 
     // GeneratePaths
 
     // Save shit
+    TODO("Not yet implemented")
   }
+  fun fetchOrCreatePlaceDto(placeString: String) = placeRepository
+    .findByName(placeString)
+    ?: PlaceDto(name = placeString)
+      .also {
+        placeRepository
+          .create(
+            it
+          )
+      }
+
   fun fetchOrCreateMotive(
     motiveString: String,
     categoryDto: CategoryDto,
