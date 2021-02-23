@@ -43,6 +43,7 @@ class PhotoController(
     @RequestParam("placeString") placeString: String,
     @RequestParam("securityLevelId") securityLevelId: UUID,
     @RequestParam("photoGangBangerId") photoGangBangerId: UUID,
+    @RequestParam("albumId") albumId: UUID,
     @RequestParam("photoFileList") photoFileList: List<MultipartFile>,
     @RequestParam("isGoodPhotoList") isGoodPhotoList: List<Boolean>,
     @RequestParam("tagList")tagList: List<List<String>>
@@ -52,6 +53,7 @@ class PhotoController(
         motiveString = motiveString,
         placeString = placeString,
         securityLevelId = securityLevelId,
+        albumId = albumId,
         photoGangBangerId = photoGangBangerId,
         photoFileList = photoFileList,
         tagList = tagList,

@@ -1,12 +1,17 @@
 package no.fg.hilflingbackend.service
 
 import no.fg.hilflingbackend.configurations.ImageFileStorageProperties
+import no.fg.hilflingbackend.dto.AlbumDto
+import no.fg.hilflingbackend.dto.CategoryDto
+import no.fg.hilflingbackend.dto.EventOwnerDto
 import no.fg.hilflingbackend.dto.GangDto
+import no.fg.hilflingbackend.dto.MotiveDto
 import no.fg.hilflingbackend.dto.PhotoDto
 import no.fg.hilflingbackend.dto.SecurityLevelDto
 import no.fg.hilflingbackend.dto.toDto
 import no.fg.hilflingbackend.model.Motive
 import no.fg.hilflingbackend.model.SecurityLevel
+import no.fg.hilflingbackend.model.toDto
 import no.fg.hilflingbackend.repository.GangRepository
 import no.fg.hilflingbackend.repository.MotiveRepository
 import no.fg.hilflingbackend.repository.PhotoGangBangerRepository
@@ -249,12 +254,44 @@ class PhotoService(
     placeString: String,
     securityLevelId: UUID,
     photoGangBangerId: UUID,
+    albumId: UUID,
     photoFileList: List<MultipartFile>,
     isGoodPhotoList: List<Boolean>,
     tagList: List<List<String>>
   ): List<String> {
     TODO("Not yet implemented")
+
+    // Fetch or generate Place
+
+    // Fetch or create Motive
+
+    // Fetch SecurityLevel
+
+    // Fetch PhotoGangBanger
+
+    // fetch or generateTags
+
+    // Generate PhotoDto
+
+    // GeneratePaths
+
+    // Save shit
   }
+  fun fetchOrCreateMotive(
+    motiveString: String,
+    categoryDto: CategoryDto,
+    eventOwnerDto: EventOwnerDto,
+    albumDto: AlbumDto
+  ): MotiveDto =
+    motiveRepository
+      .findByTitle(motiveString)
+      ?.toDto()
+      ?: MotiveDto(
+        title = motiveString,
+        categoryDto = categoryDto,
+        eventOwnerDto = eventOwnerDto,
+        albumDto = albumDto
+      )
 
   override fun getCarouselPhotos(): List<PhotoDto> = photoRepository
     .findCarouselPhotos()

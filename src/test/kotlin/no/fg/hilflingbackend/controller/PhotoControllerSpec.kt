@@ -63,6 +63,7 @@ class PhotoControllerSpec : Spek({
           placeString = "Storsalen",
           securityLevelId = mockDataService.generateSecurityLevelData().first().securityLevelId.id,
           photoGangBangerId = mockDataService.generatePhotoGangBangerData().first().photoGangBangerId.id,
+          albumId = mockDataService.generateAlbumData().first().albumId.id,
           photoFileList = listOf(
             mock<MultipartFile> {},
             mock<MultipartFile> {}
@@ -79,6 +80,7 @@ class PhotoControllerSpec : Spek({
         placeString = "Storsalen",
         securityLevelId = mockDataService.generateSecurityLevelData().first().securityLevelId.id,
         photoGangBangerId = mockDataService.generatePhotoGangBangerData().first().photoGangBangerId.id,
+        albumId = mockDataService.generateAlbumData().first().albumId.id,
         photoFileList = listOf<MultipartFile>(),
         isGoodPhotoList = listOf<Boolean>(),
         tagList = listOf<List<String>>(
