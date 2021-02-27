@@ -25,6 +25,7 @@ import no.fg.hilflingbackend.repository.SecurityLevelRepository
 import no.fg.hilflingbackend.utils.convertToValidFolderName
 import no.fg.hilflingbackend.value_object.ImageFileName
 import no.fg.hilflingbackend.value_object.PhotoSize
+import no.fg.hilflingbackend.value_object.SecurityLevelType
 import org.slf4j.LoggerFactory
 import org.springframework.core.env.Environment
 import org.springframework.core.io.Resource
@@ -55,6 +56,7 @@ class PhotoService(
 ) : IPhotoService {
 
   val logger = LoggerFactory.getLogger(this::class.java)
+  val profileLocation = Paths.get("filestorage/PROFILE")
 
   val rootLocation = Paths.get("static-files/static/img/")
   val photoGangBangerLocation = Paths.get("static-files/static/img//FG")
@@ -91,13 +93,13 @@ class PhotoService(
     return fullFilePath
   }
 
-  fun store(file: MultipartFile, securityLevel: SecurityLevel): String {
-    val location: Path
+  fun store(file: MultipartFile, securityLevelType: SecurityLevelType): String {
     val newFileName = "${UUID.randomUUID()}.${file.originalFilename!!.split('.').get(1)}"
-    location = when (securityLevel.type) {
-      "FG" -> this.photoGangBangerLocation.resolve(newFileName)
-      "HUSFOLK" -> this.houseMemberLocation.resolve(newFileName)
-      "ALLE" -> this.allLocation.resolve(newFileName)
+    val location = when (securityLevelType) {
+      SecurityLevelType.FG -> this.photoGangBangerLocation.resolve(newFileName)
+      SecurityLevelType.HUSFOLK -> this.houseMemberLocation.resolve(newFileName)
+      SecurityLevelType.ALLE -> this.allLocation.resolve(newFileName)
+      SecurityLevelType.PROFILE -> this.profileLocation.resolve(newFileName)
       else -> throw IllegalArgumentException("Invalid security level")
     }
     Files.copy(file.inputStream, location).toString()
@@ -131,6 +133,9 @@ class PhotoService(
     }
     if (!Files.exists(allLocation)) {
       Files.createDirectory(allLocation)
+    }
+    if (!Files.exists(profileLocation)) {
+      Files.createDirectory(profileLocation)
     }
   }
 
@@ -183,7 +188,6 @@ class PhotoService(
 
       val securityLevelDto: SecurityLevelDto = securityLevelRepository
         .findById(securityLevelIdList.get(index))
-        ?.toDto()
         ?: throw EntityNotFoundException("Did not find securitulevel")
 
       val motive = motiveRepository

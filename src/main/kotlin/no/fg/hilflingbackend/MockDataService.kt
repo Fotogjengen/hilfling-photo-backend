@@ -5,6 +5,9 @@ import no.fg.hilflingbackend.dto.AlbumDto
 import no.fg.hilflingbackend.dto.AlbumId
 import no.fg.hilflingbackend.dto.CategoryDto
 import no.fg.hilflingbackend.dto.CategoryId
+import no.fg.hilflingbackend.dto.EventOwnerDto
+import no.fg.hilflingbackend.dto.EventOwnerId
+import no.fg.hilflingbackend.dto.EventOwnerName
 import no.fg.hilflingbackend.dto.GangDto
 import no.fg.hilflingbackend.dto.GangId
 import no.fg.hilflingbackend.dto.PhotoDto
@@ -25,7 +28,6 @@ import no.fg.hilflingbackend.dto.SecurityLevelDto
 import no.fg.hilflingbackend.dto.SecurityLevelId
 import no.fg.hilflingbackend.dto.SemesterStart
 import no.fg.hilflingbackend.dto.toEntity
-import no.fg.hilflingbackend.model.EventOwner
 import no.fg.hilflingbackend.model.Motive
 import no.fg.hilflingbackend.repository.AlbumRepository
 import no.fg.hilflingbackend.repository.ArticleRepository
@@ -171,7 +173,7 @@ class MockDataService {
         id = UUID.fromString("94540f3c-77b8-4bc5-acc7-4dd7d8cc4bcd")
         title = "Amber Butts spiller på klubben"
         album = generateAlbumData().first().toEntity()
-        eventOwner = generateEventOwnerData().first()
+        eventOwner = generateEventOwnerData().first().toEntity()
         category = generateCategoryData().first().toEntity()
       },
 
@@ -179,7 +181,7 @@ class MockDataService {
         id = UUID.fromString("94540f3c-77b8-4bc5-acc7-4dd7d8cc5bcd")
         title = "High As a Kite 2020"
         album = generateAlbumData().first().toEntity()
-        eventOwner = generateEventOwnerData().first()
+        eventOwner = generateEventOwnerData().first().toEntity()
         category = generateCategoryData().first().toEntity()
       }
     )
@@ -196,20 +198,20 @@ class MockDataService {
       )
     )
 
-  fun generateEventOwnerData(): List<EventOwner> =
+  fun generateEventOwnerData(): List<EventOwnerDto> =
     listOf(
-      EventOwner {
-        id = UUID.fromString("afc308c4-06e2-47bb-b97b-70eb3f55e8d9")
-        name = "ISFIT"
-      },
-      EventOwner {
-        id = UUID.fromString("9265f73d-7b13-4673-9f3b-1db3b6c7d526")
-        name = "Samfundet"
-      },
-      EventOwner {
-        id = UUID.fromString("e91f1201-e0bf-4d25-8026-b2a2d44c37c3")
-        name = "UKA"
-      }
+      EventOwnerDto(
+        eventOwnerId = EventOwnerId(UUID.fromString("afc308c4-06e2-47bb-b97b-70eb3f55e8d9")),
+        name = EventOwnerName.valueOf("ISFIT")
+      ),
+      EventOwnerDto(
+        eventOwnerId = EventOwnerId(UUID.fromString("9265f73d-7b13-4673-9f3b-1db3b6c7d526")),
+        name = EventOwnerName.valueOf("Samfundet")
+      ),
+      EventOwnerDto(
+        eventOwnerId = EventOwnerId(UUID.fromString("e91f1201-e0bf-4d25-8026-b2a2d44c37c3")),
+        name = EventOwnerName.valueOf("UKA")
+      )
     )
 
   fun generateAlbumData(): List<AlbumDto> {
@@ -507,7 +509,7 @@ class MockDataService {
       photoTagRepository.create(it)
     }
     generateSecurityLevelData().forEach {
-      securityLevelRepository.create(it.toEntity())
+      securityLevelRepository.create(it)
     }
     generateSamfundetUserData().forEach {
       samfundetUserRepository.create(it)
