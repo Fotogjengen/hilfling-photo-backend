@@ -6,6 +6,7 @@ import no.fg.hilflingbackend.model.AnalogPhoto
 import no.fg.hilflingbackend.model.SecurityLevel
 import no.fg.hilflingbackend.service.PhotoService
 import no.fg.hilflingbackend.utils.ResponseOk
+import no.fg.hilflingbackend.value_object.SecurityLevelType
 import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
@@ -29,12 +30,43 @@ class PhotoController(
 
 ) : GlobalExceptionHandler() {
   // TODO: Remove not used anyMOre
+  @PostMapping("/profile", consumes = ["multipart/form-data"])
   private fun uploadPhotoFile(
-    file: MultipartFile,
-    securityLevel: SecurityLevel
+    @RequestPart("file") file: MultipartFile,
+    // @RequestPart("type") type: String,
   ): String {
-    return photoService.store(file, securityLevel)
+    return photoService.store(file, SecurityLevelType.valueOf("PROFILE"))
   }
+
+  // The main photo-upload endpoint used most of the time
+  @PostMapping("/upload")
+  fun uploadPhotos(
+    @RequestParam("motiveString") motiveString: String,
+    @RequestParam("placeString") placeString: String,
+    @RequestParam("securityLevelId") securityLevelId: UUID,
+    @RequestParam("photoGangBangerId") photoGangBangerId: UUID,
+    @RequestParam("albumId") albumId: UUID,
+    @RequestParam("categoryName") categoryName: String,
+    @RequestParam("EventOwnerString") eventOwnerString: String,
+    @RequestParam("photoFileList") photoFileList: List<MultipartFile>,
+    @RequestParam("isGoodPhotoList") isGoodPhotoList: List<Boolean>,
+    @RequestParam("tagList")tagList: List<List<String>>
+  ): ResponseEntity<List<String>> =
+    ResponseEntity(
+      photoService.createNewMotiveAndSaveDigitalPhotos(
+        motiveString = motiveString,
+        placeString = placeString,
+        eventOwnerString = eventOwnerString,
+        securityLevelId = securityLevelId,
+        albumId = albumId,
+        photoGangBangerId = photoGangBangerId,
+        photoFileList = photoFileList,
+        tagList = tagList,
+        categoryName = categoryName,
+        isGoodPhotoList = isGoodPhotoList
+      ),
+      HttpStatus.CREATED,
+    )
 
   @PostMapping
   fun uploadPhoto(

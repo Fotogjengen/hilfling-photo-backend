@@ -1,7 +1,7 @@
-
 import com.nhaarman.mockitokotlin2.atLeast
 import com.nhaarman.mockitokotlin2.doReturn
 import com.nhaarman.mockitokotlin2.mock
+import com.nhaarman.mockitokotlin2.whenever
 import no.fg.hilflingbackend.MockDataService
 import no.fg.hilflingbackend.controller.PhotoController
 import no.fg.hilflingbackend.service.PhotoService
@@ -11,9 +11,12 @@ import org.slf4j.LoggerFactory
 import org.spekframework.spek2.Spek
 import org.spekframework.spek2.style.specification.describe
 import org.springframework.core.io.ClassPathResource
+import org.springframework.http.HttpStatus
 import org.springframework.mock.web.MockMultipartFile
+import org.springframework.web.multipart.MultipartFile
 import java.security.InvalidParameterException
 import java.util.UUID
+import kotlin.test.assertEquals
 
 class PhotoControllerSpec : Spek({
   val log = LoggerFactory.getLogger(this::class.java)
@@ -52,6 +55,44 @@ class PhotoControllerSpec : Spek({
           )
         }
       }
+    }
+    describe("UploadPhotos()") {
+      whenever(
+        mockPhotoService.createNewMotiveAndSaveDigitalPhotos(
+          motiveString = "Sindres dickpicks",
+          placeString = "Storsalen",
+          securityLevelId = mockDataService.generateSecurityLevelData().first().securityLevelId.id,
+          photoGangBangerId = mockDataService.generatePhotoGangBangerData().first().photoGangBangerId.id,
+          albumId = mockDataService.generateAlbumData().first().albumId.id,
+          photoFileList = listOf(
+            mock<MultipartFile> {},
+            mock<MultipartFile> {}
+          ),
+          isGoodPhotoList = listOf(true, true),
+          tagList = listOf(listOf("big dick!")),
+          // TODO: Return full url instead?
+          categoryName = "Gjengfoto",
+          eventOwnerString = "Samfundet"
+        )
+      )
+        .thenReturn(listOf("bildeUrl1.jpg", "bildeUrl2.jpg"))
+
+      val response = photoController.uploadPhotos(
+        motiveString = "Sindres dickpicks",
+        placeString = "Storsalen",
+        securityLevelId = mockDataService.generateSecurityLevelData().first().securityLevelId.id,
+        photoGangBangerId = mockDataService.generatePhotoGangBangerData().first().photoGangBangerId.id,
+        albumId = mockDataService.generateAlbumData().first().albumId.id,
+        photoFileList = listOf<MultipartFile>(),
+        isGoodPhotoList = listOf<Boolean>(),
+        tagList = listOf<List<String>>(
+          listOf("Sindre"),
+          listOf("Enorm!")
+        ),
+        categoryName = "Gjengfoto",
+        eventOwnerString = "Samfundet"
+      )
+      assertEquals(HttpStatus.CREATED, response.statusCode)
     }
 /*
     val mockPhotoService = mock<PhotoService> {
