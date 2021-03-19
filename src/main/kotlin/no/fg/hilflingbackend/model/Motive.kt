@@ -5,6 +5,8 @@ import me.liuwj.ktorm.entity.Entity
 import me.liuwj.ktorm.entity.sequenceOf
 import me.liuwj.ktorm.schema.uuid
 import me.liuwj.ktorm.schema.varchar
+import no.fg.hilflingbackend.dto.MotiveDto
+import no.fg.hilflingbackend.dto.MotiveId
 
 interface Motive : BaseModel<Motive> {
   companion object : Entity.Factory<Motive>()
@@ -25,5 +27,13 @@ object Motives : BaseTable<Motive>("motive") {
   val eventOwnerId = uuid("event_owner_id").references(EventOwners) { it.eventOwner }
   val albumId = uuid("album_id").references(Albums) { it.album }
 }
+
+fun Motive.toDto(): MotiveDto = MotiveDto(
+  motiveId = MotiveId(this.id),
+  title = this.title,
+  categoryDto = this.category.toDto(),
+  eventOwnerDto = eventOwner.toDto(),
+  albumDto = album.toDto()
+)
 
 val Database.motives get() = this.sequenceOf(Motives)

@@ -1,16 +1,28 @@
 package no.fg.hilflingbackend.service
 
 import no.fg.hilflingbackend.configurations.ImageFileStorageProperties
+import no.fg.hilflingbackend.dto.AlbumDto
+import no.fg.hilflingbackend.dto.CategoryDto
+import no.fg.hilflingbackend.dto.EventOwnerDto
+import no.fg.hilflingbackend.dto.EventOwnerName
 import no.fg.hilflingbackend.dto.GangDto
+import no.fg.hilflingbackend.dto.MotiveDto
 import no.fg.hilflingbackend.dto.PhotoDto
+import no.fg.hilflingbackend.dto.PlaceDto
 import no.fg.hilflingbackend.dto.SecurityLevelDto
+import no.fg.hilflingbackend.dto.toDto
+import no.fg.hilflingbackend.model.Motive
 import no.fg.hilflingbackend.model.SecurityLevel
+import no.fg.hilflingbackend.model.toDto
+import no.fg.hilflingbackend.repository.AlbumRepository
+import no.fg.hilflingbackend.repository.CategoryRepository
 import no.fg.hilflingbackend.repository.GangRepository
 import no.fg.hilflingbackend.repository.MotiveRepository
 import no.fg.hilflingbackend.repository.PhotoGangBangerRepository
 import no.fg.hilflingbackend.repository.PhotoRepository
 import no.fg.hilflingbackend.repository.PlaceRepository
 import no.fg.hilflingbackend.repository.SecurityLevelRepository
+import no.fg.hilflingbackend.utils.convertToValidFolderName
 import no.fg.hilflingbackend.value_object.ImageFileName
 import no.fg.hilflingbackend.value_object.PhotoSize
 import no.fg.hilflingbackend.value_object.SecurityLevelType
@@ -37,6 +49,8 @@ class PhotoService(
   val gangRepository: GangRepository,
   val motiveRepository: MotiveRepository,
   val placeRepository: PlaceRepository,
+  val categoryRepository: CategoryRepository,
+  val albumRepository: AlbumRepository,
   val securityLevelRepository: SecurityLevelRepository,
   val photoGangBangerRepository: PhotoGangBangerRepository,
 ) : IPhotoService {
@@ -55,20 +69,27 @@ class PhotoService(
 
   /**
    * FilePath is generated as follows:
-   * /basePath/securitylevel/fileSize-+filename.fileExtension
+   * basepath/<securityLevel>/<Album>/<Motive/<uuuid>.jpg
    */
   fun generateFilePath(
     fileName: ImageFileName,
     securityLevel: SecurityLevelDto,
+    motive: Motive,
     size: PhotoSize,
   ): Path {
     // BasePath
     val basePath = imageFileStorageProperties.savedPhotosPath
     println("BaseBath from config: $basePath")
-    val fullFilePath = Paths.get("$basePath/${securityLevel.securityLevelType}/$size-${fileName.filename}")
+    val fullFilePath = Paths.get(
+      "$basePath/" +
+        "${securityLevel.securityLevelType}/" +
+        "${convertToValidFolderName(motive.album.title)}/" +
+        "${convertToValidFolderName(motive.title)}" +
+        "$size-${fileName.filename}"
+    )
     println(fullFilePath)
     // TODO: Check if directories exiist before continou
-    // Files.isDirectory()
+    if (!Files.isDirectory(fullFilePath)) throw IllegalStateException("The file path does not exist")
     return fullFilePath
   }
 
@@ -168,6 +189,7 @@ class PhotoService(
       val securityLevelDto: SecurityLevelDto = securityLevelRepository
         .findById(securityLevelIdList.get(index))
         ?: throw EntityNotFoundException("Did not find securitulevel")
+
       val motive = motiveRepository
         .findById(motiveIdList.get(index))
         ?: throw EntityNotFoundException("Did not find motive")
@@ -192,12 +214,14 @@ class PhotoService(
         gang = gang,
         photoGangBangerDto = photoGangBanger
       )
+
       val filePath = generateFilePath(
         // TODO: Rename to fileName
         fileName = ImageFileName(photoDto.largeUrl),
         securityLevel = photoDto.securityLevel,
         // TODO: Fix this
-        size = PhotoSize.Large
+        size = PhotoSize.Large,
+        motive = motive
       )
       // Save file to disk
       try {
@@ -234,6 +258,87 @@ class PhotoService(
   ): List<String> {
     TODO("Not implemented yet")
   }
+
+  override fun createNewMotiveAndSaveDigitalPhotos(
+    motiveString: String,
+    placeString: String,
+    securityLevelId: UUID,
+    photoGangBangerId: UUID,
+    albumId: UUID,
+    categoryName: String,
+    eventOwnerString: String,
+    photoFileList: List<MultipartFile>,
+    isGoodPhotoList: List<Boolean>,
+    tagList: List<List<String>>
+  ): List<String> {
+    val eventOwner = EventOwnerName.valueOf(eventOwnerString)
+
+    val albumDto = albumRepository
+      .findById(albumId)
+      ?: throw EntityNotFoundException("Did not find album")
+
+    val photoGangBangerDto = photoRepository
+      .findById(photoGangBangerId)
+      ?: throw EntityNotFoundException("Did not find photoGangBanger")
+
+    val securityLevelDto = securityLevelRepository
+      .findById(securityLevelId)
+      ?: throw EntityNotFoundException("SecurityLevelNotFound")
+
+    val categoryDto = categoryRepository
+      .findByName(categoryName)
+      // Should we use categoryId instead of categoryName??
+      ?: throw EntityNotFoundException("Did not find category")
+
+    // Fetch object from database, if not exist create object
+    // and save to database
+    // TODO: Wait with saving place to database to later?
+    val placeDto = fetchOrCreatePlaceDto(placeString)
+
+    TODO("GenerateTags")
+
+    // Fetch or create Motive
+    /*
+    val motiveDto = fetchOrCreateMotive(
+      motiveString = motiveString,
+      eventOwnerDto = eventOwnerDto,
+      categoryDto = cateGoryDto,
+      albumDto = albumDto
+    )
+     */
+
+    // Generate PhotoDto
+
+    // GeneratePaths
+
+    // Save shit
+    TODO("Not yet implemented")
+  }
+  fun fetchOrCreatePlaceDto(placeString: String) = placeRepository
+    .findByName(placeString)
+    ?: PlaceDto(name = placeString)
+      .also {
+        placeRepository
+          .create(
+            it
+          )
+      }
+
+  fun fetchOrCreateMotive(
+    motiveString: String,
+    categoryDto: CategoryDto,
+    eventOwnerDto: EventOwnerDto,
+    albumDto: AlbumDto
+  ): MotiveDto =
+    motiveRepository
+      .findByTitle(motiveString)
+      ?.toDto()
+      ?: MotiveDto(
+        title = motiveString,
+        categoryDto = categoryDto,
+        eventOwnerDto = eventOwnerDto,
+        albumDto = albumDto
+      )
 
   override fun getCarouselPhotos(): List<PhotoDto> = photoRepository
     .findCarouselPhotos()

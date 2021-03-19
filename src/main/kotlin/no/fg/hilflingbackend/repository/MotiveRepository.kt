@@ -13,8 +13,16 @@ import java.util.UUID
 
 @Repository
 open class MotiveRepository {
+
   @Autowired
   open lateinit var database: Database
+
+  fun findByTitle(title: String): Motive? =
+    database
+      .motives
+      .find {
+        it.title eq title
+      }
 
   fun findById(id: UUID): Motive? {
     return database.motives.find { it.id eq id }

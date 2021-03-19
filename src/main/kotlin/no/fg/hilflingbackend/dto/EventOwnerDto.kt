@@ -3,6 +3,12 @@ package no.fg.hilflingbackend.dto
 import no.fg.hilflingbackend.model.EventOwner
 import java.util.UUID
 
+/**
+ * DEPRECATED
+ * We dont need to have EventOwner as a table in the database
+ * We can only use ENUMS
+ * TODO: Remove EventOwner from database
+ */
 data class EventOwnerDto(
   val eventOwnerId: EventOwnerId = EventOwnerId(),
   val name: EventOwnerName
