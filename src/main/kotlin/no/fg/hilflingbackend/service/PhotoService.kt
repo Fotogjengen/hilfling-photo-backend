@@ -10,6 +10,7 @@ import no.fg.hilflingbackend.dto.MotiveDto
 import no.fg.hilflingbackend.dto.PhotoDto
 import no.fg.hilflingbackend.dto.PlaceDto
 import no.fg.hilflingbackend.dto.SecurityLevelDto
+import no.fg.hilflingbackend.dto.toDto
 import no.fg.hilflingbackend.model.Motive
 import no.fg.hilflingbackend.model.toDto
 import no.fg.hilflingbackend.repository.AlbumRepository
