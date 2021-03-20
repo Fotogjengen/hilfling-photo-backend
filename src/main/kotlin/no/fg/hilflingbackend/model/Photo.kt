@@ -8,6 +8,7 @@ import me.liuwj.ktorm.schema.uuid
 import me.liuwj.ktorm.schema.varchar
 import no.fg.hilflingbackend.dto.PhotoDto
 import no.fg.hilflingbackend.dto.PhotoId
+import no.fg.hilflingbackend.dto.PhotoTagDto
 import no.fg.hilflingbackend.dto.toDto
 
 interface Photo : BaseModel<Photo> {
@@ -24,22 +25,11 @@ interface Photo : BaseModel<Photo> {
   var place: Place
   var securityLevel: SecurityLevel
   var gang: Gang
+  var album: Album
+  var category: Category
   var photoGangBanger: PhotoGangBanger
 }
 
-fun Photo.toDto(): PhotoDto = PhotoDto(
-  photoId = PhotoId(this.id),
-  isGoodPicture = this.isGoodPicture,
-  smallUrl = this.smallUrl,
-  mediumUrl = this.mediumUrl,
-  largeUrl = this.largeUrl,
-  motive = this.motive,
-  placeDto = this.place
-    .toDto(),
-  securityLevel = this.securityLevel.toDto(),
-  gang = this.gang.toDto(),
-  photoGangBangerDto = this.photoGangBanger.toDto()
-)
 
 object Photos : BaseTable<Photo>("photo") {
   val isGoodPicture = boolean("is_good_picture").bindTo { it.isGoodPicture }
@@ -53,7 +43,26 @@ object Photos : BaseTable<Photo>("photo") {
   val placeId = uuid("place_id").references(Places) { it.place }
   val securityLevelId = uuid("security_level_id").references(SecurityLevels) { it.securityLevel }
   val gangId = uuid("gang_id").references(Gangs) { it.gang }
+  val albumId = uuid("album_id").references(Albums) {it.album}
+  val categoryId = uuid("category_id").references(Categories) {it.category}
   val photoGangBangerId = uuid("photo_gang_banger_id").references(PhotoGangBangers) { it.photoGangBanger }
 }
 
 val Database.photos get() = this.sequenceOf(Photos)
+
+fun Photo.toDto(photoTags: List<PhotoTagDto> = listOf()): PhotoDto = PhotoDto(
+  photoId = PhotoId(this.id),
+  isGoodPicture = this.isGoodPicture,
+  smallUrl = this.smallUrl,
+  mediumUrl = this.mediumUrl,
+  largeUrl = this.largeUrl,
+  motive = this.motive.toDto(),
+  placeDto = this.place
+    .toDto(),
+  securityLevel = this.securityLevel.toDto(),
+  gang = this.gang.toDto(),
+  photoGangBangerDto = this.photoGangBanger.toDto(),
+  albumDto = this.album.toDto(),
+  categoryDto = this.category.toDto(),
+  photoTags = photoTags
+    )

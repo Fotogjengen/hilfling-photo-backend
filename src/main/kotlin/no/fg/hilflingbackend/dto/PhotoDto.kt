@@ -1,6 +1,6 @@
 package no.fg.hilflingbackend.dto
 
-import no.fg.hilflingbackend.model.Motive
+import no.fg.hilflingbackend.model.Gang
 import no.fg.hilflingbackend.model.Photo
 import no.fg.hilflingbackend.value_object.ImageFileName
 import java.util.UUID
@@ -12,11 +12,14 @@ data class PhotoDto(
   val mediumUrl: String,
   val largeUrl: String,
 
-  val motive: Motive,
+  val motive: MotiveDto,
   val placeDto: PlaceDto,
   val securityLevel: SecurityLevelDto,
-  val gang: GangDto,
-  val photoGangBangerDto: PhotoGangBangerDto
+  val gang: GangDto?,
+  val albumDto: AlbumDto,
+  val categoryDto: CategoryDto,
+  val photoGangBangerDto: PhotoGangBangerDto,
+  val photoTags: List<PhotoTagDto>
 ) {
   fun toEntity(): Photo {
     val photo = this
@@ -26,10 +29,12 @@ data class PhotoDto(
       this.smallUrl = photo.smallUrl
       this.mediumUrl = photo.mediumUrl
       this.largeUrl = photo.largeUrl
-      this.motive = photo.motive
+      this.motive = photo.motive.toEntity()
       this.place = photo.placeDto.toEntity()
       this.securityLevel = photo.securityLevel.toEntity()
-      this.gang = photo.gang.toEntity()
+      //this.gang = photo.gang.toEntity() as Gang
+      this.album = photo.albumDto.toEntity()
+      this.category = photo.categoryDto.toEntity()
       this.photoGangBanger = photo.photoGangBangerDto.toEntity()
     }
   }
@@ -37,11 +42,14 @@ data class PhotoDto(
     fun createWithFileName(
       fileName: ImageFileName,
       isGoodPicture: Boolean,
-      motive: Motive,
+      motive: MotiveDto,
       placeDto: PlaceDto,
       securityLevel: SecurityLevelDto,
-      gang: GangDto,
-      photoGangBangerDto: PhotoGangBangerDto
+      gang: GangDto? = null,
+      albumDto: AlbumDto,
+      categoryDto: CategoryDto,
+      photoGangBangerDto: PhotoGangBangerDto,
+      tags: List<PhotoTagDto> = listOf()
     ): PhotoDto {
       // Generate unique ID
       val photoId = PhotoId()
@@ -56,8 +64,11 @@ data class PhotoDto(
         motive = motive,
         placeDto = placeDto,
         gang = gang,
+        albumDto = albumDto,
+        categoryDto = categoryDto,
         securityLevel = securityLevel,
-        photoGangBangerDto = photoGangBangerDto
+        photoGangBangerDto = photoGangBangerDto,
+        photoTags = tags
       )
     }
   }

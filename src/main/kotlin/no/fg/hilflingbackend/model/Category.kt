@@ -14,7 +14,7 @@ interface Category : BaseModel<Category> {
 }
 
 fun Category.toDto() = CategoryDto(
-  categoryId = CategoryId(),
+  categoryId = CategoryId(this.id),
   name = this.name
 )
 
