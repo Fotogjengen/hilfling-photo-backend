@@ -11,7 +11,6 @@ import no.fg.hilflingbackend.dto.PhotoDto
 import no.fg.hilflingbackend.dto.PlaceDto
 import no.fg.hilflingbackend.dto.SecurityLevelDto
 import no.fg.hilflingbackend.dto.toDto
-import no.fg.hilflingbackend.model.Motive
 import no.fg.hilflingbackend.model.toDto
 import no.fg.hilflingbackend.repository.AlbumRepository
 import no.fg.hilflingbackend.repository.CategoryRepository
@@ -318,10 +317,9 @@ class PhotoService(
       albumDto = albumDto
     )
 
-    val numPhotoGenerated = photoFileList.mapIndexed{index, photoFile ->
+    val numPhotoGenerated = photoFileList.mapIndexed { index, photoFile ->
       val tags = tagList.get(index)
       val isGoodPhoto = isGoodPhotoList.get(index)
-
 
       logger.info("Filename: ${photoFile.name}")
       val photoDto = PhotoDto.createWithFileName(
@@ -344,9 +342,6 @@ class PhotoService(
       "/path/to/photo/TODO"
       // Save shit
     }
-
-
-
 
     return numPhotoGenerated
   }

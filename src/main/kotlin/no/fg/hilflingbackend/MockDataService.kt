@@ -53,7 +53,6 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.core.io.ClassPathResource
 import org.springframework.mock.web.MockMultipartFile
 import org.springframework.stereotype.Service
-import org.springframework.web.multipart.MultipartFile
 import java.util.UUID
 
 @Service
@@ -186,18 +185,18 @@ class MockDataService {
   fun generateMotiveData(): List<MotiveDto> =
     listOf(
       MotiveDto(
-        motiveId = MotiveId(UUID.fromString("94540f3c-77b8-4bc5-acc7-4dd7d8cc4bcd")) ,
-          title = "Amber Butts spiller på klubben",
-          albumDto = generateAlbumData().first(),
-          eventOwnerDto = generateEventOwnerData().first(),
-          categoryDto = generateCategoryData().first(),
+        motiveId = MotiveId(UUID.fromString("94540f3c-77b8-4bc5-acc7-4dd7d8cc4bcd")),
+        title = "Amber Butts spiller på klubben",
+        albumDto = generateAlbumData().first(),
+        eventOwnerDto = generateEventOwnerData().first(),
+        categoryDto = generateCategoryData().first(),
       ),
       MotiveDto(
         motiveId = MotiveId(UUID.fromString("94540f3c-77b8-4bc5-acc7-4dd7d8cc5bcd")),
-          title = "High As a Kite 2020",
-          albumDto = generateAlbumData().first(),
-          eventOwnerDto = generateEventOwnerData().first(),
-          categoryDto = generateCategoryData().first(),
+        title = "High As a Kite 2020",
+        albumDto = generateAlbumData().first(),
+        eventOwnerDto = generateEventOwnerData().first(),
+        categoryDto = generateCategoryData().first(),
       )
     )
   fun generateCategoryData(): List<CategoryDto> =
@@ -538,8 +537,8 @@ class MockDataService {
     generatePositionData().forEach {
       positionRepository.create(it)
     }
-    generatePhotoTagData().forEach{
-      //photoTagRepository.create(it)
+    generatePhotoTagData().forEach {
+      // photoTagRepository.create(it)
     }
     println("Position seeded")
     println(positionRepository.findAll())
@@ -579,15 +578,15 @@ class MockDataService {
         photoFileList = listOf(
           MockMultipartFile(file.file.name, file.filename, "text/plain", file.file.inputStream())
         ),
-        tagList = listOf(it.photoTags.map {
-          it.name
-        }.toList()
+        tagList = listOf(
+          it.photoTags.map {
+            it.name
+          }.toList()
         ),
         categoryName = it.categoryDto.name,
         isGoodPhotoList = listOf(it.isGoodPicture)
       )
-      //photoRepository.createPhoto(it)
-
+      // photoRepository.createPhoto(it)
     }
     println("Photos Seeded")
   }

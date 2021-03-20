@@ -1,6 +1,5 @@
 package no.fg.hilflingbackend.dto
 
-import no.fg.hilflingbackend.model.Gang
 import no.fg.hilflingbackend.model.Photo
 import no.fg.hilflingbackend.value_object.ImageFileName
 import java.util.UUID
@@ -32,7 +31,7 @@ data class PhotoDto(
       this.motive = photo.motive.toEntity()
       this.place = photo.placeDto.toEntity()
       this.securityLevel = photo.securityLevel.toEntity()
-      //this.gang = photo.gang.toEntity() as Gang
+      // this.gang = photo.gang.toEntity() as Gang
       this.album = photo.albumDto.toEntity()
       this.category = photo.categoryDto.toEntity()
       this.photoGangBanger = photo.photoGangBangerDto.toEntity()

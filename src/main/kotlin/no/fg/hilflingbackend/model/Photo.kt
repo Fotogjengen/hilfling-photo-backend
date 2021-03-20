@@ -30,7 +30,6 @@ interface Photo : BaseModel<Photo> {
   var photoGangBanger: PhotoGangBanger
 }
 
-
 object Photos : BaseTable<Photo>("photo") {
   val isGoodPicture = boolean("is_good_picture").bindTo { it.isGoodPicture }
 
@@ -43,8 +42,8 @@ object Photos : BaseTable<Photo>("photo") {
   val placeId = uuid("place_id").references(Places) { it.place }
   val securityLevelId = uuid("security_level_id").references(SecurityLevels) { it.securityLevel }
   val gangId = uuid("gang_id").references(Gangs) { it.gang }
-  val albumId = uuid("album_id").references(Albums) {it.album}
-  val categoryId = uuid("category_id").references(Categories) {it.category}
+  val albumId = uuid("album_id").references(Albums) { it.album }
+  val categoryId = uuid("category_id").references(Categories) { it.category }
   val photoGangBangerId = uuid("photo_gang_banger_id").references(PhotoGangBangers) { it.photoGangBanger }
 }
 
@@ -65,4 +64,4 @@ fun Photo.toDto(photoTags: List<PhotoTagDto> = listOf()): PhotoDto = PhotoDto(
   albumDto = this.album.toDto(),
   categoryDto = this.category.toDto(),
   photoTags = photoTags
-    )
+)
