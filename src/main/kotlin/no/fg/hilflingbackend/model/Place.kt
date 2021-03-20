@@ -10,7 +10,7 @@ import no.fg.hilflingbackend.dto.PlaceId
 interface Place : BaseModel<Place> {
   companion object : Entity.Factory<Place>()
 
-  var name: String?
+  var name: String
 }
 
 fun Place.toDto(): PlaceDto = PlaceDto(

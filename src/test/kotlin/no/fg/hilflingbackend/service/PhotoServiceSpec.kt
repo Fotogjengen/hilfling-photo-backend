@@ -4,6 +4,7 @@ import com.nhaarman.mockitokotlin2.mock
 import no.fg.hilflingbackend.configurations.ImageFileStorageProperties
 import no.fg.hilflingbackend.repository.AlbumRepository
 import no.fg.hilflingbackend.repository.CategoryRepository
+import no.fg.hilflingbackend.repository.EventOwnerRepository
 import no.fg.hilflingbackend.repository.GangRepository
 import no.fg.hilflingbackend.repository.MotiveRepository
 import no.fg.hilflingbackend.repository.PhotoGangBangerRepository
@@ -26,6 +27,7 @@ class PhotoServiceSpec : Spek({
   val placeRepository = mock<PlaceRepository> {}
   val securityLevelRepository = mock<SecurityLevelRepository> {}
   val photoGangBangerRepository = mock<PhotoGangBangerRepository> {}
+  val eventOwnerReposity = mock<EventOwnerRepository> {}
   val environment = mock<Environment> {}
   describe("PhotoServiceSpec") {
     /*
@@ -98,7 +100,8 @@ class PhotoServiceSpec : Spek({
       photoGangBangerRepository = photoGangBangerRepository,
       motiveRepository = motiveRepository,
       albumRepository = albumRepository,
-      categoryRepository = categoryRepository
+      categoryRepository = categoryRepository,
+      eventOwnerRepository = eventOwnerReposity
     )
   }
 })

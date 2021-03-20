@@ -1,6 +1,7 @@
 package no.fg.hilflingbackend
 
 import me.liuwj.ktorm.database.Database
+import no.fg.hilflingbackend.controller.PhotoController
 import no.fg.hilflingbackend.dto.AlbumDto
 import no.fg.hilflingbackend.dto.AlbumId
 import no.fg.hilflingbackend.dto.CategoryDto
@@ -10,6 +11,8 @@ import no.fg.hilflingbackend.dto.EventOwnerId
 import no.fg.hilflingbackend.dto.EventOwnerName
 import no.fg.hilflingbackend.dto.GangDto
 import no.fg.hilflingbackend.dto.GangId
+import no.fg.hilflingbackend.dto.MotiveDto
+import no.fg.hilflingbackend.dto.MotiveId
 import no.fg.hilflingbackend.dto.PhotoDto
 import no.fg.hilflingbackend.dto.PhotoGangBangerDto
 import no.fg.hilflingbackend.dto.PhotoGangBangerId
@@ -17,6 +20,7 @@ import no.fg.hilflingbackend.dto.PhotoGangBangerPositionDto
 import no.fg.hilflingbackend.dto.PhotoGangBangerPositionId
 import no.fg.hilflingbackend.dto.PhotoId
 import no.fg.hilflingbackend.dto.PhotoTagDto
+import no.fg.hilflingbackend.dto.PhotoTagId
 import no.fg.hilflingbackend.dto.PlaceDto
 import no.fg.hilflingbackend.dto.PlaceId
 import no.fg.hilflingbackend.dto.PositionDto
@@ -28,7 +32,6 @@ import no.fg.hilflingbackend.dto.SecurityLevelDto
 import no.fg.hilflingbackend.dto.SecurityLevelId
 import no.fg.hilflingbackend.dto.SemesterStart
 import no.fg.hilflingbackend.dto.toEntity
-import no.fg.hilflingbackend.model.Motive
 import no.fg.hilflingbackend.repository.AlbumRepository
 import no.fg.hilflingbackend.repository.ArticleRepository
 import no.fg.hilflingbackend.repository.ArticleTagRepository
@@ -47,13 +50,19 @@ import no.fg.hilflingbackend.value_object.Email
 import no.fg.hilflingbackend.value_object.PhoneNumber
 import no.fg.hilflingbackend.value_object.SecurityLevelType
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.core.io.ClassPathResource
+import org.springframework.mock.web.MockMultipartFile
 import org.springframework.stereotype.Service
 import java.util.UUID
 
 @Service
 class MockDataService {
+
   @Autowired
   lateinit var database: Database
+
+  @Autowired
+  lateinit var photoController: PhotoController
 
   @Autowired
   lateinit var placeRepository: PlaceRepository
@@ -138,7 +147,10 @@ class MockDataService {
         isGoodPicture = true,
         smallUrl = "img/FG/8214142f-7c08-48ad-9130-fd7ac6b23e58.jpg",
         mediumUrl = "img/FG/8214142f-7c08-48ad-9130-fd7ac6b23e58.jpg",
-        photoGangBangerDto = generatePhotoGangBangerData().first()
+        photoGangBangerDto = generatePhotoGangBangerData().first(),
+        photoTags = generatePhotoTagData(),
+        albumDto = generateAlbumData().first(),
+        categoryDto = generateCategoryData().first()
       ),
 
       PhotoDto(
@@ -151,7 +163,10 @@ class MockDataService {
         smallUrl = "img/FG/7214142f-7c08-48ad-9130-fd7ac6b23e58.jpg",
         mediumUrl = "img/FG/7214142f-7c08-48ad-9130-fd7ac6b23e58.jpg",
         largeUrl = "img/FG/7214142f-7c08-48ad-9130-fd7ac6b23e58.jpg",
-        photoGangBangerDto = generatePhotoGangBangerData()[0]
+        photoGangBangerDto = generatePhotoGangBangerData()[0],
+        photoTags = generatePhotoTagData(),
+        albumDto = generateAlbumData().first(),
+        categoryDto = generateCategoryData().first()
       )
     )
   fun generatePlaceData(): List<PlaceDto> =
@@ -167,23 +182,22 @@ class MockDataService {
       )
     )
 
-  fun generateMotiveData(): List<Motive> =
+  fun generateMotiveData(): List<MotiveDto> =
     listOf(
-      Motive {
-        id = UUID.fromString("94540f3c-77b8-4bc5-acc7-4dd7d8cc4bcd")
-        title = "Amber Butts spiller på klubben"
-        album = generateAlbumData().first().toEntity()
-        eventOwner = generateEventOwnerData().first().toEntity()
-        category = generateCategoryData().first().toEntity()
-      },
-
-      Motive {
-        id = UUID.fromString("94540f3c-77b8-4bc5-acc7-4dd7d8cc5bcd")
-        title = "High As a Kite 2020"
-        album = generateAlbumData().first().toEntity()
-        eventOwner = generateEventOwnerData().first().toEntity()
-        category = generateCategoryData().first().toEntity()
-      }
+      MotiveDto(
+        motiveId = MotiveId(UUID.fromString("94540f3c-77b8-4bc5-acc7-4dd7d8cc4bcd")),
+        title = "Amber Butts spiller på klubben",
+        albumDto = generateAlbumData().first(),
+        eventOwnerDto = generateEventOwnerData().first(),
+        categoryDto = generateCategoryData().first(),
+      ),
+      MotiveDto(
+        motiveId = MotiveId(UUID.fromString("94540f3c-77b8-4bc5-acc7-4dd7d8cc5bcd")),
+        title = "High As a Kite 2020",
+        albumDto = generateAlbumData().first(),
+        eventOwnerDto = generateEventOwnerData().first(),
+        categoryDto = generateCategoryData().first(),
+      )
     )
   fun generateCategoryData(): List<CategoryDto> =
     listOf(
@@ -217,7 +231,7 @@ class MockDataService {
   fun generateAlbumData(): List<AlbumDto> {
     return listOf(
       AlbumDto(
-        albumId = AlbumId(UUID.fromString("91fcac35-4e68-400a-a43e-e8d3f81d10f8")),
+        albumId = AlbumId(UUID.fromString("8a2bb663-1260-4c16-933c-a2af7420f5ff")),
         title = "Vår 2017",
         isAnalog = true
       ),
@@ -248,12 +262,15 @@ class MockDataService {
   fun generatePhotoTagData(): List<PhotoTagDto> {
     return listOf(
       PhotoTagDto(
+        photoTagId = PhotoTagId(UUID.fromString(("d8771ab3-28a9-4b8c-991d-01f6123b8590"))),
         name = "WowFactor100"
       ),
       PhotoTagDto(
+        photoTagId = PhotoTagId(UUID.fromString(("d8771ab3-28a9-4b8c-991d-01f6123b8590"))),
         name = "insane!"
       ),
       PhotoTagDto(
+        photoTagId = PhotoTagId(UUID.fromString(("d8771ab3-28a9-4b8c-991d-01f6123b8590"))),
         name = "Meh"
       )
     )
@@ -506,8 +523,9 @@ class MockDataService {
         albumRepository.create(it)
       }
     generatePhotoTagData().forEach {
-      photoTagRepository.create(it)
+      // hotoTagRepository.create(it)
     }
+    println("PhotoTags Seeded")
     generateSecurityLevelData().forEach {
       securityLevelRepository.create(it)
     }
@@ -518,6 +536,9 @@ class MockDataService {
     println(samfundetUserRepository.findAll().toString())
     generatePositionData().forEach {
       positionRepository.create(it)
+    }
+    generatePhotoTagData().forEach {
+      // photoTagRepository.create(it)
     }
     println("Position seeded")
     println(positionRepository.findAll())
@@ -537,7 +558,7 @@ class MockDataService {
     println("Eventowner seeded")
 
     generateMotiveData().forEach {
-      motiveRepository.create(it)
+      motiveRepository.create(it.toEntity())
     }
     generatePlaceData().forEach {
       placeRepository.create(it)
@@ -546,7 +567,27 @@ class MockDataService {
       gangRepository.create(it)
     }
     generatePhoto().forEach {
-      photoRepository.createPhoto(it.toEntity())
+      val file = ClassPathResource("demoPhotos/digfø3652.jpg")
+      photoController.uploadPhotos(
+        motiveString = it.motive.title,
+        placeString = it.placeDto.name,
+        eventOwnerString = "UKA",
+        securityLevelId = it.securityLevel.securityLevelId.id,
+        albumId = it.albumDto.albumId.id,
+        photoGangBangerId = it.photoGangBangerDto.photoGangBangerId.id,
+        photoFileList = listOf(
+          MockMultipartFile(file.file.name, file.filename, "text/plain", file.file.inputStream())
+        ),
+        tagList = listOf(
+          it.photoTags.map {
+            it.name
+          }.toList()
+        ),
+        categoryName = it.categoryDto.name,
+        isGoodPhotoList = listOf(it.isGoodPicture)
+      )
+      // photoRepository.createPhoto(it)
     }
+    println("Photos Seeded")
   }
 }

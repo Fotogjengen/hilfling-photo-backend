@@ -75,6 +75,8 @@ class PhotoController(
     @RequestParam("securityLevelIdList") securityLevelIdList: List<UUID>,
     @RequestParam("gangIdList") gangIdList: List<UUID>,
     @RequestParam("photoGangBangerIdList") photoGangBangerIdList: List<UUID>,
+    @RequestParam("albumIdList") albumIdList: List<UUID>,
+    @RequestParam("categoryIdList") categoryIdList: List<UUID>,
     @RequestParam("fileList") fileList: List<MultipartFile>
   ): ResponseEntity<List<String>> {
     // Assert all fields are populated
@@ -107,6 +109,8 @@ class PhotoController(
         securityLevelIdList,
         gangIdList,
         photoGangBangerIdList,
+        albumIdList,
+        categoryIdList,
         fileList,
       )
 
