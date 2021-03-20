@@ -3,7 +3,6 @@ package no.fg.hilflingbackend.controller
 import no.fg.hilflingbackend.dto.PhotoDto
 import no.fg.hilflingbackend.exceptions.GlobalExceptionHandler
 import no.fg.hilflingbackend.model.AnalogPhoto
-import no.fg.hilflingbackend.model.SecurityLevel
 import no.fg.hilflingbackend.service.PhotoService
 import no.fg.hilflingbackend.utils.ResponseOk
 import no.fg.hilflingbackend.value_object.SecurityLevelType
