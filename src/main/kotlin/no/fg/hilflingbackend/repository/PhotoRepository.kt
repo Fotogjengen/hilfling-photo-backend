@@ -14,6 +14,7 @@ import me.liuwj.ktorm.entity.find
 import me.liuwj.ktorm.entity.take
 import me.liuwj.ktorm.entity.toList
 import me.liuwj.ktorm.entity.update
+import me.liuwj.ktorm.support.postgresql.insertOrUpdate
 import no.fg.hilflingbackend.dto.PhotoDto
 import no.fg.hilflingbackend.dto.PhotoTagDto
 import no.fg.hilflingbackend.dto.PhotoTagId
@@ -134,19 +135,17 @@ open class PhotoRepository {
 
     val numOfSavedPhotos = database.photos.add(photoDto.toEntity())
     // TODO: Rewrite to batchInsert for perfomance gains
-    println(photoDto)
+    // TODO: Add photoTags as well
+    /*
     photoDto.photoTags.forEach { photoTagDto: PhotoTagDto ->
-      println("Adding photoTag $photoTagDto.name")
-      database.insert(PhotoTags) {
-        set(it.id, photoTagDto.photoTagId.id)
-        set(it.name, photoTagDto.name)
-      }
+      logger.info("Adding photoTag ${photoTagDto.name} to ${photoDto.photoId.id}")
       database.insert(PhotoTagReferences) {
         set(it.id, UUID.randomUUID())
         set(it.photoId, photoDto.photoId.id)
         set(it.photoTagId, photoTagDto.photoTagId.id)
       }
     }
+     */
     return numOfSavedPhotos
   }
 

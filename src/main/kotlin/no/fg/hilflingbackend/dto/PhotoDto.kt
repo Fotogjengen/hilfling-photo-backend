@@ -46,9 +46,9 @@ data class PhotoDto(
       securityLevel: SecurityLevelDto,
       gang: GangDto? = null,
       albumDto: AlbumDto,
+      photoTags: List<PhotoTagDto>,
       categoryDto: CategoryDto,
       photoGangBangerDto: PhotoGangBangerDto,
-      tags: List<PhotoTagDto> = listOf()
     ): PhotoDto {
       // Generate unique ID
       val photoId = PhotoId()
@@ -67,7 +67,7 @@ data class PhotoDto(
         categoryDto = categoryDto,
         securityLevel = securityLevel,
         photoGangBangerDto = photoGangBangerDto,
-        photoTags = tags
+        photoTags = photoTags
       )
     }
   }
