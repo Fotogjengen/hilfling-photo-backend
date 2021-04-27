@@ -287,11 +287,13 @@ class PhotoService(
     isGoodPhotoList: List<Boolean>,
     tagList: List<List<String>>
   ): List<String> {
-    val isValidRequest = photoFileList.size > 0 && (photoFileList.size == isGoodPhotoList.size &&
-      photoFileList.size == tagList.size)
+    val isValidRequest = photoFileList.size > 0 && (
+      photoFileList.size == isGoodPhotoList.size &&
+        photoFileList.size == tagList.size
+      )
     logger.warn("Is valid request? $isValidRequest")
     if (!isValidRequest) throw java.lang.IllegalArgumentException("photoFileList, isGoodPhotoList and tagList are of unequal length or not given")
-    logger.info("createNewMotiveAndSaveDigitalPhotos() ${tagList}")
+    logger.info("createNewMotiveAndSaveDigitalPhotos() $tagList")
     val eventOwnerDto = eventOwnerRepository
       .findByEventOwnerName(EventOwnerName.valueOf(eventOwnerString))
       ?: throw EntityNotFoundException("Did not find eventOwner")

@@ -29,7 +29,7 @@ class PhotoServiceSpec : Spek({
   val securityLevelRepository = mock<SecurityLevelRepository> {}
   val photoGangBangerRepository = mock<PhotoGangBangerRepository> {}
   val eventOwnerReposity = mock<EventOwnerRepository> {}
-  val photoTagRepository = mock<PhotoTagRepository>{}
+  val photoTagRepository = mock<PhotoTagRepository> {}
   val environment = mock<Environment> {}
   describe("PhotoServiceSpec") {
     /*

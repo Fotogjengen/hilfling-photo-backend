@@ -4,7 +4,6 @@ import me.liuwj.ktorm.database.Database
 import me.liuwj.ktorm.dsl.crossJoin
 import me.liuwj.ktorm.dsl.eq
 import me.liuwj.ktorm.dsl.from
-import me.liuwj.ktorm.dsl.insert
 import me.liuwj.ktorm.dsl.map
 import me.liuwj.ktorm.dsl.select
 import me.liuwj.ktorm.dsl.where
@@ -14,7 +13,6 @@ import me.liuwj.ktorm.entity.find
 import me.liuwj.ktorm.entity.take
 import me.liuwj.ktorm.entity.toList
 import me.liuwj.ktorm.entity.update
-import me.liuwj.ktorm.support.postgresql.insertOrUpdate
 import no.fg.hilflingbackend.dto.PhotoDto
 import no.fg.hilflingbackend.dto.PhotoTagDto
 import no.fg.hilflingbackend.dto.PhotoTagId
