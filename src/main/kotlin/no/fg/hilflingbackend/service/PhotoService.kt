@@ -8,6 +8,7 @@ import no.fg.hilflingbackend.dto.EventOwnerName
 import no.fg.hilflingbackend.dto.GangDto
 import no.fg.hilflingbackend.dto.MotiveDto
 import no.fg.hilflingbackend.dto.PhotoDto
+import no.fg.hilflingbackend.dto.PhotoTagDto
 import no.fg.hilflingbackend.dto.PlaceDto
 import no.fg.hilflingbackend.dto.SecurityLevelDto
 import no.fg.hilflingbackend.dto.toDto
@@ -19,6 +20,7 @@ import no.fg.hilflingbackend.repository.GangRepository
 import no.fg.hilflingbackend.repository.MotiveRepository
 import no.fg.hilflingbackend.repository.PhotoGangBangerRepository
 import no.fg.hilflingbackend.repository.PhotoRepository
+import no.fg.hilflingbackend.repository.PhotoTagRepository
 import no.fg.hilflingbackend.repository.PlaceRepository
 import no.fg.hilflingbackend.repository.SecurityLevelRepository
 import no.fg.hilflingbackend.utils.convertToValidFolderName
@@ -46,6 +48,7 @@ class PhotoService(
   val environment: Environment,
   val photoRepository: PhotoRepository,
   val gangRepository: GangRepository,
+  val photoTagRepository: PhotoTagRepository,
   val motiveRepository: MotiveRepository,
   val eventOwnerRepository: EventOwnerRepository,
   val placeRepository: PlaceRepository,
@@ -224,7 +227,8 @@ class PhotoService(
         gang = gang,
         albumDto = album,
         categoryDto = category,
-        photoGangBangerDto = photoGangBanger
+        photoGangBangerDto = photoGangBanger,
+        photoTags = listOf() // TODO: Pass in photoTags
       )
 
       val filePath = generateFilePath(
@@ -283,7 +287,13 @@ class PhotoService(
     isGoodPhotoList: List<Boolean>,
     tagList: List<List<String>>
   ): List<String> {
-    logger.info("createNewMotiveAndSaveDigitalPhotos()")
+    val isValidRequest = photoFileList.size > 0 && (
+      photoFileList.size == isGoodPhotoList.size &&
+        photoFileList.size == tagList.size
+      )
+    logger.warn("Is valid request? $isValidRequest")
+    if (!isValidRequest) throw java.lang.IllegalArgumentException("photoFileList, isGoodPhotoList and tagList are of unequal length or not given")
+    logger.info("createNewMotiveAndSaveDigitalPhotos() $tagList")
     val eventOwnerDto = eventOwnerRepository
       .findByEventOwnerName(EventOwnerName.valueOf(eventOwnerString))
       ?: throw EntityNotFoundException("Did not find eventOwner")
@@ -318,7 +328,17 @@ class PhotoService(
     )
 
     val numPhotoGenerated = photoFileList.mapIndexed { index, photoFile ->
-      val tags = tagList.get(index)
+      val photoTagDtos = tagList.get(index).map {
+        photoTagRepository
+          .findByName(it)
+          ?: PhotoTagDto(name = it)
+            .apply {
+              photoTagRepository
+                .create(
+                  this
+                )
+            }
+      }
       val isGoodPhoto = isGoodPhotoList.get(index)
 
       logger.info("Filename: ${photoFile.name}")
@@ -329,6 +349,7 @@ class PhotoService(
         isGoodPicture = isGoodPhoto,
         photoGangBangerDto = photoGangBangerDto,
         albumDto = albumDto,
+        photoTags = photoTagDtos,
         categoryDto = categoryDto,
         fileName = ImageFileName(
           photoFile.name

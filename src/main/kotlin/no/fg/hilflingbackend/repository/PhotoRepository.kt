@@ -4,7 +4,6 @@ import me.liuwj.ktorm.database.Database
 import me.liuwj.ktorm.dsl.crossJoin
 import me.liuwj.ktorm.dsl.eq
 import me.liuwj.ktorm.dsl.from
-import me.liuwj.ktorm.dsl.insert
 import me.liuwj.ktorm.dsl.map
 import me.liuwj.ktorm.dsl.select
 import me.liuwj.ktorm.dsl.where
@@ -134,19 +133,17 @@ open class PhotoRepository {
 
     val numOfSavedPhotos = database.photos.add(photoDto.toEntity())
     // TODO: Rewrite to batchInsert for perfomance gains
-    println(photoDto)
+    // TODO: Add photoTags as well
+    /*
     photoDto.photoTags.forEach { photoTagDto: PhotoTagDto ->
-      println("Adding photoTag $photoTagDto.name")
-      database.insert(PhotoTags) {
-        set(it.id, photoTagDto.photoTagId.id)
-        set(it.name, photoTagDto.name)
-      }
+      logger.info("Adding photoTag ${photoTagDto.name} to ${photoDto.photoId.id}")
       database.insert(PhotoTagReferences) {
         set(it.id, UUID.randomUUID())
         set(it.photoId, photoDto.photoId.id)
         set(it.photoTagId, photoTagDto.photoTagId.id)
       }
     }
+     */
     return numOfSavedPhotos
   }
 
