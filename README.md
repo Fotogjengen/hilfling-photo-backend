@@ -34,5 +34,5 @@ run the built package
 # Testing
 https://www.baeldung.com/kotlin-speek
 
-
-
+# PhpMyAdmin
+`localhost:5050`

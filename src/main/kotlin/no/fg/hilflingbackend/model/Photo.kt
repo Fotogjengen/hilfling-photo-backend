@@ -27,19 +27,21 @@ interface Photo : BaseModel<Photo> {
   var photoGangBanger: PhotoGangBanger
 }
 
-fun Photo.toDto(): PhotoDto = PhotoDto(
-  photoId = PhotoId(this.id),
-  isGoodPicture = this.isGoodPicture,
-  smallUrl = this.smallUrl,
-  mediumUrl = this.mediumUrl,
-  largeUrl = this.largeUrl,
-  motive = this.motive,
-  placeDto = this.place
-    .toDto(),
-  securityLevel = this.securityLevel.toDto(),
-  gang = this.gang.toDto(),
-  photoGangBangerDto = this.photoGangBanger.toDto()
-)
+fun Photo.toDto(): PhotoDto {
+  return PhotoDto(
+    photoId = PhotoId(this.id),
+    isGoodPicture = this.isGoodPicture,
+    smallUrl = this.smallUrl,
+    mediumUrl = this.mediumUrl,
+    largeUrl = this.largeUrl,
+    motive = this.motive,
+    placeDto = this.place
+      .toDto(),
+    securityLevel = this.securityLevel.toDto(),
+    gang = this.gang.toDto(),
+    photoGangBangerDto = this.photoGangBanger.toDto()
+  )
+}
 
 object Photos : BaseTable<Photo>("photo") {
   val isGoodPicture = boolean("is_good_picture").bindTo { it.isGoodPicture }

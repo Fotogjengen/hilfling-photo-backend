@@ -27,7 +27,6 @@ import java.util.UUID
 @RequestMapping("/photos")
 class PhotoController(
   val photoService: PhotoService
-
 ) : GlobalExceptionHandler() {
   // TODO: Remove not used anyMOre
   @PostMapping("/profile", consumes = ["multipart/form-data"])
