@@ -16,6 +16,8 @@ interface IPhotoService : IBaseService<PhotoDto> {
     securityLevelIdList: List<UUID>,
     gangIdList: List<UUID>,
     photoGangBangerIdList: List<UUID>,
+    albumIdList: List<UUID>,
+    categoryIdList: List<UUID>,
     fileList: List<MultipartFile>
   ): List<String>
   fun saveAnalogPhotos(

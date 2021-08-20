@@ -155,6 +155,8 @@ CREATE TABLE PHOTO
     place_id             UUID REFERENCES PLACE (id),
     security_level_id    UUID REFERENCES SECURITY_LEVEL (id),
     gang_id              UUID REFERENCES GANG (id),
+    album_id UUID REFERENCES ALBUM(id),
+    category_id UUID REFERENCES CATEGORY(id),
     photo_gang_banger_id UUID REFERENCES PHOTO_GANG_BANGER (id)
 );
 
@@ -182,6 +184,7 @@ CREATE TABLE PHOTOS_IN_PURCHASE_ORDER
 
 CREATE TABLE PHOTO_TAG_IN_PHOTO
 (
+    id           UUID PRIMARY KEY,
     photo_tag_id UUID REFERENCES PHOTO_TAG (id),
     photo_id     UUID REFERENCES PHOTO (id)
 );

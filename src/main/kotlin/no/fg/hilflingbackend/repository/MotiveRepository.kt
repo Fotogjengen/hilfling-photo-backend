@@ -17,6 +17,7 @@ open class MotiveRepository {
   @Autowired
   open lateinit var database: Database
 
+  // TODO: Make return MotiveDto instead of Motive
   fun findByTitle(title: String): Motive? =
     database
       .motives

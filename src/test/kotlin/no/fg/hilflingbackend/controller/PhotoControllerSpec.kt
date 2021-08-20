@@ -52,6 +52,8 @@ class PhotoControllerSpec : Spek({
             gangIdList = listOf(UUID.fromString("b1bd026f-cc19-4474-989c-aec8d4a76bc9")),
             photoGangBangerIdList = listOf(UUID.fromString("7a89444f-25f6-44d9-8a73-94587d72b839")),
             fileList = listOf(multipartFile),
+            albumIdList = listOf(UUID.fromString("91fcac35-4e68-400a-a43e-e8d3f81d10f5")),
+            categoryIdList = listOf(UUID.fromString("3832ee5e-3f11-4f11-8189-56ca4f70f418"))
           )
         }
       }

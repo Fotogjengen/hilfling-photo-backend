@@ -3,7 +3,6 @@ package no.fg.hilflingbackend.controller
 import no.fg.hilflingbackend.dto.PhotoDto
 import no.fg.hilflingbackend.exceptions.GlobalExceptionHandler
 import no.fg.hilflingbackend.model.AnalogPhoto
-import no.fg.hilflingbackend.model.SecurityLevel
 import no.fg.hilflingbackend.service.PhotoService
 import no.fg.hilflingbackend.utils.ResponseOk
 import no.fg.hilflingbackend.value_object.SecurityLevelType
@@ -75,6 +74,8 @@ class PhotoController(
     @RequestParam("securityLevelIdList") securityLevelIdList: List<UUID>,
     @RequestParam("gangIdList") gangIdList: List<UUID>,
     @RequestParam("photoGangBangerIdList") photoGangBangerIdList: List<UUID>,
+    @RequestParam("albumIdList") albumIdList: List<UUID>,
+    @RequestParam("categoryIdList") categoryIdList: List<UUID>,
     @RequestParam("fileList") fileList: List<MultipartFile>
   ): ResponseEntity<List<String>> {
     // Assert all fields are populated
@@ -107,6 +108,8 @@ class PhotoController(
         securityLevelIdList,
         gangIdList,
         photoGangBangerIdList,
+        albumIdList,
+        categoryIdList,
         fileList,
       )
 

@@ -5,7 +5,7 @@
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>2.4.2</version>
+		<version>2.4.5</version>
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>no.fg.hilflingbackend</groupId>
@@ -16,7 +16,7 @@
 
 	<properties>
 		<java.version>11</java.version>
-		<kotlin.version>1.4.30</kotlin.version>
+		<kotlin.version>1.5.0</kotlin.version>
 		<kotlin.compiler.apiVersion>1.4</kotlin.compiler.apiVersion>
 		<jacoco.version>0.8.3</jacoco.version>
 		<kotlinx-coroutines.version>1.4.2-native-mt</kotlinx-coroutines.version>
@@ -42,7 +42,7 @@
 		<dependency>
 			<groupId>io.projectreactor</groupId>
 			<artifactId>reactor-core</artifactId>
-			<version>3.4.3</version>
+			<version>3.4.5</version>
 		</dependency>
 
 		<!-- Thanks for using https://jar-download.com -->
@@ -145,13 +145,13 @@
 		<dependency>
 			<groupId>org.spekframework.spek2</groupId>
 			<artifactId>spek-dsl-jvm</artifactId>
-			<version>2.0.15</version>
+			<version>2.0.16</version>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.spekframework.spek2</groupId>
 			<artifactId>spek-runner-junit5</artifactId>
-			<version>2.0.15</version>
+			<version>2.0.16</version>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
@@ -163,10 +163,14 @@
 		<dependency>
 			<groupId>org.jetbrains.kotlin</groupId>
 			<artifactId>kotlin-stdlib</artifactId>
-			<version>1.4.30</version>
+			<version>1.5.0</version>
 		</dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-test</artifactId>
+        </dependency>
 
-		<!-- END TESTING -->
+        <!-- END TESTING -->
 	</dependencies>
 
 	<repositories>
