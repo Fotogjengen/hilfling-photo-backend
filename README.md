@@ -36,5 +36,6 @@ https://www.baeldung.com/kotlin-speek
 
 ## PGAdmin
 `localhost:5050`
+`username: admin@admin.com`
 `password: password`
 
