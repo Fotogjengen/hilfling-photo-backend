@@ -34,5 +34,8 @@ run the built package
 # Testing
 https://www.baeldung.com/kotlin-speek
 
-# PhpMyAdmin
+## PGAdmin
 `localhost:5050`
+`username: admin@admin.com`
+`password: password`
+
