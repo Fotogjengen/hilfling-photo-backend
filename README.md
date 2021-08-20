@@ -34,5 +34,7 @@ run the built package
 # Testing
 https://www.baeldung.com/kotlin-speek
 
-# PGAdmin
+## PGAdmin
 `localhost:5050`
+`password: password`
+
