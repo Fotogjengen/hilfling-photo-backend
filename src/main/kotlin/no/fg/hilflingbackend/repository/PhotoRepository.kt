@@ -17,16 +17,7 @@ import no.fg.hilflingbackend.dto.PhotoDto
 import no.fg.hilflingbackend.dto.PhotoTagDto
 import no.fg.hilflingbackend.dto.PhotoTagId
 import no.fg.hilflingbackend.dto.toEntity
-import no.fg.hilflingbackend.model.Albums
-import no.fg.hilflingbackend.model.AnalogPhoto
-import no.fg.hilflingbackend.model.Motives
-import no.fg.hilflingbackend.model.PhotoTagReferences
-import no.fg.hilflingbackend.model.PhotoTags
-import no.fg.hilflingbackend.model.SecurityLevel
-import no.fg.hilflingbackend.model.SecurityLevels
-import no.fg.hilflingbackend.model.analog_photos
-import no.fg.hilflingbackend.model.photos
-import no.fg.hilflingbackend.model.toDto
+import no.fg.hilflingbackend.model.*
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Repository
@@ -74,6 +65,18 @@ open class PhotoRepository {
         return photo.toDto(tags)
       }
   }
+
+  fun findByMotiveId(id: UUID): List<PhotoDto>? {
+    println("Repo")
+    return database
+      .photos
+      .filter {
+        it.motiveId eq id
+      }
+      .toList()
+      .map { it.toDto() }
+  }
+
   fun findAnalogPhotoById(id: UUID): AnalogPhoto? {
     return database.analog_photos.find { it.id eq id }
   }

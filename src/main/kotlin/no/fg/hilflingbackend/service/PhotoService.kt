@@ -12,6 +12,7 @@ import no.fg.hilflingbackend.dto.PhotoTagDto
 import no.fg.hilflingbackend.dto.PlaceDto
 import no.fg.hilflingbackend.dto.SecurityLevelDto
 import no.fg.hilflingbackend.dto.toDto
+import no.fg.hilflingbackend.model.Photo
 import no.fg.hilflingbackend.model.toDto
 import no.fg.hilflingbackend.repository.AlbumRepository
 import no.fg.hilflingbackend.repository.CategoryRepository
@@ -400,6 +401,11 @@ class PhotoService(
 
   override fun getAllDigitalPhotos(): List<PhotoDto> = photoRepository
     .findAllDigitalPhotos()
+
+
+  fun getByMotiveId(id: UUID): List<PhotoDto>? = photoRepository
+    .findByMotiveId(id)
+
 
   override fun getById(id: UUID): PhotoDto = photoRepository
     ?.findById(id)
