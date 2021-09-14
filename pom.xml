@@ -42,7 +42,7 @@
 		<dependency>
 			<groupId>io.projectreactor</groupId>
 			<artifactId>reactor-core</artifactId>
-			<version>3.4.5</version>
+			<version>3.4.10</version>
 		</dependency>
 
 		<!-- Thanks for using https://jar-download.com -->
