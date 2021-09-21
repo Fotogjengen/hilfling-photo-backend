@@ -16,6 +16,7 @@ import me.liuwj.ktorm.entity.update
 import no.fg.hilflingbackend.dto.PhotoDto
 import no.fg.hilflingbackend.dto.PhotoTagDto
 import no.fg.hilflingbackend.dto.PhotoTagId
+/* ktlint-disable no-wildcard-imports */
 import no.fg.hilflingbackend.model.*
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
