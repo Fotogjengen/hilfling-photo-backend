@@ -400,9 +400,7 @@ class PhotoService(
   override fun getAllDigitalPhotos(): List<PhotoDto> = photoRepository
     .findAllDigitalPhotos()
 
-
   fun getByMotiveId(id: UUID): List<PhotoDto>? = photoRepository.findByMotiveId(id)
-
 
   override fun getById(id: UUID): PhotoDto = photoRepository?.findById(id) ?: throw EntityNotFoundException("Did not find photo")
 
