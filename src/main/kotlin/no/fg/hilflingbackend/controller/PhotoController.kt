@@ -141,6 +141,12 @@ class PhotoController(
       .getById(id)
   )
 
+  @GetMapping("/motive/{id}")
+  fun getByMotiveId(@PathVariable("id") id: UUID): ResponseEntity<List<PhotoDto>?> = ResponseOk(
+    photoService
+      .getByMotiveId(id)
+  )
+
   @GetMapping
   fun getAll(): ResponseEntity<List<PhotoDto>> = ResponseOk(
     photoService
