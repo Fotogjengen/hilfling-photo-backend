@@ -11,8 +11,6 @@ import no.fg.hilflingbackend.dto.PhotoDto
 import no.fg.hilflingbackend.dto.PhotoTagDto
 import no.fg.hilflingbackend.dto.PlaceDto
 import no.fg.hilflingbackend.dto.SecurityLevelDto
-import no.fg.hilflingbackend.dto.toDto
-import no.fg.hilflingbackend.model.Photo
 import no.fg.hilflingbackend.model.toDto
 import no.fg.hilflingbackend.repository.AlbumRepository
 import no.fg.hilflingbackend.repository.CategoryRepository
@@ -403,13 +401,10 @@ class PhotoService(
     .findAllDigitalPhotos()
 
 
-  fun getByMotiveId(id: UUID): List<PhotoDto>? = photoRepository
-    .findByMotiveId(id)
+  fun getByMotiveId(id: UUID): List<PhotoDto>? = photoRepository.findByMotiveId(id)
 
 
-  override fun getById(id: UUID): PhotoDto = photoRepository
-    ?.findById(id)
-    ?: throw EntityNotFoundException("Did not find photo")
+  override fun getById(id: UUID): PhotoDto = photoRepository?.findById(id) ?: throw EntityNotFoundException("Did not find photo")
 
   override fun getAll(): List<PhotoDto> {
     println("service")

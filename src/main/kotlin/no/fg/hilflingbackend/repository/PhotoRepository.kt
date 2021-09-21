@@ -16,14 +16,13 @@ import me.liuwj.ktorm.entity.update
 import no.fg.hilflingbackend.dto.PhotoDto
 import no.fg.hilflingbackend.dto.PhotoTagDto
 import no.fg.hilflingbackend.dto.PhotoTagId
-import no.fg.hilflingbackend.dto.toEntity
 import no.fg.hilflingbackend.model.*
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Repository
 import java.util.UUID
 
-/*
+/* TODO Remove this?
 fun Database.getPhotoAndPhotoTags(filter: () -> ColumnDeclaring<Boolean>){
   return this
     .from(Photos)
