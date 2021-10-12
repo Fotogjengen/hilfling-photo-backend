@@ -96,14 +96,21 @@ class PhotoService(
   }
 
   fun store(file: MultipartFile, photoDto: PhotoDto, imageFileName: ImageFileName): String {
-    val location = when (photoDto.securityLevel.securityLevelType) {
-      SecurityLevelType.FG -> this.photoGangBangerLocation.resolve(imageFileName.filename)
-      SecurityLevelType.HUSFOLK -> this.houseMemberLocation.resolve(imageFileName.filename)
-      SecurityLevelType.ALLE -> this.allLocation.resolve(imageFileName.filename)
-      SecurityLevelType.PROFILE -> this.profileLocation.resolve(imageFileName.filename)
+    // Create filePath
+
+    val directory = when (photoDto.securityLevel.securityLevelType) {
+      SecurityLevelType.FG -> this.photoGangBangerLocation.resolve(photoDto.motive.motiveId.toString())
+      SecurityLevelType.HUSFOLK -> this.houseMemberLocation.resolve(photoDto.motive.motiveId.toString())
+      SecurityLevelType.ALLE -> this.allLocation.resolve(photoDto.motive.motiveId.toString())
+      SecurityLevelType.PROFILE -> this.profileLocation.resolve(photoDto.motive.motiveId.toString())
       else -> throw IllegalArgumentException("Invalid security level")
     }
+    if (!Files.isDirectory(directory)) {
+      Files.createDirectories(directory)
+    }
+    val location = directory.resolve(imageFileName.filename)
     Files.copy(file.inputStream, location).toString()
+
     return location.toString().subSequence(20, location.toString().length).toString()
   }
 
@@ -357,6 +364,7 @@ class PhotoService(
       // Generate PhotoDto
       photoRepository
         .createPhoto(photoDto)
+
 
       // GeneratePaths
       store(photoFile, photoDto, imageFileName)
