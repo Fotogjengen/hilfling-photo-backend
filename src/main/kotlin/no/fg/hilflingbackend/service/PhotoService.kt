@@ -367,7 +367,8 @@ class PhotoService(
 
 
       // GeneratePaths
-      store(photoFile, photoDto, imageFileName)
+      // TODO: Do not hard code this. Fetch from application
+      "http://localhost:8383/${store(photoFile, photoDto, imageFileName)}"
       // Save shit
     }
 
