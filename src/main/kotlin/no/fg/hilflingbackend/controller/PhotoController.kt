@@ -33,7 +33,9 @@ class PhotoController(
     @RequestPart("file") file: MultipartFile,
     // @RequestPart("type") type: String,
   ): String {
-    return photoService.store(file, SecurityLevelType.valueOf("PROFILE"))
+    // TODO: Refactor to use photoDto as in photoService
+    //return photoService.store(file, SecurityLevelType.valueOf("PROFILE"))
+    return "TODO"
   }
 
   // The main photo-upload endpoint used most of the time

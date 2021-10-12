@@ -61,9 +61,9 @@ class PhotoService(
   val profileLocation = Paths.get("filestorage/PROFILE")
 
   val rootLocation = Paths.get("static-files/static/img/")
-  val photoGangBangerLocation = Paths.get("static-files/static/img//FG")
-  val houseMemberLocation = Paths.get("static-files/static/img//HUSFOLK")
-  val allLocation = Paths.get("static-files/static/img//ALLE")
+  val photoGangBangerLocation = Paths.get("static-files/static/img/FG")
+  val houseMemberLocation = Paths.get("static-files/static/img/HUSFOLK")
+  val allLocation = Paths.get("static-files/static/img/ALLE")
 
   fun savePhotosToDisk() {
     throw NotImplementedError()
@@ -95,13 +95,12 @@ class PhotoService(
     return fullFilePath
   }
 
-  fun store(file: MultipartFile, securityLevelType: SecurityLevelType): String {
-    val newFileName = "${UUID.randomUUID()}.${file.originalFilename!!.split('.').get(1)}"
-    val location = when (securityLevelType) {
-      SecurityLevelType.FG -> this.photoGangBangerLocation.resolve(newFileName)
-      SecurityLevelType.HUSFOLK -> this.houseMemberLocation.resolve(newFileName)
-      SecurityLevelType.ALLE -> this.allLocation.resolve(newFileName)
-      SecurityLevelType.PROFILE -> this.profileLocation.resolve(newFileName)
+  fun store(file: MultipartFile, photoDto: PhotoDto, imageFileName: ImageFileName): String {
+    val location = when (photoDto.securityLevel.securityLevelType) {
+      SecurityLevelType.FG -> this.photoGangBangerLocation.resolve(imageFileName.filename)
+      SecurityLevelType.HUSFOLK -> this.houseMemberLocation.resolve(imageFileName.filename)
+      SecurityLevelType.ALLE -> this.allLocation.resolve(imageFileName.filename)
+      SecurityLevelType.PROFILE -> this.profileLocation.resolve(imageFileName.filename)
       else -> throw IllegalArgumentException("Invalid security level")
     }
     Files.copy(file.inputStream, location).toString()
@@ -217,7 +216,7 @@ class PhotoService(
       val validatedFileName = ImageFileName(file.originalFilename ?: "")
 
       // Generate Objects
-      val photoDto = PhotoDto.createWithFileName(
+      val (photoDto, imageFileName) = PhotoDto.createWithFileName(
         fileName = validatedFileName,
         isGoodPicture = isGoodPictureList.get(index),
         motive = motive,
@@ -340,8 +339,8 @@ class PhotoService(
       }
       val isGoodPhoto = isGoodPhotoList.get(index)
 
-      logger.info("Filename: ${photoFile.name}")
-      val photoDto = PhotoDto.createWithFileName(
+
+      val (photoDto, imageFileName) = PhotoDto.createWithFileName(
         securityLevel = securityLevelDto,
         placeDto = placeDto,
         motive = motiveDto,
@@ -351,15 +350,16 @@ class PhotoService(
         photoTags = photoTagDtos,
         categoryDto = categoryDto,
         fileName = ImageFileName(
-          photoFile.name
+          photoFile.originalFilename ?: ""
         )
       )
+
       // Generate PhotoDto
       photoRepository
         .createPhoto(photoDto)
 
       // GeneratePaths
-      "/path/to/photo/TODO"
+      store(photoFile, photoDto, imageFileName)
       // Save shit
     }
 
@@ -384,12 +384,14 @@ class PhotoService(
     motiveRepository
       .findByTitle(motiveString)
       ?.toDto()
-      ?: MotiveDto(
+      ?: motiveRepository.create(MotiveDto(
         title = motiveString,
         categoryDto = categoryDto,
         eventOwnerDto = eventOwnerDto,
         albumDto = albumDto
-      )
+      ))
+
+
 
   override fun getCarouselPhotos(): List<PhotoDto> = photoRepository
     .findCarouselPhotos()

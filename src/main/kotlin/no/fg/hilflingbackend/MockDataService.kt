@@ -558,7 +558,7 @@ class MockDataService {
     println("Eventowner seeded")
 
     generateMotiveData().forEach {
-      motiveRepository.create(it.toEntity())
+      motiveRepository.create(it)
     }
     generatePlaceData().forEach {
       placeRepository.create(it)

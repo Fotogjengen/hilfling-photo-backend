@@ -5,6 +5,8 @@ import me.liuwj.ktorm.dsl.eq
 import me.liuwj.ktorm.entity.add
 import me.liuwj.ktorm.entity.find
 import me.liuwj.ktorm.entity.toList
+import no.fg.hilflingbackend.dto.MotiveDto
+import no.fg.hilflingbackend.dto.toEntity
 import no.fg.hilflingbackend.model.Motive
 import no.fg.hilflingbackend.model.motives
 import org.springframework.beans.factory.annotation.Autowired
@@ -34,6 +36,10 @@ open class MotiveRepository {
   }
 
   fun create(
-    motive: Motive
-  ): Int = database.motives.add(motive)
+    motive: MotiveDto
+  ): MotiveDto {
+    database.motives.add(motive.toEntity())
+    return motive
+  }
+
 }
