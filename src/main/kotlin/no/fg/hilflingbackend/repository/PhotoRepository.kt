@@ -67,7 +67,6 @@ open class PhotoRepository {
   }
 
   fun findByMotiveId(id: UUID): List<PhotoDto>? {
-    println("Repo")
     return database
       .photos
       .filter {
