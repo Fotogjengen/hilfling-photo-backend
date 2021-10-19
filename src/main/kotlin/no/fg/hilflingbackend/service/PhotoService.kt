@@ -405,7 +405,6 @@ class PhotoService(
   override fun getById(id: UUID): PhotoDto = photoRepository?.findById(id) ?: throw EntityNotFoundException("Did not find photo")
 
   override fun getAll(): List<PhotoDto> {
-    println("service")
     return photoRepository
       .findAll()
   }
