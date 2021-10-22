@@ -61,8 +61,8 @@ class PhotoControllerSpec : Spek({
     describe("UploadPhotos()") {
       whenever(
         mockPhotoService.createNewMotiveAndSaveDigitalPhotos(
-          motiveString = "Sindres dickpicks",
-          placeString = "Storsalen",
+          motiveTitle = "Sindres dickpicks",
+          placeName = "Storsalen",
           securityLevelId = mockDataService.generateSecurityLevelData().first().securityLevelId.id,
           photoGangBangerId = mockDataService.generatePhotoGangBangerData().first().photoGangBangerId.id,
           albumId = mockDataService.generateAlbumData().first().albumId.id,
@@ -74,14 +74,14 @@ class PhotoControllerSpec : Spek({
           tagList = listOf(listOf("big dick!")),
           // TODO: Return full url instead?
           categoryName = "Gjengfoto",
-          eventOwnerString = "Samfundet"
+          eventOwnerName = "Samfundet"
         )
       )
         .thenReturn(listOf("bildeUrl1.jpg", "bildeUrl2.jpg"))
 
       val response = photoController.uploadPhotos(
-        motiveString = "Sindres dickpicks",
-        placeString = "Storsalen",
+        motiveTitle = "Sindres dickpicks",
+        placeName = "Storsalen",
         securityLevelId = mockDataService.generateSecurityLevelData().first().securityLevelId.id,
         photoGangBangerId = mockDataService.generatePhotoGangBangerData().first().photoGangBangerId.id,
         albumId = mockDataService.generateAlbumData().first().albumId.id,
@@ -92,7 +92,7 @@ class PhotoControllerSpec : Spek({
           listOf("Enorm!")
         ),
         categoryName = "Gjengfoto",
-        eventOwnerString = "Samfundet"
+        eventOwnerName = "Samfundet"
       )
       assertEquals(HttpStatus.CREATED, response.statusCode)
     }

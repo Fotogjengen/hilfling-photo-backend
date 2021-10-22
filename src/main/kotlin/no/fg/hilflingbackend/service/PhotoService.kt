@@ -281,13 +281,13 @@ class PhotoService(
   }
 
   override fun createNewMotiveAndSaveDigitalPhotos(
-    motiveString: String,
-    placeString: String,
+    motiveTitle: String,
+    placeName: String,
     securityLevelId: UUID,
     photoGangBangerId: UUID,
     albumId: UUID,
     categoryName: String,
-    eventOwnerString: String,
+    eventOwnerName: String,
     photoFileList: List<MultipartFile>,
     isGoodPhotoList: List<Boolean>,
     tagList: List<List<String>>
@@ -300,7 +300,7 @@ class PhotoService(
     if (!isValidRequest) throw java.lang.IllegalArgumentException("photoFileList, isGoodPhotoList and tagList are of unequal length or not given")
     logger.info("createNewMotiveAndSaveDigitalPhotos() $tagList")
     val eventOwnerDto = eventOwnerRepository
-      .findByEventOwnerName(EventOwnerName.valueOf(eventOwnerString))
+      .findByEventOwnerName(EventOwnerName.valueOf(eventOwnerName))
       ?: throw EntityNotFoundException("Did not find eventOwner")
 
     val albumDto = albumRepository
@@ -323,10 +323,10 @@ class PhotoService(
     // Fetch object from database, if not exist create object
     // and save to database
     // TODO: Wait with saving place to database to later?
-    val placeDto = fetchOrCreatePlaceDto(placeString)
+    val placeDto = fetchOrCreatePlaceDto(placeName)
 
     val motiveDto = fetchOrCreateMotive(
-      motiveString = motiveString,
+      motiveTitle = motiveTitle,
       eventOwnerDto = eventOwnerDto,
       categoryDto = categoryDto,
       albumDto = albumDto
@@ -374,9 +374,9 @@ class PhotoService(
 
     return numPhotoGenerated
   }
-  fun fetchOrCreatePlaceDto(placeString: String) = placeRepository
-    .findByName(placeString)
-    ?: PlaceDto(name = placeString)
+  fun fetchOrCreatePlaceDto(placeName: String) = placeRepository
+    .findByName(placeName)
+    ?: PlaceDto(name = placeName)
       .also {
         placeRepository
           .create(
@@ -385,16 +385,16 @@ class PhotoService(
       }
 
   fun fetchOrCreateMotive(
-    motiveString: String,
+    motiveTitle: String,
     categoryDto: CategoryDto,
     eventOwnerDto: EventOwnerDto,
     albumDto: AlbumDto
   ): MotiveDto =
     motiveRepository
-      .findByTitle(motiveString)
+      .findByTitle(motiveTitle)
       ?.toDto()
       ?: motiveRepository.create(MotiveDto(
-        title = motiveString,
+        title = motiveTitle,
         categoryDto = categoryDto,
         eventOwnerDto = eventOwnerDto,
         albumDto = albumDto
