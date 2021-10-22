@@ -7,7 +7,6 @@ data class ImageFileName private constructor(val filename: String) {
       else ImageFileName(filename)
     }
     private fun isValidImageFileName(filename: String): Boolean {
-      println(filename)
       // Must have a valid file extension
       return filename.split(".").size >= 2 &&
         (
