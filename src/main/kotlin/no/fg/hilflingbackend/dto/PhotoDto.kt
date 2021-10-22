@@ -49,25 +49,28 @@ data class PhotoDto(
       photoTags: List<PhotoTagDto>,
       categoryDto: CategoryDto,
       photoGangBangerDto: PhotoGangBangerDto,
-    ): PhotoDto {
+    ): Pair<PhotoDto, ImageFileName> {
       // Generate unique ID
       val photoId = PhotoId()
       val newUniqueFileName = ImageFileName("${photoId}${fileName.getFileExtension()}")
 
-      return PhotoDto(
-        photoId = photoId,
-        isGoodPicture = isGoodPicture,
-        smallUrl = newUniqueFileName.filename,
-        mediumUrl = newUniqueFileName.filename,
-        largeUrl = newUniqueFileName.filename,
-        motive = motive,
-        placeDto = placeDto,
-        gang = gang,
-        albumDto = albumDto,
-        categoryDto = categoryDto,
-        securityLevel = securityLevel,
-        photoGangBangerDto = photoGangBangerDto,
-        photoTags = photoTags
+      return Pair(
+        PhotoDto(
+          photoId = photoId,
+          isGoodPicture = isGoodPicture,
+          smallUrl = newUniqueFileName.filename,
+          mediumUrl = newUniqueFileName.filename,
+          largeUrl = newUniqueFileName.filename,
+          motive = motive,
+          placeDto = placeDto,
+          gang = gang,
+          albumDto = albumDto,
+          categoryDto = categoryDto,
+          securityLevel = securityLevel,
+          photoGangBangerDto = photoGangBangerDto,
+          photoTags = photoTags
+        ),
+        newUniqueFileName
       )
     }
   }

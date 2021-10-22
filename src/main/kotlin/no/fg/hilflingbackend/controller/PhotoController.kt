@@ -5,7 +5,6 @@ import no.fg.hilflingbackend.exceptions.GlobalExceptionHandler
 import no.fg.hilflingbackend.model.AnalogPhoto
 import no.fg.hilflingbackend.service.PhotoService
 import no.fg.hilflingbackend.utils.ResponseOk
-import no.fg.hilflingbackend.value_object.SecurityLevelType
 import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
@@ -33,28 +32,30 @@ class PhotoController(
     @RequestPart("file") file: MultipartFile,
     // @RequestPart("type") type: String,
   ): String {
-    return photoService.store(file, SecurityLevelType.valueOf("PROFILE"))
+    // TODO: Refactor to use photoDto as in photoService
+    // return photoService.store(file, SecurityLevelType.valueOf("PROFILE"))
+    return "TODO"
   }
 
   // The main photo-upload endpoint used most of the time
   @PostMapping("/upload")
   fun uploadPhotos(
-    @RequestParam("motiveString") motiveString: String,
-    @RequestParam("placeString") placeString: String,
+    @RequestParam("motiveTitle") motiveTitle: String,
+    @RequestParam("placeName") placeName: String,
     @RequestParam("securityLevelId") securityLevelId: UUID,
     @RequestParam("photoGangBangerId") photoGangBangerId: UUID,
     @RequestParam("albumId") albumId: UUID,
     @RequestParam("categoryName") categoryName: String,
-    @RequestParam("EventOwnerString") eventOwnerString: String,
+    @RequestParam("eventOwnerName") eventOwnerName: String,
     @RequestParam("photoFileList") photoFileList: List<MultipartFile>,
     @RequestParam("isGoodPhotoList") isGoodPhotoList: List<Boolean>,
     @RequestParam("tagList")tagList: List<List<String>>
   ): ResponseEntity<List<String>> =
     ResponseEntity(
       photoService.createNewMotiveAndSaveDigitalPhotos(
-        motiveString = motiveString,
-        placeString = placeString,
-        eventOwnerString = eventOwnerString,
+        motiveTitle = motiveTitle,
+        placeName = placeName,
+        eventOwnerName = eventOwnerName,
         securityLevelId = securityLevelId,
         albumId = albumId,
         photoGangBangerId = photoGangBangerId,

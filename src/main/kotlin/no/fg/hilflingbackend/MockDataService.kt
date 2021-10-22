@@ -31,7 +31,6 @@ import no.fg.hilflingbackend.dto.SamfundetUserId
 import no.fg.hilflingbackend.dto.SecurityLevelDto
 import no.fg.hilflingbackend.dto.SecurityLevelId
 import no.fg.hilflingbackend.dto.SemesterStart
-import no.fg.hilflingbackend.dto.toEntity
 import no.fg.hilflingbackend.repository.AlbumRepository
 import no.fg.hilflingbackend.repository.ArticleRepository
 import no.fg.hilflingbackend.repository.ArticleTagRepository
@@ -555,10 +554,9 @@ class MockDataService {
     generateEventOwnerData().forEach {
       eventOwnerRepository.create(it)
     }
-    println("Eventowner seeded")
 
     generateMotiveData().forEach {
-      motiveRepository.create(it.toEntity())
+      motiveRepository.create(it)
     }
     generatePlaceData().forEach {
       placeRepository.create(it)
@@ -569,9 +567,9 @@ class MockDataService {
     generatePhoto().forEach {
       val file = ClassPathResource("demoPhotos/digfø3652.jpg")
       photoController.uploadPhotos(
-        motiveString = it.motive.title,
-        placeString = it.placeDto.name,
-        eventOwnerString = "UKA",
+        motiveTitle = it.motive.title,
+        placeName = it.placeDto.name,
+        eventOwnerName = "UKA",
         securityLevelId = it.securityLevel.securityLevelId.id,
         albumId = it.albumDto.albumId.id,
         photoGangBangerId = it.photoGangBangerDto.photoGangBangerId.id,

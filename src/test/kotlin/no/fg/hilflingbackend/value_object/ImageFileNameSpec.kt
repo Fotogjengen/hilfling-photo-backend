@@ -17,15 +17,18 @@ class ImageFileNameSpec : Spek({
     it("Generates the right fileExtension") {
       assertEquals(".jpg", fileName.getFileExtension())
     }
-    it("Fails on wrong input") {
+    it("Works with filenamesV that has spaces") {
+      assertEquals("test space.jpg", ImageFileName("test space.jpg").filename)
+    }
+    it("Works with filenamesV that has . in it") {
+      assertEquals("Screenshot 2021-05-10 at 21.33.52.jpg", ImageFileName("Screenshot 2021-05-10 at 21.33.52.jpg").filename)
+    }
+    it("Fails on not whitelisted file extension") {
       assertFailsWith<IllegalArgumentException> {
         ImageFileName("notApicture.pdf")
       }
       assertFailsWith<IllegalArgumentException> {
         ImageFileName("notApicture.exe")
-      }
-      assertFailsWith<IllegalArgumentException> {
-        ImageFileName("notApicture.png.png")
       }
     }
   }

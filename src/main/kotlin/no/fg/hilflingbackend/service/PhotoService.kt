@@ -61,9 +61,9 @@ class PhotoService(
   val profileLocation = Paths.get("filestorage/PROFILE")
 
   val rootLocation = Paths.get("static-files/static/img/")
-  val photoGangBangerLocation = Paths.get("static-files/static/img//FG")
-  val houseMemberLocation = Paths.get("static-files/static/img//HUSFOLK")
-  val allLocation = Paths.get("static-files/static/img//ALLE")
+  val photoGangBangerLocation = Paths.get("static-files/static/img/FG")
+  val houseMemberLocation = Paths.get("static-files/static/img/HUSFOLK")
+  val allLocation = Paths.get("static-files/static/img/ALLE")
 
   fun savePhotosToDisk() {
     throw NotImplementedError()
@@ -95,16 +95,22 @@ class PhotoService(
     return fullFilePath
   }
 
-  fun store(file: MultipartFile, securityLevelType: SecurityLevelType): String {
-    val newFileName = "${UUID.randomUUID()}.${file.originalFilename!!.split('.').get(1)}"
-    val location = when (securityLevelType) {
-      SecurityLevelType.FG -> this.photoGangBangerLocation.resolve(newFileName)
-      SecurityLevelType.HUSFOLK -> this.houseMemberLocation.resolve(newFileName)
-      SecurityLevelType.ALLE -> this.allLocation.resolve(newFileName)
-      SecurityLevelType.PROFILE -> this.profileLocation.resolve(newFileName)
+  fun store(file: MultipartFile, photoDto: PhotoDto, imageFileName: ImageFileName): String {
+    // Create filePath
+
+    val directory = when (photoDto.securityLevel.securityLevelType) {
+      SecurityLevelType.FG -> this.photoGangBangerLocation.resolve(photoDto.motive.motiveId.toString())
+      SecurityLevelType.HUSFOLK -> this.houseMemberLocation.resolve(photoDto.motive.motiveId.toString())
+      SecurityLevelType.ALLE -> this.allLocation.resolve(photoDto.motive.motiveId.toString())
+      SecurityLevelType.PROFILE -> this.profileLocation.resolve(photoDto.motive.motiveId.toString())
       else -> throw IllegalArgumentException("Invalid security level")
     }
+    if (!Files.isDirectory(directory)) {
+      Files.createDirectories(directory)
+    }
+    val location = directory.resolve(imageFileName.filename)
     Files.copy(file.inputStream, location).toString()
+
     return location.toString().subSequence(20, location.toString().length).toString()
   }
 
@@ -217,7 +223,7 @@ class PhotoService(
       val validatedFileName = ImageFileName(file.originalFilename ?: "")
 
       // Generate Objects
-      val photoDto = PhotoDto.createWithFileName(
+      val (photoDto, imageFileName) = PhotoDto.createWithFileName(
         fileName = validatedFileName,
         isGoodPicture = isGoodPictureList.get(index),
         motive = motive,
@@ -275,13 +281,13 @@ class PhotoService(
   }
 
   override fun createNewMotiveAndSaveDigitalPhotos(
-    motiveString: String,
-    placeString: String,
+    motiveTitle: String,
+    placeName: String,
     securityLevelId: UUID,
     photoGangBangerId: UUID,
     albumId: UUID,
     categoryName: String,
-    eventOwnerString: String,
+    eventOwnerName: String,
     photoFileList: List<MultipartFile>,
     isGoodPhotoList: List<Boolean>,
     tagList: List<List<String>>
@@ -294,7 +300,7 @@ class PhotoService(
     if (!isValidRequest) throw java.lang.IllegalArgumentException("photoFileList, isGoodPhotoList and tagList are of unequal length or not given")
     logger.info("createNewMotiveAndSaveDigitalPhotos() $tagList")
     val eventOwnerDto = eventOwnerRepository
-      .findByEventOwnerName(EventOwnerName.valueOf(eventOwnerString))
+      .findByEventOwnerName(EventOwnerName.valueOf(eventOwnerName))
       ?: throw EntityNotFoundException("Did not find eventOwner")
 
     val albumDto = albumRepository
@@ -317,10 +323,10 @@ class PhotoService(
     // Fetch object from database, if not exist create object
     // and save to database
     // TODO: Wait with saving place to database to later?
-    val placeDto = fetchOrCreatePlaceDto(placeString)
+    val placeDto = fetchOrCreatePlaceDto(placeName)
 
     val motiveDto = fetchOrCreateMotive(
-      motiveString = motiveString,
+      motiveTitle = motiveTitle,
       eventOwnerDto = eventOwnerDto,
       categoryDto = categoryDto,
       albumDto = albumDto
@@ -340,8 +346,7 @@ class PhotoService(
       }
       val isGoodPhoto = isGoodPhotoList.get(index)
 
-      logger.info("Filename: ${photoFile.name}")
-      val photoDto = PhotoDto.createWithFileName(
+      val (photoDto, imageFileName) = PhotoDto.createWithFileName(
         securityLevel = securityLevelDto,
         placeDto = placeDto,
         motive = motiveDto,
@@ -351,23 +356,25 @@ class PhotoService(
         photoTags = photoTagDtos,
         categoryDto = categoryDto,
         fileName = ImageFileName(
-          photoFile.name
+          photoFile.originalFilename ?: ""
         )
       )
+
       // Generate PhotoDto
       photoRepository
         .createPhoto(photoDto)
 
       // GeneratePaths
-      "/path/to/photo/TODO"
+      // TODO: Do not hard code this. Fetch from application
+      "http://localhost:8383/${store(photoFile, photoDto, imageFileName)}"
       // Save shit
     }
 
     return numPhotoGenerated
   }
-  fun fetchOrCreatePlaceDto(placeString: String) = placeRepository
-    .findByName(placeString)
-    ?: PlaceDto(name = placeString)
+  fun fetchOrCreatePlaceDto(placeName: String) = placeRepository
+    .findByName(placeName)
+    ?: PlaceDto(name = placeName)
       .also {
         placeRepository
           .create(
@@ -376,19 +383,21 @@ class PhotoService(
       }
 
   fun fetchOrCreateMotive(
-    motiveString: String,
+    motiveTitle: String,
     categoryDto: CategoryDto,
     eventOwnerDto: EventOwnerDto,
     albumDto: AlbumDto
   ): MotiveDto =
     motiveRepository
-      .findByTitle(motiveString)
+      .findByTitle(motiveTitle)
       ?.toDto()
-      ?: MotiveDto(
-        title = motiveString,
-        categoryDto = categoryDto,
-        eventOwnerDto = eventOwnerDto,
-        albumDto = albumDto
+      ?: motiveRepository.create(
+        MotiveDto(
+          title = motiveTitle,
+          categoryDto = categoryDto,
+          eventOwnerDto = eventOwnerDto,
+          albumDto = albumDto
+        )
       )
 
   override fun getCarouselPhotos(): List<PhotoDto> = photoRepository
