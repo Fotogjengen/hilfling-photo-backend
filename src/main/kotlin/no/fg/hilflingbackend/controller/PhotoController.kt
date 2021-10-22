@@ -33,7 +33,7 @@ class PhotoController(
     // @RequestPart("type") type: String,
   ): String {
     // TODO: Refactor to use photoDto as in photoService
-    //return photoService.store(file, SecurityLevelType.valueOf("PROFILE"))
+    // return photoService.store(file, SecurityLevelType.valueOf("PROFILE"))
     return "TODO"
   }
 

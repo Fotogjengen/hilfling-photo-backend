@@ -41,5 +41,4 @@ open class MotiveRepository {
     database.motives.add(motive.toEntity())
     return motive
   }
-
 }

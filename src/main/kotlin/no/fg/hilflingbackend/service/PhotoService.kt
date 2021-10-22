@@ -346,7 +346,6 @@ class PhotoService(
       }
       val isGoodPhoto = isGoodPhotoList.get(index)
 
-
       val (photoDto, imageFileName) = PhotoDto.createWithFileName(
         securityLevel = securityLevelDto,
         placeDto = placeDto,
@@ -364,7 +363,6 @@ class PhotoService(
       // Generate PhotoDto
       photoRepository
         .createPhoto(photoDto)
-
 
       // GeneratePaths
       // TODO: Do not hard code this. Fetch from application
@@ -393,14 +391,14 @@ class PhotoService(
     motiveRepository
       .findByTitle(motiveTitle)
       ?.toDto()
-      ?: motiveRepository.create(MotiveDto(
-        title = motiveTitle,
-        categoryDto = categoryDto,
-        eventOwnerDto = eventOwnerDto,
-        albumDto = albumDto
-      ))
-
-
+      ?: motiveRepository.create(
+        MotiveDto(
+          title = motiveTitle,
+          categoryDto = categoryDto,
+          eventOwnerDto = eventOwnerDto,
+          albumDto = albumDto
+        )
+      )
 
   override fun getCarouselPhotos(): List<PhotoDto> = photoRepository
     .findCarouselPhotos()
