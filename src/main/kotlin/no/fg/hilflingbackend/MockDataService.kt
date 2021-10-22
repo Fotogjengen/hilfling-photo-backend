@@ -554,7 +554,6 @@ class MockDataService {
     generateEventOwnerData().forEach {
       eventOwnerRepository.create(it)
     }
-    println("Eventowner seeded")
 
     generateMotiveData().forEach {
       motiveRepository.create(it)
