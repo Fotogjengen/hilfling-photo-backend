@@ -202,7 +202,6 @@ class PhotoService(
 
       val motive = motiveRepository
         .findById(motiveIdList.get(index))
-        ?.toDto()
         ?: throw EntityNotFoundException("Did not find motive")
 
       val gang: GangDto = gangRepository
