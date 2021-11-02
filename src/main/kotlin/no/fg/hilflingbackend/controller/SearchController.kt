@@ -1,5 +1,6 @@
 package no.fg.hilflingbackend.controller
 
+import no.fg.hilflingbackend.dto.MotiveDto
 import no.fg.hilflingbackend.dto.PhotoDto
 import no.fg.hilflingbackend.model.Motive
 import no.fg.hilflingbackend.repository.SearchRepository
@@ -18,7 +19,7 @@ class SearchController {
   lateinit var repository: SearchRepository
 
   @GetMapping("/{searchTerm}")
-  fun getBySearchTerm(@PathVariable("searchTerm") searchTerm: String): ResponseEntity<List<Motive>> =
+  fun getBySearchTerm(@PathVariable("searchTerm") searchTerm: String): ResponseEntity<List<MotiveDto>> =
     ResponseOk(repository.findBySearchterm(searchTerm))
 
 }
