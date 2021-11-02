@@ -54,6 +54,16 @@ jobs:
           tags: # optional
             fotogjengen/hilfling-backend:latest
           push: true #optional, default is false
+      - name: "Publish package to Github Releases"
+        uses: "marvinpinto/action-automatic-releases@latest"
+        with:
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          automatic_release_tag: "latest"
+          prerelease: true
+          title: "Development Build"
+          files: |
+            LICENSE.txt
+            *.jar
 
   lint:
       runs-on: ubuntu-latest
