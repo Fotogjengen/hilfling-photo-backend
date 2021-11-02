@@ -1,10 +1,10 @@
 package no.fg.hilflingbackend.repository
 
 import me.liuwj.ktorm.database.Database
-import me.liuwj.ktorm.dsl.eq
-import me.liuwj.ktorm.entity.find
-import no.fg.hilflingbackend.model.Search
-import no.fg.hilflingbackend.model.motives
+import me.liuwj.ktorm.dsl.like
+import me.liuwj.ktorm.entity.filter
+import me.liuwj.ktorm.entity.toList
+import no.fg.hilflingbackend.model.*
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Repository
 
@@ -15,11 +15,24 @@ open class SearchRepository {
   open lateinit var database: Database
 
   // TODO: Make return MotiveDto instead of Motive
-  fun find(SearchTerm: String): Search? =
+  fun findBySearchterm(SearchTerm: String): List<Motive> =
     database
       .motives
-      .find {
-        it.title eq SearchTerm
-      }
-
+      .filter {
+        it.title like "%$SearchTerm%"
+      }.toList()
 }
+
+
+/*
+fun findAllDigitalPhotos(): List<PhotoDto> {
+  return database
+    .photos
+    .filter {
+      val motive = it.motiveId.referenceTable as Motives
+      val album = motive.albumId.referenceTable as Albums
+      album.isAnalog eq false
+    }.toList()
+    .map { it.toDto() }
+}
+*/
