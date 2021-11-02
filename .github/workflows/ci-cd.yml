@@ -54,6 +54,9 @@ jobs:
           tags: # optional
             fotogjengen/hilfling-backend:latest
           push: true #optional, default is false
+      - name: "Package app outside docker"
+        run: "clean package spring-boot:repackage"
+
       - name: "Publish package to Github Releases"
         uses: "marvinpinto/action-automatic-releases@latest"
         with:
