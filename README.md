@@ -28,6 +28,20 @@ TODO
 run the built package
 `java --jar target/hilfling-0.0.1.SNAPSHOT.jar`
 
+## Configuration
+To specify a different database connection
+
+Set these environment variables:
+
+```
+export DATABASE_USERNAME=<username>
+export DATABASE_PASSWORD=<password>
+export DATABASE_URL=jdbc:postgresql://<ip:port>/<database name>
+export DATABASE_DRIVER=org.postgresql.Driver
+```
+
+[https://www.baeldung.com/spring-properties-file-outside-jar](https://www.baeldung.com/spring-properties-file-outside-jar)
+
 ## Build docker image
 `mvn spring-boot:build-image`
 
