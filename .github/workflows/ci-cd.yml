@@ -61,9 +61,7 @@ jobs:
           automatic_release_tag: "latest"
           prerelease: true
           title: "Development Build"
-          files: |
-            LICENSE.txt
-            *.jar
+          files: ./target/*
 
   lint:
       runs-on: ubuntu-latest
