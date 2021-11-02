@@ -1,8 +1,6 @@
 package no.fg.hilflingbackend.controller
 
 import no.fg.hilflingbackend.dto.MotiveDto
-import no.fg.hilflingbackend.dto.PhotoDto
-import no.fg.hilflingbackend.model.Motive
 import no.fg.hilflingbackend.repository.SearchRepository
 import no.fg.hilflingbackend.utils.ResponseOk
 import org.springframework.beans.factory.annotation.Autowired
