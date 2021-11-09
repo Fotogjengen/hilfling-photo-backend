@@ -16,11 +16,11 @@ open class SearchRepository {
   @Autowired
   open lateinit var database: Database
 
-  fun findBySearchTerm(SearchTerm: String): List<MotiveDto> =
+  fun findBySearchTerm(searchTerm: String): List<MotiveDto> =
     database
       .motives
       .filter {
-        it.title ilike "%$SearchTerm%"
+        it.title ilike "%$searchTerm%"
       }.toList()
       .map { it.toDto() }
 }
