@@ -4,6 +4,7 @@ import me.liuwj.ktorm.database.Database
 import me.liuwj.ktorm.dsl.like
 import me.liuwj.ktorm.entity.filter
 import me.liuwj.ktorm.entity.toList
+import me.liuwj.ktorm.support.postgresql.ilike
 import no.fg.hilflingbackend.dto.MotiveDto
 import no.fg.hilflingbackend.model.*
 import org.springframework.beans.factory.annotation.Autowired
@@ -20,7 +21,7 @@ open class SearchRepository {
     database
       .motives
       .filter {
-        it.title like "%$SearchTerm%"
+        it.title ilike "%$SearchTerm%"
       }.toList()
       .map { it.toDto() }
 }
