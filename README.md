@@ -34,6 +34,9 @@ To specify a different database connection
 Set these environment variables:
 
 ```
+export LISTENING_IP=localhost
+export LISTENING_PORT=8080
+
 export DATABASE_USERNAME=<username>
 export DATABASE_PASSWORD=<password>
 export DATABASE_URL=jdbc:postgresql://<ip:port>/<database name>
