@@ -33,7 +33,8 @@ fun Motive.toDto(): MotiveDto = MotiveDto(
   title = this.title,
   categoryDto = this.category.toDto(),
   eventOwnerDto = eventOwner.toDto(),
-  albumDto = album.toDto()
+  albumDto = album.toDto(),
+  dateCreated = this.dateCreated
 )
 
 val Database.motives get() = this.sequenceOf(Motives)

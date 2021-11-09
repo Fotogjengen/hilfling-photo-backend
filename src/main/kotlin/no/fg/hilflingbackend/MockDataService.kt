@@ -52,6 +52,7 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.core.io.ClassPathResource
 import org.springframework.mock.web.MockMultipartFile
 import org.springframework.stereotype.Service
+import java.time.LocalDate
 import java.util.UUID
 
 @Service
@@ -189,6 +190,7 @@ class MockDataService {
         albumDto = generateAlbumData().first(),
         eventOwnerDto = generateEventOwnerData().first(),
         categoryDto = generateCategoryData().first(),
+        dateCreated = LocalDate.now()
       ),
       MotiveDto(
         motiveId = MotiveId(UUID.fromString("94540f3c-77b8-4bc5-acc7-4dd7d8cc5bcd")),
@@ -196,6 +198,7 @@ class MockDataService {
         albumDto = generateAlbumData().first(),
         eventOwnerDto = generateEventOwnerData().first(),
         categoryDto = generateCategoryData().first(),
+        dateCreated = LocalDate.now()
       )
     )
   fun generateCategoryData(): List<CategoryDto> =

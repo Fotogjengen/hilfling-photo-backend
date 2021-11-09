@@ -1,15 +1,23 @@
 package no.fg.hilflingbackend.dto
 
 import no.fg.hilflingbackend.model.Motive
-import java.util.UUID
+import java.time.LocalDate
+import java.util.*
 
 data class MotiveDto(
   val motiveId: MotiveId = MotiveId(),
   val title: String,
   val categoryDto: CategoryDto,
   val eventOwnerDto: EventOwnerDto,
-  val albumDto: AlbumDto
-)
+  val albumDto: AlbumDto,
+  val dateCreated: LocalDate?
+){
+  constructor(motiveId: MotiveId = MotiveId(),
+              title: String,
+              categoryDto: CategoryDto,
+              eventOwnerDto: EventOwnerDto,
+              albumDto: AlbumDto ) : this(motiveId, title, categoryDto, eventOwnerDto, albumDto, null)
+}
 
 data class MotiveId(
   override val id: UUID = UUID.randomUUID()
