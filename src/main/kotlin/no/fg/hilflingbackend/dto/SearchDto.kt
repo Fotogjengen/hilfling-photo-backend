@@ -3,7 +3,7 @@ package no.fg.hilflingbackend.dto
 import no.fg.hilflingbackend.model.Search
 
 data class SearchDto(
-  val suggestions: List<String>,
+  var suggestions: List<String>,
 )
 
 fun SearchDto.toEntity(): Search {
