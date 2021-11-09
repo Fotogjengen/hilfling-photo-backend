@@ -5,7 +5,8 @@ import me.liuwj.ktorm.entity.filter
 import me.liuwj.ktorm.entity.toList
 import me.liuwj.ktorm.support.postgresql.ilike
 import no.fg.hilflingbackend.dto.MotiveDto
-import no.fg.hilflingbackend.model.*
+import no.fg.hilflingbackend.model.motives
+import no.fg.hilflingbackend.model.toDto
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Repository
 
@@ -15,8 +16,7 @@ open class SearchRepository {
   @Autowired
   open lateinit var database: Database
 
-  // TODO: Make return MotiveDto instead of Motive
-  fun findBySearchterm(SearchTerm: String): List<MotiveDto> =
+  fun findBySearchTerm(SearchTerm: String): List<MotiveDto> =
     database
       .motives
       .filter {

@@ -15,5 +15,5 @@ class SearchController(val repository: SearchRepository) {
 
   @GetMapping("/{searchTerm}")
   fun getBySearchTerm(@PathVariable("searchTerm") searchTerm: String): ResponseEntity<List<MotiveDto>> =
-    ResponseOk(repository.findBySearchterm(searchTerm))
+    ResponseOk(repository.findBySearchTerm(searchTerm))
 }

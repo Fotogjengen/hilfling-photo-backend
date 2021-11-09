@@ -7,6 +7,6 @@ import org.springframework.stereotype.Service
 @Service
 class SearchService(val repository: SearchRepository) {
   fun findMotives(searchTerm: String): List<MotiveDto> {
-    return repository.findBySearchterm(searchTerm)
+    return repository.findBySearchTerm(searchTerm)
   }
 }
