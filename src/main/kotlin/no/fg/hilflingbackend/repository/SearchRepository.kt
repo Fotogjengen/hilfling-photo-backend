@@ -1,7 +1,6 @@
 package no.fg.hilflingbackend.repository
 
 import me.liuwj.ktorm.database.Database
-import me.liuwj.ktorm.dsl.like
 import me.liuwj.ktorm.entity.filter
 import me.liuwj.ktorm.entity.toList
 import me.liuwj.ktorm.support.postgresql.ilike
