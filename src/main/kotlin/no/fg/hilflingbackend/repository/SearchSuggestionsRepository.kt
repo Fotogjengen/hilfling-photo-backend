@@ -2,6 +2,7 @@ package no.fg.hilflingbackend.repository
 
 import me.liuwj.ktorm.database.Database
 import me.liuwj.ktorm.entity.filter
+import me.liuwj.ktorm.entity.take
 import me.liuwj.ktorm.entity.toList
 import me.liuwj.ktorm.support.postgresql.ilike
 import no.fg.hilflingbackend.model.motives
@@ -19,5 +20,6 @@ open class SearchSuggestionsRepository {
       .motives
       .filter {
         it.title ilike "%$searchTerm%"
-      }.toList().map { it.title }
+      }.take(10)
+      .toList().map { it.title }
 }
