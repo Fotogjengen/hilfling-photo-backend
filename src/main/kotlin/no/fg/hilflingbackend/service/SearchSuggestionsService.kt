@@ -1,7 +1,5 @@
 package no.fg.hilflingbackend.service
 
-import no.fg.hilflingbackend.dto.MotiveDto
-import no.fg.hilflingbackend.repository.SearchRepository
 import no.fg.hilflingbackend.repository.SearchSuggestionsRepository
 import org.springframework.stereotype.Service
 

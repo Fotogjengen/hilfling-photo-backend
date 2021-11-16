@@ -1,6 +1,5 @@
 package no.fg.hilflingbackend.controller
 
-import no.fg.hilflingbackend.dto.MotiveDto
 import no.fg.hilflingbackend.service.SearchSuggestionsService
 import no.fg.hilflingbackend.utils.ResponseOk
 import org.springframework.http.ResponseEntity
