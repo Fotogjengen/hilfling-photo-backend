@@ -2,7 +2,7 @@ package no.fg.hilflingbackend.dto
 
 import no.fg.hilflingbackend.model.Motive
 import java.time.LocalDate
-import java.util.*
+import java.util.UUID
 
 data class MotiveDto(
   val motiveId: MotiveId = MotiveId(),
@@ -11,12 +11,14 @@ data class MotiveDto(
   val eventOwnerDto: EventOwnerDto,
   val albumDto: AlbumDto,
   val dateCreated: LocalDate?
-){
-  constructor(motiveId: MotiveId = MotiveId(),
-              title: String,
-              categoryDto: CategoryDto,
-              eventOwnerDto: EventOwnerDto,
-              albumDto: AlbumDto ) : this(motiveId, title, categoryDto, eventOwnerDto, albumDto, null)
+) {
+  constructor(
+    motiveId: MotiveId = MotiveId(),
+    title: String,
+    categoryDto: CategoryDto,
+    eventOwnerDto: EventOwnerDto,
+    albumDto: AlbumDto
+  ) : this(motiveId, title, categoryDto, eventOwnerDto, albumDto, null)
 }
 
 data class MotiveId(
