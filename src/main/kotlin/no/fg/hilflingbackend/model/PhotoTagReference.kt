@@ -4,7 +4,6 @@ import me.liuwj.ktorm.database.Database
 import me.liuwj.ktorm.entity.Entity
 import me.liuwj.ktorm.entity.sequenceOf
 import me.liuwj.ktorm.schema.uuid
-import java.util.UUID
 
 interface PhotoTagReference : BaseModel<PhotoTagReference> {
   companion object : Entity.Factory<PhotoTagReference>()

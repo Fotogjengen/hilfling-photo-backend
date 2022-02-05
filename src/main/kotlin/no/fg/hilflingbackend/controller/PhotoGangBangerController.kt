@@ -1,8 +1,6 @@
 package no.fg.hilflingbackend.controller
 
-import no.fg.hilflingbackend.dto.AlbumDto
 import no.fg.hilflingbackend.dto.PhotoGangBangerDto
-import no.fg.hilflingbackend.dto.RelationshipStatus
 import no.fg.hilflingbackend.dto.SemesterStart
 import no.fg.hilflingbackend.repository.PhotoGangBangerRepository
 import org.springframework.beans.factory.annotation.Autowired

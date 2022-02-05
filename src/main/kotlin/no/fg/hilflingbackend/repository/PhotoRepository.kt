@@ -17,18 +17,6 @@ import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Repository
 import java.util.UUID
 
-/* TODO Remove this?
-fun Database.getPhotoAndPhotoTags(filter: () -> ColumnDeclaring<Boolean>){
-  return this
-    .from(Photos)
-    .crossJoin(PhotoTags)
-    .select(
-      Photos.id,
-      PhotoTags.name
-    )
-}
-
- */
 @Repository
 open class PhotoRepository(
   val database: Database
