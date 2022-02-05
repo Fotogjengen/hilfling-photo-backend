@@ -1,5 +1,6 @@
 package no.fg.hilflingbackend.controller
 
+import me.liuwj.ktorm.database.Database
 import no.fg.hilflingbackend.dto.PhotoDto
 import no.fg.hilflingbackend.exceptions.GlobalExceptionHandler
 import no.fg.hilflingbackend.model.AnalogPhoto
@@ -24,18 +25,9 @@ import java.util.UUID
 @RestController
 @RequestMapping("/photos")
 class PhotoController(
-  val photoService: PhotoService
+  val photoService: PhotoService,
+  val database: Database
 ) : GlobalExceptionHandler() {
-  // TODO: Remove not used anyMOre
-  @PostMapping("/profile", consumes = ["multipart/form-data"])
-  private fun uploadPhotoFile(
-    @RequestPart("file") file: MultipartFile,
-    // @RequestPart("type") type: String,
-  ): String {
-    // TODO: Refactor to use photoDto as in photoService
-    // return photoService.store(file, SecurityLevelType.valueOf("PROFILE"))
-    return "TODO"
-  }
 
   // The main photo-upload endpoint used most of the time
   @PostMapping("/upload")
@@ -53,9 +45,9 @@ class PhotoController(
   ): ResponseEntity<List<String>> =
     ResponseEntity(
       photoService.createNewMotiveAndSaveDigitalPhotos(
-        motiveTitle = motiveTitle,
-        placeName = placeName,
-        eventOwnerName = eventOwnerName,
+        motiveString = motiveTitle,
+        placeString = placeName,
+        eventOwnerString = eventOwnerName,
         securityLevelId = securityLevelId,
         albumId = albumId,
         photoGangBangerId = photoGangBangerId,
@@ -149,10 +141,12 @@ class PhotoController(
   )
 
   @GetMapping
-  fun getAll(): ResponseEntity<List<PhotoDto>> = ResponseOk(
-    photoService
-      .getAll(),
-  )
+  fun getAll(): ResponseEntity<List<PhotoDto>> {
+    return ResponseOk(
+      photoService
+        .getAll()
+    )
+  }
 
   @GetMapping("/carousel")
   fun getCarouselPhotos(): ResponseEntity<List<PhotoDto>> = ResponseOk(

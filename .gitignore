@@ -117,3 +117,4 @@ $RECYCLE.BIN/
 .env
 # End of https://www.gitignore.io/api/linux,macos,windows
 variables.env
+static-files/blob_storage/*

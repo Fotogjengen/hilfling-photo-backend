@@ -6,6 +6,7 @@ import me.liuwj.ktorm.entity.add
 import me.liuwj.ktorm.entity.filter
 import me.liuwj.ktorm.entity.find
 import me.liuwj.ktorm.entity.toList
+import me.liuwj.ktorm.entity.update
 import no.fg.hilflingbackend.dto.PhotoGangBangerDto
 import no.fg.hilflingbackend.dto.toEntity
 import no.fg.hilflingbackend.model.photo_gang_bangers
@@ -55,9 +56,15 @@ open class PhotoGangBangerRepository {
   }
 
   fun create(
-    photoGangBangerDto: PhotoGangBangerDto
+    dto: PhotoGangBangerDto
   ): Int =
     database.photo_gang_bangers.add(
-      photoGangBangerDto.toEntity()
+      dto.toEntity()
     )
+
+  fun patch(
+    dto: PhotoGangBangerDto
+  ): Int = database.photo_gang_bangers.update(
+    dto.toEntity()
+  )
 }

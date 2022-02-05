@@ -1,3 +1,4 @@
+/*
 import com.nhaarman.mockitokotlin2.atLeast
 import com.nhaarman.mockitokotlin2.doReturn
 import com.nhaarman.mockitokotlin2.mock
@@ -96,6 +97,7 @@ class PhotoControllerSpec : Spek({
       )
       assertEquals(HttpStatus.CREATED, response.statusCode)
     }
+*/
 /*
     val mockPhotoService = mock<PhotoService> {
       on {
@@ -129,6 +131,8 @@ class PhotoControllerSpec : Spek({
       }
     }
 
- */
+ *//*
+
   }
 })
+*/

@@ -4,6 +4,7 @@ import no.fg.hilflingbackend.dto.PhotoGangBangerDto
 import no.fg.hilflingbackend.repository.PhotoGangBangerRepository
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.web.bind.annotation.GetMapping
+import org.springframework.web.bind.annotation.PatchMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
@@ -43,9 +44,16 @@ class PhotoGangBangerController {
     return repository.findAllInActivePangs()
   }
 
-  @PostMapping
+  @PostMapping("/create")
   fun create(
-    @RequestBody photoGangBangerDto: PhotoGangBangerDto
+    @RequestBody dto: PhotoGangBangerDto
   ): Int =
-    repository.create(photoGangBangerDto)
+    repository.create(dto)
+
+  @PatchMapping()
+  fun patch(
+    @RequestBody dto: PhotoGangBangerDto
+  ): Int {
+    return repository.patch(dto)
+  }
 }
