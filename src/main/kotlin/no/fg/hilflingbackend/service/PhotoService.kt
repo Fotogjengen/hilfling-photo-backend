@@ -400,18 +400,18 @@ class PhotoService(
         )
       )
 
-  override fun getCarouselPhotos(): List<PhotoDto> = photoRepository
-    .findCarouselPhotos()
+  override fun getCarouselPhotos(page: Int, pageSize: Int): Page<PhotoDto> = photoRepository
+    .findCarouselPhotos(page, pageSize)
 
-  override fun getAllAnalogPhotos(): List<PhotoDto> = photoRepository
-    .findAllAnalogPhotos()
+  override fun getAllAnalogPhotos(page: Int, pageSize: Int): Page<PhotoDto> = photoRepository
+    .findAllAnalogPhotos(page, pageSize)
 
-  override fun getAllDigitalPhotos(): List<PhotoDto> = photoRepository
-    .findAllDigitalPhotos()
+  override fun getAllDigitalPhotos(page: Int, pageSize: Int): Page<PhotoDto> = photoRepository
+    .findAllDigitalPhotos(page, pageSize)
 
-  fun getByMotiveId(id: UUID): List<PhotoDto>? = photoRepository.findByMotiveId(id)
+  fun getByMotiveId(id: UUID, page: Int, pageSize: Int): Page<PhotoDto>? = photoRepository.findByMotiveId(id, page, pageSize)
 
-  override fun getById(id: UUID): PhotoDto = photoRepository?.findById(id) ?: throw EntityNotFoundException("Did not find photo")
+  override fun getById(id: UUID): PhotoDto = photoRepository.findById(id) ?: throw EntityNotFoundException("Did not find photo")
 
   override fun getAll(page: Int, pageSize: Int): Page<PhotoDto> {
     return photoRepository

@@ -136,9 +136,13 @@ class PhotoController(
   )
 
   @GetMapping("/motive/{id}")
-  fun getByMotiveId(@PathVariable("id") id: UUID): ResponseEntity<List<PhotoDto>?> = ResponseOk(
+  fun getByMotiveId(
+    @PathVariable("id") id: UUID,
+    @RequestParam("page", required = false) page: Int?,
+    @RequestParam("pageSize", required = false) pageSize: Int?
+  ): ResponseEntity<Page<PhotoDto>?> = ResponseOk(
     photoService
-      .getByMotiveId(id)
+      .getByMotiveId(id, page ?: 0, pageSize ?: 100)
   )
 
   @GetMapping
@@ -153,19 +157,29 @@ class PhotoController(
   }
 
   @GetMapping("/carousel")
-  fun getCarouselPhotos(): ResponseEntity<List<PhotoDto>> = ResponseOk(
+  fun getCarouselPhotos(
+    @RequestParam("page", required = false) page: Int?,
+    @RequestParam("pageSize", required = false) pageSize: Int?
+  ): ResponseEntity<Page<PhotoDto>> = ResponseOk(
     photoService
-      .getCarouselPhotos()
+      .getCarouselPhotos(page ?: 0, pageSize ?: 6)
   )
 
   @GetMapping("/analog")
-  fun getAllAnalogPhotos(): ResponseEntity<List<PhotoDto>> = ResponseOk(
+  fun getAllAnalogPhotos(
+    @RequestParam("page", required = false) page: Int?,
+    @RequestParam("pageSize", required = false) pageSize: Int?
+  ): ResponseEntity<Page<PhotoDto>> = ResponseOk(
     photoService
-      .getAllAnalogPhotos()
+      .getAllAnalogPhotos(page ?: 0, pageSize ?: 100)
   )
 
-  fun getAllDigitalPhotos(): ResponseEntity<List<PhotoDto>> = ResponseOk(
+  @GetMapping("/digital")
+  fun getAllDigitalPhotos(
+    @RequestParam("page", required = false) page: Int?,
+    @RequestParam("pageSize", required = false) pageSize: Int?
+  ): ResponseEntity<Page<PhotoDto>> = ResponseOk(
     photoService
-      .getAllDigitalPhotos()
+      .getAllDigitalPhotos(page ?: 0, pageSize ?: 100)
   )
 }

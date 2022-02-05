@@ -42,7 +42,7 @@ interface IPhotoService : IBaseService<PhotoDto> {
     isGoodPhotoList: List<Boolean>,
     tagList: List<List<String>>
   ): List<String>
-  fun getCarouselPhotos(): List<PhotoDto>
-  fun getAllAnalogPhotos(): List<PhotoDto> // TODO: Need different DTO for analog
-  fun getAllDigitalPhotos(): List<PhotoDto>
+  fun getCarouselPhotos(page: Int = 0, pageSize: Int = 100): Page<PhotoDto>
+  fun getAllAnalogPhotos(page: Int = 0, pageSize: Int = 100): Page<PhotoDto> // TODO: Need different DTO for analog
+  fun getAllDigitalPhotos(page: Int = 0, pageSize: Int = 100): Page<PhotoDto>
 }
