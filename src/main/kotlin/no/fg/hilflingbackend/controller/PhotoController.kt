@@ -4,7 +4,6 @@ import me.liuwj.ktorm.database.Database
 import no.fg.hilflingbackend.dto.PhotoDto
 import no.fg.hilflingbackend.exceptions.GlobalExceptionHandler
 import no.fg.hilflingbackend.model.AnalogPhoto
-import no.fg.hilflingbackend.model.Photo
 import no.fg.hilflingbackend.service.PhotoService
 import no.fg.hilflingbackend.utils.ResponseOk
 import org.springframework.http.HttpHeaders
@@ -153,9 +152,9 @@ open class PhotoController(
   )
 
   @GetMapping
-  fun getAll(): List<PhotoDto> {
-    return photoService
-        .getAll()
+  fun getAll(): ResponseEntity<List<PhotoDto>> {
+    return ResponseOk(photoService
+      .getAll())
   }
 
   @GetMapping("/carousel")
