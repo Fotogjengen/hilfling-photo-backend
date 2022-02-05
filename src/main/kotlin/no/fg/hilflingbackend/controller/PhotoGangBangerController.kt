@@ -45,13 +45,6 @@ class PhotoGangBangerController {
   ): Int =
     repository.create(dto)
 
-  @PostMapping
-  fun create2(
-    @RequestBody dto: SemesterStart
-  ): Int {
-    return 1
-  }
-
   @PatchMapping()
   fun patch(
     @RequestBody dto: PhotoGangBangerDto
