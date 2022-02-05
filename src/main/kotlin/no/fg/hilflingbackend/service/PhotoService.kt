@@ -7,6 +7,7 @@ import no.fg.hilflingbackend.dto.EventOwnerDto
 import no.fg.hilflingbackend.dto.EventOwnerName
 import no.fg.hilflingbackend.dto.GangDto
 import no.fg.hilflingbackend.dto.MotiveDto
+import no.fg.hilflingbackend.dto.Page
 import no.fg.hilflingbackend.dto.PhotoDto
 import no.fg.hilflingbackend.dto.PhotoTagDto
 import no.fg.hilflingbackend.dto.PlaceDto
@@ -412,8 +413,8 @@ class PhotoService(
 
   override fun getById(id: UUID): PhotoDto = photoRepository?.findById(id) ?: throw EntityNotFoundException("Did not find photo")
 
-  override fun getAll(): List<PhotoDto> {
+  override fun getAll(page: Int, pageSize: Int): Page<PhotoDto> {
     return photoRepository
-      .findAll()
+      .findAll(page, pageSize)
   }
 }

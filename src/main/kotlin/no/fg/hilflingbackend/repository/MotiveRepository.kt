@@ -35,19 +35,19 @@ open class MotiveRepository {
     return database.motives.find { it.id eq id }?.toDto()
   }
 
-  fun findAll(offset: Int, limit: Int): Page<MotiveDto> {
+  fun findAll(page: Int, pageSize: Int): Page<MotiveDto> {
     val motives = database
       .motives
-      .drop(offset)
-      .take(limit)
+      .drop(page)
+      .take(pageSize)
       .toList()
 
     val motiveDtos = motives.map { it.toDto() }
 
     return Page(
-      offset,
-      limit,
-      totalRecords = motiveDtos.size,
+      page = page,
+      pageSize = pageSize,
+      totalRecords = database.motives.totalRecords,
       currentList = motiveDtos
     )
   }

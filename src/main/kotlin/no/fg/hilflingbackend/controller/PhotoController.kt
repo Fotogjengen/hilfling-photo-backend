@@ -1,6 +1,7 @@
 package no.fg.hilflingbackend.controller
 
 import me.liuwj.ktorm.database.Database
+import no.fg.hilflingbackend.dto.Page
 import no.fg.hilflingbackend.dto.PhotoDto
 import no.fg.hilflingbackend.exceptions.GlobalExceptionHandler
 import no.fg.hilflingbackend.model.AnalogPhoto
@@ -141,10 +142,13 @@ class PhotoController(
   )
 
   @GetMapping
-  fun getAll(): ResponseEntity<List<PhotoDto>> {
+  fun getAll(
+    @RequestParam("page", required = false) page: Int?,
+    @RequestParam("pageSize", required = false) pageSize: Int?
+  ): ResponseEntity<Page<PhotoDto>> {
     return ResponseOk(
       photoService
-        .getAll()
+        .getAll(page ?: 0, pageSize ?: 100)
     )
   }
 

@@ -9,11 +9,13 @@ import me.liuwj.ktorm.dsl.map
 import me.liuwj.ktorm.dsl.select
 import me.liuwj.ktorm.dsl.where
 import me.liuwj.ktorm.entity.add
+import me.liuwj.ktorm.entity.drop
 import me.liuwj.ktorm.entity.filter
 import me.liuwj.ktorm.entity.find
 import me.liuwj.ktorm.entity.take
 import me.liuwj.ktorm.entity.toList
 import me.liuwj.ktorm.entity.update
+import no.fg.hilflingbackend.dto.Page
 import no.fg.hilflingbackend.dto.PhotoDto
 import no.fg.hilflingbackend.dto.PhotoTagDto
 import no.fg.hilflingbackend.dto.PhotoTagId
@@ -76,13 +78,19 @@ open class PhotoRepository(
     return database.analog_photos.find { it.id eq id }
   }
 
-  fun findAll(): List<PhotoDto> {
-    return database.photos.toList()
+  fun findAll(page: Int, pageSize: Int): Page<PhotoDto> {
+    val photos = database.photos.drop(page).take(pageSize).toList()
       .map {
         it.toDto(
           findCorrespondingPhotoTagDtos(it)
         )
       }
+    return Page(
+      page = page,
+      pageSize = pageSize,
+      totalRecords = database.photos.totalRecords,
+      currentList = photos
+    )
   }
 
   fun findAllAnalogPhotos(): List<PhotoDto> {

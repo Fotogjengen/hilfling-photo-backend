@@ -28,10 +28,10 @@ class MotiveController {
 
   @GetMapping
   fun getAll(
-    @RequestParam("offset", required = false) offset: Int?,
-    @RequestParam("limit", required = false) limit: Int?
+    @RequestParam("page", required = false) page: Int?,
+    @RequestParam("pageSize", required = false) pageSize: Int?
   ): Page<MotiveDto> {
-    return repository.findAll(offset ?: 0, limit ?: 100)
+    return repository.findAll(page ?: 0, pageSize ?: 100)
   }
 
   @PostMapping
