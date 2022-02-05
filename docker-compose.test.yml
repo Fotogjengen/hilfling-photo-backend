@@ -1,0 +1,29 @@
+# This file is not designed to be used a lone, but
+# As an addition to './docker-compose.yml' ex: 'docker-compose -f ./docker-compose.yml -f ./docker-compose.deploy.yml up -d'
+version: "3"
+networks:
+  hilfling-network: # Used for internal networking
+
+services:
+  run-tests:
+    container_name: run-tests
+    image: maven:3.6.3-jdk-11-slim
+    working_dir: /hilfling
+    entrypoint: mvn test
+    volumes:
+      - ./:/hilfling
+    depends_on:
+      - postgres
+      - fg-blob-storage
+    expose:
+      - 8080
+    networks:
+      - hilfling-network
+    environment:
+      AZURE_STORAGE_CONNECTION_STRING: "DefaultEndpointsProtocol=http;AccountName=devstoreaccount1;AccountKey=Eby8vdM02xNOcqFlqUwJPLlmEtlCDXJ1OUzFT50uSRZ6IFsuFq2UVErCz4I6tq/K1SZFPTOtr/KBHBeksoGMGw==;BlobEndpoint=http://fg-blob-storage:10000/devstoreaccount1;QueueEndpoint=http://fg-blob-storage:10001/devstoreaccount1;TableEndpoint=http://fg-blob-storage:10002/devstoreaccount1;"
+      DATABASE_USERNAME: $DATABASE_USERNAME
+      DATABASE_PASSWORD: $DATABASE_PASSWORD
+      DATABASE_URL:  "jdbc:postgresql://postgres:5432/hilflingdb" #"jdbc:postgresql://postgres:5432/hilflingdb?createDatabaseIfNotExist=true"
+
+    labels:
+      - traefik.enable=false
