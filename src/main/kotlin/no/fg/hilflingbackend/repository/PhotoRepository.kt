@@ -1,6 +1,7 @@
 package no.fg.hilflingbackend.repository
 
 import me.liuwj.ktorm.database.Database
+import me.liuwj.ktorm.dsl.batchInsert
 import me.liuwj.ktorm.dsl.crossJoin
 import me.liuwj.ktorm.dsl.eq
 import me.liuwj.ktorm.dsl.from
@@ -16,64 +17,59 @@ import me.liuwj.ktorm.entity.update
 import no.fg.hilflingbackend.dto.PhotoDto
 import no.fg.hilflingbackend.dto.PhotoTagDto
 import no.fg.hilflingbackend.dto.PhotoTagId
-/* ktlint-disable no-wildcard-imports */
-import no.fg.hilflingbackend.model.*
+import no.fg.hilflingbackend.model.Albums
+import no.fg.hilflingbackend.model.AnalogPhoto
+import no.fg.hilflingbackend.model.Motives
+import no.fg.hilflingbackend.model.Photo
+import no.fg.hilflingbackend.model.PhotoTagReferences
+import no.fg.hilflingbackend.model.PhotoTags
+import no.fg.hilflingbackend.model.SecurityLevel
+import no.fg.hilflingbackend.model.SecurityLevels
+import no.fg.hilflingbackend.model.analog_photos
+import no.fg.hilflingbackend.model.photos
+import no.fg.hilflingbackend.model.toDto
 import org.slf4j.LoggerFactory
-import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Repository
 import java.util.UUID
 
-/* TODO Remove this?
-fun Database.getPhotoAndPhotoTags(filter: () -> ColumnDeclaring<Boolean>){
-  return this
-    .from(Photos)
-    .crossJoin(PhotoTags)
-    .select(
-      Photos.id,
-      PhotoTags.name
-    )
-}
-
- */
 @Repository
-open class PhotoRepository {
-  @Autowired
-  open lateinit var database: Database
-
+open class PhotoRepository(
+  val database: Database
+) {
   val logger = LoggerFactory.getLogger(this::class.java)
+
+  private fun findCorrespondingPhotoTagDtos(photo: Photo): List<PhotoTagDto> {
+    return database.from(PhotoTags)
+      .crossJoin(PhotoTagReferences)
+      .select(
+        PhotoTags.name,
+        PhotoTags.id,
+        PhotoTagReferences.photoId,
+        PhotoTagReferences.photoTagId
+      )
+      .where { PhotoTagReferences.photoId eq photo.id }
+      .map { row ->
+        PhotoTagDto(
+          photoTagId = PhotoTagId(row[PhotoTags.id]!!),
+          name = row[PhotoTags.name]!!
+        )
+      }
+  }
 
   fun findById(id: UUID): PhotoDto? {
     return database.photos.find { it.id eq id }
       ?.let { photo ->
-        val tags = database
-          .from(PhotoTags)
-          .crossJoin(PhotoTagReferences)
-          .select(
-            PhotoTags.id,
-            PhotoTags.name,
-            PhotoTagReferences.photoId,
-            PhotoTagReferences.photoTagId
-          )
-          .where { PhotoTagReferences.photoId eq photo.id }
-          .map { row ->
-            PhotoTagDto(
-              // TODO: Try to avoid !! null safety override
-              photoTagId = PhotoTagId(row[PhotoTags.id]!!),
-              name = row[PhotoTags.name]!!
-            )
-          }
-        return photo.toDto(tags)
+        return photo.toDto(
+          findCorrespondingPhotoTagDtos(photo)
+        )
       }
   }
 
   fun findByMotiveId(id: UUID): List<PhotoDto>? {
-    return database
-      .photos
-      .filter {
-        it.motiveId eq id
-      }
-      .toList()
-      .map { it.toDto() }
+    return database.photos.filter {
+      it.motiveId eq id
+    }.toList()
+      .map { it.toDto(findCorrespondingPhotoTagDtos(it)) }
   }
 
   fun findAnalogPhotoById(id: UUID): AnalogPhoto? {
@@ -81,10 +77,12 @@ open class PhotoRepository {
   }
 
   fun findAll(): List<PhotoDto> {
-    return database
-      .photos
-      .toList()
-      .map { it.toDto() }
+    return database.photos.toList()
+      .map {
+        it.toDto(
+          findCorrespondingPhotoTagDtos(it)
+        )
+      }
   }
 
   fun findAllAnalogPhotos(): List<PhotoDto> {
@@ -96,7 +94,7 @@ open class PhotoRepository {
         album.isAnalog eq true
       }
       .toList()
-      .map { it.toDto() }
+      .map { it.toDto(findCorrespondingPhotoTagDtos(it)) }
   }
 
   fun findAllDigitalPhotos(): List<PhotoDto> {
@@ -107,7 +105,7 @@ open class PhotoRepository {
         val album = motive.albumId.referenceTable as Albums
         album.isAnalog eq false
       }.toList()
-      .map { it.toDto() }
+      .map { it.toDto(findCorrespondingPhotoTagDtos(it)) }
   }
 
   fun findCarouselPhotos(): List<PhotoDto> {
@@ -115,7 +113,7 @@ open class PhotoRepository {
       .photos
       .filter { it.isGoodPicture eq true }
       .take(6).toList()
-      .map { it.toDto() }
+      .map { it.toDto(findCorrespondingPhotoTagDtos(it)) }
   }
 
   fun findBySecurityLevel(securityLevel: SecurityLevel): List<PhotoDto> {
@@ -125,7 +123,7 @@ open class PhotoRepository {
         val securityLevelFromDatabase = it.securityLevelId.referenceTable as SecurityLevels
         securityLevelFromDatabase.id eq securityLevel.id
       }.toList()
-      .map { it.toDto() }
+      .map { it.toDto(findCorrespondingPhotoTagDtos(it)) }
   }
 
   fun createPhoto(
@@ -146,6 +144,18 @@ open class PhotoRepository {
       }
     }
      */
+    logger.info("Storing photo tags to database")
+    val photoTagDtoList = photoDto.photoTags
+    database.batchInsert(PhotoTagReferences) {
+      photoTagDtoList.map { photoTagDto ->
+        item {
+          set(it.id, UUID.randomUUID())
+          set(it.photoTagId, photoTagDto.photoTagId.id)
+          set(it.photoId, photoDto.photoId.id)
+        }
+      }
+    }
+
     return numOfSavedPhotos
   }
 

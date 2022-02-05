@@ -280,13 +280,13 @@ class PhotoService(
   }
 
   override fun createNewMotiveAndSaveDigitalPhotos(
-    motiveTitle: String,
-    placeName: String,
+    motiveString: String,
+    placeString: String,
     securityLevelId: UUID,
     photoGangBangerId: UUID,
     albumId: UUID,
     categoryName: String,
-    eventOwnerName: String,
+    eventOwnerString: String,
     photoFileList: List<MultipartFile>,
     isGoodPhotoList: List<Boolean>,
     tagList: List<List<String>>
@@ -299,7 +299,7 @@ class PhotoService(
     if (!isValidRequest) throw java.lang.IllegalArgumentException("photoFileList, isGoodPhotoList and tagList are of unequal length or not given")
     logger.info("createNewMotiveAndSaveDigitalPhotos() $tagList")
     val eventOwnerDto = eventOwnerRepository
-      .findByEventOwnerName(EventOwnerName.valueOf(eventOwnerName))
+      .findByEventOwnerName(EventOwnerName.valueOf(eventOwnerString))
       ?: throw EntityNotFoundException("Did not find eventOwner")
 
     val albumDto = albumRepository
@@ -322,10 +322,10 @@ class PhotoService(
     // Fetch object from database, if not exist create object
     // and save to database
     // TODO: Wait with saving place to database to later?
-    val placeDto = fetchOrCreatePlaceDto(placeName)
+    val placeDto = fetchOrCreatePlaceDto(placeString)
 
     val motiveDto = fetchOrCreateMotive(
-      motiveTitle = motiveTitle,
+      motiveTitle = motiveString,
       eventOwnerDto = eventOwnerDto,
       categoryDto = categoryDto,
       albumDto = albumDto
