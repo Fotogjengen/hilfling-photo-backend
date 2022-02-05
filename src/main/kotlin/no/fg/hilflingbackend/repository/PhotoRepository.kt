@@ -67,11 +67,18 @@ open class PhotoRepository(
       }
   }
 
-  fun findByMotiveId(id: UUID): List<PhotoDto>? {
-    return database.photos.filter {
+  fun findByMotiveId(id: UUID, page: Int, pageSize: Int): Page<PhotoDto>? {
+    val photos = database.photos.filter {
       it.motiveId eq id
-    }.toList()
+    }
+    val photoDtos = photos.toList()
       .map { it.toDto(findCorrespondingPhotoTagDtos(it)) }
+    return Page(
+      page = page,
+      pageSize = pageSize,
+      totalRecords = photos.totalRecords,
+      currentList = photoDtos
+    )
   }
 
   fun findAnalogPhotoById(id: UUID): AnalogPhoto? {
@@ -79,7 +86,8 @@ open class PhotoRepository(
   }
 
   fun findAll(page: Int, pageSize: Int): Page<PhotoDto> {
-    val photos = database.photos.drop(page).take(pageSize).toList()
+    val photos = database.photos
+    val photoDtos = photos.drop(page).take(pageSize).toList()
       .map {
         it.toDto(
           findCorrespondingPhotoTagDtos(it)
@@ -88,32 +96,46 @@ open class PhotoRepository(
     return Page(
       page = page,
       pageSize = pageSize,
-      totalRecords = database.photos.totalRecords,
-      currentList = photos
+      totalRecords = photos.totalRecords,
+      currentList = photoDtos
     )
   }
 
-  fun findAllAnalogPhotos(): List<PhotoDto> {
-    return database
+  fun findAllAnalogPhotos(page: Int, pageSize: Int): Page<PhotoDto> {
+    val photos = database
       .photos
       .filter {
         val motive = it.motiveId.referenceTable as Motives
         val album = motive.albumId.referenceTable as Albums
         album.isAnalog eq true
       }
-      .toList()
+    val photoDtos = photos.toList()
       .map { it.toDto(findCorrespondingPhotoTagDtos(it)) }
+    return Page(
+      page = page,
+      pageSize = pageSize,
+      totalRecords = photos.totalRecords,
+      currentList = photoDtos
+    )
   }
 
-  fun findAllDigitalPhotos(): List<PhotoDto> {
-    return database
+  fun findAllDigitalPhotos(page: Int, pageSize: Int): Page<PhotoDto> {
+    val photos = database
       .photos
       .filter {
         val motive = it.motiveId.referenceTable as Motives
         val album = motive.albumId.referenceTable as Albums
         album.isAnalog eq false
-      }.toList()
-      .map { it.toDto(findCorrespondingPhotoTagDtos(it)) }
+      }
+    val photoDtos = photos.toList()
+    .map { it.toDto(findCorrespondingPhotoTagDtos(it)) }
+
+    return Page(
+      page = page,
+      pageSize = pageSize,
+      totalRecords = photos.totalRecords,
+      currentList = photoDtos
+    )
   }
 
   fun findCarouselPhotos(): List<PhotoDto> {
@@ -124,14 +146,26 @@ open class PhotoRepository(
       .map { it.toDto(findCorrespondingPhotoTagDtos(it)) }
   }
 
-  fun findBySecurityLevel(securityLevel: SecurityLevel): List<PhotoDto> {
-    return database
+  fun findBySecurityLevel(
+    securityLevel: SecurityLevel,
+    page: Int,
+    pageSize: Int
+  ): Page<PhotoDto> {
+    val photos = database
       .photos
       .filter {
         val securityLevelFromDatabase = it.securityLevelId.referenceTable as SecurityLevels
         securityLevelFromDatabase.id eq securityLevel.id
-      }.toList()
-      .map { it.toDto(findCorrespondingPhotoTagDtos(it)) }
+      }
+    val photoDtos = photos.toList()
+    .map { it.toDto(findCorrespondingPhotoTagDtos(it)) }
+
+    return Page(
+      page = page,
+      pageSize = pageSize,
+      totalRecords = photos.totalRecords,
+      currentList = photoDtos
+    )
   }
 
   fun createPhoto(
