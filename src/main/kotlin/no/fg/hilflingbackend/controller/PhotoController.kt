@@ -142,8 +142,10 @@ class PhotoController(
 
   @GetMapping
   fun getAll(): ResponseEntity<List<PhotoDto>> {
-    return ResponseOk(photoService
-      .getAll())
+    return ResponseOk(
+      photoService
+        .getAll()
+    )
   }
 
   @GetMapping("/carousel")

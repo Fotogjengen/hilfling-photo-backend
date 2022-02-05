@@ -3,9 +3,9 @@ package no.fg.hilflingbackend.dto
 import no.fg.hilflingbackend.model.Photo
 import no.fg.hilflingbackend.model.PhotoTag
 import no.fg.hilflingbackend.model.PhotoTagReference
-import java.util.*
+import java.util.UUID
 
-data class PhotoTagReferenceDto (
+data class PhotoTagReferenceDto(
   val photoTagReferenceId: PhotoTagReferenceId = PhotoTagReferenceId(),
   val photoTag: PhotoTag,
   val photo: Photo

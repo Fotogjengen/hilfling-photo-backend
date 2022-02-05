@@ -1,7 +1,13 @@
 package no.fg.hilflingbackend.repository
 
 import me.liuwj.ktorm.database.Database
-import me.liuwj.ktorm.dsl.*
+import me.liuwj.ktorm.dsl.batchInsert
+import me.liuwj.ktorm.dsl.crossJoin
+import me.liuwj.ktorm.dsl.eq
+import me.liuwj.ktorm.dsl.from
+import me.liuwj.ktorm.dsl.map
+import me.liuwj.ktorm.dsl.select
+import me.liuwj.ktorm.dsl.where
 import me.liuwj.ktorm.entity.add
 import me.liuwj.ktorm.entity.filter
 import me.liuwj.ktorm.entity.find
@@ -11,8 +17,17 @@ import me.liuwj.ktorm.entity.update
 import no.fg.hilflingbackend.dto.PhotoDto
 import no.fg.hilflingbackend.dto.PhotoTagDto
 import no.fg.hilflingbackend.dto.PhotoTagId
-/* ktlint-disable no-wildcard-imports */
-import no.fg.hilflingbackend.model.*
+import no.fg.hilflingbackend.model.Albums
+import no.fg.hilflingbackend.model.AnalogPhoto
+import no.fg.hilflingbackend.model.Motives
+import no.fg.hilflingbackend.model.Photo
+import no.fg.hilflingbackend.model.PhotoTagReferences
+import no.fg.hilflingbackend.model.PhotoTags
+import no.fg.hilflingbackend.model.SecurityLevel
+import no.fg.hilflingbackend.model.SecurityLevels
+import no.fg.hilflingbackend.model.analog_photos
+import no.fg.hilflingbackend.model.photos
+import no.fg.hilflingbackend.model.toDto
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Repository
 import java.util.UUID
@@ -33,10 +48,12 @@ open class PhotoRepository(
         PhotoTagReferences.photoTagId
       )
       .where { PhotoTagReferences.photoId eq photo.id }
-      .map { row -> PhotoTagDto(
-        photoTagId = PhotoTagId(row[PhotoTags.id]!!),
-        name = row[PhotoTags.name]!!
-      ) }
+      .map { row ->
+        PhotoTagDto(
+          photoTagId = PhotoTagId(row[PhotoTags.id]!!),
+          name = row[PhotoTags.name]!!
+        )
+      }
   }
 
   fun findById(id: UUID): PhotoDto? {
@@ -50,8 +67,8 @@ open class PhotoRepository(
 
   fun findByMotiveId(id: UUID): List<PhotoDto>? {
     return database.photos.filter {
-        it.motiveId eq id
-      }.toList()
+      it.motiveId eq id
+    }.toList()
       .map { it.toDto(findCorrespondingPhotoTagDtos(it)) }
   }
 
@@ -61,9 +78,11 @@ open class PhotoRepository(
 
   fun findAll(): List<PhotoDto> {
     return database.photos.toList()
-      .map { it.toDto(
-        findCorrespondingPhotoTagDtos(it)
-      ) }
+      .map {
+        it.toDto(
+          findCorrespondingPhotoTagDtos(it)
+        )
+      }
   }
 
   fun findAllAnalogPhotos(): List<PhotoDto> {
@@ -127,12 +146,14 @@ open class PhotoRepository(
      */
     logger.info("Storing photo tags to database")
     val photoTagDtoList = photoDto.photoTags
-    database.batchInsert(PhotoTagReferences){
-      photoTagDtoList.map { photoTagDto -> item {
-        set(it.id, UUID.randomUUID())
-        set(it.photoTagId, photoTagDto.photoTagId.id)
-        set(it.photoId, photoDto.photoId.id)
-      } }
+    database.batchInsert(PhotoTagReferences) {
+      photoTagDtoList.map { photoTagDto ->
+        item {
+          set(it.id, UUID.randomUUID())
+          set(it.photoTagId, photoTagDto.photoTagId.id)
+          set(it.photoId, photoDto.photoId.id)
+        }
+      }
     }
 
     return numOfSavedPhotos
