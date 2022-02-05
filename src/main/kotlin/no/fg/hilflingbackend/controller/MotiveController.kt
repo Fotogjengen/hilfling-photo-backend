@@ -17,7 +17,7 @@ import java.util.UUID
 
 @RestController
 @RequestMapping("/motives")
-open class MotiveController {
+class MotiveController {
   @Autowired
   lateinit var repository: MotiveRepository
 
