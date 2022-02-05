@@ -24,21 +24,10 @@ import java.util.UUID
 
 @RestController
 @RequestMapping("/photos")
-open class PhotoController(
+class PhotoController(
   val photoService: PhotoService,
   val database: Database
 ) : GlobalExceptionHandler() {
-
-  // TODO: Remove not used anyMOre
-  @PostMapping("/profile", consumes = ["multipart/form-data"])
-  private fun uploadPhotoFile(
-    @RequestPart("file") file: MultipartFile,
-    // @RequestPart("type") type: String,
-  ): String {
-    // TODO: Refactor to use photoDto as in photoService
-    // return photoService.store(file, SecurityLevelType.valueOf("PROFILE"))
-    return "TODO"
-  }
 
   // The main photo-upload endpoint used most of the time
   @PostMapping("/upload")
