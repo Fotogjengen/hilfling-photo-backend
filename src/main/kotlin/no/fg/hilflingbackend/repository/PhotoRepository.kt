@@ -112,8 +112,10 @@ open class PhotoRepository(
 
     val totalRecords = photos.sumOf { it.totalRecords }
 
-    val photoDtos = photos.map { photoList -> photoList.drop(page).take(pageSize).toList()
-      .map { it.toDto(findCorrespondingPhotoTagDtos(it)) } }.flatten()
+    val photoDtos = photos.map { photoList ->
+      photoList.drop(page).take(pageSize).toList()
+        .map { it.toDto(findCorrespondingPhotoTagDtos(it)) }
+    }.flatten()
 
     return Page(
       page = page,
@@ -135,8 +137,10 @@ open class PhotoRepository(
 
     val totalRecords = photos.sumOf { it.totalRecords }
 
-    val photoDtos = photos.map { photoList -> photoList.drop(page).take(pageSize).toList()
-      .map { it.toDto(findCorrespondingPhotoTagDtos(it)) } }.flatten()
+    val photoDtos = photos.map { photoList ->
+      photoList.drop(page).take(pageSize).toList()
+        .map { it.toDto(findCorrespondingPhotoTagDtos(it)) }
+    }.flatten()
 
     return Page(
       page = page,
@@ -173,7 +177,7 @@ open class PhotoRepository(
         securityLevelFromDatabase.id eq securityLevel.id
       }
     val photoDtos = photos.drop(page).take(pageSize).toList()
-    .map { it.toDto(findCorrespondingPhotoTagDtos(it)) }
+      .map { it.toDto(findCorrespondingPhotoTagDtos(it)) }
 
     return Page(
       page = page,
