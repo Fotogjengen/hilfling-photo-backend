@@ -24,7 +24,7 @@ import java.util.UUID
 
 @RestController
 @RequestMapping("/photos")
-open class PhotoController(
+class PhotoController(
   val photoService: PhotoService,
   val database: Database
 ) : GlobalExceptionHandler() {
