@@ -416,8 +416,4 @@ class PhotoService(
     return photoRepository
       .findAll()
   }
-
-  fun test(): Any {
-    return photoRepository.findAll()
-  }
 }
