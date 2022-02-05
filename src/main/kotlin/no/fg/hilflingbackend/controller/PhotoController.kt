@@ -1,8 +1,10 @@
 package no.fg.hilflingbackend.controller
 
+import me.liuwj.ktorm.database.Database
 import no.fg.hilflingbackend.dto.PhotoDto
 import no.fg.hilflingbackend.exceptions.GlobalExceptionHandler
 import no.fg.hilflingbackend.model.AnalogPhoto
+import no.fg.hilflingbackend.model.Photo
 import no.fg.hilflingbackend.service.PhotoService
 import no.fg.hilflingbackend.utils.ResponseOk
 import org.springframework.http.HttpHeaders
@@ -23,9 +25,11 @@ import java.util.UUID
 
 @RestController
 @RequestMapping("/photos")
-class PhotoController(
-  val photoService: PhotoService
+open class PhotoController(
+  val photoService: PhotoService,
+  val database: Database
 ) : GlobalExceptionHandler() {
+
   // TODO: Remove not used anyMOre
   @PostMapping("/profile", consumes = ["multipart/form-data"])
   private fun uploadPhotoFile(
@@ -53,9 +57,9 @@ class PhotoController(
   ): ResponseEntity<List<String>> =
     ResponseEntity(
       photoService.createNewMotiveAndSaveDigitalPhotos(
-        motiveTitle = motiveTitle,
-        placeName = placeName,
-        eventOwnerName = eventOwnerName,
+        motiveString = motiveTitle,
+        placeString = placeName,
+        eventOwnerString = eventOwnerName,
         securityLevelId = securityLevelId,
         albumId = albumId,
         photoGangBangerId = photoGangBangerId,
@@ -149,10 +153,10 @@ class PhotoController(
   )
 
   @GetMapping
-  fun getAll(): ResponseEntity<List<PhotoDto>> = ResponseOk(
-    photoService
-      .getAll(),
-  )
+  fun getAll(): List<PhotoDto> {
+    return photoService
+        .getAll()
+  }
 
   @GetMapping("/carousel")
   fun getCarouselPhotos(): ResponseEntity<List<PhotoDto>> = ResponseOk(

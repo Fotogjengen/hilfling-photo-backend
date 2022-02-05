@@ -11,6 +11,7 @@ import no.fg.hilflingbackend.dto.PhotoDto
 import no.fg.hilflingbackend.dto.PhotoTagDto
 import no.fg.hilflingbackend.dto.PlaceDto
 import no.fg.hilflingbackend.dto.SecurityLevelDto
+import no.fg.hilflingbackend.model.Photo
 import no.fg.hilflingbackend.model.toDto
 import no.fg.hilflingbackend.repository.AlbumRepository
 import no.fg.hilflingbackend.repository.CategoryRepository
@@ -280,13 +281,13 @@ class PhotoService(
   }
 
   override fun createNewMotiveAndSaveDigitalPhotos(
-    motiveTitle: String,
-    placeName: String,
+    motiveString: String,
+    placeString: String,
     securityLevelId: UUID,
     photoGangBangerId: UUID,
     albumId: UUID,
     categoryName: String,
-    eventOwnerName: String,
+    eventOwnerString: String,
     photoFileList: List<MultipartFile>,
     isGoodPhotoList: List<Boolean>,
     tagList: List<List<String>>
@@ -299,7 +300,7 @@ class PhotoService(
     if (!isValidRequest) throw java.lang.IllegalArgumentException("photoFileList, isGoodPhotoList and tagList are of unequal length or not given")
     logger.info("createNewMotiveAndSaveDigitalPhotos() $tagList")
     val eventOwnerDto = eventOwnerRepository
-      .findByEventOwnerName(EventOwnerName.valueOf(eventOwnerName))
+      .findByEventOwnerName(EventOwnerName.valueOf(eventOwnerString))
       ?: throw EntityNotFoundException("Did not find eventOwner")
 
     val albumDto = albumRepository
@@ -322,10 +323,10 @@ class PhotoService(
     // Fetch object from database, if not exist create object
     // and save to database
     // TODO: Wait with saving place to database to later?
-    val placeDto = fetchOrCreatePlaceDto(placeName)
+    val placeDto = fetchOrCreatePlaceDto(placeString)
 
     val motiveDto = fetchOrCreateMotive(
-      motiveTitle = motiveTitle,
+      motiveTitle = motiveString,
       eventOwnerDto = eventOwnerDto,
       categoryDto = categoryDto,
       albumDto = albumDto
@@ -415,5 +416,9 @@ class PhotoService(
   override fun getAll(): List<PhotoDto> {
     return photoRepository
       .findAll()
+  }
+
+  fun test(): Any {
+    return photoRepository.findAll()
   }
 }
