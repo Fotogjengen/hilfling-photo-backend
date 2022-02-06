@@ -36,7 +36,7 @@ abstract class BaseRepository<E : BaseModel<E>, D>(val table: BaseTable<E>, val 
   }
 
   override fun delete(id: UUID): Int {
-    // TODO: remember to test that this actually works
+    // TODO: remember to test that this actually works --> Soft delete?? h
     return database.delete(table) { it.id eq id }
   }
 }

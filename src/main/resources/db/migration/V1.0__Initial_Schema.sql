@@ -3,7 +3,7 @@ CREATE TABLE ALBUM
     id           uuid PRIMARY KEY,
     title        VARCHAR(40),
     date_created DATE NOT NULL DEFAULT CURRENT_DATE,
-    is_analog    BOOLEAN
+    is_analog    BOOLEAN,
 );
 
 CREATE TABLE POSITION
