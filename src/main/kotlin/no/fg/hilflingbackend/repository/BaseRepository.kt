@@ -25,11 +25,11 @@ abstract class BaseRepository<E : BaseModel<E>, D>(val table: BaseTable<E>, val 
     return t
   }
 
-  override fun findAll(offset: Int, limit: Int): Page<D> {
-    val resultSet = database.from(table).select().limit(offset, limit)
+  override fun findAll(page: Int, pageSize: Int): Page<D> {
+    val resultSet = database.from(table).select().limit(page, pageSize)
     return Page(
-      offset,
-      limit,
+      page,
+      pageSize,
       1,
       currentList = resultSet.map { row -> convertToClass(row) }
     )
