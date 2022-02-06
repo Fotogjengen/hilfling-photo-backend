@@ -1,9 +1,11 @@
 package no.fg.hilflingbackend.controller
 
 import com.azure.core.models.ResponseError
+import hilfling.backend.hilfling.exceptions.RestExceptionHandler
 import no.fg.hilflingbackend.dto.Page
 import no.fg.hilflingbackend.dto.PhotoGangBangerDto
 import no.fg.hilflingbackend.dto.SamfundetUserDto
+import no.fg.hilflingbackend.exceptions.EntityCreationException
 import no.fg.hilflingbackend.exceptions.GlobalExceptionHandler
 import no.fg.hilflingbackend.repository.PhotoGangBangerRepository
 import no.fg.hilflingbackend.repository.SamfundetUserRepository
@@ -30,7 +32,7 @@ import java.util.UUID
 class PhotoGangBangerController(
   val repository: PhotoGangBangerRepository,
   val samfundetUserRepository: SamfundetUserRepository
-) : GlobalExceptionHandler() {
+) : RestExceptionHandler() {
 
   @GetMapping("/{id}")
   fun getById(@PathVariable("id") id: UUID): PhotoGangBangerDto? {
@@ -69,16 +71,12 @@ class PhotoGangBangerController(
     return repository.findAllInactivePangs(page = 0, pageSize = 100)
   }
 
-  @PostMapping("/create")
+  @PostMapping
   fun create(
     @RequestBody dto: PhotoGangBangerDto
-  ): ResponseEntity<PhotoGangBangerDto?> {
-    print(dto.toString())
+  ): ResponseEntity<Int> {
     val created = repository.create(dto)
-    if (created != 0) {
-      return ResponseCreated(null)
-    }
-    return ResponseNotCreated(null)
+    return ResponseCreated(created)
   }
 
   @PatchMapping()

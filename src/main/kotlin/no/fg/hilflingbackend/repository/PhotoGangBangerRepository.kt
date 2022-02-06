@@ -11,10 +11,12 @@ import me.liuwj.ktorm.entity.update
 import no.fg.hilflingbackend.dto.Page
 import no.fg.hilflingbackend.dto.PhotoGangBangerDto
 import no.fg.hilflingbackend.dto.toEntity
+import no.fg.hilflingbackend.exceptions.EntityCreationException
+import no.fg.hilflingbackend.exceptions.EntityExistsException
 import no.fg.hilflingbackend.model.PhotoGangBangers
 import no.fg.hilflingbackend.model.photo_gang_bangers
+import no.fg.hilflingbackend.model.samfundet_users
 import no.fg.hilflingbackend.model.toDto
-import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Repository
 import java.util.UUID
 
@@ -100,9 +102,24 @@ class PhotoGangBangerRepository(
   fun create(
     dto: PhotoGangBangerDto
   ): Int {
-    /*val created2 = database.photo_gang_bangers.add(
-      dto.toEntity()
-    )*/
+    val existingPhotoGangBanger = database.photo_gang_bangers
+      .find {
+        it.samfundetUserId eq dto.samfundetUser.samfundetUserId.id
+      }
+    if (existingPhotoGangBanger != null) {
+      throw EntityExistsException("PhotoGangBanger already exists")
+    }
+
+    val samfundetUser = database.samfundet_users.find {
+      it.id eq dto.samfundetUser.samfundetUserId.id
+    }
+    if (samfundetUser == null) {
+      try {
+        database.samfundet_users.add(dto.samfundetUser.toEntity())
+      } catch (_: Error) {
+        throw EntityCreationException("Could not create new SamfundetUser")
+      }
+    }
 
     val created = database.insert(PhotoGangBangers) {
       set(it.id, dto.photoGangBangerId.id)
