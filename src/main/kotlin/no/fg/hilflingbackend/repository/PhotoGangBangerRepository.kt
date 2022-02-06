@@ -7,6 +7,7 @@ import me.liuwj.ktorm.entity.filter
 import me.liuwj.ktorm.entity.find
 import me.liuwj.ktorm.entity.toList
 import me.liuwj.ktorm.entity.update
+import no.fg.hilflingbackend.dto.Page
 import no.fg.hilflingbackend.dto.PhotoGangBangerDto
 import no.fg.hilflingbackend.dto.toEntity
 import no.fg.hilflingbackend.model.photo_gang_bangers
@@ -25,13 +26,13 @@ open class PhotoGangBangerRepository {
     return database.photo_gang_bangers.find { it.id eq id }?.toDto()
   }
 
-  fun findAll(): List<PhotoGangBangerDto> {
-    return database.photo_gang_bangers
+  fun findAll(): Page<PhotoGangBangerDto> {
+    val photoGangBangers = database.photo_gang_bangers
       .toList()
       .map { it.toDto() }
   }
 
-  fun findAllActives(): List<PhotoGangBangerDto> {
+  fun findAllActives(): Page<PhotoGangBangerDto> {
     return database.photo_gang_bangers.filter {
       it.isActive eq true
       it.isPang eq false
@@ -39,7 +40,7 @@ open class PhotoGangBangerRepository {
       .map { it.toDto() }
   }
 
-  fun findAllActivePangs(): List<PhotoGangBangerDto> {
+  fun findAllActivePangs(): Page<PhotoGangBangerDto> {
     return database.photo_gang_bangers.filter {
       it.isActive eq true
       it.isPang eq true
@@ -47,7 +48,7 @@ open class PhotoGangBangerRepository {
       .map { it.toDto() }
   }
 
-  fun findAllInActivePangs(): List<PhotoGangBangerDto> {
+  fun findAllInActivePangs(): Page<PhotoGangBangerDto> {
     return database.photo_gang_bangers.filter {
       it.isActive eq false
       it.isPang eq true
