@@ -39,7 +39,7 @@ class PhotoGangBangerController(
 
   @GetMapping("/inactive_pangs")
   fun getInActivePangs(): List<PhotoGangBangerDto> {
-    return repository.findAllInActivePangs()
+    return repository.findAllInactivePangs()
   }
 
   @PostMapping("/create")

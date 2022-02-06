@@ -16,44 +16,83 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Repository
 import java.util.UUID
 
+interface IPhotoGangBangerRepository {
+  fun findById(id: UUID): PhotoGangBangerDto?
+  fun findAll(page: Int = 0, pageSize: Int = 100): Page<PhotoGangBangerDto>
+  fun findAllActives(page: Int = 0, pageSize: Int = 100): Page<PhotoGangBangerDto>
+  fun findAllActivePangs(page: Int = 0, pageSize: Int = 100): Page<PhotoGangBangerDto>
+  fun findAllInactivePangs(page: Int = 0, pageSize: Int = 100): Page<PhotoGangBangerDto>
+}
+
 @Repository
-open class PhotoGangBangerRepository {
+class PhotoGangBangerRepository : IPhotoGangBangerRepository {
   // TODO: Join with PhotoGangBangerDtoPositions
   @Autowired
   open lateinit var database: Database
 
-  fun findById(id: UUID): PhotoGangBangerDto? {
+  override fun findById(id: UUID): PhotoGangBangerDto? {
     return database.photo_gang_bangers.find { it.id eq id }?.toDto()
   }
 
-  fun findAll(): Page<PhotoGangBangerDto> {
+  override fun findAll(page: Int, pageSize: Int): Page<PhotoGangBangerDto> {
     val photoGangBangers = database.photo_gang_bangers
-      .toList()
-      .map { it.toDto() }
+    val photoGangBangerDtos = photoGangBangers.toList()
+    .map { it.toDto() }
+
+    return Page(
+      page = page,
+      pageSize = pageSize,
+      totalRecords = photoGangBangers.totalRecords,
+      currentList = photoGangBangerDtos
+    )
   }
 
-  fun findAllActives(): Page<PhotoGangBangerDto> {
-    return database.photo_gang_bangers.filter {
+  override fun findAllActives(page: Int, pageSize: Int): Page<PhotoGangBangerDto> {
+    val photoGangBangers = database.photo_gang_bangers.filter {
       it.isActive eq true
       it.isPang eq false
-    }.toList()
+    }
+    val photoGangBangerDtos = photoGangBangers.toList()
       .map { it.toDto() }
+
+    return Page(
+      page = page,
+      pageSize = pageSize,
+      totalRecords = photoGangBangers.totalRecords,
+      currentList = photoGangBangerDtos
+    )
   }
 
-  fun findAllActivePangs(): Page<PhotoGangBangerDto> {
-    return database.photo_gang_bangers.filter {
+  override fun findAllActivePangs(page: Int, pageSize: Int): Page<PhotoGangBangerDto> {
+    val photoGangBangers = database.photo_gang_bangers.filter {
       it.isActive eq true
       it.isPang eq true
-    }.toList()
+    }
+    val photoGangBangerDtos = photoGangBangers.toList()
       .map { it.toDto() }
+
+    return Page(
+      page = page,
+      pageSize = pageSize,
+      totalRecords = photoGangBangers.totalRecords,
+      currentList = photoGangBangerDtos
+    )
   }
 
-  fun findAllInActivePangs(): Page<PhotoGangBangerDto> {
-    return database.photo_gang_bangers.filter {
+  override fun findAllInactivePangs(page: Int, pageSize: Int): Page<PhotoGangBangerDto> {
+    val photoGangBangers = database.photo_gang_bangers.filter {
       it.isActive eq false
       it.isPang eq true
-    }.toList()
+    }
+    val photoGangBangerDtos = photoGangBangers.toList()
       .map { it.toDto() }
+
+    return Page(
+      page = page,
+      pageSize = pageSize,
+      totalRecords = photoGangBangers.totalRecords,
+      currentList = photoGangBangerDtos
+    )
   }
 
   fun create(
