@@ -10,6 +10,8 @@ services:
     image: maven:3.6.3-jdk-11-slim
     working_dir: /hilfling
     entrypoint: mvn test
+    # run commands as user instead of root to avoid privilage trouble
+    user: "${UID}:${GID}"
     volumes:
       - ./:/hilfling
     depends_on:
