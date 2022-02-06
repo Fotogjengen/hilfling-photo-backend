@@ -9,6 +9,7 @@ import no.fg.hilflingbackend.dto.SamfundetUserDto
 import no.fg.hilflingbackend.dto.toEntity
 import no.fg.hilflingbackend.model.SamfundetUser
 import no.fg.hilflingbackend.model.samfundet_users
+import no.fg.hilflingbackend.model.toDto
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Repository
 import java.util.UUID
@@ -28,11 +29,20 @@ open class SamfundetUserRepository {
 
   fun create(
     samfundetUserDto: SamfundetUserDto
-  ): Int {
-    return database
-      .samfundet_users
-      .add(
-        samfundetUserDto.toEntity()
-      )
+  ): SamfundetUserDto? {
+    var success = 0
+    try {
+       success = database
+        .samfundet_users
+        .add(
+          samfundetUserDto.toEntity()
+        )
+    } catch (error: Error) {
+      return null
+    }
+    if (success == 1) {
+      return findById(samfundetUserDto.samfundetUserId.id)?.toDto()
+    }
+    return null
   }
 }

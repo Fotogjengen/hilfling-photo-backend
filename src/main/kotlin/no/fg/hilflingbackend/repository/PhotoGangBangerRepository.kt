@@ -2,6 +2,7 @@ package no.fg.hilflingbackend.repository
 
 import me.liuwj.ktorm.database.Database
 import me.liuwj.ktorm.dsl.eq
+import me.liuwj.ktorm.dsl.insert
 import me.liuwj.ktorm.entity.add
 import me.liuwj.ktorm.entity.filter
 import me.liuwj.ktorm.entity.find
@@ -10,6 +11,7 @@ import me.liuwj.ktorm.entity.update
 import no.fg.hilflingbackend.dto.Page
 import no.fg.hilflingbackend.dto.PhotoGangBangerDto
 import no.fg.hilflingbackend.dto.toEntity
+import no.fg.hilflingbackend.model.PhotoGangBangers
 import no.fg.hilflingbackend.model.photo_gang_bangers
 import no.fg.hilflingbackend.model.toDto
 import org.springframework.beans.factory.annotation.Autowired
@@ -25,10 +27,10 @@ interface IPhotoGangBangerRepository {
 }
 
 @Repository
-class PhotoGangBangerRepository : IPhotoGangBangerRepository {
+class PhotoGangBangerRepository(
+  val database: Database
+) : IPhotoGangBangerRepository {
   // TODO: Join with PhotoGangBangerDtoPositions
-  @Autowired
-  open lateinit var database: Database
 
   override fun findById(id: UUID): PhotoGangBangerDto? {
     return database.photo_gang_bangers.find { it.id eq id }?.toDto()
@@ -97,10 +99,27 @@ class PhotoGangBangerRepository : IPhotoGangBangerRepository {
 
   fun create(
     dto: PhotoGangBangerDto
-  ): Int =
-    database.photo_gang_bangers.add(
+  ): Int {
+    /*val created2 = database.photo_gang_bangers.add(
       dto.toEntity()
-    )
+    )*/
+
+    val created = database.insert(PhotoGangBangers) {
+      set(it.id, dto.photoGangBangerId.id)
+      set(it.isActive, dto.isActive)
+      set(it.isPang, dto.isPang)
+      set(it.address, dto.address)
+      set(it.city, dto.city)
+      set(it.positionId, dto.position.positionId.id)
+      set(it.relationshipStatus, dto.relationShipStatus.status)
+      set(it.samfundetUserId, dto.samfundetUser.samfundetUserId.id)
+      set(it.semesterStart, dto.semesterStart.value)
+      set(it.zipCode, dto.zipCode)
+    }
+
+    return created
+  }
+
 
   fun patch(
     dto: PhotoGangBangerDto
