@@ -2,7 +2,6 @@ package no.fg.hilflingbackend.controller
 
 import no.fg.hilflingbackend.dto.PhotoGangBangerDto
 import no.fg.hilflingbackend.repository.PhotoGangBangerRepository
-import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PatchMapping
 import org.springframework.web.bind.annotation.PathVariable
@@ -14,10 +13,9 @@ import java.util.UUID
 
 @RestController
 @RequestMapping("/photo_gang_bangers")
-class PhotoGangBangerController {
-  // TODO: Refactor to use BaseController
-  @Autowired
-  lateinit var repository: PhotoGangBangerRepository
+class PhotoGangBangerController(
+  val repository: PhotoGangBangerRepository
+) {
 
   @GetMapping("/{id}")
   fun getById(@PathVariable("id") id: UUID): PhotoGangBangerDto? {
