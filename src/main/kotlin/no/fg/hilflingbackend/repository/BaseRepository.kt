@@ -16,7 +16,7 @@ import java.util.UUID
 
 abstract class BaseRepository<E : BaseModel<E>, D>(val table: BaseTable<E>, val database: Database) : IRepository<E, D> {
   override fun findById(id: UUID): D? {
-    // TODO: make a little bit less hacky wacky
+    // TODO: make a little bit less hacky wacky WHY IS THIS HACKY WACKY?
     val resultSet = database.from(table)
       .select()
       .where { table.id eq id }
@@ -26,7 +26,9 @@ abstract class BaseRepository<E : BaseModel<E>, D>(val table: BaseTable<E>, val 
   }
 
   override fun findAll(page: Int, pageSize: Int): Page<D> {
-    val resultSet = database.from(table).select().limit(page, pageSize)
+    val resultSet = database.from(table)
+      .select()
+      .limit(page, pageSize)
     return Page(
       page,
       pageSize,
@@ -36,7 +38,10 @@ abstract class BaseRepository<E : BaseModel<E>, D>(val table: BaseTable<E>, val 
   }
 
   override fun delete(id: UUID): Int {
-    // TODO: remember to test that this actually works --> Soft delete?? h
+    // TODO: remember to test that this actually works --> Soft delete??
+    // Dersom den er null vil jeg sette den til gjeldende dato
+    // Dersom deleted ikke er null, skal ikke tabellen vises eller returneres
+
     return database.delete(table) { it.id eq id }
   }
 }
