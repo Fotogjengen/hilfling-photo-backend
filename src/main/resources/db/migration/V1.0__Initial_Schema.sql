@@ -4,6 +4,7 @@ CREATE TABLE ALBUM
     title        VARCHAR(40),
     date_created DATE NOT NULL DEFAULT CURRENT_DATE,
     is_analog    BOOLEAN,
+    deleted DATE DEFAULT NULL
 );
 
 CREATE TABLE POSITION
@@ -11,21 +12,25 @@ CREATE TABLE POSITION
     id           uuid PRIMARY KEY,
     title        VARCHAR(40),
     email        VARCHAR(40),
-    date_created DATE NOT NULL DEFAULT CURRENT_DATE
+    date_created DATE NOT NULL DEFAULT CURRENT_DATE,
+    deleted      DATE DEFAULT NULL
 );
 
 CREATE TABLE GANG
 (
     id           uuid PRIMARY KEY,
     name         VARCHAR(30),
-    date_created DATE NOT NULL DEFAULT CURRENT_DATE
+    date_created DATE NOT NULL DEFAULT CURRENT_DATE,
+    deleted DATE DEFAULT NULL
 );
 
 CREATE TABLE PHOTO_TAG
 (
     id           uuid PRIMARY KEY,
     name         VARCHAR(20),
-    date_created DATE NOT NULL DEFAULT CURRENT_DATE
+    date_created DATE NOT NULL DEFAULT CURRENT_DATE,
+    deleted      DATE DEFAULT NULL,
+    deleted DATE DEFAULT NULL
 );
 
 CREATE TABLE PURCHASE_ORDER
@@ -39,42 +44,53 @@ CREATE TABLE PURCHASE_ORDER
     send_by_post BOOLEAN,
     comment      TEXT,
     date_created DATE NOT NULL DEFAULT CURRENT_DATE,
-    is_completed BOOLEAN
+    is_completed BOOLEAN,
+    deleted DATE DEFAULT NULL
 );
 
 CREATE TABLE SECURITY_LEVEL
 (
     id           uuid PRIMARY KEY,
     type         VARCHAR(10),
-    date_created DATE NOT NULL DEFAULT CURRENT_DATE
+    date_created DATE NOT NULL DEFAULT CURRENT_DATE,
+    date_modified DATE DEFAULT NULL,
+    deleted DATE DEFAULT NULL
 );
 
 CREATE TABLE PLACE
 (
     id           uuid PRIMARY KEY NOT NULL,
     date_created DATE NOT NULL DEFAULT CURRENT_DATE,
-    name         VARCHAR(30) UNIQUE
+    name         VARCHAR(30) UNIQUE,
+    date_modified DATE DEFAULT NULL,
+    deleted DATE DEFAULT NULL
 );
 
 CREATE TABLE EVENT_OWNER
 (
     id           uuid PRIMARY KEY,
     date_created DATE NOT NULL DEFAULT CURRENT_DATE,
-    name         VARCHAR(30)
+    name         VARCHAR(30),
+    date_modified DATE DEFAULT NULL,
+    deleted DATE DEFAULT NULL
 );
 
 CREATE TABLE CATEGORY
 (
     id           uuid PRIMARY KEY,
     date_created DATE NOT NULL DEFAULT CURRENT_DATE,
-    name         VARCHAR(20)
+    name         VARCHAR(20),
+    date_modified DATE DEFAULT NULL,
+    deleted DATE DEFAULT NULL
 );
 
 CREATE TABLE ARTICLE_TAG
 (
     id           uuid PRIMARY KEY,
     date_created DATE NOT NULL DEFAULT CURRENT_DATE,
-    name         VARCHAR(20)
+    name         VARCHAR(20),
+    date_modified DATE DEFAULT NULL,
+    deleted DATE DEFAULT NULL
 );
 
 CREATE TABLE PHOTOGRAPHY_REQUEST
@@ -89,7 +105,9 @@ CREATE TABLE PHOTOGRAPHY_REQUEST
     name         VARCHAR(50) NOT NULL,
     email        VARCHAR(50) NOT NULL,
     phone        VARCHAR(20) NOT NULL,
-    description  TEXT        NOT NULL
+    description  TEXT        NOT NULL,
+    date_modified DATE       DEFAULT NULL,
+    deleted DATE DEFAULT NULL
 );
 
 CREATE TABLE SAMFUNDET_USER
@@ -103,7 +121,9 @@ CREATE TABLE SAMFUNDET_USER
     profile_picture   VARCHAR(100),
     phone_number      VARCHAR(20),
     sex               VARCHAR(10),
-    security_level_id UUID REFERENCES SECURITY_LEVEL (id)
+    security_level_id UUID REFERENCES SECURITY_LEVEL (id),
+    date_modified DATE DEFAULT NULL,
+    deleted DATE DEFAULT NULL
 );
 
 
@@ -119,7 +139,9 @@ CREATE TABLE PHOTO_GANG_BANGER
     zip_code            VARCHAR(4),
     city                VARCHAR(30),
     samfundet_user_id   UUID REFERENCES SAMFUNDET_USER (id),
-    position_id UUID NOT NULL REFERENCES POSITION(id)
+    position_id UUID NOT NULL REFERENCES POSITION(id),
+    date_modified DATE DEFAULT NULL,
+    deleted DATE DEFAULT NULL
 );
 
 
@@ -130,7 +152,8 @@ CREATE TABLE ARTICLE
     title                VARCHAR(50),
     plain_text           VARCHAR(100),
     security_level_id    UUID REFERENCES SECURITY_LEVEL (id),
-    photo_gang_banger_id UUID REFERENCES PHOTO_GANG_BANGER (id)
+    photo_gang_banger_id UUID REFERENCES PHOTO_GANG_BANGER (id),
+    date_modified DATE DEFAULT NULL
 );
 
 CREATE TABLE MOTIVE
@@ -140,7 +163,8 @@ CREATE TABLE MOTIVE
     date_created   DATE NOT NULL DEFAULT CURRENT_DATE,
     category_id    UUID REFERENCES CATEGORY (id),
     event_owner_id UUID REFERENCES EVENT_OWNER (id),
-    album_id       UUID REFERENCES ALBUM (id)
+    album_id       UUID REFERENCES ALBUM (id),
+    date_modified DATE DEFAULT NULL
 );
 
 CREATE TABLE PHOTO
@@ -157,7 +181,8 @@ CREATE TABLE PHOTO
     gang_id              UUID REFERENCES GANG (id),
     album_id UUID REFERENCES ALBUM(id),
     category_id UUID REFERENCES CATEGORY(id),
-    photo_gang_banger_id UUID REFERENCES PHOTO_GANG_BANGER (id)
+    photo_gang_banger_id UUID REFERENCES PHOTO_GANG_BANGER (id),
+    date_modified DATE DEFAULT NULL
 );
 
 CREATE TABLE ANALOG_PHOTO
@@ -165,26 +190,30 @@ CREATE TABLE ANALOG_PHOTO
     image_number INTEGER,
     date_created DATE NOT NULL DEFAULT CURRENT_DATE,
     page_number  INTEGER,
-    photo_id     UUID REFERENCES PHOTO (id)
+    photo_id     UUID REFERENCES PHOTO (id),
+    date_modified DATE DEFAULT NULL
 );
 
 
 CREATE TABLE ARTICLE_TAG_IN_ARTICLE
 (
     article_tag_id UUID REFERENCES ARTICLE_TAG (id),
-    article_id     UUID REFERENCES ARTICLE (id)
+    article_id     UUID REFERENCES ARTICLE (id),
+    date_modified DATE DEFAULT NULL
 );
 
 CREATE TABLE PHOTOS_IN_PURCHASE_ORDER
 (
     purchase_order_id UUID REFERENCES PURCHASE_ORDER (id),
     photo_id          UUID REFERENCES PHOTO (id),
-    img_size          VARCHAR(10)
+    img_size          VARCHAR(10),
+    date_modified DATE DEFAULT NULL
 );
 
 CREATE TABLE PHOTO_TAG_IN_PHOTO
 (
     id           UUID PRIMARY KEY,
     photo_tag_id UUID REFERENCES PHOTO_TAG (id),
-    photo_id     UUID REFERENCES PHOTO (id)
+    photo_id     UUID REFERENCES PHOTO (id),
+    date_modified DATE DEFAULT NULL
 );
