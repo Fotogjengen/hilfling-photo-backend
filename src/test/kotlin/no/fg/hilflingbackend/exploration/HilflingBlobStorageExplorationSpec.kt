@@ -12,8 +12,6 @@ class HilflingBlobStorageExplorationSpec : Spek({
   describe("BlobService client") {
     it("Can create blob container") {
       val connectionString = System.getenv("AZURE_STORAGE_CONNECTION_STRING")
-      val test = System.getenv(("TEST_TEST_TEST"))
-      println("Test: $test")
       // BlobServiceClient.
       println("connection string: $connectionString")
 
@@ -46,9 +44,8 @@ class HilflingBlobStorageExplorationSpec : Spek({
       // Upload the blob
       blobClient.uploadFromFile(localPath + fileName)
       println("\nListing blobs...")
-
       // List the blob(s) in the container.
-      containerClient.listBlobs()
+      blobClient.containerClient.listBlobs()
 
       assertTrue {
         containerClient.listBlobs().any {
