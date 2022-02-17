@@ -10,6 +10,8 @@ import me.liuwj.ktorm.entity.toList
 import me.liuwj.ktorm.entity.update
 import no.fg.hilflingbackend.dto.Page
 import no.fg.hilflingbackend.dto.PhotoGangBangerDto
+import no.fg.hilflingbackend.dto.PhotoGangBangerPatchRequestDto
+import no.fg.hilflingbackend.dto.SamfundetUserDto
 import no.fg.hilflingbackend.dto.toEntity
 import no.fg.hilflingbackend.exceptions.EntityCreationException
 import no.fg.hilflingbackend.exceptions.EntityExistsException
@@ -19,6 +21,7 @@ import no.fg.hilflingbackend.model.samfundet_users
 import no.fg.hilflingbackend.model.toDto
 import org.springframework.stereotype.Repository
 import java.util.UUID
+import javax.persistence.EntityNotFoundException
 
 interface IPhotoGangBangerRepository {
   fun findById(id: UUID): PhotoGangBangerDto?
@@ -41,7 +44,7 @@ class PhotoGangBangerRepository(
   override fun findAll(page: Int, pageSize: Int): Page<PhotoGangBangerDto> {
     val photoGangBangers = database.photo_gang_bangers
     val photoGangBangerDtos = photoGangBangers.toList()
-    .map { it.toDto() }
+      .map { it.toDto() }
 
     return Page(
       page = page,
@@ -139,8 +142,35 @@ class PhotoGangBangerRepository(
 
 
   fun patch(
-    dto: PhotoGangBangerDto
-  ): Int = database.photo_gang_bangers.update(
-    dto.toEntity()
-  )
+    dto: PhotoGangBangerPatchRequestDto
+  ): PhotoGangBangerDto? {
+
+    val photoGangBangerDtoFromDb = findById(dto.photoGangBangerId.id)
+        ?: throw EntityNotFoundException("Could not find PhotoGangBanger")
+
+    println(photoGangBangerDtoFromDb.samfundetUser.samfundetUserId.id)
+
+    var hasUpdatedSamfundetUser = 0
+    if (dto.samfundetUser != null) {
+      hasUpdatedSamfundetUser = database.samfundet_users.update(dto.samfundetUser.toEntity())
+    }
+
+    val photoGangBangerDto = PhotoGangBangerDto(
+      photoGangBangerId = photoGangBangerDtoFromDb.photoGangBangerId,
+      samfundetUser = dto.samfundetUser ?: photoGangBangerDtoFromDb.samfundetUser,
+      city = dto.city ?: photoGangBangerDtoFromDb.city,
+      zipCode = dto.zipCode ?: photoGangBangerDtoFromDb.zipCode,
+      address = dto.address ?: photoGangBangerDtoFromDb.address,
+      isPang = dto.isPang ?: photoGangBangerDtoFromDb.isPang,
+      isActive = dto.isActive ?: photoGangBangerDtoFromDb.isActive,
+      semesterStart = dto.semesterStart ?: photoGangBangerDtoFromDb.semesterStart,
+      relationShipStatus = dto.relationshipStatus ?: photoGangBangerDtoFromDb.relationShipStatus,
+      position = dto.position ?: photoGangBangerDtoFromDb.position
+    )
+
+    val hasUpdatedPhotoGangBanger = database.photo_gang_bangers.update(
+      photoGangBangerDto.toEntity()
+    )
+    return findById(dto.photoGangBangerId.id)
+  }
 }

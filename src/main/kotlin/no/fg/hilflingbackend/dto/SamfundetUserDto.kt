@@ -5,6 +5,18 @@ import no.fg.hilflingbackend.value_object.Email
 import no.fg.hilflingbackend.value_object.PhoneNumber
 import java.util.UUID
 
+data class SamfundetUserPatchRequestDto(
+  val samfundetUserId: SamfundetUserId,
+  val firstName: String?,
+  val lastName: String?,
+  val username: String?,
+  val phoneNumber: PhoneNumber?,
+  val email: Email?,
+  val profilePicturePath: String?,
+  val sex: String?,
+  val securituLevel: SecurityLevelDto?
+)
+
 data class SamfundetUserDto(
   val samfundetUserId: SamfundetUserId = SamfundetUserId(),
   val firstName: String,

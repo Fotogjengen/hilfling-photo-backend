@@ -4,6 +4,7 @@ import com.azure.core.models.ResponseError
 import hilfling.backend.hilfling.exceptions.RestExceptionHandler
 import no.fg.hilflingbackend.dto.Page
 import no.fg.hilflingbackend.dto.PhotoGangBangerDto
+import no.fg.hilflingbackend.dto.PhotoGangBangerPatchRequestDto
 import no.fg.hilflingbackend.dto.SamfundetUserDto
 import no.fg.hilflingbackend.exceptions.EntityCreationException
 import no.fg.hilflingbackend.exceptions.GlobalExceptionHandler
@@ -81,8 +82,8 @@ class PhotoGangBangerController(
 
   @PatchMapping()
   fun patch(
-    @RequestBody dto: PhotoGangBangerDto
-  ): Int {
+    @RequestBody dto: PhotoGangBangerPatchRequestDto
+  ): PhotoGangBangerDto? {
     return repository.patch(dto)
   }
 }

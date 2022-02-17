@@ -3,12 +3,25 @@ package no.fg.hilflingbackend.dto
 import no.fg.hilflingbackend.model.PhotoGangBanger
 import java.util.UUID
 
+data class PhotoGangBangerPatchRequestDto(
+  val photoGangBangerId: PhotoGangBangerId,
+  val relationshipStatus: RelationshipStatus?,
+  val semesterStart: SemesterStart?,
+  val isActive: Boolean?,
+  val isPang: Boolean?,
+  val address: String?,
+  val zipCode: String?,
+  val city: String?,
+  val samfundetUser: SamfundetUserDto?,
+  val position: PositionDto?
+)
+
 data class PhotoGangBangerDto(
   val photoGangBangerId: PhotoGangBangerId = PhotoGangBangerId(),
   val relationShipStatus: RelationshipStatus,
   val semesterStart: SemesterStart,
   val isActive: Boolean,
-  val isPang: Boolean,
+  var isPang: Boolean,
   // TODO: Add value object
   val address: String,
   // TODO: Add value object
@@ -17,6 +30,7 @@ data class PhotoGangBangerDto(
   val samfundetUser: SamfundetUserDto,
   val position: PositionDto
 )
+
 fun PhotoGangBangerDto.toEntity(): PhotoGangBanger {
   val dto = this
   return PhotoGangBanger {

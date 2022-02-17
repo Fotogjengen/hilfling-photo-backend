@@ -5,6 +5,7 @@ import me.liuwj.ktorm.entity.Entity
 import me.liuwj.ktorm.entity.sequenceOf
 import me.liuwj.ktorm.schema.varchar
 import no.fg.hilflingbackend.dto.PositionDto
+import no.fg.hilflingbackend.dto.PositionId
 import no.fg.hilflingbackend.value_object.Email
 
 interface Position : BaseModel<Position> {
@@ -20,6 +21,7 @@ object Positions : BaseTable<Position>("position") {
 }
 
 fun Position.toDto() = PositionDto(
+  positionId = PositionId(this.id),
   title = this.title,
   email = Email(this.email)
 )
