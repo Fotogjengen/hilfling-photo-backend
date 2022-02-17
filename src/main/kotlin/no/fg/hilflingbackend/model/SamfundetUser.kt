@@ -34,7 +34,7 @@ fun SamfundetUser.toDto() = SamfundetUserDto(
   email = Email(this.email),
   profilePicturePath = this.profilePicture,
   phoneNumber = PhoneNumber(this.phoneNumber),
-  securituLevel = this.securityLevel.toDto(),
+  securityLevel = this.securityLevel.toDto(),
   sex = this.sex
 )
 

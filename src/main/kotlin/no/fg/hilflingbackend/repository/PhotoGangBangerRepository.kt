@@ -144,20 +144,29 @@ class PhotoGangBangerRepository(
   fun patch(
     dto: PhotoGangBangerPatchRequestDto
   ): PhotoGangBangerDto? {
-
     val photoGangBangerDtoFromDb = findById(dto.photoGangBangerId.id)
         ?: throw EntityNotFoundException("Could not find PhotoGangBanger")
 
-    println(photoGangBangerDtoFromDb.samfundetUser.samfundetUserId.id)
-
-    var hasUpdatedSamfundetUser = 0
+    var samfundetUserDto = photoGangBangerDtoFromDb.samfundetUser
     if (dto.samfundetUser != null) {
-      hasUpdatedSamfundetUser = database.samfundet_users.update(dto.samfundetUser.toEntity())
-    }
+      samfundetUserDto = SamfundetUserDto(
+        samfundetUserId = photoGangBangerDtoFromDb.samfundetUser.samfundetUserId,
+        firstName = dto.samfundetUser.firstName ?: photoGangBangerDtoFromDb.samfundetUser.firstName,
+        lastName = dto.samfundetUser.lastName ?: photoGangBangerDtoFromDb.samfundetUser.lastName,
+        username = dto.samfundetUser.username ?: photoGangBangerDtoFromDb.samfundetUser.username,
+        phoneNumber = dto.samfundetUser.phoneNumber ?: photoGangBangerDtoFromDb.samfundetUser.phoneNumber,
+        email = dto.samfundetUser.email ?: photoGangBangerDtoFromDb.samfundetUser.email,
+        profilePicturePath = dto.samfundetUser.profilePicturePath ?: photoGangBangerDtoFromDb.samfundetUser.profilePicturePath,
+        sex = dto.samfundetUser.sex ?: photoGangBangerDtoFromDb.samfundetUser.sex,
+        securityLevel = dto.samfundetUser.securityLevel ?: photoGangBangerDtoFromDb.samfundetUser.securityLevel,
 
+      )
+      database.samfundet_users.update(samfundetUserDto.toEntity())
+    }
+    
     val photoGangBangerDto = PhotoGangBangerDto(
       photoGangBangerId = photoGangBangerDtoFromDb.photoGangBangerId,
-      samfundetUser = dto.samfundetUser ?: photoGangBangerDtoFromDb.samfundetUser,
+      samfundetUser = samfundetUserDto,
       city = dto.city ?: photoGangBangerDtoFromDb.city,
       zipCode = dto.zipCode ?: photoGangBangerDtoFromDb.zipCode,
       address = dto.address ?: photoGangBangerDtoFromDb.address,
@@ -168,7 +177,7 @@ class PhotoGangBangerRepository(
       position = dto.position ?: photoGangBangerDtoFromDb.position
     )
 
-    val hasUpdatedPhotoGangBanger = database.photo_gang_bangers.update(
+    database.photo_gang_bangers.update(
       photoGangBangerDto.toEntity()
     )
     return findById(dto.photoGangBangerId.id)

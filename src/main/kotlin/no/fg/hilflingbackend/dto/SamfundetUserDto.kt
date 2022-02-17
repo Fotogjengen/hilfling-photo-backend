@@ -14,7 +14,7 @@ data class SamfundetUserPatchRequestDto(
   val email: Email?,
   val profilePicturePath: String?,
   val sex: String?,
-  val securituLevel: SecurityLevelDto?
+  val securityLevel: SecurityLevelDto?
 )
 
 data class SamfundetUserDto(
@@ -27,7 +27,7 @@ data class SamfundetUserDto(
   // TODO: Rename SQL-scheme and interface to match this variablename
   val profilePicturePath: String,
   val sex: String,
-  val securituLevel: SecurityLevelDto
+  val securityLevel: SecurityLevelDto
 )
 
 // Extend Dto object with a converter to ktorm interface
@@ -41,7 +41,7 @@ fun SamfundetUserDto.toEntity(): SamfundetUser {
     phoneNumber = dto.phoneNumber.value
     email = dto.email.value
     sex = dto.sex
-    securityLevel = dto.securituLevel.toEntity()
+    securityLevel = dto.securityLevel.toEntity()
     profilePicture = dto.profilePicturePath
   }
 }

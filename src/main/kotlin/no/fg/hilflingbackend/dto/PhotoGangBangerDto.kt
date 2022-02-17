@@ -12,7 +12,7 @@ data class PhotoGangBangerPatchRequestDto(
   val address: String?,
   val zipCode: String?,
   val city: String?,
-  val samfundetUser: SamfundetUserDto?,
+  val samfundetUser: SamfundetUserPatchRequestDto?,
   val position: PositionDto?
 )
 
