@@ -288,7 +288,7 @@ class MockDataService {
         profilePicturePath = "https://media1.tenor.com/images/79f8be09f39791c6462d30c5ce42e3be/tenor.gif?itemid=18386674",
         sex = "Mann",
         username = "sjsivert",
-        securituLevel = generateSecurityLevelData().first(),
+        securityLevel = generateSecurityLevelData().first(),
         phoneNumber = PhoneNumber("91382506")
       ),
       SamfundetUserDto(
@@ -299,7 +299,7 @@ class MockDataService {
         profilePicturePath = "https://media1.tenor.com/images/79f8be09f39791c6462d30c5ce42e3be/tenor.gif?itemid=18386674",
         sex = "Kvinne",
         username = "Carossa",
-        securituLevel = generateSecurityLevelData().first(),
+        securityLevel = generateSecurityLevelData().first(),
         phoneNumber = PhoneNumber("91382506")
       )
     )
