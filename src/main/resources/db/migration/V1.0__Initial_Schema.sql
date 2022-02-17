@@ -153,7 +153,8 @@ CREATE TABLE ARTICLE
     plain_text           VARCHAR(100),
     security_level_id    UUID REFERENCES SECURITY_LEVEL (id),
     photo_gang_banger_id UUID REFERENCES PHOTO_GANG_BANGER (id),
-    date_modified DATE DEFAULT NULL
+    date_modified DATE DEFAULT NULL,
+    deleted DATE DEFAULT NULL
 );
 
 CREATE TABLE MOTIVE
@@ -164,7 +165,8 @@ CREATE TABLE MOTIVE
     category_id    UUID REFERENCES CATEGORY (id),
     event_owner_id UUID REFERENCES EVENT_OWNER (id),
     album_id       UUID REFERENCES ALBUM (id),
-    date_modified DATE DEFAULT NULL
+    date_modified DATE DEFAULT NULL,
+    deleted DATE DEFAULT NULL
 );
 
 CREATE TABLE PHOTO
@@ -182,7 +184,8 @@ CREATE TABLE PHOTO
     album_id UUID REFERENCES ALBUM(id),
     category_id UUID REFERENCES CATEGORY(id),
     photo_gang_banger_id UUID REFERENCES PHOTO_GANG_BANGER (id),
-    date_modified DATE DEFAULT NULL
+    date_modified DATE DEFAULT NULL,
+    deleted DATE DEFAULT NULL
 );
 
 CREATE TABLE ANALOG_PHOTO
@@ -191,7 +194,8 @@ CREATE TABLE ANALOG_PHOTO
     date_created DATE NOT NULL DEFAULT CURRENT_DATE,
     page_number  INTEGER,
     photo_id     UUID REFERENCES PHOTO (id),
-    date_modified DATE DEFAULT NULL
+    date_modified DATE DEFAULT NULL,
+    deleted DATE DEFAULT NULL
 );
 
 
@@ -199,7 +203,8 @@ CREATE TABLE ARTICLE_TAG_IN_ARTICLE
 (
     article_tag_id UUID REFERENCES ARTICLE_TAG (id),
     article_id     UUID REFERENCES ARTICLE (id),
-    date_modified DATE DEFAULT NULL
+    date_modified DATE DEFAULT NULL,
+    deleted DATE DEFAULT NULL
 );
 
 CREATE TABLE PHOTOS_IN_PURCHASE_ORDER
@@ -207,7 +212,8 @@ CREATE TABLE PHOTOS_IN_PURCHASE_ORDER
     purchase_order_id UUID REFERENCES PURCHASE_ORDER (id),
     photo_id          UUID REFERENCES PHOTO (id),
     img_size          VARCHAR(10),
-    date_modified DATE DEFAULT NULL
+    date_modified DATE DEFAULT NULL,
+    deleted DATE DEFAULT NULL
 );
 
 CREATE TABLE PHOTO_TAG_IN_PHOTO
@@ -215,5 +221,6 @@ CREATE TABLE PHOTO_TAG_IN_PHOTO
     id           UUID PRIMARY KEY,
     photo_tag_id UUID REFERENCES PHOTO_TAG (id),
     photo_id     UUID REFERENCES PHOTO (id),
-    date_modified DATE DEFAULT NULL
+    date_modified DATE DEFAULT NULL,
+    deleted DATE DEFAULT NULL
 );
