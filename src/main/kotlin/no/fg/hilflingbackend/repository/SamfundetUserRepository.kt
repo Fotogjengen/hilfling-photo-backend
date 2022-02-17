@@ -32,7 +32,7 @@ open class SamfundetUserRepository {
   ): SamfundetUserDto? {
     var success = 0
     try {
-       success = database
+      success = database
         .samfundet_users
         .add(
           samfundetUserDto.toEntity()

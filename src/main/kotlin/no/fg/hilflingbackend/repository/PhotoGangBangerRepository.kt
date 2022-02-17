@@ -140,12 +140,11 @@ class PhotoGangBangerRepository(
     return created
   }
 
-
   fun patch(
     dto: PhotoGangBangerPatchRequestDto
   ): PhotoGangBangerDto? {
     val photoGangBangerDtoFromDb = findById(dto.photoGangBangerId.id)
-        ?: throw EntityNotFoundException("Could not find PhotoGangBanger")
+      ?: throw EntityNotFoundException("Could not find PhotoGangBanger")
 
     var samfundetUserDto = photoGangBangerDtoFromDb.samfundetUser
     if (dto.samfundetUser != null) {
@@ -163,7 +162,7 @@ class PhotoGangBangerRepository(
       )
       database.samfundet_users.update(samfundetUserDto.toEntity())
     }
-    
+
     val photoGangBangerDto = PhotoGangBangerDto(
       photoGangBangerId = photoGangBangerDtoFromDb.photoGangBangerId,
       samfundetUser = samfundetUserDto,

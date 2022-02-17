@@ -49,7 +49,7 @@ class RestExceptionHandler : ResponseEntityExceptionHandler() {
     val error = ApiError("No object with tat id exist", "", HttpStatus.NOT_FOUND, ex)
     return ResponseEntity(error, error.status)
   }
-  //other exception handlers below
+  // other exception handlers below
 
   @ExceptionHandler(DataIntegrityViolationException::class)
   fun handleDataIntegrityViolation(ex: DataIntegrityViolationException): ResponseEntity<Any> {
@@ -57,11 +57,11 @@ class RestExceptionHandler : ResponseEntityExceptionHandler() {
     return ResponseEntity(error, error.status)
   }
 
-   @ExceptionHandler(ConstraintViolationException::class)
-   fun handleConstraintViolation(ex: ConstraintViolationException): ResponseEntity<Any> {
-       val error = ApiError("Violates constraint", "", HttpStatus.BAD_REQUEST, ex)
-       return ResponseEntity(error, error.status)
-   }
+  @ExceptionHandler(ConstraintViolationException::class)
+  fun handleConstraintViolation(ex: ConstraintViolationException): ResponseEntity<Any> {
+    val error = ApiError("Violates constraint", "", HttpStatus.BAD_REQUEST, ex)
+    return ResponseEntity(error, error.status)
+  }
 
   @ExceptionHandler(EntityExistsException::class)
   fun handleEntityExist(ex: EntityExistsException): ResponseEntity<Any> {
@@ -74,6 +74,4 @@ class RestExceptionHandler : ResponseEntityExceptionHandler() {
     val error = ApiError(String.format("Entity could not be created: %s", ex.message), "", HttpStatus.BAD_REQUEST, ex)
     return ResponseEntity(error, error.status)
   }
-
 }
-
