@@ -3,6 +3,11 @@ package no.fg.hilflingbackend.dto
 import no.fg.hilflingbackend.model.PhotoTag
 import java.util.UUID
 
+data class PhotoTagPatchRequestDto(
+  val photoTagId: PhotoTagId,
+  val name: String?
+)
+
 data class PhotoTagDto(
   val photoTagId: PhotoTagId = PhotoTagId(),
   val name: String
