@@ -14,7 +14,7 @@ import no.fg.hilflingbackend.model.BaseModel
 import no.fg.hilflingbackend.model.BaseTable
 import java.util.UUID
 
-abstract class BaseRepository<E : BaseModel<E>, D>(val table: BaseTable<E>, val database: Database) : IRepository<E, D> {
+abstract class BaseRepository<E : BaseModel<E>, D, R>(val table: BaseTable<E>, val database: Database) : IRepository<E, D, R> {
   override fun findById(id: UUID): D? {
     // TODO: make a little bit less hacky wacky
     val resultSet = database.from(table)
