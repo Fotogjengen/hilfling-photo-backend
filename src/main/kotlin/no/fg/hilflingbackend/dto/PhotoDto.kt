@@ -4,6 +4,22 @@ import no.fg.hilflingbackend.model.Photo
 import no.fg.hilflingbackend.value_object.ImageFileName
 import java.util.UUID
 
+data class PhotoPatchRequestDto(
+  val photoId: PhotoId,
+  val isGoodPicture: Boolean?,
+  val smallUrl: String?,
+  val mediumUrl: String?,
+  val largeUrl: String?,
+  val motive: MotiveDto?,
+  val placeDto: PlaceDto?,
+  val securityLevel: SecurityLevelDto?,
+  val gang: GangDto?,
+  val albumDto: AlbumDto?,
+  val categoryDto: CategoryDto?,
+  val photoGangBangerDto: PhotoGangBangerDto?,
+  val photoTags: List<PhotoTagDto>?
+)
+
 data class PhotoDto(
   val photoId: PhotoId = PhotoId(),
   val isGoodPicture: Boolean = false,
