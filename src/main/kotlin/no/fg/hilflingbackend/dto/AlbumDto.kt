@@ -3,6 +3,12 @@ package no.fg.hilflingbackend.dto
 import no.fg.hilflingbackend.model.Album
 import java.util.UUID
 
+data class AlbumPatchRequestDto(
+  val albumId: AlbumId,
+  val title: String?,
+  val isAnalog: Boolean?
+)
+
 data class AlbumDto(
   val albumId: AlbumId = AlbumId(),
   val title: String,
