@@ -4,6 +4,14 @@ import no.fg.hilflingbackend.model.Motive
 import java.time.LocalDate
 import java.util.UUID
 
+data class MotivePatchRequestDto(
+  val motiveId: MotiveId,
+  val title: String?,
+  val categoryDto: CategoryDto?,
+  val eventOwnerDto: EventOwnerDto?,
+  val albumDto: AlbumDto?,
+)
+
 data class MotiveDto(
   val motiveId: MotiveId = MotiveId(),
   val title: String,
