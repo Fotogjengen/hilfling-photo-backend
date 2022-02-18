@@ -23,7 +23,7 @@ open class SecurityLevelRepository(database: Database) : BaseRepository<Security
     return database.security_levels.add(dto.toEntity())
   }
 
-  override fun patch(dto: SecurityLevelDto): Int {
+  fun patch(dto: SecurityLevelDto): Int {
     return database.security_levels.update(dto.toEntity())
   }
 }

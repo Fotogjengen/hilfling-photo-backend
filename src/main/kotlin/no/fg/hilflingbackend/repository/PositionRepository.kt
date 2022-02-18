@@ -25,7 +25,7 @@ open class PositionRepository(database: Database) : BaseRepository<Position, Pos
     return database.positions.add(dto.toEntity())
   }
 
-  override fun patch(dto: PositionDto): Int {
+  fun patch(dto: PositionDto): Int {
     return database.positions.update(dto.toEntity())
   }
 }

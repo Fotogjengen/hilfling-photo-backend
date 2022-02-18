@@ -34,7 +34,7 @@ open class PlaceRepository(database: Database) : BaseRepository<Place, PlaceDto>
     }
     ?.toDto()
 
-  override fun patch(dto: PlaceDto): Int {
+  fun patch(dto: PlaceDto): Int {
     return database.places.update(dto.toEntity())
   }
 }

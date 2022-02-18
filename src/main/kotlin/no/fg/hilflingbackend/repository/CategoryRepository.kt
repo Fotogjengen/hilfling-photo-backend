@@ -26,7 +26,7 @@ open class CategoryRepository(database: Database) : BaseRepository<Category, Cat
     return database.categories.add(dto.toEntity())
   }
 
-  override fun patch(dto: CategoryDto): Int {
+  fun patch(dto: CategoryDto): Int {
     return database.categories.update(dto.toEntity())
   }
 

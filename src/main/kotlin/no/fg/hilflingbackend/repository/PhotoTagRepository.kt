@@ -26,7 +26,7 @@ open class PhotoTagRepository(database: Database) : BaseRepository<PhotoTag, Pho
     return database.photo_tags.add(dto.toEntity())
   }
 
-  override fun patch(dto: PhotoTagDto): Int {
+  fun patch(dto: PhotoTagDto): Int {
     return database.photo_tags.update(dto.toEntity())
   }
 

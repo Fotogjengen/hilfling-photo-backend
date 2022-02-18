@@ -26,7 +26,7 @@ open class EventOwnerRepository(database: Database) : BaseRepository<EventOwner,
     return database.event_owners.add(dto.toEntity())
   }
 
-  override fun patch(dto: EventOwnerDto): Int {
+  fun patch(dto: EventOwnerDto): Int {
     return database.event_owners.update(dto.toEntity())
   }
 

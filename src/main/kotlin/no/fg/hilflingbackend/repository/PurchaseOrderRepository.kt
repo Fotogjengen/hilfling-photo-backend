@@ -32,7 +32,7 @@ open class PurchaseOrderRepository(database: Database) : BaseRepository<Purchase
     return database.purchase_orders.add(dto.toEntity())
   }
 
-  override fun patch(dto: PurchaseOrderDto): Int {
+  fun patch(dto: PurchaseOrderDto): Int {
     return database.purchase_orders.update(dto.toEntity())
   }
 }

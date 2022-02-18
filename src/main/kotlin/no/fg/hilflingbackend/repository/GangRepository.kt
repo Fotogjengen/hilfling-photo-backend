@@ -23,7 +23,7 @@ open class GangRepository(database: Database) : BaseRepository<Gang, GangDto>(ta
     return database.gangs.add(dto.toEntity())
   }
 
-  override fun patch(dto: GangDto): Int {
+  fun patch(dto: GangDto): Int {
     return database.gangs.update(dto.toEntity())
   }
 }

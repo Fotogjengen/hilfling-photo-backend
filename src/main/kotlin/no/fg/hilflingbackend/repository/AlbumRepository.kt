@@ -24,7 +24,7 @@ open class AlbumRepository(database: Database) : BaseRepository<Album, AlbumDto>
     return database.albums.add(dto.toEntity())
   }
 
-  override fun patch(dto: AlbumDto): Int {
+  fun patch(dto: AlbumDto): Int {
     return database.albums.update(dto.toEntity())
   }
 }
