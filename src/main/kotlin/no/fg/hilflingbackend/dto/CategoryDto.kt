@@ -3,6 +3,11 @@ package no.fg.hilflingbackend.dto
 import no.fg.hilflingbackend.model.Category
 import java.util.UUID
 
+data class CategoryPatchRequestDto(
+  val categoryId: CategoryId,
+  val name: String?
+)
+
 data class CategoryDto(
   val categoryId: CategoryId = CategoryId(),
   val name: String
