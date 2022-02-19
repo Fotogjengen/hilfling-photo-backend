@@ -31,7 +31,7 @@ data class PhotoDto(
       this.motive = photo.motive.toEntity()
       this.place = photo.placeDto.toEntity()
       this.securityLevel = photo.securityLevel.toEntity()
-      // this.gang = photo.gang.toEntity() as Gang
+      this.gang = photo.gang?.toEntity()
       this.album = photo.albumDto.toEntity()
       this.category = photo.categoryDto.toEntity()
       this.photoGangBanger = photo.photoGangBangerDto.toEntity()

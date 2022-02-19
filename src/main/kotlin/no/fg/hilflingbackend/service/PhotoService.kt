@@ -414,6 +414,7 @@ class PhotoService(
   override fun getById(id: UUID): PhotoDto = photoRepository.findById(id) ?: throw EntityNotFoundException("Did not find photo")
 
   override fun getAll(page: Int, pageSize: Int): Page<PhotoDto> {
+    println("photoservice")
     return photoRepository
       .findAll(page, pageSize)
   }
