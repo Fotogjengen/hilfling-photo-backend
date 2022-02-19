@@ -15,7 +15,7 @@ import no.fg.hilflingbackend.value_object.ZipCode
 import org.springframework.stereotype.Repository
 
 @Repository
-open class PurchaseOrderRepository(database: Database) : BaseRepository<PurchaseOrder, PurchaseOrderDto>(table = PurchaseOrders, database = database) {
+open class PurchaseOrderRepository(database: Database) : BaseRepository<PurchaseOrder, PurchaseOrderDto, NotImplementedError>(table = PurchaseOrders, database = database) {
   override fun convertToClass(qrs: QueryRowSet): PurchaseOrderDto = PurchaseOrderDto(
     purchaseOrderId = PurchaseOrderId(qrs[PurchaseOrders.id]!!),
     name = qrs[PurchaseOrders.name]!!,
