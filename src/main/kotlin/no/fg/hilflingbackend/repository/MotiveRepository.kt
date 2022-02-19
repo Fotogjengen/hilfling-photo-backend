@@ -7,15 +7,24 @@ import me.liuwj.ktorm.entity.drop
 import me.liuwj.ktorm.entity.find
 import me.liuwj.ktorm.entity.take
 import me.liuwj.ktorm.entity.toList
+import me.liuwj.ktorm.entity.update
+import no.fg.hilflingbackend.dto.AlbumDto
+import no.fg.hilflingbackend.dto.CategoryDto
+import no.fg.hilflingbackend.dto.EventOwnerDto
 import no.fg.hilflingbackend.dto.MotiveDto
+import no.fg.hilflingbackend.dto.MotivePatchRequestDto
 import no.fg.hilflingbackend.dto.Page
+import no.fg.hilflingbackend.dto.SecurityLevelDto
 import no.fg.hilflingbackend.dto.toEntity
 import no.fg.hilflingbackend.model.Motive
 import no.fg.hilflingbackend.model.motives
+import no.fg.hilflingbackend.model.security_levels
 import no.fg.hilflingbackend.model.toDto
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Repository
+import java.time.LocalDate
 import java.util.UUID
+import javax.persistence.EntityNotFoundException
 
 @Repository
 open class MotiveRepository {
@@ -57,5 +66,21 @@ open class MotiveRepository {
   ): MotiveDto {
     database.motives.add(motive.toEntity())
     return motive
+  }
+
+  fun patch(dto: MotivePatchRequestDto): MotiveDto {
+    val fromDb = findById(dto.motiveId.id)
+      ?: throw EntityNotFoundException("Could not find Motive")
+    val newDto = MotiveDto(
+      motiveId = fromDb.motiveId,
+      title = dto.title ?: fromDb.title,
+      categoryDto = dto.categoryDto ?: fromDb.categoryDto,
+      eventOwnerDto = dto.eventOwnerDto ?: fromDb.eventOwnerDto,
+      albumDto = dto.albumDto ?: fromDb.albumDto,
+      dateCreated = fromDb.dateCreated
+    )
+    val updated = database.motives.update(newDto.toEntity())
+
+    return if (updated == 1) newDto else fromDb
   }
 }
