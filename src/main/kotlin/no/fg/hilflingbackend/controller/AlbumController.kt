@@ -1,11 +1,9 @@
 package no.fg.hilflingbackend.controller
 
-import no.fg.hilflingbackend.blobStorage.AzureStorageConfiguration
 import no.fg.hilflingbackend.dto.AlbumDto
 import no.fg.hilflingbackend.model.Album
 import no.fg.hilflingbackend.repository.AlbumRepository
 import no.fg.hilflingbackend.service.AlbumService
-import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping

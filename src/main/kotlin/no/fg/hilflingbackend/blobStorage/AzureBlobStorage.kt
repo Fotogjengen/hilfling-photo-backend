@@ -7,7 +7,7 @@ import org.springframework.stereotype.Repository
 import org.springframework.web.multipart.MultipartFile
 
 @Repository
-class AzureBlobStorage(val azureStorageConfiguration: AzureStorageConfiguration ): IAzureBlobStorage {
+class AzureBlobStorage(val azureStorageConfiguration: AzureStorageConfiguration) : IAzureBlobStorage {
 
   val blobServiceClient: BlobServiceClient = BlobServiceClientBuilder()
     .connectionString(azureStorageConfiguration.azureStorageConnectionString)
@@ -24,4 +24,3 @@ class AzureBlobStorage(val azureStorageConfiguration: AzureStorageConfiguration 
     return blobClient.blobUrl
   }
 }
-

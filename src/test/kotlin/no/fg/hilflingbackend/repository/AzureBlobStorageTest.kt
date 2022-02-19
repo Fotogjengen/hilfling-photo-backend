@@ -1,21 +1,18 @@
 package no.fg.hilflingbackend.repository
 
-import com.nhaarman.mockitokotlin2.mock
 import no.fg.hilflingbackend.blobStorage.AzureBlobStorage
 import no.fg.hilflingbackend.blobStorage.AzureStorageConfiguration
 import no.fg.hilflingbackend.value_object.ImageFileName
 import org.junit.jupiter.api.AfterEach
-import org.junit.jupiter.api.Test
-
-import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
 import org.junit.runner.RunWith
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.mock.web.MockMultipartFile
 import org.springframework.test.context.junit4.SpringRunner
-import org.springframework.web.multipart.MultipartFile
 import java.util.UUID
+import kotlin.test.assertTrue
 
 @RunWith(SpringRunner::class)
 @SpringBootTest()
@@ -46,7 +43,7 @@ internal class AzureBlobStorageTest {
 
     val response = azureBlobStorage.saveFile(
       multipartFile = mockFile,
-      blobContainerName =  containerName,
+      blobContainerName = containerName,
       fileName = ImageFileName("test.png")
     )
 

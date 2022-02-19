@@ -111,12 +111,11 @@ class MockDataService {
   @Autowired
   lateinit var azureBlobStorage: AzureBlobStorage
 
-  fun initializeAzureBlobStorageContainers(){
+  fun initializeAzureBlobStorageContainers() {
     listOf("alle", "fggjeng", "husfolk").forEach {
       val containerClient = azureBlobStorage.blobServiceClient.createBlobContainer(it)
       containerClient.setAccessPolicy(PublicAccessType.BLOB, null)
     }
-
   }
 
   fun generateSecurityLevelData(): List<SecurityLevelDto> =
