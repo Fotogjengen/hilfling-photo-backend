@@ -8,21 +8,15 @@ import me.liuwj.ktorm.entity.find
 import me.liuwj.ktorm.entity.take
 import me.liuwj.ktorm.entity.toList
 import me.liuwj.ktorm.entity.update
-import no.fg.hilflingbackend.dto.AlbumDto
-import no.fg.hilflingbackend.dto.CategoryDto
-import no.fg.hilflingbackend.dto.EventOwnerDto
 import no.fg.hilflingbackend.dto.MotiveDto
 import no.fg.hilflingbackend.dto.MotivePatchRequestDto
 import no.fg.hilflingbackend.dto.Page
-import no.fg.hilflingbackend.dto.SecurityLevelDto
 import no.fg.hilflingbackend.dto.toEntity
 import no.fg.hilflingbackend.model.Motive
 import no.fg.hilflingbackend.model.motives
-import no.fg.hilflingbackend.model.security_levels
 import no.fg.hilflingbackend.model.toDto
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Repository
-import java.time.LocalDate
 import java.util.UUID
 import javax.persistence.EntityNotFoundException
 

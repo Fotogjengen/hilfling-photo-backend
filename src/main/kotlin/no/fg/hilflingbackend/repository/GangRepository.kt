@@ -7,12 +7,10 @@ import me.liuwj.ktorm.entity.update
 import no.fg.hilflingbackend.dto.GangDto
 import no.fg.hilflingbackend.dto.GangId
 import no.fg.hilflingbackend.dto.GangPatchRequestDto
-import no.fg.hilflingbackend.dto.SecurityLevelDto
 import no.fg.hilflingbackend.dto.toEntity
 import no.fg.hilflingbackend.model.Gang
 import no.fg.hilflingbackend.model.Gangs
 import no.fg.hilflingbackend.model.gangs
-import no.fg.hilflingbackend.model.security_levels
 import org.springframework.stereotype.Repository
 import javax.persistence.EntityNotFoundException
 
