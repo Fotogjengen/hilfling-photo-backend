@@ -1,50 +1,13 @@
 package no.fg.hilflingbackend
 
 import me.liuwj.ktorm.database.Database
+import me.liuwj.ktorm.dsl.batchInsert
+import me.liuwj.ktorm.dsl.from
 import no.fg.hilflingbackend.controller.PhotoController
-import no.fg.hilflingbackend.dto.AlbumDto
-import no.fg.hilflingbackend.dto.AlbumId
-import no.fg.hilflingbackend.dto.CategoryDto
-import no.fg.hilflingbackend.dto.CategoryId
-import no.fg.hilflingbackend.dto.EventOwnerDto
-import no.fg.hilflingbackend.dto.EventOwnerId
-import no.fg.hilflingbackend.dto.EventOwnerName
-import no.fg.hilflingbackend.dto.GangDto
-import no.fg.hilflingbackend.dto.GangId
-import no.fg.hilflingbackend.dto.MotiveDto
-import no.fg.hilflingbackend.dto.MotiveId
-import no.fg.hilflingbackend.dto.PhotoDto
-import no.fg.hilflingbackend.dto.PhotoGangBangerDto
-import no.fg.hilflingbackend.dto.PhotoGangBangerId
-import no.fg.hilflingbackend.dto.PhotoGangBangerPositionDto
-import no.fg.hilflingbackend.dto.PhotoGangBangerPositionId
-import no.fg.hilflingbackend.dto.PhotoId
-import no.fg.hilflingbackend.dto.PhotoTagDto
-import no.fg.hilflingbackend.dto.PhotoTagId
-import no.fg.hilflingbackend.dto.PlaceDto
-import no.fg.hilflingbackend.dto.PlaceId
-import no.fg.hilflingbackend.dto.PositionDto
-import no.fg.hilflingbackend.dto.PositionId
-import no.fg.hilflingbackend.dto.RelationshipStatus
-import no.fg.hilflingbackend.dto.SamfundetUserDto
-import no.fg.hilflingbackend.dto.SamfundetUserId
-import no.fg.hilflingbackend.dto.SecurityLevelDto
-import no.fg.hilflingbackend.dto.SecurityLevelId
-import no.fg.hilflingbackend.dto.SemesterStart
-import no.fg.hilflingbackend.repository.AlbumRepository
-import no.fg.hilflingbackend.repository.ArticleRepository
-import no.fg.hilflingbackend.repository.ArticleTagRepository
-import no.fg.hilflingbackend.repository.CategoryRepository
-import no.fg.hilflingbackend.repository.EventOwnerRepository
-import no.fg.hilflingbackend.repository.GangRepository
-import no.fg.hilflingbackend.repository.MotiveRepository
-import no.fg.hilflingbackend.repository.PhotoGangBangerRepository
-import no.fg.hilflingbackend.repository.PhotoRepository
-import no.fg.hilflingbackend.repository.PhotoTagRepository
-import no.fg.hilflingbackend.repository.PlaceRepository
-import no.fg.hilflingbackend.repository.PositionRepository
-import no.fg.hilflingbackend.repository.SamfundetUserRepository
-import no.fg.hilflingbackend.repository.SecurityLevelRepository
+import no.fg.hilflingbackend.dto.*
+import no.fg.hilflingbackend.model.Photos
+import no.fg.hilflingbackend.model.photos
+import no.fg.hilflingbackend.repository.*
 import no.fg.hilflingbackend.value_object.Email
 import no.fg.hilflingbackend.value_object.PhoneNumber
 import no.fg.hilflingbackend.value_object.SecurityLevelType
@@ -52,8 +15,17 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.core.io.ClassPathResource
 import org.springframework.mock.web.MockMultipartFile
 import org.springframework.stereotype.Service
+import java.io.IOException
+import java.net.HttpURLConnection
+import java.net.URI
+import java.net.URL
+import java.net.http.HttpClient
+import java.net.http.HttpRequest
+import java.net.http.HttpResponse
+import java.security.SecureRandom
 import java.time.LocalDate
-import java.util.UUID
+import java.util.*
+
 
 @Service
 class MockDataService {
@@ -135,40 +107,44 @@ class MockDataService {
       )
     )
 
-  fun generatePhoto(): List<PhotoDto> =
-    listOf(
-      PhotoDto(
-        photoId = PhotoId(UUID.fromString("8214142f-7c08-48ad-9130-fd7ac6b23e58")),
-        largeUrl = "img/FG/8214142f-7c08-48ad-9130-fd7ac6b23e58.jpg",
-        motive = generateMotiveData().first(),
-        placeDto = generatePlaceData().first(),
-        securityLevel = generateSecurityLevelData().first(),
-        gang = generateGangData().first(),
-        isGoodPicture = true,
-        smallUrl = "img/FG/8214142f-7c08-48ad-9130-fd7ac6b23e58.jpg",
-        mediumUrl = "img/FG/8214142f-7c08-48ad-9130-fd7ac6b23e58.jpg",
-        photoGangBangerDto = generatePhotoGangBangerData().first(),
-        photoTags = generatePhotoTagData(),
-        albumDto = generateAlbumData().first(),
-        categoryDto = generateCategoryData().first()
-      ),
+  fun getPhotoFromApi(): String {
+    val client = HttpClient.newBuilder().build()
+    val request = HttpRequest.newBuilder()
+      .uri(URI.create("https://picsum.photos/1200/800"))
+      .build()
+    val response = client.send(request, HttpResponse.BodyHandlers.ofString())
+    return response.headers().allValues("location")[0]
+  }
 
-      PhotoDto(
-        photoId = PhotoId(UUID.fromString("7214142f-7c08-48ad-9130-fd7ac6b23e58")),
-        motive = generateMotiveData().first(),
-        placeDto = generatePlaceData().first(),
-        securityLevel = generateSecurityLevelData().first(),
-        gang = generateGangData().first(),
-        isGoodPicture = false,
-        smallUrl = "img/FG/7214142f-7c08-48ad-9130-fd7ac6b23e58.jpg",
-        mediumUrl = "img/FG/7214142f-7c08-48ad-9130-fd7ac6b23e58.jpg",
-        largeUrl = "img/FG/7214142f-7c08-48ad-9130-fd7ac6b23e58.jpg",
-        photoGangBangerDto = generatePhotoGangBangerData()[0],
-        photoTags = generatePhotoTagData(),
-        albumDto = generateAlbumData().first(),
-        categoryDto = generateCategoryData().first()
+  fun generatePhoto(): List<PhotoDto> {
+    val list = mutableListOf<PhotoDto>()
+
+    for(i in 1..50){
+      val random = SecureRandom()
+      val byte = random.generateSeed(i);
+      val uuid = UUID.nameUUIDFromBytes(byte)
+      val url = getPhotoFromApi()
+      list.add(
+        PhotoDto(
+          photoId = PhotoId(uuid),
+          largeUrl = url,
+          motive = generateMotiveData().first(),
+          placeDto = generatePlaceData().first(),
+          securityLevel = generateSecurityLevelData().first(),
+          gang = generateGangData().first(),
+          isGoodPicture = true,
+          smallUrl = url,
+          mediumUrl = url,
+          photoGangBangerDto = generatePhotoGangBangerData().first(),
+          photoTags = generatePhotoTagData(),
+          albumDto = generateAlbumData().first(),
+          categoryDto = generateCategoryData().first()
+        )
       )
-    )
+    }
+    return list
+  }
+
   fun generatePlaceData(): List<PlaceDto> =
     listOf(
       PlaceDto(
@@ -567,8 +543,24 @@ class MockDataService {
     generateGangData().forEach {
       gangRepository.create(it)
     }
-    generatePhoto().forEach {
-      val file = ClassPathResource("demoPhotos/digfø3652.jpg")
+    database.batchInsert(Photos){
+      generatePhoto().map { photoDto -> item {
+        set(it.isGoodPicture, photoDto.isGoodPicture)
+        set(it.id, photoDto.photoId.id)
+        set(it.largeUrl, photoDto.largeUrl)
+        set(it.motiveId, photoDto.motive.motiveId.id)
+        set(it.securityLevelId, photoDto.securityLevel.securityLevelId.id)
+        set(it.gangId, photoDto.gang?.gangId?.id)
+        set(it.placeId, photoDto.placeDto.placeId.id)
+        set(it.smallUrl, photoDto.smallUrl)
+        set(it.mediumUrl, photoDto.mediumUrl)
+        set(it.photoGangBangerId, photoDto.photoGangBangerDto.photoGangBangerId.id)
+        set(it.albumId, photoDto.albumDto.albumId.id)
+        set(it.categoryId, photoDto.categoryDto.categoryId.id)
+      } }
+    }
+    /*generatePhoto().forEach {
+      val file = getPhotoFromApi()
       photoController.uploadPhotos(
         motiveTitle = it.motive.title,
         placeName = it.placeDto.name,
@@ -588,7 +580,7 @@ class MockDataService {
         isGoodPhotoList = listOf(it.isGoodPicture)
       )
       // photoRepository.createPhoto(it)
-    }
+    }*/
     println("Photos Seeded")
   }
 }
