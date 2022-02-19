@@ -29,8 +29,7 @@ CREATE TABLE PHOTO_TAG
     id           uuid PRIMARY KEY,
     name         VARCHAR(20),
     date_created DATE NOT NULL DEFAULT CURRENT_DATE,
-    deleted      DATE DEFAULT NULL,
-    deleted DATE DEFAULT NULL
+    deleted      DATE DEFAULT NULL
 );
 
 CREATE TABLE PURCHASE_ORDER
