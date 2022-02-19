@@ -37,12 +37,27 @@ spring:
       file-size-threshold: 2KB
       max-file-size: 50MB
       max-request-size: 60MB
+  azure:
+    tenant-id:
+    client:
+      client-id:
+      client-secret:
+    storage:
+      storage-id:
+      storage-endpoint:
+      container:
+      blob-storage:
+        connection-string: ${AZURE_STORAGE_CONNECTION_STRING:DefaultEndpointsProtocol=http;AccountName=devstoreaccount1;AccountKey=Eby8vdM02xNOcqFlqUwJPLlmEtlCDXJ1OUzFT50uSRZ6IFsuFq2UVErCz4I6tq/K1SZFPTOtr/KBHBeksoGMGw==;BlobEndpoint=http://127.0.0.1:10000/devstoreaccount1;QueueEndpoint=http://127.0.0.1:10001/devstoreaccount1;TableEndpoint=http://127.0.0.1:10002/devstoreaccount1;}
+
+
 springdoc:
   api-docs:
     #path: "/"
     enabled: true
   swagger-ui:
     path: "/"
+
+# Doesn't currently work?
 static-files:
   img:
     saved-photos-path: "static-files/static/img"
@@ -51,6 +66,7 @@ file:
   large-upload-dir: photos/large/
   medium-upload-dir: photos/medium/
   small-upload-dir: photos/small/
+
 #okta: # SECURITY OKTA
 #  oauth2:
 #    issuer: https://dev-812828.okta.com/oauth2/default

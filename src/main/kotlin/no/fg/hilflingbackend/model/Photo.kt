@@ -24,7 +24,7 @@ interface Photo : BaseModel<Photo> {
   var motive: Motive
   var place: Place
   var securityLevel: SecurityLevel
-  var gang: Gang
+  var gang: Gang?
   var album: Album
   var category: Category
   var photoGangBanger: PhotoGangBanger
@@ -49,19 +49,19 @@ object Photos : BaseTable<Photo>("photo") {
 
 val Database.photos get() = this.sequenceOf(Photos)
 
-fun Photo.toDto(photoTags: List<PhotoTagDto> = listOf()): PhotoDto = PhotoDto(
-  photoId = PhotoId(this.id),
-  isGoodPicture = this.isGoodPicture,
-  smallUrl = this.smallUrl,
-  mediumUrl = this.mediumUrl,
-  largeUrl = this.largeUrl,
-  motive = this.motive.toDto(),
-  placeDto = this.place
-    .toDto(),
-  securityLevel = this.securityLevel.toDto(),
-  gang = this.gang.toDto(),
-  photoGangBangerDto = this.photoGangBanger.toDto(),
-  albumDto = this.album.toDto(),
-  categoryDto = this.category.toDto(),
-  photoTags = photoTags
-)
+fun Photo.toDto(photoTags: List<PhotoTagDto> = listOf()): PhotoDto =
+  PhotoDto(
+    photoId = PhotoId(this.id),
+    isGoodPicture = this.isGoodPicture,
+    smallUrl = this.smallUrl,
+    mediumUrl = this.mediumUrl,
+    largeUrl = this.largeUrl,
+    motive = this.motive.toDto(),
+    placeDto = this.place.toDto(),
+    securityLevel = this.securityLevel.toDto(),
+    photoGangBangerDto = this.photoGangBanger.toDto(),
+    gang = this.gang?.toDto(),
+    albumDto = this.album.toDto(),
+    categoryDto = this.category.toDto(),
+    photoTags = photoTags
+  )
