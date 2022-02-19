@@ -5,6 +5,8 @@ import me.liuwj.ktorm.dsl.eq
 import me.liuwj.ktorm.entity.add
 import me.liuwj.ktorm.entity.find
 import me.liuwj.ktorm.entity.toList
+import no.fg.hilflingbackend.dto.ArticleDto
+import no.fg.hilflingbackend.dto.toEntity
 import no.fg.hilflingbackend.model.Article
 import no.fg.hilflingbackend.model.articles
 import org.springframework.beans.factory.annotation.Autowired
@@ -20,20 +22,13 @@ open class ArticleRepository {
     return database.articles.find { it.id eq id }
   }
 
-  fun findAll(): List<Article> {
-    return database.articles.toList()
+  fun findAll(): List<ArticleDto> {
+    return database.articles.toList().map { it.toDto() }
   }
 
   fun create(
-    article: Article
-  ): Article {
-    val articleFromDatabase = Article {
-      this.title = article.title
-      this.plainText = article.plainText
-      this.securityLevel = article.securityLevel
-      this.photoGangBanger = article.photoGangBanger
-    }
-    database.articles.add(articleFromDatabase)
-    return articleFromDatabase
+    dto: ArticleDto
+  ): Int {
+    return database.articles.add(dto.toEntity())
   }
 }

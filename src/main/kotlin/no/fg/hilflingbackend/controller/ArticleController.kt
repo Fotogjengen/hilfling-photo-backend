@@ -1,6 +1,8 @@
 package no.fg.hilflingbackend.controller
 
+import no.fg.hilflingbackend.dto.ArticleDto
 import no.fg.hilflingbackend.model.Article
+import no.fg.hilflingbackend.model.toDto
 import no.fg.hilflingbackend.repository.ArticleRepository
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.web.bind.annotation.GetMapping
@@ -18,19 +20,19 @@ class ArticleController {
   lateinit var repository: ArticleRepository
 
   @GetMapping("/{id}")
-  fun getById(@PathVariable("id") id: UUID): Article? {
-    return repository.findById(id)
+  fun getById(@PathVariable("id") id: UUID): ArticleDto? {
+    return repository.findById(id).toDto()
   }
 
   @GetMapping
-  fun getAll(): List<Article> {
+  fun getAll(): List<ArticleDto> {
     return repository.findAll()
   }
 
   @PostMapping
   fun create(
-    @RequestBody article: Article
-  ): Article {
+    @RequestBody article: ArticleDto
+  ): Int {
     return repository.create(
       article
     )
