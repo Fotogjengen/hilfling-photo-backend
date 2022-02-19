@@ -4,6 +4,12 @@ import no.fg.hilflingbackend.model.Position
 import no.fg.hilflingbackend.value_object.Email
 import java.util.UUID
 
+data class PositionPatchRequestDto(
+  val positionId: PositionId,
+  val title: String?,
+  val email: Email?
+)
+
 data class PositionDto(
   val positionId: PositionId = PositionId(),
   val title: String,

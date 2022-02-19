@@ -1,8 +1,10 @@
 package no.fg.hilflingbackend
 
+import com.azure.storage.blob.models.PublicAccessType
 import me.liuwj.ktorm.database.Database
 import me.liuwj.ktorm.dsl.batchInsert
 import me.liuwj.ktorm.dsl.from
+import no.fg.hilflingbackend.blobStorage.AzureBlobStorage
 import no.fg.hilflingbackend.controller.PhotoController
 import no.fg.hilflingbackend.dto.*
 import no.fg.hilflingbackend.model.Photos
@@ -77,6 +79,16 @@ class MockDataService {
 
   @Autowired
   lateinit var photoRepository: PhotoRepository
+
+  @Autowired
+  lateinit var azureBlobStorage: AzureBlobStorage
+
+  fun initializeAzureBlobStorageContainers() {
+    listOf("alle", "fggjeng", "husfolk").forEach {
+      val containerClient = azureBlobStorage.blobServiceClient.createBlobContainer(it)
+      containerClient.setAccessPolicy(PublicAccessType.BLOB, null)
+    }
+  }
 
   fun generateSecurityLevelData(): List<SecurityLevelDto> =
     listOf(
@@ -264,7 +276,7 @@ class MockDataService {
         profilePicturePath = "https://media1.tenor.com/images/79f8be09f39791c6462d30c5ce42e3be/tenor.gif?itemid=18386674",
         sex = "Mann",
         username = "sjsivert",
-        securituLevel = generateSecurityLevelData().first(),
+        securityLevel = generateSecurityLevelData().first(),
         phoneNumber = PhoneNumber("91382506")
       ),
       SamfundetUserDto(
@@ -275,7 +287,7 @@ class MockDataService {
         profilePicturePath = "https://media1.tenor.com/images/79f8be09f39791c6462d30c5ce42e3be/tenor.gif?itemid=18386674",
         sex = "Kvinne",
         username = "Carossa",
-        securituLevel = generateSecurityLevelData().first(),
+        securityLevel = generateSecurityLevelData().first(),
         phoneNumber = PhoneNumber("91382506")
       )
     )
@@ -559,28 +571,7 @@ class MockDataService {
         set(it.categoryId, photoDto.categoryDto.categoryId.id)
       } }
     }
-    /*generatePhoto().forEach {
-      val file = getPhotoFromApi()
-      photoController.uploadPhotos(
-        motiveTitle = it.motive.title,
-        placeName = it.placeDto.name,
-        eventOwnerName = "UKA",
-        securityLevelId = it.securityLevel.securityLevelId.id,
-        albumId = it.albumDto.albumId.id,
-        photoGangBangerId = it.photoGangBangerDto.photoGangBangerId.id,
-        photoFileList = listOf(
-          MockMultipartFile(file.file.name, file.filename, "text/plain", file.file.inputStream())
-        ),
-        tagList = listOf(
-          it.photoTags.map {
-            it.name
-          }.toList()
-        ),
-        categoryName = it.categoryDto.name,
-        isGoodPhotoList = listOf(it.isGoodPicture)
-      )
-      // photoRepository.createPhoto(it)
-    }*/
+    initializeAzureBlobStorageContainers()
     println("Photos Seeded")
   }
 }
