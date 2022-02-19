@@ -39,4 +39,8 @@ abstract class BaseRepository<E : BaseModel<E>, D, R>(val table: BaseTable<E>, v
     // TODO: remember to test that this actually works
     return database.delete(table) { it.id eq id }
   }
+
+  override fun patch(dto: R): D {
+    throw NotImplementedError("Patch function is not implemented.")
+  }
 }
