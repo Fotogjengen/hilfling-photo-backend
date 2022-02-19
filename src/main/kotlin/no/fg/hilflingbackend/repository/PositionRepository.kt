@@ -7,12 +7,10 @@ import me.liuwj.ktorm.entity.update
 import no.fg.hilflingbackend.dto.PositionDto
 import no.fg.hilflingbackend.dto.PositionId
 import no.fg.hilflingbackend.dto.PositionPatchRequestDto
-import no.fg.hilflingbackend.dto.SecurityLevelDto
 import no.fg.hilflingbackend.dto.toEntity
 import no.fg.hilflingbackend.model.Position
 import no.fg.hilflingbackend.model.Positions
 import no.fg.hilflingbackend.model.positions
-import no.fg.hilflingbackend.model.security_levels
 import no.fg.hilflingbackend.value_object.Email
 import org.springframework.stereotype.Repository
 import javax.persistence.EntityNotFoundException

@@ -7,12 +7,10 @@ import me.liuwj.ktorm.entity.update
 import no.fg.hilflingbackend.dto.AlbumDto
 import no.fg.hilflingbackend.dto.AlbumId
 import no.fg.hilflingbackend.dto.AlbumPatchRequestDto
-import no.fg.hilflingbackend.dto.SecurityLevelDto
 import no.fg.hilflingbackend.dto.toEntity
 import no.fg.hilflingbackend.model.Album
 import no.fg.hilflingbackend.model.Albums
 import no.fg.hilflingbackend.model.albums
-import no.fg.hilflingbackend.model.security_levels
 import org.springframework.stereotype.Repository
 import javax.persistence.EntityNotFoundException
 

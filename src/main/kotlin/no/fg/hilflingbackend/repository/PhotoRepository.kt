@@ -15,18 +15,11 @@ import me.liuwj.ktorm.entity.find
 import me.liuwj.ktorm.entity.take
 import me.liuwj.ktorm.entity.toList
 import me.liuwj.ktorm.entity.update
-import no.fg.hilflingbackend.dto.AlbumDto
-import no.fg.hilflingbackend.dto.CategoryDto
-import no.fg.hilflingbackend.dto.GangDto
-import no.fg.hilflingbackend.dto.MotiveDto
 import no.fg.hilflingbackend.dto.Page
 import no.fg.hilflingbackend.dto.PhotoDto
-import no.fg.hilflingbackend.dto.PhotoGangBangerDto
 import no.fg.hilflingbackend.dto.PhotoPatchRequestDto
 import no.fg.hilflingbackend.dto.PhotoTagDto
 import no.fg.hilflingbackend.dto.PhotoTagId
-import no.fg.hilflingbackend.dto.PlaceDto
-import no.fg.hilflingbackend.dto.SecurityLevelDto
 import no.fg.hilflingbackend.model.AnalogPhoto
 import no.fg.hilflingbackend.model.Photo
 import no.fg.hilflingbackend.model.PhotoTagReferences
@@ -36,7 +29,6 @@ import no.fg.hilflingbackend.model.SecurityLevels
 import no.fg.hilflingbackend.model.albums
 import no.fg.hilflingbackend.model.analog_photos
 import no.fg.hilflingbackend.model.photos
-import no.fg.hilflingbackend.model.security_levels
 import no.fg.hilflingbackend.model.toDto
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Repository

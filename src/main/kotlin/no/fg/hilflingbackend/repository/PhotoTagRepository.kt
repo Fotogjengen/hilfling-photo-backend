@@ -9,12 +9,10 @@ import me.liuwj.ktorm.entity.update
 import no.fg.hilflingbackend.dto.PhotoTagDto
 import no.fg.hilflingbackend.dto.PhotoTagId
 import no.fg.hilflingbackend.dto.PhotoTagPatchRequestDto
-import no.fg.hilflingbackend.dto.SecurityLevelDto
 import no.fg.hilflingbackend.dto.toEntity
 import no.fg.hilflingbackend.model.PhotoTag
 import no.fg.hilflingbackend.model.PhotoTags
 import no.fg.hilflingbackend.model.photo_tags
-import no.fg.hilflingbackend.model.security_levels
 import no.fg.hilflingbackend.model.toDto
 import org.springframework.stereotype.Repository
 import javax.persistence.EntityNotFoundException

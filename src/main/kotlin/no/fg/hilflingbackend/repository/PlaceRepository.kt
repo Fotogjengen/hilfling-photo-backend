@@ -9,12 +9,10 @@ import me.liuwj.ktorm.entity.update
 import no.fg.hilflingbackend.dto.PlaceDto
 import no.fg.hilflingbackend.dto.PlaceId
 import no.fg.hilflingbackend.dto.PlacePatchRequestDto
-import no.fg.hilflingbackend.dto.SecurityLevelDto
 import no.fg.hilflingbackend.dto.toEntity
 import no.fg.hilflingbackend.model.Place
 import no.fg.hilflingbackend.model.Places
 import no.fg.hilflingbackend.model.places
-import no.fg.hilflingbackend.model.security_levels
 import no.fg.hilflingbackend.model.toDto
 import org.springframework.stereotype.Repository
 import javax.persistence.EntityNotFoundException
