@@ -124,9 +124,9 @@ class MockDataService {
   fun generatePhoto(): List<PhotoDto> {
     val list = mutableListOf<PhotoDto>()
 
-    for(i in 1..50){
+    for (i in 1..50) {
       val random = SecureRandom()
-      val byte = random.generateSeed(i);
+      val byte = random.generateSeed(i)
       val uuid = UUID.nameUUIDFromBytes(byte)
       val url = getPhotoFromApi()
       list.add(
@@ -548,21 +548,23 @@ class MockDataService {
     generateGangData().forEach {
       gangRepository.create(it)
     }
-    database.batchInsert(Photos){
-      generatePhoto().map { photoDto -> item {
-        set(it.isGoodPicture, photoDto.isGoodPicture)
-        set(it.id, photoDto.photoId.id)
-        set(it.largeUrl, photoDto.largeUrl)
-        set(it.motiveId, photoDto.motive.motiveId.id)
-        set(it.securityLevelId, photoDto.securityLevel.securityLevelId.id)
-        set(it.gangId, photoDto.gang?.gangId?.id)
-        set(it.placeId, photoDto.placeDto.placeId.id)
-        set(it.smallUrl, photoDto.smallUrl)
-        set(it.mediumUrl, photoDto.mediumUrl)
-        set(it.photoGangBangerId, photoDto.photoGangBangerDto.photoGangBangerId.id)
-        set(it.albumId, photoDto.albumDto.albumId.id)
-        set(it.categoryId, photoDto.categoryDto.categoryId.id)
-      } }
+    database.batchInsert(Photos) {
+      generatePhoto().map { photoDto ->
+        item {
+          set(it.isGoodPicture, photoDto.isGoodPicture)
+          set(it.id, photoDto.photoId.id)
+          set(it.largeUrl, photoDto.largeUrl)
+          set(it.motiveId, photoDto.motive.motiveId.id)
+          set(it.securityLevelId, photoDto.securityLevel.securityLevelId.id)
+          set(it.gangId, photoDto.gang?.gangId?.id)
+          set(it.placeId, photoDto.placeDto.placeId.id)
+          set(it.smallUrl, photoDto.smallUrl)
+          set(it.mediumUrl, photoDto.mediumUrl)
+          set(it.photoGangBangerId, photoDto.photoGangBangerDto.photoGangBangerId.id)
+          set(it.albumId, photoDto.albumDto.albumId.id)
+          set(it.categoryId, photoDto.categoryDto.categoryId.id)
+        }
+      }
     }
     initializeAzureBlobStorageContainers()
     println("Photos Seeded")
