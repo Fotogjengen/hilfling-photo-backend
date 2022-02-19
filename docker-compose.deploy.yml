@@ -18,6 +18,7 @@ services:
       - ./static-files/:/app/static-files/
     depends_on:
       - postgres
+      - fg-blob-storage
     ports:
       - 8484:8080
     expose:
@@ -48,6 +49,4 @@ services:
       - traefik.http.routers.hilfling-static.entrypoints=websecure # <== Defining the entrypoint for http, **ref: line 30
       - traefik.http.routers.hilfling-static.rule=Host(`fg-static.nikzy.no`) # <== Your Domain Name goes here for the http rule
       - traefik.http.routers.hilfling-static.tls.certresolver=lets-encr # Adds SSL to App
-
-
 

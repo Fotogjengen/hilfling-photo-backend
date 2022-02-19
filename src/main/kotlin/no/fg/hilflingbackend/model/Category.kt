@@ -13,7 +13,7 @@ interface Category : BaseModel<Category> {
   var name: String
 }
 
-fun Category.toDto() = CategoryDto(
+fun Category.toDto(): CategoryDto = CategoryDto(
   categoryId = CategoryId(this.id),
   name = this.name
 )
