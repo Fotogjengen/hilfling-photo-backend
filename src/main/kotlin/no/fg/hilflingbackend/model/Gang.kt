@@ -10,7 +10,7 @@ import no.fg.hilflingbackend.dto.GangId
 interface Gang : BaseModel<Gang> {
   companion object : Entity.Factory<Gang>()
 
-  var name: String?
+  var name: String
 }
 
 fun Gang.toDto() = GangDto(

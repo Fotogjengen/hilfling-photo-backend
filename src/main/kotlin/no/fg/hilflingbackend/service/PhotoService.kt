@@ -9,6 +9,7 @@ import no.fg.hilflingbackend.dto.GangDto
 import no.fg.hilflingbackend.dto.MotiveDto
 import no.fg.hilflingbackend.dto.Page
 import no.fg.hilflingbackend.dto.PhotoDto
+import no.fg.hilflingbackend.dto.PhotoPatchRequestDto
 import no.fg.hilflingbackend.dto.PhotoTagDto
 import no.fg.hilflingbackend.dto.PlaceDto
 import no.fg.hilflingbackend.dto.SecurityLevelDto
@@ -416,5 +417,9 @@ class PhotoService(
   override fun getAll(page: Int, pageSize: Int): Page<PhotoDto> {
     return photoRepository
       .findAll(page, pageSize)
+  }
+
+  override fun patch(dto: PhotoPatchRequestDto): PhotoDto {
+    return photoRepository.patch(dto)
   }
 }

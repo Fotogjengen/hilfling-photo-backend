@@ -1,10 +1,12 @@
 package no.fg.hilflingbackend.controller
 
 import no.fg.hilflingbackend.dto.ArticleDto
+import no.fg.hilflingbackend.dto.ArticlePatchRequestDto
 import no.fg.hilflingbackend.model.toDto
 import no.fg.hilflingbackend.repository.ArticleRepository
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.web.bind.annotation.GetMapping
+import org.springframework.web.bind.annotation.PatchMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
@@ -20,7 +22,7 @@ class ArticleController {
 
   @GetMapping("/{id}")
   fun getById(@PathVariable("id") id: UUID): ArticleDto {
-    return repository.findById(id).toDto()
+    return repository.findById(id)
   }
 
   @GetMapping
@@ -35,5 +37,12 @@ class ArticleController {
     return repository.create(
       article
     )
+  }
+
+  @PatchMapping
+  fun patch(
+    @RequestBody dto: ArticlePatchRequestDto
+  ): ArticleDto {
+    return repository.patch(dto)
   }
 }

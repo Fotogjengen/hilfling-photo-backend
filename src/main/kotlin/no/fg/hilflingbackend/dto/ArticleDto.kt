@@ -4,7 +4,7 @@ import no.fg.hilflingbackend.model.Article
 import java.util.*
 
 data class ArticlePatchRequestDto(
-  val articleTagId: ArticleTagId,
+  val articleId: ArticleId,
   val title: String?,
   val plainText: String?,
   val securityLevel: SecurityLevelDto?,

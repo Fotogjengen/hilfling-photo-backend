@@ -8,4 +8,4 @@ import org.springframework.web.bind.annotation.RestController
 
 @RestController
 @RequestMapping("/purchase_orders")
-open class PurchaseOrderController(override val repository: PurchaseOrderRepository) : BaseController<PurchaseOrder, PurchaseOrderDto>(repository)
+open class PurchaseOrderController(override val repository: PurchaseOrderRepository) : BaseController<PurchaseOrder, PurchaseOrderDto, NotImplementedError>(repository)
