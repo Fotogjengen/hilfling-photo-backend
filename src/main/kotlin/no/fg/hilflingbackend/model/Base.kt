@@ -10,7 +10,6 @@ import java.util.UUID
 open interface BaseModel<E : Entity<E>> : Entity<E> {
   var id: UUID
   var dateCreated: LocalDate
-  var dateModfied: LocalDate
   var deleted: LocalDate
 
 }
@@ -18,6 +17,5 @@ open interface BaseModel<E : Entity<E>> : Entity<E> {
 open class BaseTable<E : BaseModel<E>>(tableName: String) : Table<E>(tableName) {
   val id = uuid("id").primaryKey().bindTo { it.id }
   val dateCreated = date("date_created").bindTo { it.dateCreated }
-  val dateModified = date("date_modified").bindTo { it.dateModfied }
   val deleted = date("deleted").bindTo { it.deleted }
 }

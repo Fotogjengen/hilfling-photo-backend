@@ -52,7 +52,6 @@ CREATE TABLE SECURITY_LEVEL
     id           uuid PRIMARY KEY,
     type         VARCHAR(10),
     date_created DATE NOT NULL DEFAULT CURRENT_DATE,
-    date_modified DATE DEFAULT NULL,
     deleted DATE DEFAULT NULL
 );
 
@@ -61,7 +60,6 @@ CREATE TABLE PLACE
     id           uuid PRIMARY KEY NOT NULL,
     date_created DATE NOT NULL DEFAULT CURRENT_DATE,
     name         VARCHAR(30) UNIQUE,
-    date_modified DATE DEFAULT NULL,
     deleted DATE DEFAULT NULL
 );
 
@@ -70,7 +68,6 @@ CREATE TABLE EVENT_OWNER
     id           uuid PRIMARY KEY,
     date_created DATE NOT NULL DEFAULT CURRENT_DATE,
     name         VARCHAR(30),
-    date_modified DATE DEFAULT NULL,
     deleted DATE DEFAULT NULL
 );
 
@@ -79,7 +76,6 @@ CREATE TABLE CATEGORY
     id           uuid PRIMARY KEY,
     date_created DATE NOT NULL DEFAULT CURRENT_DATE,
     name         VARCHAR(20),
-    date_modified DATE DEFAULT NULL,
     deleted DATE DEFAULT NULL
 );
 
@@ -88,7 +84,6 @@ CREATE TABLE ARTICLE_TAG
     id           uuid PRIMARY KEY,
     date_created DATE NOT NULL DEFAULT CURRENT_DATE,
     name         VARCHAR(20),
-    date_modified DATE DEFAULT NULL,
     deleted DATE DEFAULT NULL
 );
 
@@ -105,7 +100,6 @@ CREATE TABLE PHOTOGRAPHY_REQUEST
     email        VARCHAR(50) NOT NULL,
     phone        VARCHAR(20) NOT NULL,
     description  TEXT        NOT NULL,
-    date_modified DATE       DEFAULT NULL,
     deleted DATE DEFAULT NULL
 );
 
@@ -121,7 +115,6 @@ CREATE TABLE SAMFUNDET_USER
     phone_number      VARCHAR(20),
     sex               VARCHAR(10),
     security_level_id UUID REFERENCES SECURITY_LEVEL (id),
-    date_modified DATE DEFAULT NULL,
     deleted DATE DEFAULT NULL
 );
 
@@ -139,7 +132,6 @@ CREATE TABLE PHOTO_GANG_BANGER
     city                VARCHAR(30),
     samfundet_user_id   UUID REFERENCES SAMFUNDET_USER (id),
     position_id UUID NOT NULL REFERENCES POSITION(id),
-    date_modified DATE DEFAULT NULL,
     deleted DATE DEFAULT NULL
 );
 
@@ -152,7 +144,6 @@ CREATE TABLE ARTICLE
     plain_text           VARCHAR(100),
     security_level_id    UUID REFERENCES SECURITY_LEVEL (id),
     photo_gang_banger_id UUID REFERENCES PHOTO_GANG_BANGER (id),
-    date_modified DATE DEFAULT NULL,
     deleted DATE DEFAULT NULL
 );
 
@@ -164,7 +155,6 @@ CREATE TABLE MOTIVE
     category_id    UUID REFERENCES CATEGORY (id),
     event_owner_id UUID REFERENCES EVENT_OWNER (id),
     album_id       UUID REFERENCES ALBUM (id),
-    date_modified DATE DEFAULT NULL,
     deleted DATE DEFAULT NULL
 );
 
@@ -183,7 +173,6 @@ CREATE TABLE PHOTO
     album_id UUID REFERENCES ALBUM(id),
     category_id UUID REFERENCES CATEGORY(id),
     photo_gang_banger_id UUID REFERENCES PHOTO_GANG_BANGER (id),
-    date_modified DATE DEFAULT NULL,
     deleted DATE DEFAULT NULL
 );
 
@@ -193,7 +182,6 @@ CREATE TABLE ANALOG_PHOTO
     date_created DATE NOT NULL DEFAULT CURRENT_DATE,
     page_number  INTEGER,
     photo_id     UUID REFERENCES PHOTO (id),
-    date_modified DATE DEFAULT NULL,
     deleted DATE DEFAULT NULL
 );
 
@@ -202,7 +190,6 @@ CREATE TABLE ARTICLE_TAG_IN_ARTICLE
 (
     article_tag_id UUID REFERENCES ARTICLE_TAG (id),
     article_id     UUID REFERENCES ARTICLE (id),
-    date_modified DATE DEFAULT NULL,
     deleted DATE DEFAULT NULL
 );
 
@@ -211,7 +198,6 @@ CREATE TABLE PHOTOS_IN_PURCHASE_ORDER
     purchase_order_id UUID REFERENCES PURCHASE_ORDER (id),
     photo_id          UUID REFERENCES PHOTO (id),
     img_size          VARCHAR(10),
-    date_modified DATE DEFAULT NULL,
     deleted DATE DEFAULT NULL
 );
 
@@ -220,6 +206,5 @@ CREATE TABLE PHOTO_TAG_IN_PHOTO
     id           UUID PRIMARY KEY,
     photo_tag_id UUID REFERENCES PHOTO_TAG (id),
     photo_id     UUID REFERENCES PHOTO (id),
-    date_modified DATE DEFAULT NULL,
     deleted DATE DEFAULT NULL
 );
