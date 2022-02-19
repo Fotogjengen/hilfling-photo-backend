@@ -49,7 +49,6 @@ import no.fg.hilflingbackend.repository.PositionRepository
 import no.fg.hilflingbackend.repository.SamfundetUserRepository
 import no.fg.hilflingbackend.repository.SecurityLevelRepository
 import no.fg.hilflingbackend.model.Photos
-import no.fg.hilflingbackend.repository.*
 import no.fg.hilflingbackend.value_object.Email
 import no.fg.hilflingbackend.value_object.PhoneNumber
 import no.fg.hilflingbackend.value_object.SecurityLevelType
@@ -61,7 +60,7 @@ import java.net.http.HttpRequest
 import java.net.http.HttpResponse
 import java.security.SecureRandom
 import java.time.LocalDate
-import java.util.*
+import java.util.UUID
 
 
 @Service
