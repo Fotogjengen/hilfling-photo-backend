@@ -9,17 +9,20 @@ import no.fg.hilflingbackend.dto.ArticleDto
 import no.fg.hilflingbackend.dto.toEntity
 import no.fg.hilflingbackend.model.Article
 import no.fg.hilflingbackend.model.articles
+import no.fg.hilflingbackend.model.toDto
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Repository
 import java.util.UUID
+import javax.persistence.EntityNotFoundException
 
 @Repository
 open class ArticleRepository {
   @Autowired
   open lateinit var database: Database
 
-  fun findById(id: UUID): Article? {
+  fun findById(id: UUID): Article {
     return database.articles.find { it.id eq id }
+      ?: throw EntityNotFoundException("Did not find Article")
   }
 
   fun findAll(): List<ArticleDto> {

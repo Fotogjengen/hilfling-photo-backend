@@ -1,7 +1,6 @@
 package no.fg.hilflingbackend.controller
 
 import no.fg.hilflingbackend.dto.ArticleDto
-import no.fg.hilflingbackend.model.Article
 import no.fg.hilflingbackend.model.toDto
 import no.fg.hilflingbackend.repository.ArticleRepository
 import org.springframework.beans.factory.annotation.Autowired
@@ -20,7 +19,7 @@ class ArticleController {
   lateinit var repository: ArticleRepository
 
   @GetMapping("/{id}")
-  fun getById(@PathVariable("id") id: UUID): ArticleDto? {
+  fun getById(@PathVariable("id") id: UUID): ArticleDto {
     return repository.findById(id).toDto()
   }
 
