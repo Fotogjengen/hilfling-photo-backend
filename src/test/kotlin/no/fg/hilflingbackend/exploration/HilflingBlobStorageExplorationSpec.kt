@@ -1,6 +1,7 @@
 package no.fg.hilflingbackend.exploration
 
 import com.azure.storage.blob.BlobServiceClientBuilder
+import com.azure.storage.blob.models.PublicAccessType
 import org.spekframework.spek2.Spek
 import org.spekframework.spek2.style.specification.describe
 import java.io.File
@@ -12,8 +13,6 @@ class HilflingBlobStorageExplorationSpec : Spek({
   describe("BlobService client") {
     it("Can create blob container") {
       val connectionString = System.getenv("AZURE_STORAGE_CONNECTION_STRING")
-      val test = System.getenv(("TEST_TEST_TEST"))
-      println("Test: $test")
       // BlobServiceClient.
       println("connection string: $connectionString")
 
@@ -27,6 +26,8 @@ class HilflingBlobStorageExplorationSpec : Spek({
 
       // Create the container and return a container client object
       val containerClient = blobServiceClient.createBlobContainer(containerName)
+      // Allow public access to container
+      containerClient.setAccessPolicy(PublicAccessType.BLOB, null)
 
       // Create a local file in the ./ directory for uploading and downloading
       val localPath = "./"
@@ -46,9 +47,8 @@ class HilflingBlobStorageExplorationSpec : Spek({
       // Upload the blob
       blobClient.uploadFromFile(localPath + fileName)
       println("\nListing blobs...")
-
       // List the blob(s) in the container.
-      containerClient.listBlobs()
+      blobClient.containerClient.listBlobs()
 
       assertTrue {
         containerClient.listBlobs().any {
