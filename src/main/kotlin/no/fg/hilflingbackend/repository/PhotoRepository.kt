@@ -15,10 +15,18 @@ import me.liuwj.ktorm.entity.find
 import me.liuwj.ktorm.entity.take
 import me.liuwj.ktorm.entity.toList
 import me.liuwj.ktorm.entity.update
+import no.fg.hilflingbackend.dto.AlbumDto
+import no.fg.hilflingbackend.dto.CategoryDto
+import no.fg.hilflingbackend.dto.GangDto
+import no.fg.hilflingbackend.dto.MotiveDto
 import no.fg.hilflingbackend.dto.Page
 import no.fg.hilflingbackend.dto.PhotoDto
+import no.fg.hilflingbackend.dto.PhotoGangBangerDto
+import no.fg.hilflingbackend.dto.PhotoPatchRequestDto
 import no.fg.hilflingbackend.dto.PhotoTagDto
 import no.fg.hilflingbackend.dto.PhotoTagId
+import no.fg.hilflingbackend.dto.PlaceDto
+import no.fg.hilflingbackend.dto.SecurityLevelDto
 import no.fg.hilflingbackend.model.AnalogPhoto
 import no.fg.hilflingbackend.model.Photo
 import no.fg.hilflingbackend.model.PhotoTagReferences
@@ -28,10 +36,12 @@ import no.fg.hilflingbackend.model.SecurityLevels
 import no.fg.hilflingbackend.model.albums
 import no.fg.hilflingbackend.model.analog_photos
 import no.fg.hilflingbackend.model.photos
+import no.fg.hilflingbackend.model.security_levels
 import no.fg.hilflingbackend.model.toDto
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Repository
 import java.util.UUID
+import javax.persistence.EntityNotFoundException
 
 @Repository
 open class PhotoRepository(
@@ -98,6 +108,29 @@ open class PhotoRepository(
       totalRecords = photos.totalRecords,
       currentList = photoDtos
     )
+  }
+
+  fun patch(dto: PhotoPatchRequestDto): PhotoDto {
+    val fromDb = findById(dto.photoId.id)
+      ?: throw EntityNotFoundException("Could not find Photo")
+    val newDto = PhotoDto(
+      photoId = fromDb.photoId,
+      isGoodPicture = dto.isGoodPicture ?: fromDb.isGoodPicture,
+      smallUrl = dto.smallUrl ?: fromDb.smallUrl,
+      mediumUrl = dto.mediumUrl ?: fromDb.mediumUrl,
+      largeUrl = dto.largeUrl ?: fromDb.largeUrl,
+      motive = dto.motive ?: fromDb.motive,
+      placeDto = dto.placeDto ?: fromDb.placeDto,
+      securityLevel = dto.securityLevel ?: fromDb.securityLevel,
+      gang = dto.gang ?: fromDb.gang,
+      albumDto = dto.albumDto ?: fromDb.albumDto,
+      categoryDto = dto.categoryDto ?: fromDb.categoryDto,
+      photoGangBangerDto = dto.photoGangBangerDto ?: fromDb.photoGangBangerDto,
+      photoTags = dto.photoTags ?: fromDb.photoTags
+    )
+    val updated = database.photos.update(newDto.toEntity())
+
+    return if (updated == 1) newDto else fromDb
   }
 
   fun findAllAnalogPhotos(page: Int, pageSize: Int): Page<PhotoDto> {
