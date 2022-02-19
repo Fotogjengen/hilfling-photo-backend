@@ -1,6 +1,7 @@
 package no.fg.hilflingbackend.exploration
 
 import com.azure.storage.blob.BlobServiceClientBuilder
+import com.azure.storage.blob.models.PublicAccessType
 import org.spekframework.spek2.Spek
 import org.spekframework.spek2.style.specification.describe
 import java.io.File
@@ -25,6 +26,8 @@ class HilflingBlobStorageExplorationSpec : Spek({
 
       // Create the container and return a container client object
       val containerClient = blobServiceClient.createBlobContainer(containerName)
+      // Allow public access to container
+      containerClient.setAccessPolicy(PublicAccessType.BLOB, null)
 
       // Create a local file in the ./ directory for uploading and downloading
       val localPath = "./"
