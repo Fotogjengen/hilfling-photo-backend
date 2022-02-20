@@ -38,6 +38,7 @@ import java.io.IOException
 import java.nio.file.Files
 import java.nio.file.Path
 import java.nio.file.Paths
+import java.time.LocalDate
 import java.util.UUID
 import java.util.stream.Stream
 import javax.persistence.EntityNotFoundException
@@ -406,8 +407,33 @@ class PhotoService(
   override fun getAllAnalogPhotos(page: Int, pageSize: Int): Page<PhotoDto> = photoRepository
     .findAllAnalogPhotos(page, pageSize)
 
-  override fun getAllDigitalPhotos(page: Int, pageSize: Int): Page<PhotoDto> = photoRepository
-    .findAllDigitalPhotos(page, pageSize)
+  override fun getAllDigitalPhotos(
+    page: Int,
+    pageSize: Int,
+    motive: String,
+    tag: List<String>,
+    fromDate: LocalDate,
+    toDate: LocalDate,
+    category: String,
+    place: String,
+    isGoodPic: Boolean,
+    album: String,
+    sortBy: String,
+    desc: Boolean): Page<PhotoDto> = photoRepository
+    .findAllDigitalPhotos(
+      page,
+      pageSize,
+      motive,
+      tag,
+      fromDate,
+      toDate,
+      category,
+      place,
+      isGoodPic,
+      album,
+      sortBy,
+      desc
+    )
 
   fun getByMotiveId(id: UUID, page: Int, pageSize: Int): Page<PhotoDto>? = photoRepository.findByMotiveId(id, page, pageSize)
 

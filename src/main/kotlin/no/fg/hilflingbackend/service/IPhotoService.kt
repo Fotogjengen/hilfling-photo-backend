@@ -3,6 +3,7 @@ package no.fg.hilflingbackend.service
 import no.fg.hilflingbackend.dto.Page
 import no.fg.hilflingbackend.dto.PhotoDto
 import org.springframework.web.multipart.MultipartFile
+import java.time.LocalDate
 import java.util.UUID
 
 interface IBaseService<T> {
@@ -44,5 +45,18 @@ interface IPhotoService : IBaseService<PhotoDto> {
   ): List<String>
   fun getCarouselPhotos(page: Int = 0, pageSize: Int = 100): Page<PhotoDto>
   fun getAllAnalogPhotos(page: Int = 0, pageSize: Int = 100): Page<PhotoDto> // TODO: Need different DTO for analog
-  fun getAllDigitalPhotos(page: Int = 0, pageSize: Int = 100): Page<PhotoDto>
+  fun getAllDigitalPhotos(
+    page: Int = 0,
+    pageSize: Int = 100,
+    motive: String = "",
+    tag: List<String> = listOf<String>(),
+    fromDate: LocalDate,
+    toDate: LocalDate,
+    category: String,
+    place: String,
+    isGoodPic: Boolean = false,
+    album: String,
+    sortBy: String,
+    desc: Boolean = true
+  ): Page<PhotoDto>
 }

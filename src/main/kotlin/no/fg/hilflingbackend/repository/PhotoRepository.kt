@@ -1,13 +1,7 @@
 package no.fg.hilflingbackend.repository
 
 import me.liuwj.ktorm.database.Database
-import me.liuwj.ktorm.dsl.batchInsert
-import me.liuwj.ktorm.dsl.crossJoin
-import me.liuwj.ktorm.dsl.eq
-import me.liuwj.ktorm.dsl.from
-import me.liuwj.ktorm.dsl.map
-import me.liuwj.ktorm.dsl.select
-import me.liuwj.ktorm.dsl.where
+import me.liuwj.ktorm.dsl.*
 import me.liuwj.ktorm.entity.add
 import me.liuwj.ktorm.entity.drop
 import me.liuwj.ktorm.entity.filter
@@ -31,6 +25,7 @@ import no.fg.hilflingbackend.model.photos
 import no.fg.hilflingbackend.model.toDto
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Repository
+import java.time.LocalDate
 import java.util.UUID
 
 @Repository
@@ -125,13 +120,28 @@ open class PhotoRepository(
     )
   }
 
-  fun findAllDigitalPhotos(page: Int, pageSize: Int): Page<PhotoDto> {
+  fun findAllDigitalPhotos(
+    page: Int,
+    pageSize: Int,
+    motive: String,
+    tag: List<String>,
+    fromDate: LocalDate,
+    toDate: LocalDate,
+    category: String,
+    place: String,
+    isGoodPic: Boolean,
+    album: String,
+    sortBy: String,
+    desc: Boolean): Page<PhotoDto> {
     val digitalAlbums = database.albums
       .filter { it.isAnalog eq false }
 
     val photos = digitalAlbums.toList().map { album ->
       database.photos.filter {
-        it.albumId eq album.id
+        (it.albumId eq album.id) and
+        (it.motiveId eq true) and
+        ()
+
       }
     }
 

@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.RequestPart
 import org.springframework.web.bind.annotation.RestController
 import org.springframework.web.multipart.MultipartFile
 import java.security.InvalidParameterException
+import java.time.LocalDate
 import java.util.UUID
 
 @RestController
@@ -177,9 +178,32 @@ class PhotoController(
   @GetMapping("/digital")
   fun getAllDigitalPhotos(
     @RequestParam("page", required = false) page: Int?,
-    @RequestParam("pageSize", required = false) pageSize: Int?
+    @RequestParam("pageSize", required = false) pageSize: Int?,
+    @RequestParam("motive", required = false) motive : String?,
+    @RequestParam("tag", required = false) tag : List<String>?,
+    @RequestParam("fromDate", required = false) fromDate : LocalDate?,
+    @RequestParam("toDate", required = false) toDate : LocalDate?,
+    @RequestParam("category", required = false) category : String?,
+    @RequestParam("place", required = false) place : String?,
+    @RequestParam("isGoodPic", required = false) isGoodPic : Boolean?,
+    @RequestParam("album", required = false) album : String?,
+    @RequestParam("sortBy", required = false) sortBy : String?,
+    @RequestParam("desc", required = false) desc : Boolean?,
   ): ResponseEntity<Page<PhotoDto>> = ResponseOk(
     photoService
-      .getAllDigitalPhotos(page ?: 0, pageSize ?: 100)
+      .getAllDigitalPhotos(
+        page ?: 0,
+        pageSize ?: 100,
+        motive ?: "",
+        tag ?: listOf<String>(),
+        fromDate ?: LocalDate.now(),
+        toDate ?: LocalDate.now(),
+        category ?: "",
+        place  ?: "",
+        isGoodPic ?: false,
+        album ?: "",
+        sortBy ?: "",
+        desc ?: true
+        )
   )
 }
