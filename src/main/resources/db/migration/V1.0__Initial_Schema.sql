@@ -100,7 +100,7 @@ CREATE TABLE SAMFUNDET_USER
     last_name         VARCHAR(20),
     username          VARCHAR(20),
     email             VARCHAR(30),
-    profile_picture   VARCHAR(100),
+    profile_picture   VARCHAR(150),
     phone_number      VARCHAR(20),
     sex               VARCHAR(10),
     security_level_id UUID REFERENCES SECURITY_LEVEL (id)
@@ -128,7 +128,7 @@ CREATE TABLE ARTICLE
     id                   uuid PRIMARY KEY,
     date_created         DATE NOT NULL DEFAULT CURRENT_DATE,
     title                VARCHAR(50),
-    plain_text           VARCHAR(100),
+    plain_text           VARCHAR(1000),
     security_level_id    UUID REFERENCES SECURITY_LEVEL (id),
     photo_gang_banger_id UUID REFERENCES PHOTO_GANG_BANGER (id)
 );

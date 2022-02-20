@@ -7,7 +7,7 @@ import org.springframework.web.multipart.MultipartFile
 import java.util.UUID
 
 interface IBaseService<T> {
-  fun getById(id: UUID): PhotoDto?
+  fun findById(id: UUID): PhotoDto?
   fun getAll(page: Int = 0, pageSize: Int = 100): Page<T>
 }
 interface IPhotoService : IBaseService<PhotoDto> {

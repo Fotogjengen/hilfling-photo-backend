@@ -133,7 +133,7 @@ class PhotoController(
   @GetMapping("/{id}")
   fun getById(@PathVariable("id") id: UUID): ResponseEntity<PhotoDto> = ResponseOk(
     photoService
-      .getById(id)
+      .findById(id)
   )
 
   @GetMapping("/motive/{id}")

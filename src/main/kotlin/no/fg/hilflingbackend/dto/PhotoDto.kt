@@ -7,9 +7,6 @@ import java.util.UUID
 data class PhotoPatchRequestDto(
   val photoId: PhotoId,
   val isGoodPicture: Boolean?,
-  val smallUrl: String?,
-  val mediumUrl: String?,
-  val largeUrl: String?,
   val motive: MotiveDto?,
   val placeDto: PlaceDto?,
   val securityLevel: SecurityLevelDto?,
@@ -17,7 +14,7 @@ data class PhotoPatchRequestDto(
   val albumDto: AlbumDto?,
   val categoryDto: CategoryDto?,
   val photoGangBangerDto: PhotoGangBangerDto?,
-  val photoTags: List<PhotoTagDto>?
+  val photoTags: List<String>?
 )
 
 data class PhotoDto(
@@ -26,7 +23,6 @@ data class PhotoDto(
   val smallUrl: String,
   val mediumUrl: String,
   val largeUrl: String,
-
   val motive: MotiveDto,
   val placeDto: PlaceDto,
   val securityLevel: SecurityLevelDto,

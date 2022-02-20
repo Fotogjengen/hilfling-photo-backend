@@ -102,15 +102,22 @@ open class PhotoRepository(
     )
   }
 
-  fun patch(dto: PhotoPatchRequestDto): PhotoDto {
+  private fun calculateNewUrls(dto: PhotoDto, patchDto: PhotoPatchRequestDto)
+  : Triple<String, String, String>{
+    // TODO: calculate correct URLS
+    return Triple(dto.smallUrl, dto.mediumUrl, dto.largeUrl)
+  }
+
+  fun patch(dto: PhotoPatchRequestDto, photoTags: List<PhotoTagDto>?): PhotoDto {
     val fromDb = findById(dto.photoId.id)
       ?: throw EntityNotFoundException("Could not find Photo")
+    val (smallUrl, mediumUrl, largeUrl) = calculateNewUrls(fromDb, dto)
     val newDto = PhotoDto(
       photoId = fromDb.photoId,
       isGoodPicture = dto.isGoodPicture ?: fromDb.isGoodPicture,
-      smallUrl = dto.smallUrl ?: fromDb.smallUrl,
-      mediumUrl = dto.mediumUrl ?: fromDb.mediumUrl,
-      largeUrl = dto.largeUrl ?: fromDb.largeUrl,
+      smallUrl = smallUrl,
+      mediumUrl = mediumUrl,
+      largeUrl = largeUrl,
       motive = dto.motive ?: fromDb.motive,
       placeDto = dto.placeDto ?: fromDb.placeDto,
       securityLevel = dto.securityLevel ?: fromDb.securityLevel,
@@ -118,7 +125,7 @@ open class PhotoRepository(
       albumDto = dto.albumDto ?: fromDb.albumDto,
       categoryDto = dto.categoryDto ?: fromDb.categoryDto,
       photoGangBangerDto = dto.photoGangBangerDto ?: fromDb.photoGangBangerDto,
-      photoTags = dto.photoTags ?: fromDb.photoTags
+      photoTags = photoTags ?: fromDb.photoTags
     )
     val updated = database.photos.update(newDto.toEntity())
 

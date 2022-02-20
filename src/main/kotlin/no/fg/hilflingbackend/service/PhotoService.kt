@@ -412,7 +412,7 @@ class PhotoService(
 
   fun getByMotiveId(id: UUID, page: Int, pageSize: Int): Page<PhotoDto>? = photoRepository.findByMotiveId(id, page, pageSize)
 
-  override fun getById(id: UUID): PhotoDto = photoRepository.findById(id) ?: throw EntityNotFoundException("Did not find photo")
+  override fun findById(id: UUID): PhotoDto = photoRepository.findById(id) ?: throw EntityNotFoundException("Did not find photo")
 
   override fun getAll(page: Int, pageSize: Int): Page<PhotoDto> {
     return photoRepository
@@ -420,6 +420,18 @@ class PhotoService(
   }
 
   override fun patch(dto: PhotoPatchRequestDto): PhotoDto {
-    return photoRepository.patch(dto)
+    // TODO: Move photo to new location?
+    val photoTags = dto.photoTags?.map {
+      photoTagRepository
+        .findByName(it)
+        ?: PhotoTagDto(name = it)
+          .apply {
+            photoTagRepository
+              .create(
+                this
+              )
+          }
+    }
+    return photoRepository.patch(dto, photoTags)
   }
 }

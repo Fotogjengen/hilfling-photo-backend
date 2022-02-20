@@ -13,6 +13,7 @@ import no.fg.hilflingbackend.dto.Page
 import no.fg.hilflingbackend.model.BaseModel
 import no.fg.hilflingbackend.model.BaseTable
 import java.util.UUID
+import javax.persistence.EntityNotFoundException
 
 abstract class BaseRepository<E : BaseModel<E>, D, R>(val table: BaseTable<E>, val database: Database) : IRepository<E, D, R> {
   override fun findById(id: UUID): D? {
@@ -22,6 +23,9 @@ abstract class BaseRepository<E : BaseModel<E>, D, R>(val table: BaseTable<E>, v
       .where { table.id eq id }
     var t: D? = null
     resultSet.forEach { row -> t = convertToClass(row) }
+    if (t == null) {
+      throw EntityNotFoundException("Could not find Entity")
+    }
     return t
   }
 

@@ -1,4 +1,4 @@
-package no.fg.hilflingbackend.repository
+package no.fg.hilflingbackend.integrationTests
 
 import no.fg.hilflingbackend.blobStorage.AzureBlobStorage
 import no.fg.hilflingbackend.blobStorage.AzureStorageConfiguration
