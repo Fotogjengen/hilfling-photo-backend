@@ -6,14 +6,19 @@ import me.liuwj.ktorm.dsl.delete
 import me.liuwj.ktorm.dsl.eq
 import me.liuwj.ktorm.entity.add
 import me.liuwj.ktorm.entity.find
+import me.liuwj.ktorm.entity.removeIf
+import me.liuwj.ktorm.entity.toList
 import me.liuwj.ktorm.entity.update
+import no.fg.hilflingbackend.dto.PhotoId
 import no.fg.hilflingbackend.dto.PhotoTagDto
 import no.fg.hilflingbackend.dto.PhotoTagId
 import no.fg.hilflingbackend.dto.PhotoTagPatchRequestDto
 import no.fg.hilflingbackend.dto.toEntity
 import no.fg.hilflingbackend.model.PhotoTag
+import no.fg.hilflingbackend.model.PhotoTagReference
 import no.fg.hilflingbackend.model.PhotoTagReferences
 import no.fg.hilflingbackend.model.PhotoTags
+import no.fg.hilflingbackend.model.photo_tag_references
 import no.fg.hilflingbackend.model.photo_tags
 import no.fg.hilflingbackend.model.toDto
 import org.springframework.stereotype.Repository
@@ -50,10 +55,19 @@ open class PhotoTagRepository(database: Database) : BaseRepository<PhotoTag, Pho
     }
     ?.toDto()
 
-  fun deletePhotoTagReference(photoId: UUID, photoTagId: UUID): Int {
-    return database.delete(PhotoTagReferences) {
-      // it.photoId eq photoId
-      it.photoTagId eq photoTagId
-    }
+  fun deletePhotoTagReference(photoTagId: PhotoTagId, photoId: PhotoId): Int {
+    val reference = database.photo_tag_references.find {
+      it.photoId eq photoId.id
+      it.photoTagId eq photoTagId.id
+    } ?: return 0
+    return reference.delete()
+    /*return database.photo_tag_references.removeIf {
+      it.photoTagId eq photoTagId.id
+      it.photoId eq photoId.id
+    }*/
+    /*return database.delete(PhotoTagReferences) {
+      it.id eq tag.id
+      *//*it.photoTagId eq photoTagId*//*
+    }*/
   }
 }

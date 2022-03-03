@@ -11,7 +11,11 @@ data class PhotoTagPatchRequestDto(
 data class PhotoTagDto(
   val photoTagId: PhotoTagId = PhotoTagId(),
   val name: String
-)
+) {
+  override fun equals(other: Any?): Boolean {
+    return other is PhotoTagDto && this.photoTagId.id == other.photoTagId.id
+  }
+}
 
 data class PhotoTagId(
   override val id: UUID = UUID.randomUUID()

@@ -345,6 +345,7 @@ class PhotoService(
                 )
             }
       }
+      println(photoTagDtos)
       val isGoodPhoto = isGoodPhotoList.get(index)
 
       val (photoDto, imageFileName) = PhotoDto.createWithFileName(
@@ -432,14 +433,13 @@ class PhotoService(
               )
           }
     }
+    // Delete old PhotoTagReferences
     val tags = photoRepository.findCorrespondingPhotoTagDtos(dto.photoId.id)
-    println("tags")
-    println(tags)
     tags.forEach { oldTag ->
-      photoTagRepository.deletePhotoTagReference(oldTag.photoTagId.id, dto.photoId.id)
+      if (photoTags == null || !photoTags.contains(oldTag) ) {
+        photoTagRepository.deletePhotoTagReference(oldTag.photoTagId, dto.photoId)
+      }
     }
-    println("tags")
-    println(tags)
     return photoRepository.patch(dto, photoTags)
   }
 }

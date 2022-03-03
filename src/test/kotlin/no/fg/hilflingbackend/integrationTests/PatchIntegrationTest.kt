@@ -2,8 +2,10 @@ package no.fg.hilflingbackend.integrationTests
 
 import no.fg.hilflingbackend.dto.AlbumDto
 import no.fg.hilflingbackend.dto.AlbumId
+import no.fg.hilflingbackend.dto.AlbumPatchRequestDto
 import no.fg.hilflingbackend.dto.CategoryDto
 import no.fg.hilflingbackend.dto.CategoryId
+import no.fg.hilflingbackend.dto.CategoryPatchRequestDto
 import no.fg.hilflingbackend.dto.EventOwnerDto
 import no.fg.hilflingbackend.dto.EventOwnerId
 import no.fg.hilflingbackend.dto.EventOwnerName
@@ -14,6 +16,7 @@ import no.fg.hilflingbackend.dto.MotiveId
 import no.fg.hilflingbackend.dto.MotivePatchRequestDto
 import no.fg.hilflingbackend.dto.PhotoGangBangerDto
 import no.fg.hilflingbackend.dto.PhotoGangBangerId
+import no.fg.hilflingbackend.dto.PhotoGangBangerPositionPatchRequestDto
 import no.fg.hilflingbackend.dto.PhotoId
 import no.fg.hilflingbackend.dto.PhotoPatchRequestDto
 import no.fg.hilflingbackend.dto.PhotoTagDto
@@ -364,6 +367,10 @@ internal class PatchIntegrationTest() {
 
   @Test
   fun shouldPatchPhoto() {
+    val photoTags = listOf(
+      photoTagRepository.findById(photoTagId1.id)?.name ?: "got no1",
+      photoTagRepository.findById(photoTagId2.id)?.name ?: "got no2"
+    )
     val change = PhotoPatchRequestDto(
       photoId = PhotoId(createdPhotoId),
       isGoodPicture = false,
@@ -374,12 +381,12 @@ internal class PatchIntegrationTest() {
       albumDto = albumDto2,
       categoryDto = categoryDto2,
       photoGangBangerDto = photoGangBangerDto2,
-      photoTags = listOf(photoTagDto1.name, photoTagDto2.name)
+      photoTags = photoTags
     )
+
     photoService.patch(change)
 
     val changedFromDb = photoService.findById(createdPhotoId)
-    println(changedFromDb)
 
     assertAll(
       "photo patch",
@@ -415,5 +422,39 @@ internal class PatchIntegrationTest() {
       { assertNotNull(changedFromDb) },
       { assertEquals(change.title, changedFromDb?.title) }
     )
+  }
+
+  @Test
+  fun shouldPatchCategory() {
+    val change = CategoryPatchRequestDto(
+      categoryId=categoryId1,
+      name="SAY WHAT"
+    )
+    categoryRepository.patch(change)
+    val changedFromDb = categoryRepository.findById(change.categoryId.id)
+
+    assertAll(
+      "category patch",
+      { assertNotNull(changedFromDb) },
+      { assertEquals(change.name, changedFromDb?.name) }
+    )
+  }
+
+  @Test
+  fun shouldPatchAlbum() {
+    val change = AlbumPatchRequestDto(
+      albumId=albumId1,
+      title="CAROLINE",
+      isAnalog = true
+    )
+    albumRepository.patch(change)
+    val changedFromDb = albumRepository.findById(change.albumId.id)
+
+    assertAll(
+      "album patch",
+      { assertNotNull(changedFromDb) },
+      { assertEquals(change.title, changedFromDb?.title) },
+      { assertEquals(change.isAnalog, changedFromDb?.isAnalog) }
+      )
   }
 }
