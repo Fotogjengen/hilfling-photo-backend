@@ -11,6 +11,7 @@ import no.fg.hilflingbackend.dto.GangDto
 import no.fg.hilflingbackend.dto.GangId
 import no.fg.hilflingbackend.dto.MotiveDto
 import no.fg.hilflingbackend.dto.MotiveId
+import no.fg.hilflingbackend.dto.MotivePatchRequestDto
 import no.fg.hilflingbackend.dto.PhotoGangBangerDto
 import no.fg.hilflingbackend.dto.PhotoGangBangerId
 import no.fg.hilflingbackend.dto.PhotoId
@@ -57,6 +58,8 @@ import org.springframework.mock.web.MockMultipartFile
 import org.springframework.test.context.junit4.SpringRunner
 import java.util.*
 import kotlin.test.assertEquals
+import kotlin.test.assertFalse
+import kotlin.test.assertNotNull
 
 @RunWith(SpringRunner::class)
 @SpringBootTest()
@@ -291,9 +294,10 @@ internal class PatchIntegrationTest(
     val changedFromDb = securityLevelRepository.findById(
       securityLevelId1.id
     )
-    assertEquals(
-      changedFromDb?.securityLevelType,
-      change.securityLevelType
+
+    assertAll("patch SecurityLevel",
+      { assertNotNull(changedFromDb) },
+      { assertEquals(changedFromDb?.securityLevelType, change.securityLevelType) }
     )
   }
 
@@ -310,13 +314,10 @@ internal class PatchIntegrationTest(
       positionId1.id
     )
 
-    assertEquals(
-      changedFromDb?.title,
-      change.title
-    )
-    assertEquals(
-      changedFromDb?.email,
-      change.email
+    assertAll("patch position",
+      { assertNotNull(changedFromDb) },
+      { assertEquals(changedFromDb?.title, change.title) },
+      { assertEquals(changedFromDb?.email, change.email) }
     )
   }
 
@@ -332,9 +333,9 @@ internal class PatchIntegrationTest(
       placeId1.id
     )
 
-    assertEquals(
-      changedFromDb?.name,
-      change.name
+    assertAll("patch place",
+      { assertNotNull(changedFromDb) },
+      { assertEquals(changedFromDb?.name, change.name) }
     )
   }
 
@@ -350,18 +351,17 @@ internal class PatchIntegrationTest(
       photoTagId1.id
     )
 
-    assertEquals(
-      changedFromDb?.name,
-      change.name
+    assertAll("patch PhotoTag",
+      { assertNotNull(changedFromDb) },
+      { assertEquals(changedFromDb?.name, change.name) }
     )
   }
 
   @Test
   fun shouldPatchPhoto() {
-    val fromDb = photoService.findById(createdPhotoId)
-    val patchDto = PhotoPatchRequestDto(
-      photoId = fromDb.photoId,
-      isGoodPicture = !fromDb.isGoodPicture,
+    val change = PhotoPatchRequestDto(
+      photoId = PhotoId(createdPhotoId),
+      isGoodPicture = false,
       motive = motiveDto2,
       placeDto = placeDto2,
       securityLevel = securityLevelDto2,
@@ -371,13 +371,14 @@ internal class PatchIntegrationTest(
       photoGangBangerDto = photoGangBangerDto2,
       photoTags = listOf(photoTagDto1.name, photoTagDto2.name)
     )
-
-    photoService.patch(patchDto)
+    photoService.patch(change)
 
     val changedFromDb = photoService.findById(createdPhotoId)
+    println(changedFromDb)
 
     assertAll("photo patch",
-      { assertEquals(changedFromDb.isGoodPicture, !fromDb.isGoodPicture) },
+      { assertNotNull(changedFromDb) },
+      { assertFalse(changedFromDb.isGoodPicture) },
       { assertEquals(changedFromDb.motive.motiveId.id, motiveDto2.motiveId.id) },
       { assertEquals(changedFromDb.placeDto.placeId.id, placeDto2.placeId.id) },
       { assertEquals(changedFromDb.securityLevel.securityLevelId.id, securityLevelDto2.securityLevelId.id) },
@@ -388,6 +389,24 @@ internal class PatchIntegrationTest(
       { assertEquals(changedFromDb.photoTags.size, 2) },
       { assertEquals(changedFromDb.photoTags[0].photoTagId.id, photoTagDto1.photoTagId.id) },
       { assertEquals(changedFromDb.photoTags[1].photoTagId.id, photoTagDto2.photoTagId.id) }
+    )
+  }
+
+  @Test
+  fun shouldPatchMotive() {
+    val change = MotivePatchRequestDto(
+      motiveId = motiveId1,
+      title = "new title hehe",
+      categoryDto = categoryDto2,
+      eventOwnerDto = eventOwnerDto2,
+      albumDto = albumDto2
+    )
+    motiveRepository.patch(change)
+    val changedFromDb = motiveRepository.findById(motiveId1.id)
+
+    assertAll("motive patch",
+      { assertNotNull(changedFromDb) },
+      { assertEquals(change.title, changedFromDb?.title) }
     )
   }
 }

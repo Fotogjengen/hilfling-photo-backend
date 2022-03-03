@@ -56,7 +56,7 @@ class PhotoService(
   val categoryRepository: CategoryRepository,
   val albumRepository: AlbumRepository,
   val securityLevelRepository: SecurityLevelRepository,
-  val photoGangBangerRepository: PhotoGangBangerRepository,
+  val photoGangBangerRepository: PhotoGangBangerRepository
 ) : IPhotoService {
 
   val logger = LoggerFactory.getLogger(this::class.java)
@@ -432,6 +432,14 @@ class PhotoService(
               )
           }
     }
+    val tags = photoRepository.findCorrespondingPhotoTagDtos(dto.photoId.id)
+    println("tags")
+    println(tags)
+    tags.forEach { oldTag ->
+      photoTagRepository.deletePhotoTagReference(oldTag.photoTagId.id, dto.photoId.id)
+    }
+    println("tags")
+    println(tags)
     return photoRepository.patch(dto, photoTags)
   }
 }

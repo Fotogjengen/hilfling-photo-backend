@@ -2,6 +2,7 @@ package no.fg.hilflingbackend.repository
 
 import me.liuwj.ktorm.database.Database
 import me.liuwj.ktorm.dsl.QueryRowSet
+import me.liuwj.ktorm.dsl.delete
 import me.liuwj.ktorm.dsl.eq
 import me.liuwj.ktorm.entity.add
 import me.liuwj.ktorm.entity.find
@@ -11,10 +12,13 @@ import no.fg.hilflingbackend.dto.PhotoTagId
 import no.fg.hilflingbackend.dto.PhotoTagPatchRequestDto
 import no.fg.hilflingbackend.dto.toEntity
 import no.fg.hilflingbackend.model.PhotoTag
+import no.fg.hilflingbackend.model.PhotoTagReference
+import no.fg.hilflingbackend.model.PhotoTagReferences
 import no.fg.hilflingbackend.model.PhotoTags
 import no.fg.hilflingbackend.model.photo_tags
 import no.fg.hilflingbackend.model.toDto
 import org.springframework.stereotype.Repository
+import java.util.*
 import javax.persistence.EntityNotFoundException
 
 @Repository
@@ -46,4 +50,11 @@ open class PhotoTagRepository(database: Database) : BaseRepository<PhotoTag, Pho
       it.name eq photoTagName
     }
     ?.toDto()
+
+  fun deletePhotoTagReference(photoId: UUID, photoTagId: UUID): Int {
+    return database.delete(PhotoTagReferences) {
+      //it.photoId eq photoId
+      it.photoTagId eq photoTagId
+    }
+  }
 }

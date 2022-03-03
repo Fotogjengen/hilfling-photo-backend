@@ -21,7 +21,6 @@ import no.fg.hilflingbackend.dto.PhotoPatchRequestDto
 import no.fg.hilflingbackend.dto.PhotoTagDto
 import no.fg.hilflingbackend.dto.PhotoTagId
 import no.fg.hilflingbackend.model.AnalogPhoto
-import no.fg.hilflingbackend.model.Photo
 import no.fg.hilflingbackend.model.PhotoTagReferences
 import no.fg.hilflingbackend.model.PhotoTags
 import no.fg.hilflingbackend.model.SecurityLevel
@@ -41,7 +40,7 @@ open class PhotoRepository(
 ) {
   val logger = LoggerFactory.getLogger(this::class.java)
 
-  private fun findCorrespondingPhotoTagDtos(photo: Photo): List<PhotoTagDto> {
+   fun findCorrespondingPhotoTagDtos(photoId: UUID): List<PhotoTagDto> {
     return database.from(PhotoTags)
       .crossJoin(PhotoTagReferences)
       .select(
@@ -50,7 +49,7 @@ open class PhotoRepository(
         PhotoTagReferences.photoId,
         PhotoTagReferences.photoTagId
       )
-      .where { PhotoTagReferences.photoId eq photo.id }
+      .where { PhotoTagReferences.photoId eq photoId }
       .map { row ->
         PhotoTagDto(
           photoTagId = PhotoTagId(row[PhotoTags.id]!!),
@@ -63,7 +62,7 @@ open class PhotoRepository(
     return database.photos.find { it.id eq id }
       ?.let { photo ->
         return photo.toDto(
-          findCorrespondingPhotoTagDtos(photo)
+          findCorrespondingPhotoTagDtos(id)
         )
       }
   }
@@ -73,7 +72,7 @@ open class PhotoRepository(
       it.motiveId eq id
     }
     val photoDtos = photos.toList()
-      .map { it.toDto(findCorrespondingPhotoTagDtos(it)) }
+      .map { it.toDto(findCorrespondingPhotoTagDtos(it.id)) }
     return Page(
       page = page,
       pageSize = pageSize,
@@ -91,7 +90,7 @@ open class PhotoRepository(
     val photoDtos = photos.drop(page).take(pageSize).toList()
       .map {
         it.toDto(
-          findCorrespondingPhotoTagDtos(it)
+          findCorrespondingPhotoTagDtos(it.id)
         )
       }
     return Page(
@@ -112,6 +111,7 @@ open class PhotoRepository(
     val fromDb = findById(dto.photoId.id)
       ?: throw EntityNotFoundException("Could not find Photo")
     val (smallUrl, mediumUrl, largeUrl) = calculateNewUrls(fromDb, dto)
+    println(photoTags ?: fromDb.photoTags)
     val newDto = PhotoDto(
       photoId = fromDb.photoId,
       isGoodPicture = dto.isGoodPicture ?: fromDb.isGoodPicture,
@@ -146,7 +146,7 @@ open class PhotoRepository(
 
     val photoDtos = photos.map { photoList ->
       photoList.drop(page).take(pageSize).toList()
-        .map { it.toDto(findCorrespondingPhotoTagDtos(it)) }
+        .map { it.toDto(findCorrespondingPhotoTagDtos(it.id)) }
     }.flatten()
 
     return Page(
@@ -171,7 +171,7 @@ open class PhotoRepository(
 
     val photoDtos = photos.map { photoList ->
       photoList.drop(page).take(pageSize).toList()
-        .map { it.toDto(findCorrespondingPhotoTagDtos(it)) }
+        .map { it.toDto(findCorrespondingPhotoTagDtos(it.id)) }
     }.flatten()
 
     return Page(
@@ -187,7 +187,7 @@ open class PhotoRepository(
       .photos
       .filter { it.isGoodPicture eq true }
     val photoDtos = photos.drop(page).take(pageSize).toList()
-      .map { it.toDto(findCorrespondingPhotoTagDtos(it)) }
+      .map { it.toDto(findCorrespondingPhotoTagDtos(it.id)) }
 
     return Page(
       page = page,
@@ -209,7 +209,7 @@ open class PhotoRepository(
         securityLevelFromDatabase.id eq securityLevel.id
       }
     val photoDtos = photos.drop(page).take(pageSize).toList()
-      .map { it.toDto(findCorrespondingPhotoTagDtos(it)) }
+      .map { it.toDto(findCorrespondingPhotoTagDtos(it.id)) }
 
     return Page(
       page = page,
