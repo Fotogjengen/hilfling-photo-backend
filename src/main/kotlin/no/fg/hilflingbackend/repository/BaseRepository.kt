@@ -2,15 +2,15 @@ package no.fg.hilflingbackend.repository
 
 import me.liuwj.ktorm.database.Database
 import me.liuwj.ktorm.dsl.and
-import me.liuwj.ktorm.dsl.update
 import me.liuwj.ktorm.dsl.eq
 import me.liuwj.ktorm.dsl.forEach
 import me.liuwj.ktorm.dsl.from
+import me.liuwj.ktorm.dsl.isNull
 import me.liuwj.ktorm.dsl.limit
 import me.liuwj.ktorm.dsl.map
 import me.liuwj.ktorm.dsl.select
+import me.liuwj.ktorm.dsl.update
 import me.liuwj.ktorm.dsl.where
-import me.liuwj.ktorm.dsl.isNull
 import no.fg.hilflingbackend.dto.Page
 import no.fg.hilflingbackend.model.BaseModel
 import no.fg.hilflingbackend.model.BaseTable

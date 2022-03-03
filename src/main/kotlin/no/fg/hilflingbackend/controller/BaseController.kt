@@ -38,13 +38,12 @@ open class BaseController<E, D>(open val repository: IRepository<E, D>) {
     )
   }
 
-  @RequestMapping("/{id}", method=[RequestMethod.DELETE])
-  fun delete (
+  @RequestMapping("/{id}", method = [RequestMethod.DELETE])
+  fun delete(
     @PathVariable("id") id: UUID
   ): Int {
     return repository.delete(id)
   }
-
 
   @PatchMapping
   fun patch(
