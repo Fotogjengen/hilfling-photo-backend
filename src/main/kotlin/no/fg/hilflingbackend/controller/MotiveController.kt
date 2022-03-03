@@ -3,8 +3,6 @@ package no.fg.hilflingbackend.controller
 import no.fg.hilflingbackend.dto.MotiveDto
 import no.fg.hilflingbackend.dto.MotivePatchRequestDto
 import no.fg.hilflingbackend.dto.Page
-import no.fg.hilflingbackend.model.Motive
-import no.fg.hilflingbackend.model.toDto
 import no.fg.hilflingbackend.repository.MotiveRepository
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.web.bind.annotation.GetMapping

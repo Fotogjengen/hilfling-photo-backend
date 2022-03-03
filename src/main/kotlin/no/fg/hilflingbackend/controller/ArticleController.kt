@@ -2,7 +2,6 @@ package no.fg.hilflingbackend.controller
 
 import no.fg.hilflingbackend.dto.ArticleDto
 import no.fg.hilflingbackend.dto.ArticlePatchRequestDto
-import no.fg.hilflingbackend.model.toDto
 import no.fg.hilflingbackend.repository.ArticleRepository
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.web.bind.annotation.GetMapping

@@ -20,7 +20,6 @@ fun Place.toDto(): PlaceDto = PlaceDto(
 
 object Places : BaseTable<Place>("place") {
   val name = varchar("name").bindTo { it.name }
-
 }
 
 val Database.places get() = this.sequenceOf(Places)

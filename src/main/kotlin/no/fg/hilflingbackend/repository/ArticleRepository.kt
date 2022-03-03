@@ -7,13 +7,9 @@ import me.liuwj.ktorm.entity.find
 import me.liuwj.ktorm.entity.toList
 import me.liuwj.ktorm.entity.update
 import no.fg.hilflingbackend.dto.ArticleDto
-import no.fg.hilflingbackend.dto.ArticleId
 import no.fg.hilflingbackend.dto.ArticlePatchRequestDto
-import no.fg.hilflingbackend.dto.SecurityLevelDto
 import no.fg.hilflingbackend.dto.toEntity
-import no.fg.hilflingbackend.model.Article
 import no.fg.hilflingbackend.model.articles
-import no.fg.hilflingbackend.model.security_levels
 import no.fg.hilflingbackend.model.toDto
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Repository

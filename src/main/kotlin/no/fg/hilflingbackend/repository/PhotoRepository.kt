@@ -40,7 +40,7 @@ open class PhotoRepository(
 ) {
   val logger = LoggerFactory.getLogger(this::class.java)
 
-   fun findCorrespondingPhotoTagDtos(photoId: UUID): List<PhotoTagDto> {
+  fun findCorrespondingPhotoTagDtos(photoId: UUID): List<PhotoTagDto> {
     return database.from(PhotoTags)
       .crossJoin(PhotoTagReferences)
       .select(
@@ -101,8 +101,7 @@ open class PhotoRepository(
     )
   }
 
-  private fun calculateNewUrls(dto: PhotoDto, patchDto: PhotoPatchRequestDto)
-  : Triple<String, String, String>{
+  private fun calculateNewUrls(dto: PhotoDto, patchDto: PhotoPatchRequestDto): Triple<String, String, String> {
     // TODO: calculate correct URLS
     return Triple(dto.smallUrl, dto.mediumUrl, dto.largeUrl)
   }

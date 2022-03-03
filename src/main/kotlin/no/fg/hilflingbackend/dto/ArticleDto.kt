@@ -1,7 +1,7 @@
 package no.fg.hilflingbackend.dto
 
 import no.fg.hilflingbackend.model.Article
-import java.util.*
+import java.util.UUID
 
 data class ArticlePatchRequestDto(
   val articleId: ArticleId,
@@ -10,7 +10,7 @@ data class ArticlePatchRequestDto(
   val securityLevel: SecurityLevelDto?,
 )
 
-data class ArticleDto (
+data class ArticleDto(
   val articleId: ArticleId = ArticleId(),
   val title: String,
   val plainText: String,
@@ -20,13 +20,13 @@ data class ArticleDto (
 
 data class ArticleId(
   override val id: UUID = UUID.randomUUID()
-): UuidId {
+) : UuidId {
   override fun toString(): String = id.toString()
 }
 
 fun ArticleDto.toEntity(): Article {
   val dto = this
-  return Article{
+  return Article {
     id = dto.articleId.id
     title = dto.title
     plainText = dto.plainText

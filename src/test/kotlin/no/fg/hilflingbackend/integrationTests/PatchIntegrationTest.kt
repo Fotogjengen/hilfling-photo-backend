@@ -56,7 +56,7 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.mock.web.MockMultipartFile
 import org.springframework.test.context.junit4.SpringRunner
-import java.util.*
+import java.util.UUID
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse
 import kotlin.test.assertNotNull
@@ -64,8 +64,7 @@ import kotlin.test.assertNotNull
 @RunWith(SpringRunner::class)
 @SpringBootTest()
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-internal class PatchIntegrationTest(
-) {
+internal class PatchIntegrationTest() {
   @Autowired
   lateinit var photoService: PhotoService
   @Autowired
@@ -269,18 +268,20 @@ internal class PatchIntegrationTest(
     motiveRepository.create(motiveDto1)
     motiveRepository.create(motiveDto2)
 
-    createdPhotoId = UUID.fromString(photoService.createNewMotiveAndSaveDigitalPhotos(
-      motiveString = motiveDto1.title,
-      placeString = placeDto1.name,
-      eventOwnerString = eventOwnerDto1.name.eventOwnerName,
-      securityLevelId = securityLevelId1.id,
-      albumId = albumId1.id,
-      photoGangBangerId = photoGangBangerId1.id,
-      photoFileList = listOf(mockMultiPartFile),
-      tagList = listOf(listOf(photoTagDto1.name)),
-      categoryName = categoryDto1.name,
-      isGoodPhotoList = listOf(true)
-    )[0].split("/").last().split(".").first())
+    createdPhotoId = UUID.fromString(
+      photoService.createNewMotiveAndSaveDigitalPhotos(
+        motiveString = motiveDto1.title,
+        placeString = placeDto1.name,
+        eventOwnerString = eventOwnerDto1.name.eventOwnerName,
+        securityLevelId = securityLevelId1.id,
+        albumId = albumId1.id,
+        photoGangBangerId = photoGangBangerId1.id,
+        photoFileList = listOf(mockMultiPartFile),
+        tagList = listOf(listOf(photoTagDto1.name)),
+        categoryName = categoryDto1.name,
+        isGoodPhotoList = listOf(true)
+      )[0].split("/").last().split(".").first()
+    )
   }
 
   @Test
@@ -295,7 +296,8 @@ internal class PatchIntegrationTest(
       securityLevelId1.id
     )
 
-    assertAll("patch SecurityLevel",
+    assertAll(
+      "patch SecurityLevel",
       { assertNotNull(changedFromDb) },
       { assertEquals(changedFromDb?.securityLevelType, change.securityLevelType) }
     )
@@ -314,7 +316,8 @@ internal class PatchIntegrationTest(
       positionId1.id
     )
 
-    assertAll("patch position",
+    assertAll(
+      "patch position",
       { assertNotNull(changedFromDb) },
       { assertEquals(changedFromDb?.title, change.title) },
       { assertEquals(changedFromDb?.email, change.email) }
@@ -333,7 +336,8 @@ internal class PatchIntegrationTest(
       placeId1.id
     )
 
-    assertAll("patch place",
+    assertAll(
+      "patch place",
       { assertNotNull(changedFromDb) },
       { assertEquals(changedFromDb?.name, change.name) }
     )
@@ -351,7 +355,8 @@ internal class PatchIntegrationTest(
       photoTagId1.id
     )
 
-    assertAll("patch PhotoTag",
+    assertAll(
+      "patch PhotoTag",
       { assertNotNull(changedFromDb) },
       { assertEquals(changedFromDb?.name, change.name) }
     )
@@ -376,7 +381,8 @@ internal class PatchIntegrationTest(
     val changedFromDb = photoService.findById(createdPhotoId)
     println(changedFromDb)
 
-    assertAll("photo patch",
+    assertAll(
+      "photo patch",
       { assertNotNull(changedFromDb) },
       { assertFalse(changedFromDb.isGoodPicture) },
       { assertEquals(changedFromDb.motive.motiveId.id, motiveDto2.motiveId.id) },
@@ -404,7 +410,8 @@ internal class PatchIntegrationTest(
     motiveRepository.patch(change)
     val changedFromDb = motiveRepository.findById(motiveId1.id)
 
-    assertAll("motive patch",
+    assertAll(
+      "motive patch",
       { assertNotNull(changedFromDb) },
       { assertEquals(change.title, changedFromDb?.title) }
     )

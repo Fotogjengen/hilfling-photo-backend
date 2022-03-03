@@ -15,8 +15,8 @@ import org.springframework.stereotype.Repository
 import javax.persistence.EntityNotFoundException
 
 @Repository
-open class ArticleTagRepository(database: Database)
-  : BaseRepository<ArticleTag, ArticleTagDto, ArticleTagPatchRequestDto>(table = ArticleTags, database = database){
+open class ArticleTagRepository(database: Database) :
+  BaseRepository<ArticleTag, ArticleTagDto, ArticleTagPatchRequestDto>(table = ArticleTags, database = database) {
   override fun convertToClass(qrs: QueryRowSet): ArticleTagDto = ArticleTagDto(
     articleTagId = ArticleTagId(qrs[ArticleTags.id]!!),
     name = qrs[ArticleTags.name]!!,

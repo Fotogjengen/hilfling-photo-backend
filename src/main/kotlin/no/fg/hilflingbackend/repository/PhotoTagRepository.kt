@@ -12,13 +12,12 @@ import no.fg.hilflingbackend.dto.PhotoTagId
 import no.fg.hilflingbackend.dto.PhotoTagPatchRequestDto
 import no.fg.hilflingbackend.dto.toEntity
 import no.fg.hilflingbackend.model.PhotoTag
-import no.fg.hilflingbackend.model.PhotoTagReference
 import no.fg.hilflingbackend.model.PhotoTagReferences
 import no.fg.hilflingbackend.model.PhotoTags
 import no.fg.hilflingbackend.model.photo_tags
 import no.fg.hilflingbackend.model.toDto
 import org.springframework.stereotype.Repository
-import java.util.*
+import java.util.UUID
 import javax.persistence.EntityNotFoundException
 
 @Repository
@@ -53,7 +52,7 @@ open class PhotoTagRepository(database: Database) : BaseRepository<PhotoTag, Pho
 
   fun deletePhotoTagReference(photoId: UUID, photoTagId: UUID): Int {
     return database.delete(PhotoTagReferences) {
-      //it.photoId eq photoId
+      // it.photoId eq photoId
       it.photoTagId eq photoTagId
     }
   }
