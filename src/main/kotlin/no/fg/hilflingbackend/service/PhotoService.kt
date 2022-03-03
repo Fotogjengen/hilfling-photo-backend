@@ -410,7 +410,7 @@ class PhotoService(
   override fun getAllDigitalPhotos(
     page: Int,
     pageSize: Int,
-    motive: String,
+    motive: UUID,
     tag: List<String>,
     fromDate: LocalDate,
     toDate: LocalDate,

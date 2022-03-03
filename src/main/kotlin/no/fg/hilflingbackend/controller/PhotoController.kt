@@ -10,19 +10,11 @@ import no.fg.hilflingbackend.utils.ResponseOk
 import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
-import org.springframework.web.bind.annotation.GetMapping
-import org.springframework.web.bind.annotation.PatchMapping
-import org.springframework.web.bind.annotation.PathVariable
-import org.springframework.web.bind.annotation.PostMapping
-import org.springframework.web.bind.annotation.RequestBody
-import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.RequestParam
-import org.springframework.web.bind.annotation.RequestPart
-import org.springframework.web.bind.annotation.RestController
+import org.springframework.web.bind.annotation.*
 import org.springframework.web.multipart.MultipartFile
 import java.security.InvalidParameterException
 import java.time.LocalDate
-import java.util.UUID
+import java.util.*
 
 @RestController
 @RequestMapping("/photos")
@@ -179,7 +171,7 @@ class PhotoController(
   fun getAllDigitalPhotos(
     @RequestParam("page", required = false) page: Int?,
     @RequestParam("pageSize", required = false) pageSize: Int?,
-    @RequestParam("motive", required = false) motive : String?,
+    @RequestParam("motive", required = false) motive : UUID?,
     @RequestParam("tag", required = false) tag : List<String>?,
     @RequestParam("fromDate", required = false) fromDate : LocalDate?,
     @RequestParam("toDate", required = false) toDate : LocalDate?,
@@ -194,7 +186,7 @@ class PhotoController(
       .getAllDigitalPhotos(
         page ?: 0,
         pageSize ?: 100,
-        motive ?: "",
+        motive?: UUID(0L, 0L),
         tag ?: listOf<String>(),
         fromDate ?: LocalDate.now(),
         toDate ?: LocalDate.now(),

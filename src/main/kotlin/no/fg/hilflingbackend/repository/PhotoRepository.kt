@@ -81,6 +81,7 @@ open class PhotoRepository(
 
   fun findAll(page: Int, pageSize: Int): Page<PhotoDto> {
     val photos = database.photos
+
     val photoDtos = photos.drop(page).take(pageSize).toList()
       .map {
         it.toDto(
@@ -123,7 +124,7 @@ open class PhotoRepository(
   fun findAllDigitalPhotos(
     page: Int,
     pageSize: Int,
-    motive: String,
+    motive: UUID,
     tag: List<String>,
     fromDate: LocalDate,
     toDate: LocalDate,
@@ -136,12 +137,11 @@ open class PhotoRepository(
     val digitalAlbums = database.albums
       .filter { it.isAnalog eq false }
 
+    print(motive)
     val photos = digitalAlbums.toList().map { album ->
       database.photos.filter {
-        (it.albumId eq album.id) and
-        (it.motiveId.name eq motive)
-        //()
-      }
+        it.albumId eq album.id
+      }//.filter { it.motiveId eq motive }
     }
 
     val totalRecords = photos.sumOf { it.totalRecords }

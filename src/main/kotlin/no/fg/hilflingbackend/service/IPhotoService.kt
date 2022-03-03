@@ -48,7 +48,7 @@ interface IPhotoService : IBaseService<PhotoDto> {
   fun getAllDigitalPhotos(
     page: Int = 0,
     pageSize: Int = 100,
-    motive: String = "",
+    motive: UUID = UUID(0L, 0L),
     tag: List<String> = listOf<String>(),
     fromDate: LocalDate,
     toDate: LocalDate,
