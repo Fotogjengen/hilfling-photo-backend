@@ -256,7 +256,6 @@ class MockDataService {
       AlbumDto(
         albumId = AlbumId(UUID.fromString("8a2bb663-1260-4c16-933c-a2af7420f5ff")),
         title = "Vår 2017",
-        isAnalog = true
       ),
       AlbumDto(
         albumId = AlbumId(UUID.fromString("91fcac35-4e68-400a-a43e-e8d3f81d10f1")),
@@ -277,7 +276,6 @@ class MockDataService {
       AlbumDto(
         albumId = AlbumId(UUID.fromString("91fcac35-4e68-400a-a43e-e8d3f81d10f5")),
         title = "Høst 2019",
-        isAnalog = true
       )
     )
   }
