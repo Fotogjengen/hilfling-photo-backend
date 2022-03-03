@@ -139,9 +139,8 @@ open class PhotoRepository(
     val photos = digitalAlbums.toList().map { album ->
       database.photos.filter {
         (it.albumId eq album.id) and
-        (it.motiveId eq true) and
-        ()
-
+        (it.motiveId.name eq motive)
+        //()
       }
     }
 
