@@ -34,6 +34,7 @@ import no.fg.hilflingbackend.dto.SamfundetUserId
 import no.fg.hilflingbackend.dto.SecurityLevelDto
 import no.fg.hilflingbackend.dto.SecurityLevelId
 import no.fg.hilflingbackend.dto.SemesterStart
+import no.fg.hilflingbackend.model.Photos
 import no.fg.hilflingbackend.repository.AlbumRepository
 import no.fg.hilflingbackend.repository.ArticleRepository
 import no.fg.hilflingbackend.repository.ArticleTagRepository
@@ -48,7 +49,6 @@ import no.fg.hilflingbackend.repository.PlaceRepository
 import no.fg.hilflingbackend.repository.PositionRepository
 import no.fg.hilflingbackend.repository.SamfundetUserRepository
 import no.fg.hilflingbackend.repository.SecurityLevelRepository
-import no.fg.hilflingbackend.model.Photos
 import no.fg.hilflingbackend.value_object.Email
 import no.fg.hilflingbackend.value_object.PhoneNumber
 import no.fg.hilflingbackend.value_object.SecurityLevelType
@@ -256,7 +256,6 @@ class MockDataService {
       AlbumDto(
         albumId = AlbumId(UUID.fromString("8a2bb663-1260-4c16-933c-a2af7420f5ff")),
         title = "Vår 2017",
-        isAnalog = true
       ),
       AlbumDto(
         albumId = AlbumId(UUID.fromString("91fcac35-4e68-400a-a43e-e8d3f81d10f1")),
@@ -277,7 +276,6 @@ class MockDataService {
       AlbumDto(
         albumId = AlbumId(UUID.fromString("91fcac35-4e68-400a-a43e-e8d3f81d10f5")),
         title = "Høst 2019",
-        isAnalog = true
       )
     )
   }
