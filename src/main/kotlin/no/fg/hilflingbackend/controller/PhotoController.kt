@@ -141,11 +141,33 @@ class PhotoController(
   @GetMapping
   fun getAll(
     @RequestParam("page", required = false) page: Int?,
-    @RequestParam("pageSize", required = false) pageSize: Int?
+    @RequestParam("pageSize", required = false) pageSize: Int?,
+    @RequestParam("motive", required = false) motive : UUID?,
+    @RequestParam("tag", required = false) tag : List<String>?,
+    @RequestParam("fromDate", required = false) fromDate : LocalDate?,
+    @RequestParam("toDate", required = false) toDate : LocalDate?,
+    @RequestParam("category", required = false) category : String?,
+    @RequestParam("place", required = false) place : UUID?,
+    @RequestParam("isGoodPic", required = false) isGoodPic : Boolean?,
+    @RequestParam("album", required = false) album : String?,
+    @RequestParam("sortBy", required = false) sortBy : String?,
+    @RequestParam("desc", required = false) desc : Boolean?,
   ): ResponseEntity<Page<PhotoDto>> {
     return ResponseOk(
       photoService
-        .getAll(page ?: 0, pageSize ?: 100)
+        .getAll(
+          page ?: 0,
+          pageSize ?: 100,
+          motive?: UUID(0L, 0L),
+          tag ?: listOf<String>(),
+          fromDate ?: LocalDate.now(),
+          toDate ?: LocalDate.now(),
+          category ?: "",
+          place  ?: UUID(0L, 0L),
+          isGoodPic ?: false,
+          album ?: "",
+          sortBy ?: "",
+          desc ?: true)
     )
   }
 
@@ -176,7 +198,7 @@ class PhotoController(
     @RequestParam("fromDate", required = false) fromDate : LocalDate?,
     @RequestParam("toDate", required = false) toDate : LocalDate?,
     @RequestParam("category", required = false) category : String?,
-    @RequestParam("place", required = false) place : String?,
+    @RequestParam("place", required = false) place : UUID?,
     @RequestParam("isGoodPic", required = false) isGoodPic : Boolean?,
     @RequestParam("album", required = false) album : String?,
     @RequestParam("sortBy", required = false) sortBy : String?,
@@ -191,7 +213,7 @@ class PhotoController(
         fromDate ?: LocalDate.now(),
         toDate ?: LocalDate.now(),
         category ?: "",
-        place  ?: "",
+        place  ?: UUID(0L, 0L),
         isGoodPic ?: false,
         album ?: "",
         sortBy ?: "",

@@ -8,7 +8,20 @@ import java.util.UUID
 
 interface IBaseService<T> {
   fun getById(id: UUID): PhotoDto?
-  fun getAll(page: Int = 0, pageSize: Int = 100): Page<T>
+  fun getAll(
+    page: Int = 0,
+    pageSize: Int = 100,
+    motive: UUID = UUID(0L, 0L),
+    tag: List<String> = listOf<String>(),
+    fromDate: LocalDate,
+    toDate: LocalDate,
+    category: String,
+    place: UUID,
+    isGoodPic: Boolean = false,
+    album: String,
+    sortBy: String,
+    desc: Boolean = true
+  ): Page<T>
 }
 interface IPhotoService : IBaseService<PhotoDto> {
   fun saveDigitalPhotos(
@@ -53,7 +66,7 @@ interface IPhotoService : IBaseService<PhotoDto> {
     fromDate: LocalDate,
     toDate: LocalDate,
     category: String,
-    place: String,
+    place: UUID = UUID(0L, 0L),
     isGoodPic: Boolean = false,
     album: String,
     sortBy: String,

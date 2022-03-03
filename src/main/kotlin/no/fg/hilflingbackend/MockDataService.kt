@@ -169,11 +169,12 @@ class MockDataService {
       val byte = random.generateSeed(i)
       val uuid = UUID.nameUUIDFromBytes(byte)
       val url = getPhotoFromApi()
+      val motive = generateMotiveData().random()
       list.add(
         PhotoDto(
           photoId = PhotoId(uuid),
           largeUrl = url,
-          motive = generateMotiveData().first(),
+          motive = motive,
           placeDto = generatePlaceData().first(),
           securityLevel = generateSecurityLevelData().first(),
           gang = generateGangData().first(),

@@ -79,8 +79,25 @@ open class PhotoRepository(
     return database.analog_photos.find { it.id eq id }
   }
 
-  fun findAll(page: Int, pageSize: Int): Page<PhotoDto> {
-    val photos = database.photos
+  fun findAll(
+    page: Int = 0,
+    pageSize: Int = 100,
+    motive: UUID = UUID(0L, 0L),
+    tag: List<String> = listOf<String>(),
+    fromDate: LocalDate,
+    toDate: LocalDate,
+    category: String,
+    place: UUID,
+    isGoodPic: Boolean = false,
+    album: String,
+    sortBy: String,
+    desc: Boolean = true
+  ): Page<PhotoDto> {
+    val photos = database.photos.filter {
+      it.motiveId eq motive
+    }.filter {
+      it.placeId eq place
+    }
 
     val photoDtos = photos.drop(page).take(pageSize).toList()
       .map {
@@ -129,7 +146,7 @@ open class PhotoRepository(
     fromDate: LocalDate,
     toDate: LocalDate,
     category: String,
-    place: String,
+    place: UUID,
     isGoodPic: Boolean,
     album: String,
     sortBy: String,
@@ -137,11 +154,10 @@ open class PhotoRepository(
     val digitalAlbums = database.albums
       .filter { it.isAnalog eq false }
 
-    print(motive)
     val photos = digitalAlbums.toList().map { album ->
       database.photos.filter {
         it.albumId eq album.id
-      }//.filter { it.motiveId eq motive }
+      }.filter { it.motiveId eq motive }
     }
 
     val totalRecords = photos.sumOf { it.totalRecords }
@@ -213,7 +229,7 @@ open class PhotoRepository(
         set(it.photoTagId, photoTagDto.photoTagId.id)
       }
     }
-     */
+    */
     logger.info("Storing photo tags to database")
     val photoTagDtoList = photoDto.photoTags
     database.batchInsert(PhotoTagReferences) {

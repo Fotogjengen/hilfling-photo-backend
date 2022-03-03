@@ -415,7 +415,7 @@ class PhotoService(
     fromDate: LocalDate,
     toDate: LocalDate,
     category: String,
-    place: String,
+    place: UUID,
     isGoodPic: Boolean,
     album: String,
     sortBy: String,
@@ -439,8 +439,38 @@ class PhotoService(
 
   override fun getById(id: UUID): PhotoDto = photoRepository.findById(id) ?: throw EntityNotFoundException("Did not find photo")
 
+  override fun getAll(
+    page: Int,
+    pageSize: Int,
+    motive: UUID,
+    tag: List<String>,
+    fromDate: LocalDate,
+    toDate: LocalDate,
+    category: String,
+    place: UUID,
+    isGoodPic: Boolean,
+    album: String,
+    sortBy: String,
+    desc: Boolean
+  ): Page<PhotoDto> = photoRepository
+    .findAll(
+      page,
+      pageSize,
+      motive,
+      tag,
+      fromDate,
+      toDate,
+      category,
+      place,
+      isGoodPic,
+      album,
+      sortBy,
+      desc
+    )
+}
+  /*
   override fun getAll(page: Int, pageSize: Int): Page<PhotoDto> {
     return photoRepository
       .findAll(page, pageSize)
   }
-}
+}*/
