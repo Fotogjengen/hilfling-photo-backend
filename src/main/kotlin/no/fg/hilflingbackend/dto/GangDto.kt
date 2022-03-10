@@ -3,9 +3,14 @@ package no.fg.hilflingbackend.dto
 import no.fg.hilflingbackend.model.Gang
 import java.util.UUID
 
+data class GangPatchRequestDto(
+  val gangId: GangId,
+  val name: String?
+)
+
 data class GangDto(
   val gangId: GangId = GangId(),
-  val name: String?
+  val name: String
 )
 
 data class GangId(

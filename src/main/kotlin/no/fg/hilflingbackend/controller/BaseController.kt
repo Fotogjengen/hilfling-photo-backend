@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RequestMethod
 import org.springframework.web.bind.annotation.RequestParam
 import java.util.UUID
 
-open class BaseController<E, D>(open val repository: IRepository<E, D>) {
+open class BaseController<E, D, R>(open val repository: IRepository<E, D, R>) {
 
   @GetMapping("/{id}")
   fun getById(
@@ -47,8 +47,8 @@ open class BaseController<E, D>(open val repository: IRepository<E, D>) {
 
   @PatchMapping
   fun patch(
-    @RequestBody dto: D
-  ): Int {
+    @RequestBody dto: R
+  ): D {
     return repository.patch(dto)
   }
 }

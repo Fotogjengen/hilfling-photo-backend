@@ -9,6 +9,7 @@ import no.fg.hilflingbackend.dto.GangDto
 import no.fg.hilflingbackend.dto.MotiveDto
 import no.fg.hilflingbackend.dto.Page
 import no.fg.hilflingbackend.dto.PhotoDto
+import no.fg.hilflingbackend.dto.PhotoPatchRequestDto
 import no.fg.hilflingbackend.dto.PhotoTagDto
 import no.fg.hilflingbackend.dto.PlaceDto
 import no.fg.hilflingbackend.dto.SecurityLevelDto
@@ -55,7 +56,7 @@ class PhotoService(
   val categoryRepository: CategoryRepository,
   val albumRepository: AlbumRepository,
   val securityLevelRepository: SecurityLevelRepository,
-  val photoGangBangerRepository: PhotoGangBangerRepository,
+  val photoGangBangerRepository: PhotoGangBangerRepository
 ) : IPhotoService {
 
   val logger = LoggerFactory.getLogger(this::class.java)
@@ -344,6 +345,7 @@ class PhotoService(
                 )
             }
       }
+      println(photoTagDtos)
       val isGoodPhoto = isGoodPhotoList.get(index)
 
       val (photoDto, imageFileName) = PhotoDto.createWithFileName(
@@ -411,10 +413,33 @@ class PhotoService(
 
   fun getByMotiveId(id: UUID, page: Int, pageSize: Int): Page<PhotoDto>? = photoRepository.findByMotiveId(id, page, pageSize)
 
-  override fun getById(id: UUID): PhotoDto = photoRepository.findById(id) ?: throw EntityNotFoundException("Did not find photo")
+  override fun findById(id: UUID): PhotoDto = photoRepository.findById(id) ?: throw EntityNotFoundException("Did not find photo")
 
   override fun getAll(page: Int, pageSize: Int): Page<PhotoDto> {
     return photoRepository
       .findAll(page, pageSize)
+  }
+
+  override fun patch(dto: PhotoPatchRequestDto): PhotoDto {
+    // TODO: Move photo to new location?
+    val photoTags = dto.photoTags?.map {
+      photoTagRepository
+        .findByName(it)
+        ?: PhotoTagDto(name = it)
+          .apply {
+            photoTagRepository
+              .create(
+                this
+              )
+          }
+    }
+    // Delete old PhotoTagReferences
+    val tags = photoRepository.findCorrespondingPhotoTagDtos(dto.photoId.id)
+    tags.forEach { oldTag ->
+      if (photoTags == null || !photoTags.contains(oldTag)) {
+        photoTagRepository.deletePhotoTagReference(oldTag.photoTagId, dto.photoId)
+      }
+    }
+    return photoRepository.patch(dto, photoTags)
   }
 }

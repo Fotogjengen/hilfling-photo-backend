@@ -22,31 +22,4 @@ open class PhotoOnPurchaseOrderRepository {
   fun findAll(): List<PhotoOnPurchaseOrder> {
     return database.photo_on_purchase_orders.toList()
   }
-
-  /*
-fun create(
-  photoOnPurchaseOrder: PhotoOnPurchaseOrderDto
-): Int {
-  return database
-    .photo_on_purchase_orders
-    .add {
-      PhotoOnPurchaseOrder {
-        id = photoOnPurchaseOrder.photoOnPurchaseOrderId.id
-        photo
-        amount
-        size
-
-
-      }
-    }
-    val photoOnPurchaseOrderFromDatabase = PhotoOnPurchaseOrder {
-      this.size = photoOnPurchaseOrder.size
-      this.amount = photoOnPurchaseOrder.amount
-      this.purchaseOrder = photoOnPurchaseOrder.purchaseOrder
-      this.photo = photoOnPurchaseOrder.photo
-    }
-    database.photo_on_purchase_orders.add(photoOnPurchaseOrderFromDatabase)
-    return photoOnPurchaseOrderFromDatabase
-  }
-   */
 }

@@ -111,7 +111,7 @@ CREATE TABLE SAMFUNDET_USER
     last_name         VARCHAR(20),
     username          VARCHAR(20),
     email             VARCHAR(30),
-    profile_picture   VARCHAR(100),
+    profile_picture   VARCHAR(150),
     phone_number      VARCHAR(20),
     sex               VARCHAR(10),
     security_level_id UUID REFERENCES SECURITY_LEVEL (id),
@@ -141,7 +141,7 @@ CREATE TABLE ARTICLE
     id                   uuid PRIMARY KEY,
     date_created         DATE NOT NULL DEFAULT CURRENT_DATE,
     title                VARCHAR(50),
-    plain_text           VARCHAR(100),
+    plain_text           VARCHAR(1000),
     security_level_id    UUID REFERENCES SECURITY_LEVEL (id),
     photo_gang_banger_id UUID REFERENCES PHOTO_GANG_BANGER (id),
     date_deleted DATE DEFAULT NULL
@@ -206,5 +206,7 @@ CREATE TABLE PHOTO_TAG_IN_PHOTO
     id           UUID PRIMARY KEY,
     photo_tag_id UUID REFERENCES PHOTO_TAG (id),
     photo_id     UUID REFERENCES PHOTO (id),
-    date_deleted DATE DEFAULT NULL
+    date_created DATE NOT NULL DEFAULT CURRENT_DATE,
+    date_deleted DATE DEFAULT NULL,
+    unique (photo_tag_id, photo_id)
 );

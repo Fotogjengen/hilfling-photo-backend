@@ -4,6 +4,11 @@ import no.fg.hilflingbackend.model.SecurityLevel
 import no.fg.hilflingbackend.value_object.SecurityLevelType
 import java.util.UUID
 
+data class SecurityLevelPatchRequestDto(
+  val securityLevelId: SecurityLevelId,
+  val securityLevelType: SecurityLevelType?
+)
+
 data class SecurityLevelDto(
   val securityLevelId: SecurityLevelId,
   val securityLevelType: SecurityLevelType

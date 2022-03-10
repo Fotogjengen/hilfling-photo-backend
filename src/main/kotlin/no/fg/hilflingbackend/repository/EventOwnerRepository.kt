@@ -16,7 +16,7 @@ import no.fg.hilflingbackend.model.event_owners
 import org.springframework.stereotype.Repository
 
 @Repository
-open class EventOwnerRepository(database: Database) : BaseRepository<EventOwner, EventOwnerDto>(table = EventOwners, database = database) {
+open class EventOwnerRepository(database: Database) : BaseRepository<EventOwner, EventOwnerDto, NotImplementedError>(table = EventOwners, database = database) {
   override fun convertToClass(qrs: QueryRowSet): EventOwnerDto = EventOwnerDto(
     eventOwnerId = EventOwnerId(qrs[EventOwners.id]!!),
     name = EventOwnerName.valueOf(qrs[EventOwners.name]!!)
@@ -26,7 +26,7 @@ open class EventOwnerRepository(database: Database) : BaseRepository<EventOwner,
     return database.event_owners.add(dto.toEntity())
   }
 
-  override fun patch(dto: EventOwnerDto): Int {
+  fun patch(dto: EventOwnerDto): Int {
     return database.event_owners.update(dto.toEntity())
   }
 

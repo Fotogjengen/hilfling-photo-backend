@@ -3,6 +3,13 @@ package no.fg.hilflingbackend.dto
 import no.fg.hilflingbackend.model.PhotoGangBangerPosition
 import java.util.UUID
 
+data class PhotoGangBangerPositionPatchRequestDto(
+  val photoGangBangerPositionId: PhotoGangBangerPositionId,
+  val photoGangBangerDto: PhotoGangBangerDto?,
+  val position: PositionDto?,
+  val isCurrent: Boolean?
+)
+
 data class PhotoGangBangerPositionDto(
   val photoGangBangerPositionId: PhotoGangBangerPositionId = PhotoGangBangerPositionId(),
   val photoGangBangerDto: PhotoGangBangerDto,

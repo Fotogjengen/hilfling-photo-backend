@@ -1,5 +1,6 @@
-package no.fg.hilflingbackend.service
+package no.fg.hilflingbackend.integrationTests
 
+import no.fg.hilflingbackend.service.PhotoService
 import org.junit.Test
 import org.springframework.beans.factory.annotation.Autowired
 import kotlin.test.assertTrue

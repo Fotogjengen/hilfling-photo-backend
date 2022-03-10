@@ -2,11 +2,12 @@ package no.fg.hilflingbackend.service
 
 import no.fg.hilflingbackend.dto.Page
 import no.fg.hilflingbackend.dto.PhotoDto
+import no.fg.hilflingbackend.dto.PhotoPatchRequestDto
 import org.springframework.web.multipart.MultipartFile
 import java.util.UUID
 
 interface IBaseService<T> {
-  fun getById(id: UUID): PhotoDto?
+  fun findById(id: UUID): PhotoDto?
   fun getAll(page: Int = 0, pageSize: Int = 100): Page<T>
 }
 interface IPhotoService : IBaseService<PhotoDto> {
@@ -45,4 +46,5 @@ interface IPhotoService : IBaseService<PhotoDto> {
   fun getCarouselPhotos(page: Int = 0, pageSize: Int = 100): Page<PhotoDto>
   fun getAllAnalogPhotos(page: Int = 0, pageSize: Int = 100): Page<PhotoDto> // TODO: Need different DTO for analog
   fun getAllDigitalPhotos(page: Int = 0, pageSize: Int = 100): Page<PhotoDto>
+  fun patch(dto: PhotoPatchRequestDto): PhotoDto
 }
