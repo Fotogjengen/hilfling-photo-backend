@@ -246,7 +246,7 @@ internal class PatchIntegrationTest() {
   )
 
   @BeforeAll
-  fun fill_db() {
+  fun fillDb() {
     photoTagRepository.create(photoTagDto1)
     photoTagRepository.create(photoTagDto2)
     gangRepository.create(gangDto1)
