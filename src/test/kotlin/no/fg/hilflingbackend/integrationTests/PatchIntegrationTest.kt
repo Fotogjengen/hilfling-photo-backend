@@ -16,7 +16,6 @@ import no.fg.hilflingbackend.dto.MotiveId
 import no.fg.hilflingbackend.dto.MotivePatchRequestDto
 import no.fg.hilflingbackend.dto.PhotoGangBangerDto
 import no.fg.hilflingbackend.dto.PhotoGangBangerId
-import no.fg.hilflingbackend.dto.PhotoGangBangerPositionPatchRequestDto
 import no.fg.hilflingbackend.dto.PhotoId
 import no.fg.hilflingbackend.dto.PhotoPatchRequestDto
 import no.fg.hilflingbackend.dto.PhotoTagDto
@@ -427,8 +426,8 @@ internal class PatchIntegrationTest() {
   @Test
   fun shouldPatchCategory() {
     val change = CategoryPatchRequestDto(
-      categoryId=categoryId1,
-      name="SAY WHAT"
+      categoryId = categoryId1,
+      name = "SAY WHAT"
     )
     categoryRepository.patch(change)
     val changedFromDb = categoryRepository.findById(change.categoryId.id)
@@ -443,8 +442,8 @@ internal class PatchIntegrationTest() {
   @Test
   fun shouldPatchAlbum() {
     val change = AlbumPatchRequestDto(
-      albumId=albumId1,
-      title="CAROLINE",
+      albumId = albumId1,
+      title = "CAROLINE",
       isAnalog = true
     )
     albumRepository.patch(change)
@@ -455,6 +454,6 @@ internal class PatchIntegrationTest() {
       { assertNotNull(changedFromDb) },
       { assertEquals(change.title, changedFromDb?.title) },
       { assertEquals(change.isAnalog, changedFromDb?.isAnalog) }
-      )
+    )
   }
 }

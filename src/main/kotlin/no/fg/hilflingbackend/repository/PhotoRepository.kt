@@ -2,11 +2,9 @@ package no.fg.hilflingbackend.repository
 
 import me.liuwj.ktorm.database.Database
 import me.liuwj.ktorm.dsl.batchInsert
-import me.liuwj.ktorm.dsl.crossJoin
 import me.liuwj.ktorm.dsl.eq
 import me.liuwj.ktorm.dsl.from
 import me.liuwj.ktorm.dsl.innerJoin
-import me.liuwj.ktorm.dsl.leftJoin
 import me.liuwj.ktorm.dsl.map
 import me.liuwj.ktorm.dsl.select
 import me.liuwj.ktorm.dsl.where
@@ -23,15 +21,12 @@ import no.fg.hilflingbackend.dto.PhotoPatchRequestDto
 import no.fg.hilflingbackend.dto.PhotoTagDto
 import no.fg.hilflingbackend.dto.PhotoTagId
 import no.fg.hilflingbackend.model.AnalogPhoto
-import no.fg.hilflingbackend.model.PhotoTagReference
 import no.fg.hilflingbackend.model.PhotoTagReferences
 import no.fg.hilflingbackend.model.PhotoTags
 import no.fg.hilflingbackend.model.SecurityLevel
 import no.fg.hilflingbackend.model.SecurityLevels
 import no.fg.hilflingbackend.model.albums
 import no.fg.hilflingbackend.model.analog_photos
-import no.fg.hilflingbackend.model.photo_tag_references
-import no.fg.hilflingbackend.model.photo_tags
 import no.fg.hilflingbackend.model.photos
 import no.fg.hilflingbackend.model.toDto
 import org.slf4j.LoggerFactory
@@ -118,15 +113,15 @@ open class PhotoRepository(
 
     if (photoTags != null) {
       try {
-      database.batchInsert(PhotoTagReferences) {
-        photoTags.map { photoTagDto ->
+        database.batchInsert(PhotoTagReferences) {
+          photoTags.map { photoTagDto ->
             item {
               set(it.id, UUID.randomUUID())
               set(it.photoTagId, photoTagDto.photoTagId.id)
               set(it.photoId, dto.photoId.id)
             }
+          }
         }
-      }
       } catch (e: Exception) {
         logger.info(String.format("Tried to create a PhotoTagReference that already existed. Ignoring error.", e.message))
       }

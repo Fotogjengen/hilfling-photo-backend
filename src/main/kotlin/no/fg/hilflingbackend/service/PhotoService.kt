@@ -436,7 +436,7 @@ class PhotoService(
     // Delete old PhotoTagReferences
     val tags = photoRepository.findCorrespondingPhotoTagDtos(dto.photoId.id)
     tags.forEach { oldTag ->
-      if (photoTags == null || !photoTags.contains(oldTag) ) {
+      if (photoTags == null || !photoTags.contains(oldTag)) {
         photoTagRepository.deletePhotoTagReference(oldTag.photoTagId, dto.photoId)
       }
     }
