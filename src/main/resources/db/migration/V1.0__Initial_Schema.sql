@@ -207,6 +207,6 @@ CREATE TABLE PHOTO_TAG_IN_PHOTO
     photo_tag_id UUID REFERENCES PHOTO_TAG (id),
     photo_id     UUID REFERENCES PHOTO (id),
     date_created DATE NOT NULL DEFAULT CURRENT_DATE,
-    date_deleted DATE DEFAULT NULL
+    date_deleted DATE DEFAULT NULL,
     unique (photo_tag_id, photo_id)
 );
