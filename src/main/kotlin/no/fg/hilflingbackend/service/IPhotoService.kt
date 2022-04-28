@@ -59,7 +59,7 @@ interface IPhotoService : IBaseService<PhotoDto> {
   ): List<String>
   fun getCarouselPhotos(page: Int = 0, pageSize: Int = 100): Page<PhotoDto>
   fun getAllAnalogPhotos(page: Int = 0, pageSize: Int = 100): Page<PhotoDto> // TODO: Need different DTO for analog
-<<<<<<< HEAD
+
   fun getAllDigitalPhotos(
     page: Int = 0,
     pageSize: Int = 100,
@@ -74,8 +74,6 @@ interface IPhotoService : IBaseService<PhotoDto> {
     sortBy: String,
     desc: Boolean = true
   ): Page<PhotoDto>
-=======
-  fun getAllDigitalPhotos(page: Int = 0, pageSize: Int = 100): Page<PhotoDto>
+
   fun patch(dto: PhotoPatchRequestDto): PhotoDto
->>>>>>> master
 }
