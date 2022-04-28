@@ -60,6 +60,7 @@ interface IPhotoService : IBaseService<PhotoDto> {
   ): List<String>
   fun getCarouselPhotos(page: Int = 0, pageSize: Int = 100): Page<PhotoDto>
   fun getAllAnalogPhotos(page: Int = 0, pageSize: Int = 100): Page<PhotoDto> // TODO: Need different DTO for analog
+
   fun getAllDigitalPhotos(
     page: Int = 0,
     pageSize: Int = 100,
@@ -76,5 +77,6 @@ interface IPhotoService : IBaseService<PhotoDto> {
   ): Page<PhotoDto>
 
   fun findById(id: UUID): PhotoDto
+
   fun patch(dto: PhotoPatchRequestDto): PhotoDto
 }
