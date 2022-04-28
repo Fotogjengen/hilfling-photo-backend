@@ -6,6 +6,7 @@ import no.fg.hilflingbackend.dto.PhotoPatchRequestDto
 import org.springframework.web.multipart.MultipartFile
 import java.time.LocalDate
 import java.util.UUID
+import javax.persistence.EntityNotFoundException
 
 interface IBaseService<T> {
   fun getById(id: UUID): PhotoDto?
@@ -59,7 +60,6 @@ interface IPhotoService : IBaseService<PhotoDto> {
   ): List<String>
   fun getCarouselPhotos(page: Int = 0, pageSize: Int = 100): Page<PhotoDto>
   fun getAllAnalogPhotos(page: Int = 0, pageSize: Int = 100): Page<PhotoDto> // TODO: Need different DTO for analog
-<<<<<<< HEAD
   fun getAllDigitalPhotos(
     page: Int = 0,
     pageSize: Int = 100,
@@ -74,8 +74,7 @@ interface IPhotoService : IBaseService<PhotoDto> {
     sortBy: String,
     desc: Boolean = true
   ): Page<PhotoDto>
-=======
-  fun getAllDigitalPhotos(page: Int = 0, pageSize: Int = 100): Page<PhotoDto>
+
+  fun findById(id: UUID): PhotoDto
   fun patch(dto: PhotoPatchRequestDto): PhotoDto
->>>>>>> master
 }

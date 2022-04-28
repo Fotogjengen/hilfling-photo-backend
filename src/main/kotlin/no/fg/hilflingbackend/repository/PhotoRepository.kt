@@ -2,14 +2,6 @@ package no.fg.hilflingbackend.repository
 
 import me.liuwj.ktorm.database.Database
 import me.liuwj.ktorm.dsl.*
-import me.liuwj.ktorm.entity.*
-import me.liuwj.ktorm.dsl.batchInsert
-import me.liuwj.ktorm.dsl.eq
-import me.liuwj.ktorm.dsl.from
-import me.liuwj.ktorm.dsl.innerJoin
-import me.liuwj.ktorm.dsl.map
-import me.liuwj.ktorm.dsl.select
-import me.liuwj.ktorm.dsl.where
 import me.liuwj.ktorm.entity.add
 import me.liuwj.ktorm.entity.drop
 import me.liuwj.ktorm.entity.filter
@@ -17,16 +9,15 @@ import me.liuwj.ktorm.entity.find
 import me.liuwj.ktorm.entity.take
 import me.liuwj.ktorm.entity.toList
 import me.liuwj.ktorm.entity.update
+import me.liuwj.ktorm.schema.ColumnDeclaring
 import no.fg.hilflingbackend.dto.Page
 import no.fg.hilflingbackend.dto.PhotoDto
 import no.fg.hilflingbackend.dto.PhotoPatchRequestDto
 import no.fg.hilflingbackend.dto.PhotoTagDto
 import no.fg.hilflingbackend.dto.PhotoTagId
-import no.fg.hilflingbackend.model.*
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Repository
 import java.time.LocalDate
-import java.util.*
 import no.fg.hilflingbackend.model.AnalogPhoto
 import no.fg.hilflingbackend.model.PhotoTagReferences
 import no.fg.hilflingbackend.model.PhotoTags
@@ -36,8 +27,6 @@ import no.fg.hilflingbackend.model.albums
 import no.fg.hilflingbackend.model.analog_photos
 import no.fg.hilflingbackend.model.photos
 import no.fg.hilflingbackend.model.toDto
-import org.slf4j.LoggerFactory
-import org.springframework.stereotype.Repository
 import java.util.UUID
 import javax.persistence.EntityNotFoundException
 
@@ -120,7 +109,7 @@ open class PhotoRepository(
     }
 
     //Check if date of image is between fromDate and ToDate
-    photos.filter { isWithinDateRange(it.dateCreated, fromDate, toDate) }
+    photos.filter { it.dateCreated greaterEq fromDate }.filter { it.dateCreated lessEq toDate }
 
     val photoDtos = photos.drop(page).take(pageSize).toList()
       .map {
@@ -341,9 +330,4 @@ open class PhotoRepository(
       .update(analogPhoto)
     return findAnalogPhotoById(analogPhoto.id)
   }
-}
-
-
-fun isWithinDateRange(date: LocalDate, fromDate: LocalDate, toDate: LocalDate): Boolean {
-  return !(date.isBefore(fromDate) || date.isAfter(toDate))
 }
