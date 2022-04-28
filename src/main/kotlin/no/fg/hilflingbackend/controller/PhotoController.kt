@@ -3,6 +3,7 @@ package no.fg.hilflingbackend.controller
 import me.liuwj.ktorm.database.Database
 import no.fg.hilflingbackend.dto.Page
 import no.fg.hilflingbackend.dto.PhotoDto
+import no.fg.hilflingbackend.dto.PhotoPatchRequestDto
 import no.fg.hilflingbackend.exceptions.GlobalExceptionHandler
 import no.fg.hilflingbackend.model.AnalogPhoto
 import no.fg.hilflingbackend.service.PhotoService
@@ -125,7 +126,7 @@ class PhotoController(
   @GetMapping("/{id}")
   fun getById(@PathVariable("id") id: UUID): ResponseEntity<PhotoDto> = ResponseOk(
     photoService
-      .getById(id)
+      .findById(id)
   )
 
   @GetMapping("/motive/{id}")
@@ -220,4 +221,11 @@ class PhotoController(
         desc ?: true
         )
   )
+
+  @PatchMapping
+  fun patch(
+    @RequestBody dto: PhotoPatchRequestDto
+  ): PhotoDto {
+    return photoService.patch(dto)
+  }
 }

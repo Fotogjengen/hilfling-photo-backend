@@ -8,15 +8,17 @@ import me.liuwj.ktorm.entity.find
 import me.liuwj.ktorm.entity.update
 import no.fg.hilflingbackend.dto.PlaceDto
 import no.fg.hilflingbackend.dto.PlaceId
+import no.fg.hilflingbackend.dto.PlacePatchRequestDto
 import no.fg.hilflingbackend.dto.toEntity
 import no.fg.hilflingbackend.model.Place
 import no.fg.hilflingbackend.model.Places
 import no.fg.hilflingbackend.model.places
 import no.fg.hilflingbackend.model.toDto
 import org.springframework.stereotype.Repository
+import javax.persistence.EntityNotFoundException
 
 @Repository
-open class PlaceRepository(database: Database) : BaseRepository<Place, PlaceDto>(table = Places, database = database) {
+open class PlaceRepository(database: Database) : BaseRepository<Place, PlaceDto, PlacePatchRequestDto>(table = Places, database = database) {
   override fun convertToClass(qrs: QueryRowSet): PlaceDto = PlaceDto(
     placeId = PlaceId(qrs[Places.id]!!),
     name = qrs[Places.name]!!
@@ -34,7 +36,15 @@ open class PlaceRepository(database: Database) : BaseRepository<Place, PlaceDto>
     }
     ?.toDto()
 
-  override fun patch(dto: PlaceDto): Int {
-    return database.places.update(dto.toEntity())
+  override fun patch(dto: PlacePatchRequestDto): PlaceDto {
+    val fromDb = findById(dto.placeId.id)
+      ?: throw EntityNotFoundException("Could not find Place")
+    val newDto = PlaceDto(
+      placeId = fromDb.placeId,
+      name = dto.name ?: fromDb.name
+    )
+    val updated = database.places.update(newDto.toEntity())
+
+    return if (updated == 1) newDto else fromDb
   }
 }

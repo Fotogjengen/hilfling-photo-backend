@@ -5,6 +5,9 @@ import me.liuwj.ktorm.entity.Entity
 import me.liuwj.ktorm.entity.sequenceOf
 import me.liuwj.ktorm.schema.int
 import me.liuwj.ktorm.schema.varchar
+import no.fg.hilflingbackend.dto.ArticleDto
+import no.fg.hilflingbackend.dto.ArticleId
+import no.fg.hilflingbackend.dto.toDto
 
 interface Article : BaseModel<Article> {
   companion object : Entity.Factory<Article>()
@@ -27,3 +30,11 @@ object Articles : BaseTable<Article>("article") {
 }
 
 val Database.articles get() = this.sequenceOf(Articles)
+
+fun Article.toDto(): ArticleDto = ArticleDto(
+  articleId = ArticleId(this.id),
+  title = this.title,
+  plainText = this.plainText,
+  securityLevel = this.securityLevel.toDto(),
+  photoGangBanger = this.photoGangBanger.toDto()
+)

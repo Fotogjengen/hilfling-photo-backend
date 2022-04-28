@@ -1,36 +1,40 @@
 package no.fg.hilflingbackend.repository
 
 import me.liuwj.ktorm.database.Database
-import me.liuwj.ktorm.dsl.eq
+import me.liuwj.ktorm.dsl.QueryRowSet
 import me.liuwj.ktorm.entity.add
-import me.liuwj.ktorm.entity.find
-import me.liuwj.ktorm.entity.toList
+import me.liuwj.ktorm.entity.update
+import no.fg.hilflingbackend.dto.ArticleTagDto
+import no.fg.hilflingbackend.dto.ArticleTagId
+import no.fg.hilflingbackend.dto.ArticleTagPatchRequestDto
+import no.fg.hilflingbackend.dto.toEntity
 import no.fg.hilflingbackend.model.ArticleTag
+import no.fg.hilflingbackend.model.ArticleTags
 import no.fg.hilflingbackend.model.article_tags
-import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Repository
-import java.util.UUID
+import javax.persistence.EntityNotFoundException
 
 @Repository
-open class ArticleTagRepository {
-  @Autowired
-  open lateinit var database: Database
+open class ArticleTagRepository(database: Database) :
+  BaseRepository<ArticleTag, ArticleTagDto, ArticleTagPatchRequestDto>(table = ArticleTags, database = database) {
+  override fun convertToClass(qrs: QueryRowSet): ArticleTagDto = ArticleTagDto(
+    articleTagId = ArticleTagId(qrs[ArticleTags.id]!!),
+    name = qrs[ArticleTags.name]!!,
+  )
 
-  fun findById(id: UUID): ArticleTag? {
-    return database.article_tags.find { it.id eq id }
+  override fun create(dto: ArticleTagDto): Int {
+    return database.article_tags.add(dto.toEntity())
   }
 
-  fun findAll(): List<ArticleTag> {
-    return database.article_tags.toList()
-  }
+  override fun patch(dto: ArticleTagPatchRequestDto): ArticleTagDto {
+    val fromDb = findById(dto.articleTagId.id)
+      ?: throw EntityNotFoundException("Could not find ArticleTag")
+    val newDto = ArticleTagDto(
+      articleTagId = fromDb.articleTagId,
+      name = dto.name ?: fromDb.name
+    )
+    val updated = database.article_tags.update(newDto.toEntity())
 
-  fun create(
-    articleTag: ArticleTag
-  ): ArticleTag {
-    val articleTagFromDatabase = ArticleTag {
-      this.name = articleTag.name
-    }
-    database.article_tags.add(articleTagFromDatabase)
-    return articleTagFromDatabase
+    return if (updated == 1) newDto else fromDb
   }
 }
