@@ -2,31 +2,16 @@ package no.fg.hilflingbackend.repository
 
 import me.liuwj.ktorm.database.Database
 import me.liuwj.ktorm.dsl.*
-import me.liuwj.ktorm.entity.add
-import me.liuwj.ktorm.entity.drop
-import me.liuwj.ktorm.entity.filter
-import me.liuwj.ktorm.entity.find
-import me.liuwj.ktorm.entity.take
-import me.liuwj.ktorm.entity.toList
-import me.liuwj.ktorm.entity.update
+import me.liuwj.ktorm.entity.*
 import no.fg.hilflingbackend.dto.Page
 import no.fg.hilflingbackend.dto.PhotoDto
 import no.fg.hilflingbackend.dto.PhotoTagDto
 import no.fg.hilflingbackend.dto.PhotoTagId
-import no.fg.hilflingbackend.model.AnalogPhoto
-import no.fg.hilflingbackend.model.Photo
-import no.fg.hilflingbackend.model.PhotoTagReferences
-import no.fg.hilflingbackend.model.PhotoTags
-import no.fg.hilflingbackend.model.SecurityLevel
-import no.fg.hilflingbackend.model.SecurityLevels
-import no.fg.hilflingbackend.model.albums
-import no.fg.hilflingbackend.model.analog_photos
-import no.fg.hilflingbackend.model.photos
-import no.fg.hilflingbackend.model.toDto
+import no.fg.hilflingbackend.model.*
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Repository
 import java.time.LocalDate
-import java.util.UUID
+import java.util.*
 
 @Repository
 open class PhotoRepository(
@@ -82,7 +67,7 @@ open class PhotoRepository(
   fun findAll(
     page: Int = 0,
     pageSize: Int = 100,
-    motive: UUID = UUID(0L, 0L),
+    motive: UUID,
     tag: List<String> = listOf<String>(),
     fromDate: LocalDate,
     toDate: LocalDate,
@@ -93,11 +78,21 @@ open class PhotoRepository(
     sortBy: String,
     desc: Boolean = true
   ): Page<PhotoDto> {
-    val photos = database.photos.filter {
-      it.motiveId eq motive
-    }.filter {
-      it.placeId eq place
+    val photos = database.photos
+
+    if(motive !== UUID(0L, 0L)){
+      photos.filter {
+        it.motiveId eq motive
+      }
     }
+    if(place !== UUID(0L, 0L)) {
+      photos.filter {
+        it.placeId eq place
+      }
+    }
+
+    //Check if date of image is between fromDate and ToDate
+    photos.filter { isWithinDateRange(it.dateCreated, fromDate, toDate) }
 
     val photoDtos = photos.drop(page).take(pageSize).toList()
       .map {
@@ -272,4 +267,9 @@ open class PhotoRepository(
       .update(analogPhoto)
     return findAnalogPhotoById(analogPhoto.id)
   }
+}
+
+
+fun isWithinDateRange(date: LocalDate, fromDate: LocalDate, toDate: LocalDate): Boolean {
+  return !(date.isBefore(fromDate) || date.isAfter(toDate))
 }
