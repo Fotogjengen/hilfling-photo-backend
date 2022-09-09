@@ -76,7 +76,5 @@ interface IPhotoService : IBaseService<PhotoDto> {
     desc: Boolean = true
   ): Page<PhotoDto>
 
-  fun findById(id: UUID): PhotoDto
-
   fun patch(dto: PhotoPatchRequestDto): PhotoDto
 }
