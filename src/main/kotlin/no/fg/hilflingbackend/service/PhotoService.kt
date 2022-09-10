@@ -1,18 +1,7 @@
 package no.fg.hilflingbackend.service
 
 import no.fg.hilflingbackend.configurations.ImageFileStorageProperties
-import no.fg.hilflingbackend.dto.AlbumDto
-import no.fg.hilflingbackend.dto.CategoryDto
-import no.fg.hilflingbackend.dto.EventOwnerDto
-import no.fg.hilflingbackend.dto.EventOwnerName
-import no.fg.hilflingbackend.dto.GangDto
-import no.fg.hilflingbackend.dto.MotiveDto
-import no.fg.hilflingbackend.dto.Page
-import no.fg.hilflingbackend.dto.PhotoDto
-import no.fg.hilflingbackend.dto.PhotoPatchRequestDto
-import no.fg.hilflingbackend.dto.PhotoTagDto
-import no.fg.hilflingbackend.dto.PlaceDto
-import no.fg.hilflingbackend.dto.SecurityLevelDto
+import no.fg.hilflingbackend.dto.*
 import no.fg.hilflingbackend.model.toDto
 import no.fg.hilflingbackend.repository.AlbumRepository
 import no.fg.hilflingbackend.repository.CategoryRepository
@@ -437,9 +426,17 @@ class PhotoService(
       desc
     )
 
+  override fun patch(dto: PhotoPatchRequestDto): PhotoDto {
+    TODO("Not yet implemented")
+  }
+
+  override fun getById(id: UUID): PhotoDto? {
+    TODO("Not yet implemented")
+  }
+
   fun getByMotiveId(id: UUID, page: Int, pageSize: Int): Page<PhotoDto>? = photoRepository.findByMotiveId(id, page, pageSize)
 
-  override fun findById(id: UUID): PhotoDto = photoRepository.findById(id) ?: throw EntityNotFoundException("Did not find photo")
+  fun findById(id: UUID): PhotoDto = photoRepository.findById(id) ?: throw EntityNotFoundException("Did not find photo")
 
   override fun getAll(
     page: Int,

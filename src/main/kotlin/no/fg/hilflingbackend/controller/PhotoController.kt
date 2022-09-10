@@ -145,8 +145,8 @@ class PhotoController(
     @RequestParam("pageSize", required = false) pageSize: Int?,
     @RequestParam("motive", required = false) motive : UUID?,
     @RequestParam("tag", required = false) tag : List<String>?,
-    @RequestParam("fromDate", required = false) fromDate : LocalDate?,
-    @RequestParam("toDate", required = false) toDate : LocalDate?,
+    @RequestParam("fromDate", required = false) fromDate : String?,
+    @RequestParam("toDate", required = false) toDate : String?,
     @RequestParam("category", required = false) category : String?,
     @RequestParam("place", required = false) place : UUID?,
     @RequestParam("isGoodPic", required = false) isGoodPic : Boolean?,
@@ -154,6 +154,9 @@ class PhotoController(
     @RequestParam("sortBy", required = false) sortBy : String?,
     @RequestParam("desc", required = false) desc : Boolean?,
   ): ResponseEntity<Page<PhotoDto>> {
+    println("step1")
+    println(LocalDate.parse(fromDate))
+
     return ResponseOk(
       photoService
         .getAll(
@@ -161,8 +164,8 @@ class PhotoController(
           pageSize ?: 100,
           motive?: UUID(0L, 0L),
           tag ?: listOf<String>(),
-          fromDate ?: LocalDate.now(),
-          toDate ?: LocalDate.now(),
+          LocalDate.parse(fromDate) ?: LocalDate.now(),
+          LocalDate.parse(toDate) ?: LocalDate.now(),
           category ?: "",
           place  ?: UUID(0L, 0L),
           isGoodPic ?: false,

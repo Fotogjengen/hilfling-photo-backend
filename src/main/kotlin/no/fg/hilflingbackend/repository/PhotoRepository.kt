@@ -10,23 +10,11 @@ import me.liuwj.ktorm.entity.take
 import me.liuwj.ktorm.entity.toList
 import me.liuwj.ktorm.entity.update
 import me.liuwj.ktorm.schema.ColumnDeclaring
-import no.fg.hilflingbackend.dto.Page
-import no.fg.hilflingbackend.dto.PhotoDto
-import no.fg.hilflingbackend.dto.PhotoPatchRequestDto
-import no.fg.hilflingbackend.dto.PhotoTagDto
-import no.fg.hilflingbackend.dto.PhotoTagId
+import no.fg.hilflingbackend.dto.*
+import no.fg.hilflingbackend.model.*
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Repository
 import java.time.LocalDate
-import no.fg.hilflingbackend.model.AnalogPhoto
-import no.fg.hilflingbackend.model.PhotoTagReferences
-import no.fg.hilflingbackend.model.PhotoTags
-import no.fg.hilflingbackend.model.SecurityLevel
-import no.fg.hilflingbackend.model.SecurityLevels
-import no.fg.hilflingbackend.model.albums
-import no.fg.hilflingbackend.model.analog_photos
-import no.fg.hilflingbackend.model.photos
-import no.fg.hilflingbackend.model.toDto
 import java.util.UUID
 import javax.persistence.EntityNotFoundException
 
@@ -97,6 +85,21 @@ open class PhotoRepository(
   ): Page<PhotoDto> {
     val photos = database.photos
 
+    val ph = database.from(Photos).select()
+      .where { Photos.isGoodPicture eq true }
+      .map { row -> PhotoDto(
+        photoId = PhotoId(row[Photos.id]!!),
+        isGoodPicture = row[Photos.isGoodPicture]!!,
+        smallUrl = row[Photos.smallUrl]!!,
+        mediumUrl = row[Photos.mediumUrl]!!,
+        largeUrl = row[Photos.largeUrl]!!,
+        motive = MotiveDto(row[Photos.motiveId]!!),
+        placeDto = PlaceDto(PlaceId(row[Photos.placeId]!!)),
+
+      ) }
+
+
+    /*
     if(motive !== UUID(0L, 0L)){
       photos.filter {
         it.motiveId eq motive
@@ -110,13 +113,14 @@ open class PhotoRepository(
 
     //Check if date of image is between fromDate and ToDate
     photos.filter { it.dateCreated greaterEq fromDate }.filter { it.dateCreated lessEq toDate }
-
+    */
     val photoDtos = photos.drop(page).take(pageSize).toList()
       .map {
         it.toDto(
           findCorrespondingPhotoTagDtos(it.id)
         )
-      }
+    }
+
     return Page(
       page = page,
       pageSize = pageSize,
@@ -209,6 +213,7 @@ open class PhotoRepository(
     album: String,
     sortBy: String,
     desc: Boolean): Page<PhotoDto> {
+    println("allDigitalPhotos")
     val digitalAlbums = database.albums
       .filter { it.isAnalog eq false }
 
