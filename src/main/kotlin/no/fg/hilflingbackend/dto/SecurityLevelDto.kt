@@ -11,13 +11,15 @@ data class SecurityLevelPatchRequestDto(
 
 data class SecurityLevelDto(
   val securityLevelId: SecurityLevelId,
-  val securityLevelType: SecurityLevelType
+  val securityLevelType: SecurityLevelType?
 ) {
+  constructor(securityLevelId: SecurityLevelId): this(securityLevelId, null)
+
   fun toEntity(): SecurityLevel {
     val dto = this
     return SecurityLevel {
       id = dto.securityLevelId.id
-      type = dto.securityLevelType.name
+      type = dto.securityLevelType?.name ?: ""
     }
   }
 }

@@ -9,9 +9,11 @@ import me.liuwj.ktorm.entity.find
 import me.liuwj.ktorm.entity.take
 import me.liuwj.ktorm.entity.toList
 import me.liuwj.ktorm.entity.update
-import me.liuwj.ktorm.schema.ColumnDeclaring
 import no.fg.hilflingbackend.dto.*
 import no.fg.hilflingbackend.model.*
+import no.fg.hilflingbackend.value_object.Email
+import no.fg.hilflingbackend.value_object.PhoneNumber
+import no.fg.hilflingbackend.value_object.SecurityLevelType
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Repository
 import java.time.LocalDate
@@ -40,6 +42,83 @@ open class PhotoRepository(
           name = row[PhotoTags.name]!!
         )
       }
+  }
+
+  fun constructPhotoDto(row: QueryRowSet): PhotoDto {
+    return PhotoDto(
+      photoId = PhotoId(row[Photos.id]!!),
+      isGoodPicture = row[Photos.isGoodPicture]!!,
+      smallUrl = row[Photos.smallUrl]!!,
+      mediumUrl = row[Photos.mediumUrl]!!,
+      largeUrl = row[Photos.largeUrl]!!,
+      motive = MotiveDto(
+        motiveId = MotiveId(),
+        title = row[Motives.title]!!,
+        categoryDto = CategoryDto(
+          categoryId = CategoryId(row[Categories.id]!!),
+          name = row[Categories.name]!!
+        ),
+        eventOwnerDto = EventOwnerDto(
+          eventOwnerId = EventOwnerId(row[EventOwners.id]!!),
+          name = EventOwnerName.valueOf(row[EventOwners.name]!!)
+        ),
+        albumDto = AlbumDto(
+          albumId = AlbumId(row[Albums.id]!!),
+          isAnalog = row[Albums.isAnalog]!!,
+          title = row[Albums.title]!!
+        ),
+      ),
+      placeDto = PlaceDto(
+        placeId = PlaceId(row[Places.id]!!),
+        name = row[Places.name]!!
+      ),
+      securityLevel = SecurityLevelDto(
+        securityLevelId = SecurityLevelId(row[SecurityLevels.id]!!),
+        securityLevelType = SecurityLevelType.valueOf(row[SecurityLevels.type]!!)
+      ),
+      gang = GangDto(
+        GangId(row[Gangs.id]!!),
+        row[Gangs.name]!!
+      ),
+      albumDto = AlbumDto(
+        AlbumId(row[Albums.id]!!),
+        row[Albums.title]!!,
+        row[Albums.isAnalog]!!
+      ),
+      categoryDto = CategoryDto(
+        CategoryId(row[Categories.id]!!),
+        row[Categories.name]!!,
+      ),
+      photoGangBangerDto = PhotoGangBangerDto(
+        PhotoGangBangerId(row[PhotoGangBangers.id]!!),
+        RelationshipStatus.valueOf(row[PhotoGangBangers.relationshipStatus]!!),
+        SemesterStart(row[PhotoGangBangers.semesterStart]!!),
+        row[PhotoGangBangers.isActive]!!,
+        row[PhotoGangBangers.isPang]!!,
+        row[PhotoGangBangers.address]!!,
+        row[PhotoGangBangers.zipCode]!!,
+        row[PhotoGangBangers.city]!!,
+        SamfundetUserDto(
+          SamfundetUserId(row[SamfundetUsers.id]!!),
+          row[SamfundetUsers.firstName]!!,
+          row[SamfundetUsers.lastName]!!,
+          row[SamfundetUsers.username]!!,
+          PhoneNumber(row[SamfundetUsers.phoneNumber]!!),
+          Email(row[SamfundetUsers.email]!!),
+          row[SamfundetUsers.profilePicture]!!,
+          row[SamfundetUsers.sex]!!,
+          SecurityLevelDto(
+            SecurityLevelId(row[SamfundetUsers.securityLevelId]!!)
+          )
+        ),
+        PositionDto(
+          PositionId(row[Positions.id]!!),
+          row[Positions.title]!!,
+          Email(row[Positions.email]!!)
+        )
+      ),
+      photoTags = findCorrespondingPhotoTagDtos(row[Photos.id]!!)
+    )
   }
 
   fun findById(id: UUID): PhotoDto? {
@@ -85,35 +164,63 @@ open class PhotoRepository(
   ): Page<PhotoDto> {
     val photos = database.photos
 
-    val ph = database.from(Photos).select()
-      .where { Photos.isGoodPicture eq true }
-      .map { row -> PhotoDto(
-        photoId = PhotoId(row[Photos.id]!!),
-        isGoodPicture = row[Photos.isGoodPicture]!!,
-        smallUrl = row[Photos.smallUrl]!!,
-        mediumUrl = row[Photos.mediumUrl]!!,
-        largeUrl = row[Photos.largeUrl]!!,
-        motive = MotiveDto(row[Photos.motiveId]!!),
-        placeDto = PlaceDto(PlaceId(row[Photos.placeId]!!)),
+    val ph = database.from(Photos)
+      .innerJoin(Motives, on = Photos.motiveId eq Motives.id)
+      .innerJoin(Places, on = Photos.placeId eq Places.id)
+      .innerJoin(Albums, on = Photos.albumId eq Albums.id)
+      .innerJoin(Categories, on = Motives.categoryId eq Categories.id)
+      .innerJoin(EventOwners, on = Motives.eventOwnerId eq EventOwners.id)
+      .innerJoin(SecurityLevels, on = Photos.securityLevelId eq SecurityLevels.id)
+      .innerJoin(Gangs, on = Photos.gangId eq Gangs.id)
+      .innerJoin(PhotoGangBangers, on = Photos.photoGangBangerId eq PhotoGangBangers.id)
+      .innerJoin(SamfundetUsers, on = PhotoGangBangers.samfundetUserId eq SamfundetUsers.id)
+      .innerJoin(Positions, on = PhotoGangBangers.positionId eq Positions.id)
+      .select(
+        Photos.id,
+        Photos.isGoodPicture,
+        Photos.smallUrl,
+        Photos.mediumUrl,
+        Photos.largeUrl,
+        Motives.id,
+        Motives.title,
+        Albums.id,
+        Albums.isAnalog,
+        Albums.title,
+        Categories.id,
+        Categories.name,
+        EventOwners.id,
+        EventOwners.name,
+        SamfundetUsers.id,
+        SamfundetUsers.firstName,
+        SamfundetUsers.lastName,
+        SamfundetUsers.username,
+        SamfundetUsers.phoneNumber,
+        SamfundetUsers.email,
+        SamfundetUsers.profilePicture,
+        SamfundetUsers.sex,
+        SamfundetUsers.securityLevelId,
+        Places.id,
+        Places.name,
+        SecurityLevels.id,
+        SecurityLevels.type,
+        Gangs.id,
+        Gangs.name,
+        PhotoGangBangers.id,
+        PhotoGangBangers.semesterStart,
+        PhotoGangBangers.relationshipStatus,
+        PhotoGangBangers.isActive,
+        PhotoGangBangers.isPang,
+        PhotoGangBangers.address,
+        PhotoGangBangers.zipCode,
+        PhotoGangBangers.city,
+        Positions.id,
+        Positions.title,
+        Positions.email,
+      )
+      .where { Albums.isAnalog eq false }
+      .map { row -> constructPhotoDto(row) }
+    System.out.println("test");
 
-      ) }
-
-
-    /*
-    if(motive !== UUID(0L, 0L)){
-      photos.filter {
-        it.motiveId eq motive
-      }
-    }
-    if(place !== UUID(0L, 0L)) {
-      photos.filter {
-        it.placeId eq place
-      }
-    }
-
-    //Check if date of image is between fromDate and ToDate
-    photos.filter { it.dateCreated greaterEq fromDate }.filter { it.dateCreated lessEq toDate }
-    */
     val photoDtos = photos.drop(page).take(pageSize).toList()
       .map {
         it.toDto(
@@ -125,7 +232,7 @@ open class PhotoRepository(
       page = page,
       pageSize = pageSize,
       totalRecords = photos.totalRecords,
-      currentList = photoDtos
+      currentList = ph
     )
   }
 
