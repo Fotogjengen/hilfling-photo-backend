@@ -225,7 +225,6 @@ open class PhotoRepository(
         }
       }.where {
         if(album != UUID(0L, 0L)){
-          System.out.println("test")
           Albums.id eq album
         } else {
           Albums.id notEq UUID(0L, 0L)
@@ -396,7 +395,7 @@ open class PhotoRepository(
           Motives.id notEq UUID(0L, 0L)
         }
       }.where {
-        if(motive != UUID(0L, 0L)){
+        if(album != UUID(0L, 0L)){
           Albums.id eq album
         } else {
           Albums.id notEq UUID(0L, 0L)
