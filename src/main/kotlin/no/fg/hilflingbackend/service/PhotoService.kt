@@ -408,23 +408,25 @@ class PhotoService(
     category: String,
     place: UUID,
     isGoodPic: Boolean,
-    album: String,
+    album: UUID,
     sortBy: String,
-    desc: Boolean): Page<PhotoDto> = photoRepository
-    .findAllDigitalPhotos(
-      page,
-      pageSize,
-      motive,
-      tag,
-      fromDate,
-      toDate,
-      category,
-      place,
-      isGoodPic,
-      album,
-      sortBy,
-      desc
-    )
+    desc: Boolean): Page<PhotoDto> {
+    return photoRepository
+      .findAllDigitalPhotos(
+        page,
+        pageSize,
+        motive,
+        tag,
+        fromDate,
+        toDate,
+        category,
+        place,
+        isGoodPic,
+        album,
+        sortBy,
+        desc
+      )
+  }
 
   override fun patch(dto: PhotoPatchRequestDto): PhotoDto {
     TODO("Not yet implemented")
@@ -448,7 +450,7 @@ class PhotoService(
     category: String,
     place: UUID,
     isGoodPic: Boolean,
-    album: String,
+    album: UUID,
     sortBy: String,
     desc: Boolean
   ): Page<PhotoDto> = photoRepository

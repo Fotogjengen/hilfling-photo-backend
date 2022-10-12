@@ -20,7 +20,7 @@ interface IBaseService<T> {
     category: String,
     place: UUID,
     isGoodPic: Boolean = false,
-    album: String,
+    album: UUID,
     sortBy: String,
     desc: Boolean = true
   ): Page<T>
@@ -71,7 +71,7 @@ interface IPhotoService : IBaseService<PhotoDto> {
     category: String,
     place: UUID = UUID(0L, 0L),
     isGoodPic: Boolean = false,
-    album: String,
+    album: UUID,
     sortBy: String,
     desc: Boolean = true
   ): Page<PhotoDto>

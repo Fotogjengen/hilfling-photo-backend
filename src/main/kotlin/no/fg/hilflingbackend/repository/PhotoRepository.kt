@@ -158,7 +158,7 @@ open class PhotoRepository(
     category: String,
     place: UUID,
     isGoodPic: Boolean = false,
-    album: String,
+    album: UUID,
     sortBy: String,
     desc: Boolean = true
   ): Page<PhotoDto> {
@@ -217,10 +217,23 @@ open class PhotoRepository(
         Positions.title,
         Positions.email,
       )
-      .where { Albums.isAnalog eq false }
+      .where {
+        if(motive != UUID(0L, 0L)){
+          Motives.id eq motive
+        } else {
+          Motives.id notEq UUID(0L, 0L)
+        }
+      }.where {
+        if(album != UUID(0L, 0L)){
+          System.out.println("test")
+          Albums.id eq album
+        } else {
+          Albums.id notEq UUID(0L, 0L)
+        }
+      }
       .map { row -> constructPhotoDto(row) }
-    System.out.println("test");
 
+    // TODO: Use limit instead ;)
     val photoDtos = photos.drop(page).take(pageSize).toList()
       .map {
         it.toDto(
@@ -317,31 +330,92 @@ open class PhotoRepository(
     category: String,
     place: UUID,
     isGoodPic: Boolean,
-    album: String,
+    album: UUID,
     sortBy: String,
     desc: Boolean): Page<PhotoDto> {
-    println("allDigitalPhotos")
-    val digitalAlbums = database.albums
-      .filter { it.isAnalog eq false }
+    val photos = database.photos
 
-    val photos = digitalAlbums.toList().map { album ->
-      database.photos.filter {
-        it.albumId eq album.id
-      }.filter { it.motiveId eq motive }
-    }
+    val ph = database.from(Photos)
+      .innerJoin(Motives, on = Photos.motiveId eq Motives.id)
+      .innerJoin(Places, on = Photos.placeId eq Places.id)
+      .innerJoin(Albums, on = Photos.albumId eq Albums.id)
+      .innerJoin(Categories, on = Motives.categoryId eq Categories.id)
+      .innerJoin(EventOwners, on = Motives.eventOwnerId eq EventOwners.id)
+      .innerJoin(SecurityLevels, on = Photos.securityLevelId eq SecurityLevels.id)
+      .innerJoin(Gangs, on = Photos.gangId eq Gangs.id)
+      .innerJoin(PhotoGangBangers, on = Photos.photoGangBangerId eq PhotoGangBangers.id)
+      .innerJoin(SamfundetUsers, on = PhotoGangBangers.samfundetUserId eq SamfundetUsers.id)
+      .innerJoin(Positions, on = PhotoGangBangers.positionId eq Positions.id)
+      .select(
+        Photos.id,
+        Photos.isGoodPicture,
+        Photos.smallUrl,
+        Photos.mediumUrl,
+        Photos.largeUrl,
+        Motives.id,
+        Motives.title,
+        Albums.id,
+        Albums.isAnalog,
+        Albums.title,
+        Categories.id,
+        Categories.name,
+        EventOwners.id,
+        EventOwners.name,
+        SamfundetUsers.id,
+        SamfundetUsers.firstName,
+        SamfundetUsers.lastName,
+        SamfundetUsers.username,
+        SamfundetUsers.phoneNumber,
+        SamfundetUsers.email,
+        SamfundetUsers.profilePicture,
+        SamfundetUsers.sex,
+        SamfundetUsers.securityLevelId,
+        Places.id,
+        Places.name,
+        SecurityLevels.id,
+        SecurityLevels.type,
+        Gangs.id,
+        Gangs.name,
+        PhotoGangBangers.id,
+        PhotoGangBangers.semesterStart,
+        PhotoGangBangers.relationshipStatus,
+        PhotoGangBangers.isActive,
+        PhotoGangBangers.isPang,
+        PhotoGangBangers.address,
+        PhotoGangBangers.zipCode,
+        PhotoGangBangers.city,
+        Positions.id,
+        Positions.title,
+        Positions.email,
+      )
+      .where { Albums.isAnalog eq false }
+      .where {
+        if(motive != UUID(0L, 0L)){
+          Motives.id eq motive
+        } else {
+          Motives.id notEq UUID(0L, 0L)
+        }
+      }.where {
+        if(motive != UUID(0L, 0L)){
+          Albums.id eq album
+        } else {
+          Albums.id notEq UUID(0L, 0L)
+        }
+      }
+      .map { row -> constructPhotoDto(row) }
 
-    val totalRecords = photos.sumOf { it.totalRecords }
-
-    val photoDtos = photos.map { photoList ->
-      photoList.drop(page).take(pageSize).toList()
-        .map { it.toDto(findCorrespondingPhotoTagDtos(it.id)) }
-    }.flatten()
+    val photoDtos = photos.drop(page).take(pageSize).toList()
+      .map {
+        it.toDto(
+          findCorrespondingPhotoTagDtos(it.id)
+        )
+      }
 
     return Page(
       page = page,
       pageSize = pageSize,
-      totalRecords = totalRecords,
-      currentList = photoDtos
+      totalRecords = photos.totalRecords,
+      currentList = ph
     )
   }
 
