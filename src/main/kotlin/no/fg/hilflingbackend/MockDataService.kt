@@ -221,7 +221,7 @@ class MockDataService {
         eventOwnerDto = generateEventOwnerData().first(),
         categoryDto = generateCategoryData().first(),
         dateCreated = LocalDate.now()
-      )
+      ),
     )
   fun generateCategoryData(): List<CategoryDto> =
     listOf(
@@ -239,12 +239,12 @@ class MockDataService {
   fun generateEventOwnerData(): List<EventOwnerDto> =
     listOf(
       EventOwnerDto(
-        eventOwnerId = EventOwnerId(UUID.fromString("afc308c4-06e2-47bb-b97b-70eb3f55e8d9")),
-        name = EventOwnerName.valueOf("ISFIT")
-      ),
-      EventOwnerDto(
         eventOwnerId = EventOwnerId(UUID.fromString("9265f73d-7b13-4673-9f3b-1db3b6c7d526")),
         name = EventOwnerName.valueOf("Samfundet")
+      ),
+      EventOwnerDto(
+        eventOwnerId = EventOwnerId(UUID.fromString("afc308c4-06e2-47bb-b97b-70eb3f55e8d9")),
+        name = EventOwnerName.valueOf("ISFIT")
       ),
       EventOwnerDto(
         eventOwnerId = EventOwnerId(UUID.fromString("e91f1201-e0bf-4d25-8026-b2a2d44c37c3")),

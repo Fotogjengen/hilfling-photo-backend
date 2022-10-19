@@ -229,7 +229,7 @@ open class PhotoRepository(
         } else {
           Albums.id notEq UUID(0L, 0L)
         }
-      }
+      }.limit(page, pageSize)
       .map { row -> constructPhotoDto(row) }
 
     // TODO: Use limit instead ;)
@@ -243,7 +243,7 @@ open class PhotoRepository(
     return Page(
       page = page,
       pageSize = pageSize,
-      totalRecords = photos.totalRecords,
+      totalRecords = ph.size,
       currentList = ph
     )
   }
