@@ -4,7 +4,16 @@ Photo backend
 Resource server for hilfling app
 
 # Installation
+First install required developer SDKs
 
+## Prerequisits
+
+First install required packages:
+- Kotlin
+- Maven
+- KTLint
+
+Then run:
 `mvn clean install`
 
 # Start the project
