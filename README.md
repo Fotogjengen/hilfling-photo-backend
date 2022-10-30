@@ -29,7 +29,20 @@ To use prod database
 `mvn spring-boot:run -Drun.profiles=prod`
 
 # Linting
-TODO
+This project use [KTlint](https://github.com/pinterest/ktlint) to keep code formatting consistent.
+
+## Check format
+To check linting run:
+`ktlint .`
+
+## Fix formatting
+To automaticly fix formatting run:
+`ktlint --format .`
+
+## Git pre-commit hook
+To install git pre-commit hook and avoid commits that do not follow formatting guidelines run:
+`ktlint --install-git-pre-commit-hook`
+
 
 # Build
 `mvn package`
