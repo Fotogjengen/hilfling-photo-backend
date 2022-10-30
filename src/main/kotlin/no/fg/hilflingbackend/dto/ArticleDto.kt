@@ -7,7 +7,7 @@ data class ArticlePatchRequestDto(
   val articleId: ArticleId,
   val title: String?,
   val plainText: String?,
-  val securityLevel: SecurityLevelDto?,
+  val securityLevel: SecurityLevelDto?
 )
 
 data class ArticleDto(

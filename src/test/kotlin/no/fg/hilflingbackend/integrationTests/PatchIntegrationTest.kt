@@ -69,26 +69,37 @@ import kotlin.test.assertNotNull
 internal class PatchIntegrationTest() {
   @Autowired
   lateinit var photoService: PhotoService
+
   @Autowired
   lateinit var albumRepository: AlbumRepository
+
   @Autowired
   lateinit var categoryRepository: CategoryRepository
+
   @Autowired
   lateinit var eventOwnerRepository: EventOwnerRepository
+
   @Autowired
   lateinit var gangRepository: GangRepository
+
   @Autowired
   lateinit var securityLevelRepository: SecurityLevelRepository
+
   @Autowired
   lateinit var positionRepository: PositionRepository
+
   @Autowired
   lateinit var placeRepository: PlaceRepository
+
   @Autowired
   lateinit var photoTagRepository: PhotoTagRepository
+
   @Autowired
   lateinit var samfundetUserRepository: SamfundetUserRepository
+
   @Autowired
   lateinit var photoGangBangerRepository: PhotoGangBangerRepository
+
   @Autowired
   lateinit var motiveRepository: MotiveRepository
 

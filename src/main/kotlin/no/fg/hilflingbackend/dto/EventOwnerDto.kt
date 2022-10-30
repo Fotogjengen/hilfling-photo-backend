@@ -15,9 +15,11 @@ data class EventOwnerDto(
 ) {
   // Constructor for Entity
   constructor(eventOwner: EventOwner) : this(
-    EventOwnerId(eventOwner.id), EventOwnerName.valueOf(eventOwner.name)
+    EventOwnerId(eventOwner.id),
+    EventOwnerName.valueOf(eventOwner.name)
   )
 }
+
 // TODO: Move to value object?
 enum class EventOwnerName(val eventOwnerName: String) {
   ISFIT("ISFIT"),

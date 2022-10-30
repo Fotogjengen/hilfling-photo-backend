@@ -13,6 +13,7 @@ interface PhotographyRequest : BaseModel<PhotographyRequest> {
 
   // TODO: Make LocalDateTime
   var startTime: LocalDate
+
   // TODO: Make LocalDateTime
   var endTime: LocalDate
   var place: String

@@ -8,7 +8,7 @@ class ResponseOk<T> : ResponseEntity<T> {
   constructor(
     t: T,
     headers: HttpHeaders = HttpHeaders(),
-    status: HttpStatus = HttpStatus.ACCEPTED,
+    status: HttpStatus = HttpStatus.ACCEPTED
   ) : super(t, headers, status)
 }
 
@@ -16,7 +16,7 @@ class ResponseCreated<T> : ResponseEntity<T> {
   constructor(
     t: T,
     headers: HttpHeaders = HttpHeaders(),
-    status: HttpStatus = HttpStatus.CREATED,
+    status: HttpStatus = HttpStatus.CREATED
   ) : super(t, headers, status)
 }
 
@@ -24,7 +24,7 @@ class ResponseNotCreated<T> : ResponseEntity<T> {
   constructor(
     t: T,
     headers: HttpHeaders = HttpHeaders(),
-    status: HttpStatus = HttpStatus.BAD_REQUEST,
+    status: HttpStatus = HttpStatus.BAD_REQUEST
   ) : super(t, headers, status)
 }
 

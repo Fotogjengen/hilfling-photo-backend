@@ -58,7 +58,7 @@ class PhotoController(
         categoryName = categoryName,
         isGoodPhotoList = isGoodPhotoList
       ),
-      HttpStatus.CREATED,
+      HttpStatus.CREATED
     )
 
   @PostMapping
@@ -105,7 +105,7 @@ class PhotoController(
         photoGangBangerIdList,
         albumIdList,
         categoryIdList,
-        fileList,
+        fileList
       )
 
     return ResponseEntity<List<String>>(

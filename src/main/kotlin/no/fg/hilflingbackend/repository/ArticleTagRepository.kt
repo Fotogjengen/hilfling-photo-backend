@@ -19,7 +19,7 @@ open class ArticleTagRepository(database: Database) :
   BaseRepository<ArticleTag, ArticleTagDto, ArticleTagPatchRequestDto>(table = ArticleTags, database = database) {
   override fun convertToClass(qrs: QueryRowSet): ArticleTagDto = ArticleTagDto(
     articleTagId = ArticleTagId(qrs[ArticleTags.id]!!),
-    name = qrs[ArticleTags.name]!!,
+    name = qrs[ArticleTags.name]!!
   )
 
   override fun create(dto: ArticleTagDto): Int {

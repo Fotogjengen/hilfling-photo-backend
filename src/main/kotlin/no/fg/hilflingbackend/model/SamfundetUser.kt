@@ -42,6 +42,7 @@ object SamfundetUsers : BaseTable<SamfundetUser>("samfundet_user") {
   val firstName = varchar("first_name").bindTo { it.firstName }
   val lastName = varchar("last_name").bindTo { it.lastName }
   val username = varchar("username").bindTo { it.username }
+
   // val email = varchar("email").bindTo { it.email.value  }
   val email = varchar("email").bindTo { it.email }
   val profilePicture = varchar("profile_picture").bindTo { it.profilePicture }
