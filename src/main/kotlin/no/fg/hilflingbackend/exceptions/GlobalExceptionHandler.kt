@@ -36,6 +36,7 @@ open class GlobalExceptionHandler : ResponseEntityExceptionHandler() {
     log.warn(ex.toString())
     return badReqeust(ex.localizedMessage)
   }
+
   // Handles missing request parameters
   @Override
   override fun handleMissingServletRequestParameter(

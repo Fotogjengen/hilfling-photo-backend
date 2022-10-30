@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RestController
 class SeedController {
   @Autowired
   lateinit var mockDataService: MockDataService
+
   @GetMapping
   fun seedMockdata(): String {
     mockDataService

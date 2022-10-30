@@ -25,7 +25,7 @@ open class PurchaseOrderRepository(database: Database) : BaseRepository<Purchase
     city = qrs[PurchaseOrders.city]!!,
     sendByPost = qrs[PurchaseOrders.sendByPost]!!,
     comment = qrs[PurchaseOrders.comment]!!,
-    isCompleted = qrs[PurchaseOrders.isCompleted]!!,
+    isCompleted = qrs[PurchaseOrders.isCompleted]!!
   )
 
   override fun create(dto: PurchaseOrderDto): Int {

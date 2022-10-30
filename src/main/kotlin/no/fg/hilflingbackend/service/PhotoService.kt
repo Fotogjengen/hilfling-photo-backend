@@ -79,7 +79,7 @@ class PhotoService(
     fileName: ImageFileName,
     securityLevel: SecurityLevelDto,
     motive: MotiveDto,
-    size: PhotoSize,
+    size: PhotoSize
   ): Path {
     // BasePath
     val basePath = imageFileStorageProperties.savedPhotosPath
@@ -166,9 +166,8 @@ class PhotoService(
     categoryIdList: List<UUID>,
     fileList: List<MultipartFile>
   ): List<String> {
-
     return fileList.mapIndexed {
-      index, file ->
+        index, file ->
       /*
       val cachedMotive = { id: UUID ->
         motiveRepository

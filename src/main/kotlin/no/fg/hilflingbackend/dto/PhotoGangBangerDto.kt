@@ -66,10 +66,11 @@ data class SemesterStart private constructor(val value: String) {
     // Overrides default constructor and adds a validator to it
     operator fun invoke(value: String): SemesterStart {
       // Validated
-      return if (isValidSemesterStart(value))
+      return if (isValidSemesterStart(value)) {
         SemesterStart(value)
-      else
+      } else {
         throw IllegalArgumentException(isValidSemesterStart(value).toString())
+      }
     }
 
     fun isValidSemesterStart(semesterStart: String): Boolean {
