@@ -1,7 +1,7 @@
 # hilfling-photo-backend
-Photo backend
+Photo backend.
 
-Resource server for hilfling app
+Resource server for hilfling app>
 
 # Installation
 
