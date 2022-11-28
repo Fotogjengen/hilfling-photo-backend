@@ -16,7 +16,7 @@
 
 	<properties>
 		<java.version>11</java.version>
-		<kotlin.version>1.6.10</kotlin.version>
+		<kotlin.version>1.7.22</kotlin.version>
 		<kotlin.compiler.apiVersion>1.4</kotlin.compiler.apiVersion>
 		<jacoco.version>0.8.3</jacoco.version>
 		<kotlinx-coroutines.version>1.4.2-native-mt</kotlinx-coroutines.version>
