@@ -16,6 +16,7 @@ import no.fg.hilflingbackend.value_object.PhoneNumber
 import no.fg.hilflingbackend.value_object.SecurityLevelType
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Repository
+import java.awt.Window
 import java.time.LocalDate
 import java.util.UUID
 import javax.persistence.EntityNotFoundException
@@ -52,7 +53,7 @@ open class PhotoRepository(
       mediumUrl = row[Photos.mediumUrl]!!,
       largeUrl = row[Photos.largeUrl]!!,
       motive = MotiveDto(
-        motiveId = MotiveId(),
+        motiveId = MotiveId(row[Motives.id]!!),
         title = row[Motives.title]!!,
         categoryDto = CategoryDto(
           categoryId = CategoryId(row[Categories.id]!!),
@@ -218,17 +219,19 @@ open class PhotoRepository(
         Positions.email,
       )
       .where {
-        if(motive != UUID(0L, 0L)){
-          Motives.id eq motive
-        } else {
-          Motives.id notEq UUID(0L, 0L)
-        }
-      }.where {
-        if(album != UUID(0L, 0L)){
-          Albums.id eq album
-        } else {
-          Albums.id notEq UUID(0L, 0L)
-        }
+        (
+          if (motive != UUID(0L, 0L)) {
+            Motives.id eq motive
+          } else {
+            Motives.id notEq UUID(0L, 0L)
+          }
+        ) and (
+          if (album != UUID(0L, 0L)) {
+            Albums.id eq album
+          } else {
+            Albums.id notEq UUID(0L, 0L)
+          }
+        )
       }.limit(page, pageSize)
       .map { row -> constructPhotoDto(row) }
 
@@ -238,7 +241,22 @@ open class PhotoRepository(
         it.toDto(
           findCorrespondingPhotoTagDtos(it.id)
         )
-    }
+      }
+
+    /*
+      page: Int = 0,
+      pageSize: Int = 100,
+      motive: UUID,
+      tag: List<String> = listOf<String>(),
+      fromDate: LocalDate,
+      toDate: LocalDate,
+      category: String,
+      place: UUID,
+      isGoodPic: Boolean = false,
+      album: UUID,
+      sortBy: String,
+      desc: Boolean = true
+     */
 
     return Page(
       page = page,
@@ -270,7 +288,12 @@ open class PhotoRepository(
           }
         }
       } catch (e: Exception) {
-        logger.info(String.format("Tried to create a PhotoTagReference that already existed. Ignoring error.", e.message))
+        logger.info(
+          String.format(
+            "Tried to create a PhotoTagReference that already existed. Ignoring error.",
+            e.message
+          )
+        )
       }
     }
 
@@ -331,9 +354,9 @@ open class PhotoRepository(
     isGoodPic: Boolean,
     album: UUID,
     sortBy: String,
-    desc: Boolean): Page<PhotoDto> {
+    desc: Boolean
+  ): Page<PhotoDto> {
     val photos = database.photos
-
     val ph = database.from(Photos)
       .innerJoin(Motives, on = Photos.motiveId eq Motives.id)
       .innerJoin(Places, on = Photos.placeId eq Places.id)
@@ -387,22 +410,20 @@ open class PhotoRepository(
         Positions.title,
         Positions.email,
       )
-      .where { Albums.isAnalog eq false }
       .where {
-        if(motive != UUID(0L, 0L)){
-          Motives.id eq motive
-        } else {
-          Motives.id notEq UUID(0L, 0L)
-        }
-      }.where {
-        if(album != UUID(0L, 0L)){
-          Albums.id eq album
-        } else {
-          Albums.id notEq UUID(0L, 0L)
-        }
+        (
+          if (motive != UUID(0L, 0L)) {
+            Motives.id eq motive
+          } else {
+            Motives.id notEq UUID(0L, 0L)
+          }
+        ) and (
+          Albums.isAnalog eq false
+        ) and (
+          Photos.dateCreated.greaterEq(fromDate) and Photos.dateCreated.lessEq(toDate)
+        )
       }
       .map { row -> constructPhotoDto(row) }
-
     val photoDtos = photos.drop(page).take(pageSize).toList()
       .map {
         it.toDto(
