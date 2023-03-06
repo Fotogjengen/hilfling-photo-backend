@@ -49,7 +49,8 @@ class PhotoController(
         photoFileList = photoFileList,
         tagList = tagList,
         categoryName = categoryName,
-        isGoodPhotoList = isGoodPhotoList
+        isGoodPhotoList = isGoodPhotoList,
+        dateCreated = LocalDate.now()
       ),
       HttpStatus.CREATED,
     )
@@ -153,6 +154,7 @@ class PhotoController(
     @RequestParam("album", required = false) album : UUID?,
     @RequestParam("sortBy", required = false) sortBy : String?,
     @RequestParam("desc", required = false) desc : Boolean?,
+    @RequestParam("isAnalog", required = false) isAnalog: Boolean?,
   ): ResponseEntity<Page<PhotoDto>> =
     ResponseOk(
       photoService
@@ -165,10 +167,11 @@ class PhotoController(
           LocalDate.parse(toDate) ?: LocalDate.now(),
           category ?: "",
           place  ?: UUID(0L, 0L),
-          isGoodPic ?: false,
+          isGoodPic ?: true,
           album ?: UUID(0L, 0L),
           sortBy ?: "",
-          desc ?: true)
+          desc ?: true,
+          isAnalog ?: true),
     )
 
 

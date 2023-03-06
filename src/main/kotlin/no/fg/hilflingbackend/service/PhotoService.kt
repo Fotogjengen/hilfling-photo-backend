@@ -281,7 +281,8 @@ class PhotoService(
     eventOwnerString: String,
     photoFileList: List<MultipartFile>,
     isGoodPhotoList: List<Boolean>,
-    tagList: List<List<String>>
+    tagList: List<List<String>>,
+    dateCreated: LocalDate
   ): List<String> {
     val isValidRequest = photoFileList.size > 0 && (
       photoFileList.size == isGoodPhotoList.size &&
@@ -320,7 +321,8 @@ class PhotoService(
       motiveTitle = motiveString,
       eventOwnerDto = eventOwnerDto,
       categoryDto = categoryDto,
-      albumDto = albumDto
+      albumDto = albumDto,
+      dateCreated = dateCreated
     )
 
     val numPhotoGenerated = photoFileList.mapIndexed { index, photoFile ->
@@ -378,7 +380,8 @@ class PhotoService(
     motiveTitle: String,
     categoryDto: CategoryDto,
     eventOwnerDto: EventOwnerDto,
-    albumDto: AlbumDto
+    albumDto: AlbumDto,
+    dateCreated: LocalDate?
   ): MotiveDto =
     motiveRepository
       .findByTitle(motiveTitle)
@@ -388,7 +391,8 @@ class PhotoService(
           title = motiveTitle,
           categoryDto = categoryDto,
           eventOwnerDto = eventOwnerDto,
-          albumDto = albumDto
+          albumDto = albumDto,
+          dateCreated = dateCreated ?: null
         )
       )
 

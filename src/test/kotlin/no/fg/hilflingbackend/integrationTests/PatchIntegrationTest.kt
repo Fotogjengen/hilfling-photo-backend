@@ -58,6 +58,7 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.mock.web.MockMultipartFile
 import org.springframework.test.context.junit4.SpringRunner
+import java.time.LocalDate
 import java.util.UUID
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse
@@ -235,14 +236,16 @@ internal class PatchIntegrationTest() {
     title = "motive title 1",
     categoryDto = categoryDto1,
     eventOwnerDto = eventOwnerDto1,
-    albumDto = albumDto1
+    albumDto = albumDto1,
+    dateCreated = LocalDate.now()
   )
   final val motiveDto2 = MotiveDto(
     motiveId = motiveId2,
     title = "motive title 2",
     categoryDto = categoryDto2,
     eventOwnerDto = eventOwnerDto2,
-    albumDto = albumDto2
+    albumDto = albumDto2,
+    dateCreated = LocalDate.now()
   )
 
   @BeforeAll
@@ -281,7 +284,8 @@ internal class PatchIntegrationTest() {
         photoFileList = listOf(mockMultiPartFile),
         tagList = listOf(listOf(photoTagDto1.name)),
         categoryName = categoryDto1.name,
-        isGoodPhotoList = listOf(true)
+        isGoodPhotoList = listOf(true),
+        dateCreated = LocalDate.now()
       )[0].split("/").last().split(".").first()
     )
   }

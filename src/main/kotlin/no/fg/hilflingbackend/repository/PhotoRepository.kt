@@ -57,7 +57,7 @@ open class PhotoRepository(
         title = row[Motives.title]!!,
         categoryDto = CategoryDto(
           categoryId = CategoryId(row[Categories.id]!!),
-          name = row[Categories.name]!!
+          name = row[Categories.name]!!,
         ),
         eventOwnerDto = EventOwnerDto(
           eventOwnerId = EventOwnerId(row[EventOwners.id]!!),
@@ -68,6 +68,7 @@ open class PhotoRepository(
           isAnalog = row[Albums.isAnalog]!!,
           title = row[Albums.title]!!
         ),
+        dateCreated = row[Photos.dateCreated]!!,
       ),
       placeDto = PlaceDto(
         placeId = PlaceId(row[Places.id]!!),
@@ -182,6 +183,7 @@ open class PhotoRepository(
         Photos.smallUrl,
         Photos.mediumUrl,
         Photos.largeUrl,
+        Photos.dateCreated,
         Motives.id,
         Motives.title,
         Albums.id,
@@ -231,7 +233,23 @@ open class PhotoRepository(
           } else {
             Albums.id notEq UUID(0L, 0L)
           }
-        )
+        ) and (
+          Photos.dateCreated.greaterEq(fromDate) and Photos.dateCreated.lessEq(toDate)
+        ) and (
+          if(category != "") {
+            Categories.name eq category
+          } else {
+            Categories.name notEq category
+          }
+        ) and (
+          if(place != UUID(0L, 0L)){
+            Places.id eq place
+          } else {
+            Places.id notEq UUID(0L, 0L)
+          }
+        ) and (
+          if()
+          )
       }.limit(page, pageSize)
       .map { row -> constructPhotoDto(row) }
 
