@@ -16,7 +16,6 @@ import no.fg.hilflingbackend.value_object.PhoneNumber
 import no.fg.hilflingbackend.value_object.SecurityLevelType
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Repository
-import java.awt.Window
 import java.time.LocalDate
 import java.util.UUID
 import javax.persistence.EntityNotFoundException
@@ -164,9 +163,7 @@ open class PhotoRepository(
     sortBy: String,
     desc: Boolean = true
   ): Page<PhotoDto> {
-    val photos = database.photos
-
-    val ph = database.from(Photos)
+    var ph = database.from(Photos)
       .innerJoin(Motives, on = Photos.motiveId eq Motives.id)
       .innerJoin(Places, on = Photos.placeId eq Places.id)
       .innerJoin(Albums, on = Photos.albumId eq Albums.id)
@@ -218,7 +215,7 @@ open class PhotoRepository(
         PhotoGangBangers.city,
         Positions.id,
         Positions.title,
-        Positions.email,
+        Positions.email
       )
       .where {
         (
@@ -227,39 +224,49 @@ open class PhotoRepository(
           } else {
             Motives.id notEq UUID(0L, 0L)
           }
-        ) and (
+          ) and (
           if (album != UUID(0L, 0L)) {
             Albums.id eq album
           } else {
             Albums.id notEq UUID(0L, 0L)
           }
-        ) and (
-          Photos.dateCreated.greaterEq(fromDate) and Photos.dateCreated.lessEq(toDate)
-        ) and (
-          if(category != "") {
+          ) and (
+            Photos.dateCreated.greaterEq(fromDate) and Photos.dateCreated.lessEq(toDate)
+          ) and (
+          if (category != "") {
             Categories.name eq category
           } else {
             Categories.name notEq category
           }
-        ) and (
-          if(place != UUID(0L, 0L)){
+          ) and (
+          if (place != UUID(0L, 0L)) {
             Places.id eq place
           } else {
             Places.id notEq UUID(0L, 0L)
           }
-        ) and (
-          if()
+          ) and (
+          if (isGoodPic) {
+            Photos.isGoodPicture eq true
+          } else {
+            Photos.isGoodPicture eq false or Photos.isGoodPicture eq true
+          }
           )
       }.limit(page, pageSize)
       .map { row -> constructPhotoDto(row) }
 
+    if(!tag.isEmpty()){
+      ph = ph.filter { row -> row.photoTags.any { t -> tag.contains(t.name)}}
+    }
+
+
     // TODO: Use limit instead ;)
+    /*
     val photoDtos = photos.drop(page).take(pageSize).toList()
       .map {
         it.toDto(
           findCorrespondingPhotoTagDtos(it.id)
         )
-      }
+      }*/
 
     /*
       page: Int = 0,
@@ -435,11 +442,11 @@ open class PhotoRepository(
           } else {
             Motives.id notEq UUID(0L, 0L)
           }
-        ) and (
+          ) and (
           Albums.isAnalog eq false
-        ) and (
+          ) and (
           Photos.dateCreated.greaterEq(fromDate) and Photos.dateCreated.lessEq(toDate)
-        )
+          )
       }
       .map { row -> constructPhotoDto(row) }
     val photoDtos = photos.drop(page).take(pageSize).toList()

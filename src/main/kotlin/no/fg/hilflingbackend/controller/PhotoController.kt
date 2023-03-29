@@ -163,15 +163,14 @@ class PhotoController(
           pageSize ?: 100,
           motive?: UUID(0L, 0L),
           tag ?: listOf<String>(),
-          LocalDate.parse(fromDate) ?: LocalDate.now(),
-          LocalDate.parse(toDate) ?: LocalDate.now(),
+          LocalDate.parse(fromDate ?: "1970-01-01") ?: LocalDate.now(),
+          LocalDate.parse(toDate ?: LocalDate.now().toString()) ?: LocalDate.now(),
           category ?: "",
           place  ?: UUID(0L, 0L),
-          isGoodPic ?: true,
+          isGoodPic ?: false,
           album ?: UUID(0L, 0L),
           sortBy ?: "",
-          desc ?: true,
-          isAnalog ?: true),
+          desc ?: true),
     )
 
 
