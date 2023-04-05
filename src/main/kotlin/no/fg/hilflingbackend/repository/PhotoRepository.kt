@@ -254,35 +254,9 @@ open class PhotoRepository(
       }.limit(page, pageSize)
       .map { row -> constructPhotoDto(row) }
 
-    if(!tag.isEmpty()){
+    if(tag.isNotEmpty()){
       ph = ph.filter { row -> row.photoTags.any { t -> tag.contains(t.name)}}
     }
-
-
-    // TODO: Use limit instead ;)
-    /*
-    val photoDtos = photos.drop(page).take(pageSize).toList()
-      .map {
-        it.toDto(
-          findCorrespondingPhotoTagDtos(it.id)
-        )
-      }*/
-
-    /*
-      page: Int = 0,
-      pageSize: Int = 100,
-      motive: UUID,
-      tag: List<String> = listOf<String>(),
-      fromDate: LocalDate,
-      toDate: LocalDate,
-      category: String,
-      place: UUID,
-      isGoodPic: Boolean = false,
-      album: UUID,
-      sortBy: String,
-      desc: Boolean = true
-     */
-
     return Page(
       page = page,
       pageSize = pageSize,
@@ -368,21 +342,20 @@ open class PhotoRepository(
   }
 
   fun findAllDigitalPhotos(
-    page: Int,
-    pageSize: Int,
+    page: Int = 0,
+    pageSize: Int = 100,
     motive: UUID,
-    tag: List<String>,
+    tag: List<String> = listOf<String>(),
     fromDate: LocalDate,
     toDate: LocalDate,
     category: String,
     place: UUID,
-    isGoodPic: Boolean,
+    isGoodPic: Boolean = false,
     album: UUID,
     sortBy: String,
-    desc: Boolean
+    desc: Boolean = true
   ): Page<PhotoDto> {
-    val photos = database.photos
-    val ph = database.from(Photos)
+    var ph = database.from(Photos)
       .innerJoin(Motives, on = Photos.motiveId eq Motives.id)
       .innerJoin(Places, on = Photos.placeId eq Places.id)
       .innerJoin(Albums, on = Photos.albumId eq Albums.id)
@@ -399,6 +372,7 @@ open class PhotoRepository(
         Photos.smallUrl,
         Photos.mediumUrl,
         Photos.largeUrl,
+        Photos.dateCreated,
         Motives.id,
         Motives.title,
         Albums.id,
@@ -433,7 +407,7 @@ open class PhotoRepository(
         PhotoGangBangers.city,
         Positions.id,
         Positions.title,
-        Positions.email,
+        Positions.email
       )
       .where {
         (
@@ -443,23 +417,44 @@ open class PhotoRepository(
             Motives.id notEq UUID(0L, 0L)
           }
           ) and (
-          Albums.isAnalog eq false
+          if (album != UUID(0L, 0L)) {
+            Albums.id eq album
+          } else {
+            Albums.id notEq UUID(0L, 0L)
+          }
           ) and (
           Photos.dateCreated.greaterEq(fromDate) and Photos.dateCreated.lessEq(toDate)
+          ) and (
+          if (category != "") {
+            Categories.name eq category
+          } else {
+            Categories.name notEq category
+          }
+          ) and (
+          if (place != UUID(0L, 0L)) {
+            Places.id eq place
+          } else {
+            Places.id notEq UUID(0L, 0L)
+          }
+          ) and (
+          if (isGoodPic) {
+            Photos.isGoodPicture eq true
+          } else {
+            Photos.isGoodPicture eq false or Photos.isGoodPicture eq true
+          }
+          ) and (
+          Albums.isAnalog eq false
           )
-      }
+      }.limit(page, pageSize)
       .map { row -> constructPhotoDto(row) }
-    val photoDtos = photos.drop(page).take(pageSize).toList()
-      .map {
-        it.toDto(
-          findCorrespondingPhotoTagDtos(it.id)
-        )
-      }
 
+    if (tag.isNotEmpty()) {
+      ph = ph.filter { row -> row.photoTags.any { t -> tag.contains(t.name) } }
+    }
     return Page(
       page = page,
       pageSize = pageSize,
-      totalRecords = photos.totalRecords,
+      totalRecords = ph.size,
       currentList = ph
     )
   }
