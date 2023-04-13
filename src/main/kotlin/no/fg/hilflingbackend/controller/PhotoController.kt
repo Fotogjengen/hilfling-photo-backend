@@ -144,16 +144,16 @@ class PhotoController(
   fun getAll(
     @RequestParam("page", required = false) page: Int?,
     @RequestParam("pageSize", required = false) pageSize: Int?,
-    @RequestParam("motive", required = false) motive : UUID?,
-    @RequestParam("tag", required = false) tag : List<String>?,
-    @RequestParam("fromDate", required = false) fromDate : String?,
-    @RequestParam("toDate", required = false) toDate : String?,
-    @RequestParam("category", required = false) category : String?,
-    @RequestParam("place", required = false) place : UUID?,
-    @RequestParam("isGoodPic", required = false) isGoodPic : Boolean?,
-    @RequestParam("album", required = false) album : UUID?,
-    @RequestParam("sortBy", required = false) sortBy : String?,
-    @RequestParam("desc", required = false) desc : Boolean?,
+    @RequestParam("motive", required = false) motive: UUID?,
+    @RequestParam("tag", required = false) tag: List<String>?,
+    @RequestParam("fromDate", required = false) fromDate: String?,
+    @RequestParam("toDate", required = false) toDate: String?,
+    @RequestParam("category", required = false) category: String?,
+    @RequestParam("place", required = false) place: UUID?,
+    @RequestParam("isGoodPic", required = false) isGoodPic: Boolean?,
+    @RequestParam("album", required = false) album: UUID?,
+    @RequestParam("sortBy", required = false) sortBy: String?,
+    @RequestParam("desc", required = false) desc: Boolean?,
     @RequestParam("isAnalog", required = false) isAnalog: Boolean?,
   ): ResponseEntity<Page<PhotoDto>> =
     ResponseOk(
@@ -161,18 +161,18 @@ class PhotoController(
         .getAll(
           page ?: 0,
           pageSize ?: 100,
-          motive?: UUID(0L, 0L),
+          motive ?: UUID(0L, 0L),
           tag ?: listOf<String>(),
           LocalDate.parse(fromDate ?: "1970-01-01") ?: LocalDate.now(),
           LocalDate.parse(toDate ?: LocalDate.now().toString()) ?: LocalDate.now(),
           category ?: "",
-          place  ?: UUID(0L, 0L),
+          place ?: UUID(0L, 0L),
           isGoodPic ?: false,
           album ?: UUID(0L, 0L),
           sortBy ?: "",
-          desc ?: true),
+          desc ?: true
+        ),
     )
-
 
   @GetMapping("/carousel")
   fun getCarouselPhotos(
@@ -196,16 +196,16 @@ class PhotoController(
   fun getAllDigitalPhotos(
     @RequestParam("page", required = false) page: Int?,
     @RequestParam("pageSize", required = false) pageSize: Int?,
-    @RequestParam("motive", required = false) motive : UUID?,
-    @RequestParam("tag", required = false) tag : List<String>?,
-    @RequestParam("fromDate", required = false) fromDate : String?,
-    @RequestParam("toDate", required = false) toDate : String?,
-    @RequestParam("category", required = false) category : String?,
-    @RequestParam("place", required = false) place : UUID?,
-    @RequestParam("isGoodPic", required = false) isGoodPic : Boolean?,
-    @RequestParam("album", required = false) album : UUID?,
-    @RequestParam("sortBy", required = false) sortBy : String?,
-    @RequestParam("desc", required = false) desc : Boolean?,
+    @RequestParam("motive", required = false) motive: UUID?,
+    @RequestParam("tag", required = false) tag: List<String>?,
+    @RequestParam("fromDate", required = false) fromDate: String?,
+    @RequestParam("toDate", required = false) toDate: String?,
+    @RequestParam("category", required = false) category: String?,
+    @RequestParam("place", required = false) place: UUID?,
+    @RequestParam("isGoodPic", required = false) isGoodPic: Boolean?,
+    @RequestParam("album", required = false) album: UUID?,
+    @RequestParam("sortBy", required = false) sortBy: String?,
+    @RequestParam("desc", required = false) desc: Boolean?,
   ): ResponseEntity<Page<PhotoDto>> {
     return ResponseOk(
       photoService

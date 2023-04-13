@@ -13,7 +13,7 @@ data class SecurityLevelDto(
   val securityLevelId: SecurityLevelId,
   val securityLevelType: SecurityLevelType?
 ) {
-  constructor(securityLevelId: SecurityLevelId): this(securityLevelId, null)
+  constructor(securityLevelId: SecurityLevelId) : this(securityLevelId, null)
 
   fun toEntity(): SecurityLevel {
     val dto = this

@@ -6,7 +6,6 @@ import no.fg.hilflingbackend.dto.PhotoPatchRequestDto
 import org.springframework.web.multipart.MultipartFile
 import java.time.LocalDate
 import java.util.UUID
-import javax.persistence.EntityNotFoundException
 
 interface IBaseService<T> {
   fun getById(id: UUID): PhotoDto?

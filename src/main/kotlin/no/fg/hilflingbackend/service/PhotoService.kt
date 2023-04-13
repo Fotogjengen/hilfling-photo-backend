@@ -414,7 +414,8 @@ class PhotoService(
     isGoodPic: Boolean,
     album: UUID,
     sortBy: String,
-    desc: Boolean): Page<PhotoDto> {
+    desc: Boolean
+  ): Page<PhotoDto> {
     return photoRepository
       .findAllDigitalPhotos(
         page,

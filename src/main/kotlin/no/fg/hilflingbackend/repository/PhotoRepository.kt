@@ -231,7 +231,7 @@ open class PhotoRepository(
             Albums.id notEq UUID(0L, 0L)
           }
           ) and (
-            Photos.dateCreated.greaterEq(fromDate) and Photos.dateCreated.lessEq(toDate)
+          Photos.dateCreated.greaterEq(fromDate) and Photos.dateCreated.lessEq(toDate)
           ) and (
           if (category != "") {
             Categories.name eq category
@@ -254,8 +254,8 @@ open class PhotoRepository(
       }.limit(page, pageSize)
       .map { row -> constructPhotoDto(row) }
 
-    if(tag.isNotEmpty()){
-      ph = ph.filter { row -> row.photoTags.any { t -> tag.contains(t.name)}}
+    if (tag.isNotEmpty()) {
+      ph = ph.filter { row -> row.photoTags.any { t -> tag.contains(t.name) } }
     }
     return Page(
       page = page,

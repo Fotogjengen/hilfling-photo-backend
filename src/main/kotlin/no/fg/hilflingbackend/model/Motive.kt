@@ -20,14 +20,13 @@ interface Motive : BaseModel<Motive> {
 }
 
 fun Motive.toDto(): MotiveDto = MotiveDto(
-    motiveId = MotiveId(this.id),
-    title = this.title,
-    categoryDto = this.category.toDto(),
-    eventOwnerDto = eventOwner.toDto(),
-    albumDto = album.toDto(),
-    dateCreated = this.dateCreated
+  motiveId = MotiveId(this.id),
+  title = this.title,
+  categoryDto = this.category.toDto(),
+  eventOwnerDto = eventOwner.toDto(),
+  albumDto = album.toDto(),
+  dateCreated = this.dateCreated
 )
-
 
 object Motives : BaseTable<Motive>("motive") {
   val title = varchar("title").bindTo { it.title }
