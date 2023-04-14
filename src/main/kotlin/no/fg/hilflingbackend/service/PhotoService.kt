@@ -290,14 +290,15 @@ class PhotoService(
     eventOwnerString: String,
     photoFileList: List<MultipartFile>,
     isGoodPhotoList: List<Boolean>,
-    tagList: List<List<String>>
+    tagList: List<String>
   ): List<String> {
+
+    println(tagList)
     val isValidRequest = photoFileList.size > 0 && (
-      photoFileList.size == isGoodPhotoList.size &&
-        photoFileList.size == tagList.size
+      photoFileList.size == isGoodPhotoList.size
       )
     logger.warn("Is valid request? $isValidRequest")
-    if (!isValidRequest) throw java.lang.IllegalArgumentException("photoFileList, isGoodPhotoList and tagList are of unequal length or not given")
+    if (!isValidRequest) throw java.lang.IllegalArgumentException("photoFileList, isGoodPhotoList are of unequal length or not given")
     logger.info("createNewMotiveAndSaveDigitalPhotos() $tagList")
     val eventOwnerDto = eventOwnerRepository
       .findByEventOwnerName(EventOwnerName.valueOf(eventOwnerString))
@@ -333,7 +334,7 @@ class PhotoService(
     )
 
     val numPhotoGenerated = photoFileList.mapIndexed { index, photoFile ->
-      val photoTagDtos = tagList.get(index).map {
+      val photoTagDtos = tagList.map {
         photoTagRepository
           .findByName(it)
           ?: PhotoTagDto(name = it)
