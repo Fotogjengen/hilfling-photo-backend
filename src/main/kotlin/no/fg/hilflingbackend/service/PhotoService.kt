@@ -292,7 +292,6 @@ class PhotoService(
     isGoodPhotoList: List<Boolean>,
     tagList: List<String>,
   ): List<String> {
-    println(tagList)
     val isValidRequest = photoFileList.size > 0 && (
       photoFileList.size == isGoodPhotoList.size
       )
