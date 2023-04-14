@@ -56,7 +56,7 @@ class PhotoService(
   val categoryRepository: CategoryRepository,
   val albumRepository: AlbumRepository,
   val securityLevelRepository: SecurityLevelRepository,
-  val photoGangBangerRepository: PhotoGangBangerRepository
+  val photoGangBangerRepository: PhotoGangBangerRepository,
 ) : IPhotoService {
 
   val logger = LoggerFactory.getLogger(this::class.java)
@@ -290,9 +290,8 @@ class PhotoService(
     eventOwnerString: String,
     photoFileList: List<MultipartFile>,
     isGoodPhotoList: List<Boolean>,
-    tagList: List<String>
+    tagList: List<String>,
   ): List<String> {
-
     println(tagList)
     val isValidRequest = photoFileList.size > 0 && (
       photoFileList.size == isGoodPhotoList.size
