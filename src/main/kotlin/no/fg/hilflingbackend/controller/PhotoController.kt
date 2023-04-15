@@ -43,7 +43,7 @@ class PhotoController(
     @RequestParam("eventOwnerName") eventOwnerName: String,
     @RequestParam("photoFileList") photoFileList: List<MultipartFile>,
     @RequestParam("isGoodPhotoList") isGoodPhotoList: List<Boolean>,
-    @RequestParam("tagList")tagList: List<List<String>>
+    @RequestParam("tagList")tagList: List<String>,
   ): ResponseEntity<List<String>> =
     ResponseEntity(
       photoService.createNewMotiveAndSaveDigitalPhotos(

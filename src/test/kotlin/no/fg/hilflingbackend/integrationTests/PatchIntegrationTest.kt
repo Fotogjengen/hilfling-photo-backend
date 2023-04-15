@@ -290,7 +290,7 @@ internal class PatchIntegrationTest() {
         albumId = albumId1.id,
         photoGangBangerId = photoGangBangerId1.id,
         photoFileList = listOf(mockMultiPartFile),
-        tagList = listOf(listOf(photoTagDto1.name)),
+        tagList = listOf(photoTagDto1.name),
         categoryName = categoryDto1.name,
         isGoodPhotoList = listOf(true)
       )[0].split("/").last().split(".").first()
