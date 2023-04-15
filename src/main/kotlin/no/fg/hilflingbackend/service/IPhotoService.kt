@@ -41,7 +41,7 @@ interface IPhotoService : IBaseService<PhotoDto> {
     eventOwnerString: String,
     photoFileList: List<MultipartFile>,
     isGoodPhotoList: List<Boolean>,
-    tagList: List<String>
+    tagList: List<String>,
   ): List<String>
   fun getCarouselPhotos(page: Int = 0, pageSize: Int = 100): Page<PhotoDto>
   fun getAllAnalogPhotos(page: Int = 0, pageSize: Int = 100): Page<PhotoDto> // TODO: Need different DTO for analog
