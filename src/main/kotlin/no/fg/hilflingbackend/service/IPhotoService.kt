@@ -4,11 +4,25 @@ import no.fg.hilflingbackend.dto.Page
 import no.fg.hilflingbackend.dto.PhotoDto
 import no.fg.hilflingbackend.dto.PhotoPatchRequestDto
 import org.springframework.web.multipart.MultipartFile
+import java.time.LocalDate
 import java.util.UUID
 
 interface IBaseService<T> {
-  fun findById(id: UUID): PhotoDto?
-  fun getAll(page: Int = 0, pageSize: Int = 100): Page<T>
+  fun getById(id: UUID): PhotoDto?
+  fun getAll(
+    page: Int = 0,
+    pageSize: Int = 100,
+    motive: UUID = UUID(0L, 0L),
+    tag: List<String> = listOf<String>(),
+    fromDate: LocalDate,
+    toDate: LocalDate,
+    category: String,
+    place: UUID,
+    isGoodPic: Boolean = false,
+    album: UUID,
+    sortBy: String,
+    desc: Boolean = true
+  ): Page<T>
 }
 interface IPhotoService : IBaseService<PhotoDto> {
   fun saveDigitalPhotos(
@@ -41,10 +55,26 @@ interface IPhotoService : IBaseService<PhotoDto> {
     eventOwnerString: String,
     photoFileList: List<MultipartFile>,
     isGoodPhotoList: List<Boolean>,
+    dateCreated: LocalDate,
     tagList: List<String>,
   ): List<String>
   fun getCarouselPhotos(page: Int = 0, pageSize: Int = 100): Page<PhotoDto>
   fun getAllAnalogPhotos(page: Int = 0, pageSize: Int = 100): Page<PhotoDto> // TODO: Need different DTO for analog
-  fun getAllDigitalPhotos(page: Int = 0, pageSize: Int = 100): Page<PhotoDto>
+
+  fun getAllDigitalPhotos(
+    page: Int = 0,
+    pageSize: Int = 100,
+    motive: UUID = UUID(0L, 0L),
+    tag: List<String> = listOf<String>(),
+    fromDate: LocalDate,
+    toDate: LocalDate,
+    category: String,
+    place: UUID = UUID(0L, 0L),
+    isGoodPic: Boolean = false,
+    album: UUID,
+    sortBy: String,
+    desc: Boolean = true
+  ): Page<PhotoDto>
+
   fun patch(dto: PhotoPatchRequestDto): PhotoDto
 }

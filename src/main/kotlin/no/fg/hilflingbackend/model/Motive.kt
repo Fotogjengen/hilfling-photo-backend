@@ -19,15 +19,6 @@ interface Motive : BaseModel<Motive> {
   var album: Album
 }
 
-object Motives : BaseTable<Motive>("motive") {
-  val title = varchar("title").bindTo { it.title }
-
-  // Foreign keys
-  val categoryId = uuid("category_id").references(Categories) { it.category }
-  val eventOwnerId = uuid("event_owner_id").references(EventOwners) { it.eventOwner }
-  val albumId = uuid("album_id").references(Albums) { it.album }
-}
-
 fun Motive.toDto(): MotiveDto = MotiveDto(
   motiveId = MotiveId(this.id),
   title = this.title,
@@ -36,5 +27,14 @@ fun Motive.toDto(): MotiveDto = MotiveDto(
   albumDto = album.toDto(),
   dateCreated = this.dateCreated
 )
+
+object Motives : BaseTable<Motive>("motive") {
+  val title = varchar("title").bindTo { it.title }
+
+  // Foreign keys
+  val categoryId = uuid("category_id").references(Categories) { it.category }
+  val eventOwnerId = uuid("event_owner_id").references(EventOwners) { it.eventOwner }
+  val albumId = uuid("album_id").references(Albums) { it.album }
+}
 
 val Database.motives get() = this.sequenceOf(Motives)

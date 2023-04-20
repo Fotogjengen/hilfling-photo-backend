@@ -19,15 +19,7 @@ data class MotiveDto(
   val eventOwnerDto: EventOwnerDto,
   val albumDto: AlbumDto,
   val dateCreated: LocalDate?
-) {
-  constructor(
-    motiveId: MotiveId = MotiveId(),
-    title: String,
-    categoryDto: CategoryDto,
-    eventOwnerDto: EventOwnerDto,
-    albumDto: AlbumDto
-  ) : this(motiveId, title, categoryDto, eventOwnerDto, albumDto, null)
-}
+)
 
 data class MotiveId(
   override val id: UUID = UUID.randomUUID()
@@ -43,5 +35,6 @@ fun MotiveDto.toEntity(): Motive {
     category = dto.categoryDto.toEntity()
     eventOwner = dto.eventOwnerDto.toEntity()
     album = dto.albumDto.toEntity()
+    dateCreated = dto.dateCreated!!
   }
 }

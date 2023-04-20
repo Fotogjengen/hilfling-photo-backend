@@ -22,7 +22,8 @@ import org.springframework.web.bind.annotation.RequestPart
 import org.springframework.web.bind.annotation.RestController
 import org.springframework.web.multipart.MultipartFile
 import java.security.InvalidParameterException
-import java.util.UUID
+import java.time.LocalDate
+import java.util.*
 
 @RestController
 @RequestMapping("/photos")
@@ -56,7 +57,8 @@ class PhotoController(
         photoFileList = photoFileList,
         tagList = tagList,
         categoryName = categoryName,
-        isGoodPhotoList = isGoodPhotoList
+        isGoodPhotoList = isGoodPhotoList,
+        dateCreated = LocalDate.now()
       ),
       HttpStatus.CREATED
     )
@@ -149,13 +151,36 @@ class PhotoController(
   @GetMapping
   fun getAll(
     @RequestParam("page", required = false) page: Int?,
-    @RequestParam("pageSize", required = false) pageSize: Int?
-  ): ResponseEntity<Page<PhotoDto>> {
-    return ResponseOk(
+    @RequestParam("pageSize", required = false) pageSize: Int?,
+    @RequestParam("motive", required = false) motive: UUID?,
+    @RequestParam("tag", required = false) tag: List<String>?,
+    @RequestParam("fromDate", required = false) fromDate: String?,
+    @RequestParam("toDate", required = false) toDate: String?,
+    @RequestParam("category", required = false) category: String?,
+    @RequestParam("place", required = false) place: UUID?,
+    @RequestParam("isGoodPic", required = false) isGoodPic: Boolean?,
+    @RequestParam("album", required = false) album: UUID?,
+    @RequestParam("sortBy", required = false) sortBy: String?,
+    @RequestParam("desc", required = false) desc: Boolean?,
+    @RequestParam("isAnalog", required = false) isAnalog: Boolean?,
+  ): ResponseEntity<Page<PhotoDto>> =
+    ResponseOk(
       photoService
-        .getAll(page ?: 0, pageSize ?: 100)
+        .getAll(
+          page ?: 0,
+          pageSize ?: 100,
+          motive ?: UUID(0L, 0L),
+          tag ?: listOf<String>(),
+          LocalDate.parse(fromDate ?: "1970-01-01") ?: LocalDate.now(),
+          LocalDate.parse(toDate ?: LocalDate.now().toString()) ?: LocalDate.now(),
+          category ?: "",
+          place ?: UUID(0L, 0L),
+          isGoodPic ?: false,
+          album ?: UUID(0L, 0L),
+          sortBy ?: "",
+          desc ?: true
+        ),
     )
-  }
 
   @GetMapping("/carousel")
   fun getCarouselPhotos(
@@ -178,11 +203,36 @@ class PhotoController(
   @GetMapping("/digital")
   fun getAllDigitalPhotos(
     @RequestParam("page", required = false) page: Int?,
-    @RequestParam("pageSize", required = false) pageSize: Int?
-  ): ResponseEntity<Page<PhotoDto>> = ResponseOk(
-    photoService
-      .getAllDigitalPhotos(page ?: 0, pageSize ?: 100)
-  )
+    @RequestParam("pageSize", required = false) pageSize: Int?,
+    @RequestParam("motive", required = false) motive: UUID?,
+    @RequestParam("tag", required = false) tag: List<String>?,
+    @RequestParam("fromDate", required = false) fromDate: String?,
+    @RequestParam("toDate", required = false) toDate: String?,
+    @RequestParam("category", required = false) category: String?,
+    @RequestParam("place", required = false) place: UUID?,
+    @RequestParam("isGoodPic", required = false) isGoodPic: Boolean?,
+    @RequestParam("album", required = false) album: UUID?,
+    @RequestParam("sortBy", required = false) sortBy: String?,
+    @RequestParam("desc", required = false) desc: Boolean?,
+  ): ResponseEntity<Page<PhotoDto>> {
+    return ResponseOk(
+      photoService
+        .getAllDigitalPhotos(
+          page ?: 0,
+          pageSize ?: 100,
+          motive ?: UUID(0L, 0L),
+          tag ?: listOf<String>(),
+          LocalDate.parse(fromDate) ?: LocalDate.now(),
+          LocalDate.parse(toDate) ?: LocalDate.now(),
+          category ?: "",
+          place ?: UUID(0L, 0L),
+          isGoodPic ?: false,
+          album ?: UUID(0L, 0L),
+          sortBy ?: "",
+          desc ?: true
+        )
+    )
+  }
 
   @PatchMapping
   fun patch(

@@ -39,6 +39,7 @@ import java.io.IOException
 import java.nio.file.Files
 import java.nio.file.Path
 import java.nio.file.Paths
+import java.time.LocalDate
 import java.util.UUID
 import java.util.stream.Stream
 import javax.persistence.EntityNotFoundException
@@ -290,6 +291,7 @@ class PhotoService(
     eventOwnerString: String,
     photoFileList: List<MultipartFile>,
     isGoodPhotoList: List<Boolean>,
+    dateCreated: LocalDate,
     tagList: List<String>,
   ): List<String> {
     val isValidRequest = photoFileList.size > 0 && (
@@ -328,7 +330,8 @@ class PhotoService(
       motiveTitle = motiveString,
       eventOwnerDto = eventOwnerDto,
       categoryDto = categoryDto,
-      albumDto = albumDto
+      albumDto = albumDto,
+      dateCreated = dateCreated
     )
 
     val numPhotoGenerated = photoFileList.mapIndexed { index, photoFile ->
@@ -386,7 +389,8 @@ class PhotoService(
     motiveTitle: String,
     categoryDto: CategoryDto,
     eventOwnerDto: EventOwnerDto,
-    albumDto: AlbumDto
+    albumDto: AlbumDto,
+    dateCreated: LocalDate?
   ): MotiveDto =
     motiveRepository
       .findByTitle(motiveTitle)
@@ -396,7 +400,8 @@ class PhotoService(
           title = motiveTitle,
           categoryDto = categoryDto,
           eventOwnerDto = eventOwnerDto,
-          albumDto = albumDto
+          albumDto = albumDto,
+          dateCreated = dateCreated ?: null
         )
       )
 
@@ -406,13 +411,79 @@ class PhotoService(
   override fun getAllAnalogPhotos(page: Int, pageSize: Int): Page<PhotoDto> = photoRepository
     .findAllAnalogPhotos(page, pageSize)
 
-  override fun getAllDigitalPhotos(page: Int, pageSize: Int): Page<PhotoDto> = photoRepository
-    .findAllDigitalPhotos(page, pageSize)
+  override fun getAllDigitalPhotos(
+    page: Int,
+    pageSize: Int,
+    motive: UUID,
+    tag: List<String>,
+    fromDate: LocalDate,
+    toDate: LocalDate,
+    category: String,
+    place: UUID,
+    isGoodPic: Boolean,
+    album: UUID,
+    sortBy: String,
+    desc: Boolean
+  ): Page<PhotoDto> {
+    return photoRepository
+      .findAllDigitalPhotos(
+        page,
+        pageSize,
+        motive,
+        tag,
+        fromDate,
+        toDate,
+        category,
+        place,
+        isGoodPic,
+        album,
+        sortBy,
+        desc
+      )
+  }
+
+  override fun patch(dto: PhotoPatchRequestDto): PhotoDto {
+    TODO("Not yet implemented")
+  }
+
+  override fun getById(id: UUID): PhotoDto? {
+    TODO("Not yet implemented")
+  }
 
   fun getByMotiveId(id: UUID, page: Int, pageSize: Int): Page<PhotoDto>? = photoRepository.findByMotiveId(id, page, pageSize)
 
-  override fun findById(id: UUID): PhotoDto = photoRepository.findById(id) ?: throw EntityNotFoundException("Did not find photo")
+  fun findById(id: UUID): PhotoDto = photoRepository.findById(id) ?: throw EntityNotFoundException("Did not find photo")
 
+  override fun getAll(
+    page: Int,
+    pageSize: Int,
+    motive: UUID,
+    tag: List<String>,
+    fromDate: LocalDate,
+    toDate: LocalDate,
+    category: String,
+    place: UUID,
+    isGoodPic: Boolean,
+    album: UUID,
+    sortBy: String,
+    desc: Boolean
+  ): Page<PhotoDto> = photoRepository
+    .findAll(
+      page,
+      pageSize,
+      motive,
+      tag,
+      fromDate,
+      toDate,
+      category,
+      place,
+      isGoodPic,
+      album,
+      sortBy,
+      desc
+    )
+}
+  /*
   override fun getAll(page: Int, pageSize: Int): Page<PhotoDto> {
     return photoRepository
       .findAll(page, pageSize)
@@ -441,3 +512,4 @@ class PhotoService(
     return photoRepository.patch(dto, photoTags)
   }
 }
+*/
