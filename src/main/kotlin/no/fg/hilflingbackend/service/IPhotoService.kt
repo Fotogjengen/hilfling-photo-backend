@@ -55,7 +55,7 @@ interface IPhotoService : IBaseService<PhotoDto> {
     eventOwnerString: String,
     photoFileList: List<MultipartFile>,
     isGoodPhotoList: List<Boolean>,
-    dateCreated: LocalDate
+    dateCreated: LocalDate,
     tagList: List<String>,
   ): List<String>
   fun getCarouselPhotos(page: Int = 0, pageSize: Int = 100): Page<PhotoDto>

@@ -291,7 +291,7 @@ class PhotoService(
     eventOwnerString: String,
     photoFileList: List<MultipartFile>,
     isGoodPhotoList: List<Boolean>,
-    dateCreated: LocalDate
+    dateCreated: LocalDate,
     tagList: List<String>,
   ): List<String> {
     val isValidRequest = photoFileList.size > 0 && (
