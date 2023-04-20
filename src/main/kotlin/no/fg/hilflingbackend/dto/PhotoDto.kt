@@ -60,7 +60,7 @@ data class PhotoDto(
       albumDto: AlbumDto,
       photoTags: List<PhotoTagDto>,
       categoryDto: CategoryDto,
-      photoGangBangerDto: PhotoGangBangerDto,
+      photoGangBangerDto: PhotoGangBangerDto
     ): Pair<PhotoDto, ImageFileName> {
       // Generate unique ID
       val photoId = PhotoId()

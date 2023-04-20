@@ -18,7 +18,7 @@ import javax.persistence.EntityNotFoundException
 open class SecurityLevelRepository(database: Database) : BaseRepository<SecurityLevel, SecurityLevelDto, SecurityLevelPatchRequestDto>(table = SecurityLevels, database = database) {
   override fun convertToClass(qrs: QueryRowSet): SecurityLevelDto = SecurityLevelDto(
     securityLevelId = SecurityLevelId(qrs[SecurityLevels.id]!!),
-    securityLevelType = SecurityLevelType.valueOf(qrs[SecurityLevels.type]!!),
+    securityLevelType = SecurityLevelType.valueOf(qrs[SecurityLevels.type]!!)
   )
 
   override fun create(dto: SecurityLevelDto): Int {

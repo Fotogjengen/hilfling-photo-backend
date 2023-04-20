@@ -44,7 +44,7 @@ class PhotoController(
     @RequestParam("eventOwnerName") eventOwnerName: String,
     @RequestParam("photoFileList") photoFileList: List<MultipartFile>,
     @RequestParam("isGoodPhotoList") isGoodPhotoList: List<Boolean>,
-    @RequestParam("tagList")tagList: List<List<String>>
+    @RequestParam("tagList")tagList: List<String>,
   ): ResponseEntity<List<String>> =
     ResponseEntity(
       photoService.createNewMotiveAndSaveDigitalPhotos(
@@ -60,7 +60,7 @@ class PhotoController(
         isGoodPhotoList = isGoodPhotoList,
         dateCreated = LocalDate.now()
       ),
-      HttpStatus.CREATED,
+      HttpStatus.CREATED
     )
 
   @PostMapping
@@ -107,7 +107,7 @@ class PhotoController(
         photoGangBangerIdList,
         albumIdList,
         categoryIdList,
-        fileList,
+        fileList
       )
 
     return ResponseEntity<List<String>>(

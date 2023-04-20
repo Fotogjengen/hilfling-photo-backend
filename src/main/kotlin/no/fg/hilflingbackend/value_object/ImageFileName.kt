@@ -3,8 +3,11 @@ package no.fg.hilflingbackend.value_object
 data class ImageFileName private constructor(val filename: String) {
   companion object {
     operator fun invoke(filename: String): ImageFileName {
-      return if (!isValidImageFileName(filename)) throw IllegalArgumentException("Not valid filename")
-      else ImageFileName(filename)
+      return if (!isValidImageFileName(filename)) {
+        throw IllegalArgumentException("Not valid filename")
+      } else {
+        ImageFileName(filename)
+      }
     }
     private fun isValidImageFileName(filename: String): Boolean {
       // Must have a valid file extension
@@ -15,6 +18,7 @@ data class ImageFileName private constructor(val filename: String) {
           )
     }
   }
+
   // Example: .jpg, .png
   fun getFileExtension() =
     ".${this.filename.split(".").last()}"

@@ -9,7 +9,7 @@ data class MotivePatchRequestDto(
   val title: String?,
   val categoryDto: CategoryDto?,
   val eventOwnerDto: EventOwnerDto?,
-  val albumDto: AlbumDto?,
+  val albumDto: AlbumDto?
 )
 
 data class MotiveDto(

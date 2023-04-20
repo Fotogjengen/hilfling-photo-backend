@@ -1,10 +1,19 @@
 # hilfling-photo-backend
-Photo backend
+Photo backend.
 
-Resource server for hilfling app
+Resource server for hilfling app>
 
 # Installation
+First install required developer SDKs
 
+## Prerequisits
+
+First install required packages:
+- Kotlin
+- Maven
+- KTLint
+
+Then run:
 `mvn clean install`
 
 # Start the project
@@ -20,7 +29,20 @@ To use prod database
 `mvn spring-boot:run -Drun.profiles=prod`
 
 # Linting
-TODO
+This project use [KTlint](https://github.com/pinterest/ktlint) to keep code formatting consistent.
+
+## Check format
+To check linting run:
+`ktlint .`
+
+## Fix formatting
+To automaticly fix formatting run:
+`ktlint --format .`
+
+## Git pre-commit hook
+To install git pre-commit hook and avoid commits that do not follow formatting guidelines run:
+`ktlint --install-git-pre-commit-hook`
+
 
 # Build
 `mvn package`

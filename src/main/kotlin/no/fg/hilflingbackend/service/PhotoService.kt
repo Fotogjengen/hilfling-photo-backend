@@ -57,7 +57,7 @@ class PhotoService(
   val categoryRepository: CategoryRepository,
   val albumRepository: AlbumRepository,
   val securityLevelRepository: SecurityLevelRepository,
-  val photoGangBangerRepository: PhotoGangBangerRepository
+  val photoGangBangerRepository: PhotoGangBangerRepository,
 ) : IPhotoService {
 
   val logger = LoggerFactory.getLogger(this::class.java)
@@ -80,7 +80,7 @@ class PhotoService(
     fileName: ImageFileName,
     securityLevel: SecurityLevelDto,
     motive: MotiveDto,
-    size: PhotoSize,
+    size: PhotoSize
   ): Path {
     // BasePath
     val basePath = imageFileStorageProperties.savedPhotosPath
@@ -167,9 +167,8 @@ class PhotoService(
     categoryIdList: List<UUID>,
     fileList: List<MultipartFile>
   ): List<String> {
-
     return fileList.mapIndexed {
-      index, file ->
+        index, file ->
       /*
       val cachedMotive = { id: UUID ->
         motiveRepository
@@ -292,15 +291,14 @@ class PhotoService(
     eventOwnerString: String,
     photoFileList: List<MultipartFile>,
     isGoodPhotoList: List<Boolean>,
-    tagList: List<List<String>>,
     dateCreated: LocalDate
+    tagList: List<String>,
   ): List<String> {
     val isValidRequest = photoFileList.size > 0 && (
-      photoFileList.size == isGoodPhotoList.size &&
-        photoFileList.size == tagList.size
+      photoFileList.size == isGoodPhotoList.size
       )
     logger.warn("Is valid request? $isValidRequest")
-    if (!isValidRequest) throw java.lang.IllegalArgumentException("photoFileList, isGoodPhotoList and tagList are of unequal length or not given")
+    if (!isValidRequest) throw java.lang.IllegalArgumentException("photoFileList, isGoodPhotoList are of unequal length or not given")
     logger.info("createNewMotiveAndSaveDigitalPhotos() $tagList")
     val eventOwnerDto = eventOwnerRepository
       .findByEventOwnerName(EventOwnerName.valueOf(eventOwnerString))
@@ -337,7 +335,7 @@ class PhotoService(
     )
 
     val numPhotoGenerated = photoFileList.mapIndexed { index, photoFile ->
-      val photoTagDtos = tagList.get(index).map {
+      val photoTagDtos = tagList.map {
         photoTagRepository
           .findByName(it)
           ?: PhotoTagDto(name = it)

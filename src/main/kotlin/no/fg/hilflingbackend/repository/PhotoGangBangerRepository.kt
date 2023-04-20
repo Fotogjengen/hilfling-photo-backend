@@ -157,7 +157,7 @@ class PhotoGangBangerRepository(
         email = dto.samfundetUser.email ?: photoGangBangerDtoFromDb.samfundetUser.email,
         profilePicturePath = dto.samfundetUser.profilePicturePath ?: photoGangBangerDtoFromDb.samfundetUser.profilePicturePath,
         sex = dto.samfundetUser.sex ?: photoGangBangerDtoFromDb.samfundetUser.sex,
-        securityLevel = dto.samfundetUser.securityLevel ?: photoGangBangerDtoFromDb.samfundetUser.securityLevel,
+        securityLevel = dto.samfundetUser.securityLevel ?: photoGangBangerDtoFromDb.samfundetUser.securityLevel
 
       )
       database.samfundet_users.update(samfundetUserDto.toEntity())

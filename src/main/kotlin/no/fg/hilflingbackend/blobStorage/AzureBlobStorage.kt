@@ -19,7 +19,7 @@ class AzureBlobStorage(val azureStorageConfiguration: AzureStorageConfiguration)
     // Create blob client
     val blobClient = blobContainerClient.getBlobClient(fileName.filename)
     // Upload file
-    blobClient.upload(multipartFile.inputStream, multipartFile.size,)
+    blobClient.upload(multipartFile.inputStream, multipartFile.size)
 
     return blobClient.blobUrl
   }
