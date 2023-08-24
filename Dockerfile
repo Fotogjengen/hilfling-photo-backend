@@ -1,6 +1,5 @@
 # Stage 1: Build the project
 FROM maven:3.6.3-jdk-11-slim AS MAVEN_BUILD
-MAINTAINER fg-web@samfundet.no
 # Tomcat creates a working dir at /tmp by default. Might be optional
 VOLUME /tmp
 COPY pom.xml /build/
