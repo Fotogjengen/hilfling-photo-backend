@@ -31,7 +31,7 @@ services:
     networks:
       - hilfling-network
     ports:
-      - "80:80"
+      - "8000:8000"
       - "443:443"
       - "8080:8080" # Traefik dashboard
     volumes:
@@ -46,7 +46,6 @@ services:
     restart: always
     volumes:
       - "db-data:/var/lib/postgresql/data" # Database volume
-        #- "./postgres/sql:/base-sql" # Think this was init sql schema?
     expose:
       - 5432
     networks:
@@ -54,11 +53,10 @@ services:
     ports:
       - "5432:5432"
     environment:
-      # Use env variable if exists, fallback to hilfling
-      DATABASE_USERNAME: hilfling
-      DATABASE_URL: jdbc:postgresql://postgres:5432/hilflingdb?createDatabaseIfNotExist=true
-      DATABASE_PASSWORD: password
-      DATABASE_DRIVER: org.postgresql.Driver
+      POSTGRES_USER: hilfling   # Use POSTGRES_USER instead of DATABASE_USERNAME
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: hilflingdb    # Specify the default database
+      POSTGRES_HOST_AUTH_METHOD: trust
 
 networks:
   hilfling-network:

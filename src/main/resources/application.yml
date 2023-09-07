@@ -1,6 +1,6 @@
 server:
   address: ${LISTENING_IP:localhost}
-  port: ${LISTENING_PORT:8080}
+  port: ${LISTENING_PORT:8000}
   error:
     include-message: always
     include-stacktrace: always
