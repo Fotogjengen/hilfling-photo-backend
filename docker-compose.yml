@@ -1,43 +1,23 @@
 version: '3.7'
 
 services:
-  hilfling-app:
+  app:
+    ports:
+      - "8001:8000"
     build:
       context: .
       dockerfile: Dockerfile
-    labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.hilfling-app.entrypoints=web"
-      - "traefik.http.services.hilfling-app.loadbalancer.server.port=8080"
     networks:
       - hilfling-network
     depends_on:
       - postgres
-
-  traefik:
-    image: "traefik:v2.4"
-    container_name: "traefik"
-    command:
-      - "--log.level=DEBUG"
-      - "--api.insecure=true"
-      - "--providers.docker=true"
-      - "--providers.docker.exposedbydefault=false"
-      - "--certificatesresolvers.mytlschallenge.acme.tlschallenge=true"
-      - "--certificatesresolvers.mytlschallenge.acme.email=youremail@yourdomain.com"
-      - "--certificatesresolvers.mytlschallenge.acme.storage=/letsencrypt/acme.json"
-      - "--entrypoints.web.address=:8000"
-      - "--api.dashboard=true"
-      - "--api.debug=true"
-    networks:
-      - hilfling-network
-    ports:
-      - "8000:8000"
-      - "443:443"
-      - "8080:8080" # Traefik dashboard
-    volumes:
-      - "/var/run/docker.sock:/var/run/docker.sock:ro"
-      - "./letsencrypt:/letsencrypt"
-
+    environment:
+      DATABASE_HOST: postgres
+      DATABASE_USERNAME: hilfling
+      DATABASE_PASSWORD: password
+      DATABASE_NAME: hilflingdb
+      DATABASE_PORT: 5432
+      
   postgres:
     container_name: hilflingdb
     build:
