@@ -1,5 +1,7 @@
 server:
-  address: ${LISTENING_IP:localhost}
+  address: 
+    - ${LISTENING_IP:localhost}
+    - 0.0.0.0
   port: ${LISTENING_PORT:8000}
   error:
     include-message: always
@@ -7,6 +9,19 @@ server:
     include-exception: true
     include-binding-errors: always
 spring:
+  mvc:
+    cors:
+      allow-credentials: false
+      allowed-origins:
+        - http://localhost:3000
+        - http://localhost:8000
+        - http://0.0.0.0:8000
+      allowed-methods:
+        - GET
+        - POST
+        - PUT
+        - DELETE
+      allowed-headers: "*"
   datasource:
     hikari:
       connection-timeout: 20000
