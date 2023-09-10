@@ -9,19 +9,6 @@ server:
     include-exception: true
     include-binding-errors: always
 spring:
-  mvc:
-    cors:
-      allow-credentials: false
-      allowed-origins:
-        - http://localhost:3000
-        - http://localhost:8000
-        - http://0.0.0.0:8000
-      allowed-methods:
-        - GET
-        - POST
-        - PUT
-        - DELETE
-      allowed-headers: "*"
   datasource:
     hikari:
       connection-timeout: 20000

@@ -24,8 +24,6 @@ public class ResourceConfiguration implements WebMvcConfigurer {
         registry
         .addMapping("/**")
         .allowedOrigins("http://localhost:3000")
-        .allowedOrigins("http://localhost:8000")
-        .allowedOrigins("http://localhost:8080")
         .allowedMethods("GET", "PATCH", "POST", "DELETE", "OPTIONS")
         .allowedHeaders("*");
     }
