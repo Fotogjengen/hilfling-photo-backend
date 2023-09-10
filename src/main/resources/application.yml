@@ -1,18 +1,31 @@
 server:
-  address: ${LISTENING_IP:localhost}
-  port: ${LISTENING_PORT:8080}
+  address: 
+    - ${LISTENING_IP:localhost}
+    - 0.0.0.0
+  port: ${LISTENING_PORT:8000}
   error:
     include-message: always
     include-stacktrace: always
     include-exception: true
     include-binding-errors: always
 spring:
+  mvc:
+    cors:
+      allow-credentials: false
+      allowed-origins:
+        - http://localhost:3000
+      allowed-methods:
+        - GET
+        - POST
+        - PUT
+        - DELETE
+      allowed-headers: "*"
   datasource:
     hikari:
       connection-timeout: 20000
       maximum-pool-size: 5
     username: ${DATABASE_USERNAME:hilfling}
-    url: ${DATABASE_URL:jdbc:postgresql://localhost:5432/hilflingdb?createDatabaseIfNotExist=true}
+    url: ${DATABASE_URL:jdbc:postgresql://postgres:5432/hilflingdb?createDatabaseIfNotExist=true}
     password: ${DATABASE_PASSWORD:password}
     driver-class-name: ${DATABASE_DRIVER:org.postgresql.Driver}
 
@@ -22,10 +35,9 @@ spring:
       me.liuwj.ktorm: debug
       org.springframework.web: DEBUG
 
-
   flyway:
     user: ${DATABASE_USERNAME:hilfling}
-    url: ${DATABASE_URL:jdbc:postgresql://localhost:5432/hilflingdb?createDatabaseIfNotExist=true}
+    url: ${DATABASE_URL:jdbc:postgresql://postgres:5432/hilflingdb?createDatabaseIfNotExist=true}
     password: ${DATABASE_PASSWORD:password}
     enabled: true
     validate-on-migrate: true
@@ -49,7 +61,6 @@ spring:
       blob-storage:
         connection-string: ${AZURE_STORAGE_CONNECTION_STRING:DefaultEndpointsProtocol=http;AccountName=devstoreaccount1;AccountKey=Eby8vdM02xNOcqFlqUwJPLlmEtlCDXJ1OUzFT50uSRZ6IFsuFq2UVErCz4I6tq/K1SZFPTOtr/KBHBeksoGMGw==;BlobEndpoint=http://127.0.0.1:10000/devstoreaccount1;QueueEndpoint=http://127.0.0.1:10001/devstoreaccount1;TableEndpoint=http://127.0.0.1:10002/devstoreaccount1;}
 
-
 springdoc:
   api-docs:
     #path: "/"
@@ -66,7 +77,6 @@ file:
   large-upload-dir: photos/large/
   medium-upload-dir: photos/medium/
   small-upload-dir: photos/small/
-
 #okta: # SECURITY OKTA
 #  oauth2:
 #    issuer: https://dev-812828.okta.com/oauth2/default
