@@ -14,6 +14,14 @@ on:
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Build docker stack
+        run: |
+            docker network create traefik
+            docker-compose -f docker-compose.yml -f docker-compose.test.yml up run-tests
   lint:
       runs-on: ubuntu-latest
       steps:
