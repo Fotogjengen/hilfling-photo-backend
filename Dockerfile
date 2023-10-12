@@ -21,3 +21,5 @@ COPY --from=MAVEN_BUILD /build/target/*.jar /app/
 RUN ls /app/
 # To reduce startup time: adding /dev/urandom as a source of entropy
 ENTRYPOINT ["java","-Djava.security.egd=file:/dev/./urandom","-jar","/app/hilfling-0.0.1-SNAPSHOT.jar"]
+
+EXPOSE 8080
