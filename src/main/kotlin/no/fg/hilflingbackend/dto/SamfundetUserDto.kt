@@ -38,6 +38,7 @@ fun SamfundetUserDto.toEntity(): SamfundetUser {
     email = dto.email.value
     firstName = dto.firstName
     lastName = dto.lastName
+    username = dto.username
     phoneNumber = dto.phoneNumber.value
     email = dto.email.value
     sex = dto.sex
