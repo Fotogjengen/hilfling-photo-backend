@@ -11,7 +11,7 @@ RUN mvn package -DskipTests=true
 RUN ls /build/target
 
 # Stage 2: prepare launch environment
-FROM alpine:latest
+FROM alpine:3.18.4
 RUN apk --no-cache add openjdk11
 # Running with user privileges helts to migate some risks: This is currently disabled bacause
 # The application did not have enough privileges to save images to disk
