@@ -1,10 +1,6 @@
 server:
-  address: 
-    - ${LISTENING_IP:backend.localhost}
-    - ${LISTENING_IP:localhost}
-  port: 
-    - ${LISTENING_PORT:8000}
-    - 8000
+  address: ${LISTENING_IP:localhost}
+  port: ${LISTENING_PORT:8080}
   error:
     include-message: always
     include-stacktrace: always
@@ -16,17 +12,20 @@ spring:
       connection-timeout: 20000
       maximum-pool-size: 5
     username: ${DATABASE_USERNAME:hilfling}
-    url: ${DATABASE_URL:jdbc:postgresql://postgres:5432/hilflingdb}
+    url: ${DATABASE_URL:jdbc:postgresql://localhost:5432/hilflingdb?createDatabaseIfNotExist=true}
     password: ${DATABASE_PASSWORD:password}
     driver-class-name: ${DATABASE_DRIVER:org.postgresql.Driver}
+
   logging:
     level:
       root: debug
       me.liuwj.ktorm: debug
       org.springframework.web: DEBUG
+
+
   flyway:
     user: ${DATABASE_USERNAME:hilfling}
-    url: ${DATABASE_URL:jdbc:postgresql://postgres:5432/hilflingdb?createDatabaseIfNotExist=true}
+    url: ${DATABASE_URL:jdbc:postgresql://localhost:5432/hilflingdb?createDatabaseIfNotExist=true}
     password: ${DATABASE_PASSWORD:password}
     enabled: true
     validate-on-migrate: true
@@ -75,4 +74,3 @@ file:
 #    audience: api://default
 #    groups-claim: groups
 #    scopes: 'openid'
-
