@@ -18,11 +18,18 @@ Then run:
 
 # Start the project
 
-Start the database:
+## For front-end developers
 
-`docker-compose up -d postgres`
+Run the command. This will run all the necessary services for the backend, including the hilfling service itself.
+`docker-compose up -d`
 
-Start hilfing service
+## For back-end developers
+
+Run the command mentioned below. This will run all necessary services for the backend, except the hilfling service itself. 
+`docker-compose -f docker-compose.dev up -d`
+
+This means in order to start the hilfing service you must run the following command:
+
 `mvn spring-boot:run`
 
 To use prod database

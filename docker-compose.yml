@@ -5,17 +5,64 @@
 version: "3"
 networks:
   hilfling-network: # Used for internal networking
+    driver: bridge
 
 volumes:
   db-data: # Data volume for the database
 
 services:
+  traefik:
+    image: "traefik:v2.10"
+    container_name: "traefik"
+    command:
+      #- "--log.level=DEBUG"
+      - "--api.insecure=true"
+      - "--providers.docker=true"
+      - "--providers.docker.exposedbydefault=false"
+      - "--entrypoints.web.address=:8000"
+      - "--entrypoints.websecure.address=:443"
+    ports:
+      - "8080:8080"
+      - "443:443"
+    volumes:
+      - "/var/run/docker.sock:/var/run/docker.sock:ro"
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.traefik.rule=Host(`127.0.0.1`)"
+      - "traefik.http.routers.traefik.entrypoints=web"
+      - "traefik.http.routers.traefik.service=api@internal"
+      - "traefik.http.routers.traefik.middlewares=traefik-auth"
+      - "traefik.http.middlewares.traefik-auth.basicauth.users=user:$$2y$$05$$6m8MvyzgJ4Kl7/3rL4X6VurX1huMas8a7oPB3xRfBjFbGCR8MUi7W"
+
+  backend:
+    container_name: backend
+    build:
+      context: .
+      dockerfile: ./Dockerfile # specify the Dockerfile
+    networks:
+      - hilfling-network
+    depends_on:
+      - postgres
+      - traefik
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/hilflingdb
+      SPRING_DATASOURCE_USERNAME: ${DATABASE_USERNAME:-hilfling}
+      SPRING_DATASOURCE_PASSWORD: ${DATABASE_PASSWORD:-password}
+    ports:
+      - "8000:8000" # map port 8000 of the host to port 8080 of the container
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.backend.rule=Host(`backend.localhost`)"
+      - "traefik.http.routers.backend.entrypoints=web"
+
   postgres:
     container_name: hilflingdb
     build:
       context: .
       dockerfile: postgres/Dockerfile
     restart: always
+    depends_on:
+      - traefik
     networks:
       - hilfling-network
     volumes:
@@ -29,12 +76,16 @@ services:
       # Use env variable if exists, fallback to hilfling
       POSTGRES_USER: ${DATABASE_USERNAME:-hilfling}
       POSTGRES_PASSWORD: ${DATABASE_PASSWORD:-password}
-      LISTENING_PORT: ${LISTENING_PORT-8080}
-
+      LISTENING_PORT: ${LISTENING_PORT-8000}
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.postgres.rule=Host(`hilfling-db.localhost`)"
   pgadmin:
     container_name: pgadmin
     image: dpage/pgadmin4
     restart: always
+    depends_on:
+      - traefik
     environment:
       PGADMIN_DEFAULT_EMAIL: ${PGADMIN_DEFAULT_EMAIL:-admin@admin.com}
       PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_DEFAULT_PASSWORD:-password}
@@ -42,7 +93,10 @@ services:
       - ${PGADMIN_PORT:-5050}:80
     networks:
       - hilfling-network
-
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.pgadmin.rule=Host(`pgadmin.localhost`)"
+      - "traefik.http.routers.pgadmin.entrypoints=web"
   fg-static:
     container_name: hilfling-static
     #image: fotogjengen/hilfling-static # Don't need to push this to a registry
