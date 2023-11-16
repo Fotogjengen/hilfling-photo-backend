@@ -22,7 +22,6 @@ Then run:
 
 Run the command. This will run all the necessary services for the backend, including the hilfling service itself.
 `docker-compose up -d`
-The backend-service will be available on `backend.localhost:8000`
 
 ## For back-end developers
 
@@ -30,8 +29,8 @@ Run the command mentioned below. This will run all necessary services for the ba
 `docker-compose -f docker-compose.dev up -d`
 
 This means in order to start the hilfing service you must run the following command:
+
 `mvn spring-boot:run`
-The seervice
 
 To use prod database
 `mvn spring-boot:run -Drun.profiles=prod`
