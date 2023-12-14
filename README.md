@@ -85,3 +85,8 @@ https://www.baeldung.com/kotlin-speek
 `username: admin@admin.com`
 `password: password`
 
+
+## PostgreSql:
+`hostname:hilflingdb`
+`username:hilfling`
+`password:password`
