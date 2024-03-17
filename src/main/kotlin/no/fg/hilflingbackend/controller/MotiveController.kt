@@ -34,6 +34,11 @@ class MotiveController {
     return repository.findAll(page ?: 0, pageSize ?: 100)
   }
 
+  @GetMapping("/getUuidByTitle")
+  fun getAlbumIdByName(@RequestParam("motiveTitle") motiveTitle: String): UUID? {
+      return repository.findUuidByMotive(motiveTitle)
+  }
+
   @PostMapping
   fun create(
     @RequestBody dto: MotiveDto

@@ -9,6 +9,9 @@ import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
+import org.springframework.web.bind.annotation.GetMapping
+import org.springframework.web.bind.annotation.RequestParam
+import java.util.UUID
 
 @RestController
 @RequestMapping("/albums")
@@ -22,5 +25,10 @@ class AlbumController(override val repository: AlbumRepository, val service: Alb
     return repository.create(
       dto
     )
+  }
+
+  @GetMapping("/getUuidByTitle")
+  fun getAlbumIdByName(@RequestParam("albumTitle") albumTitle: String): UUID? {
+      return repository.findUuidByMotive(albumTitle)
   }
 }
