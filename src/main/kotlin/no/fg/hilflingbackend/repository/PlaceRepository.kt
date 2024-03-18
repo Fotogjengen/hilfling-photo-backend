@@ -59,5 +59,4 @@ open class PlaceRepository(database: Database) : BaseRepository<Place, PlaceDto,
         )
     return place.id
   }
-
 }
