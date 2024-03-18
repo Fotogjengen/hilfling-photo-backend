@@ -47,7 +47,9 @@ open class AlbumRepository(database: Database) : BaseRepository<Album, AlbumDto,
 
   fun findUuidByMotive(title: String): UUID? {
     val motive = database.albums.find { it.title eq title }
-      ?: throw EntityNotFoundException("could not find motive title")
+      ?: throw EntityNotFoundException(
+        "could not find motive title"
+        )
     return motive.id
 }
 }

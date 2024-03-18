@@ -50,8 +50,12 @@ open class PlaceRepository(database: Database) : BaseRepository<Place, PlaceDto,
   }
 
   fun findUuidByPlace(name:String): UUID? {
-    val place = database.places.find {it.name eq name}
-      ?: throw EntityNotFoundException("could not find matching place")
+    val place = database.places.find {
+      it.name eq name
+    }
+      ?: throw EntityNotFoundException(
+        "could not find matching place"
+        )
     return place.id
   }
 

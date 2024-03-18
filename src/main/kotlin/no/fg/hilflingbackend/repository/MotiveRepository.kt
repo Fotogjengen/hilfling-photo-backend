@@ -79,8 +79,12 @@ open class MotiveRepository {
   }
 
   fun findUuidByMotive(motiveName:String): UUID? {
-    val motive = database.motives.find {it.title eq motiveName}
-      ?: throw EntityNotFoundException("could not find matching place")
+    val motive = database.motives.find {
+      it.title eq motiveName
+    }
+      ?: throw EntityNotFoundException(
+        "could not find matching place"
+        )
     return motive.id
   }
 }
