@@ -2,9 +2,6 @@ package no.fg.hilflingbackend.repository
 
 import me.liuwj.ktorm.database.Database
 import me.liuwj.ktorm.dsl.QueryRowSet
-import me.liuwj.ktorm.dsl.from
-import me.liuwj.ktorm.dsl.where
-import me.liuwj.ktorm.dsl.select
 import me.liuwj.ktorm.dsl.eq
 import me.liuwj.ktorm.entity.find
 import me.liuwj.ktorm.entity.add

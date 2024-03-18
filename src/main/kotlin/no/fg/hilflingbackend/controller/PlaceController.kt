@@ -18,7 +18,7 @@ open class PlaceController(override val repository: PlaceRepository) : BaseContr
     @RequestParam(
       "placeTitle",
     ) placeTitle: String,
-    ): UUID? {
+  ): UUID? {
     return repository.findUuidByPlace(placeTitle)
   }
 }
