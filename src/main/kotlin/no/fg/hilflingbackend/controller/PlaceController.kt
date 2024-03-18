@@ -13,13 +13,12 @@ import java.util.UUID
 @RestController
 @RequestMapping("/places")
 open class PlaceController(override val repository: PlaceRepository) : BaseController<Place, PlaceDto, PlacePatchRequestDto>(repository) {
-
     @GetMapping("/getUuidByTitle")
     fun getUuidByPlace(
         @RequestParam(
-            "placeTitle"
-            ) placeTitle: String
+            "placeTitle",
+            ) placeTitle: String,
     ): UUID? {
         return repository.findUuidByPlace(placeTitle)
-    }    
+    }
 }

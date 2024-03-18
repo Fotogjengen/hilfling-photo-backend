@@ -37,12 +37,11 @@ class MotiveController {
   @GetMapping("/getUuidByTitle")
   fun getAlbumIdByName(
     @RequestParam(
-      "motiveTitle"
-      ) motiveTitle: String
+      "motiveTitle",
+    ) motiveTitle: String,
   ): UUID? {
     return repository.findUuidByMotive(motiveTitle)
   }
-  
 
   @PostMapping
   fun create(
