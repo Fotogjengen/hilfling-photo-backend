@@ -29,9 +29,9 @@ class AlbumController(override val repository: AlbumRepository, val service: Alb
 
   @GetMapping("/getUuidByTitle")
   fun getAlbumIdByName(
-      @RequestParam("albumTitle") albumTitle: String
+    @RequestParam(
+      "albumTitle",) albumTitle: String
   ): UUID? {
-      return repository.findUuidByMotive(albumTitle)
+    return repository.findUuidByMotive(albumTitle)
   }
-  
 }

@@ -36,9 +36,10 @@ class MotiveController {
 
   @GetMapping("/getUuidByTitle")
   fun getAlbumIdByName(
-      @RequestParam("motiveTitle") motiveTitle: String
+    @RequestParam(
+      "motiveTitle",) motiveTitle: String
   ): UUID? {
-      return repository.findUuidByMotive(motiveTitle)
+    return repository.findUuidByMotive(motiveTitle)
   }
   
 
