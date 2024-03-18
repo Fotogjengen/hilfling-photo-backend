@@ -16,6 +16,7 @@ import no.fg.hilflingbackend.model.places
 import no.fg.hilflingbackend.model.toDto
 import org.springframework.stereotype.Repository
 import javax.persistence.EntityNotFoundException
+import java.util.UUID
 
 @Repository
 open class PlaceRepository(database: Database) : BaseRepository<Place, PlaceDto, PlacePatchRequestDto>(table = Places, database = database) {
@@ -46,5 +47,16 @@ open class PlaceRepository(database: Database) : BaseRepository<Place, PlaceDto,
     val updated = database.places.update(newDto.toEntity())
 
     return if (updated == 1) newDto else fromDb
+  }
+
+  fun findUuidByPlace(name: String): UUID? {
+    val place =
+      database.places.find {
+        it.name eq name
+      }
+        ?: throw EntityNotFoundException(
+          "could not find matching place",
+        )
+    return place.id
   }
 }

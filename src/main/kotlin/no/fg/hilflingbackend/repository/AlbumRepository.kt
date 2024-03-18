@@ -2,6 +2,8 @@ package no.fg.hilflingbackend.repository
 
 import me.liuwj.ktorm.database.Database
 import me.liuwj.ktorm.dsl.QueryRowSet
+import me.liuwj.ktorm.dsl.eq
+import me.liuwj.ktorm.entity.find
 import me.liuwj.ktorm.entity.add
 import me.liuwj.ktorm.entity.update
 import no.fg.hilflingbackend.dto.AlbumDto
@@ -13,6 +15,7 @@ import no.fg.hilflingbackend.model.Albums
 import no.fg.hilflingbackend.model.albums
 import org.springframework.stereotype.Repository
 import javax.persistence.EntityNotFoundException
+import java.util.UUID
 
 @Repository
 open class AlbumRepository(database: Database) : BaseRepository<Album, AlbumDto, AlbumPatchRequestDto>(table = Albums, database = database) {
@@ -37,5 +40,16 @@ open class AlbumRepository(database: Database) : BaseRepository<Album, AlbumDto,
     val updated = database.albums.update(newDto.toEntity())
 
     return if (updated == 1) newDto else fromDb
+  }
+
+  fun findUuidByMotive(title: String): UUID? {
+    val motive =
+      database.albums.find {
+        it.title eq title
+      }
+        ?: throw EntityNotFoundException(
+          "could not find motive title",
+        )
+    return motive.id
   }
 }
