@@ -182,8 +182,17 @@ CREATE TABLE ANALOG_PHOTO
     date_created DATE NOT NULL DEFAULT CURRENT_DATE,
     page_number  INTEGER,
     photo_id     UUID REFERENCES PHOTO (id),
-    date_deleted DATE DEFAULT NULL
+    date_deleted DATE DEFAULT NULL,
+    medium_id REFERENCES MEDIUM (id)
 );
+
+CREATE TABLE MEDIUM 
+(
+    id            UUID,
+    description   VARCHAR(30),
+    date_created  DATE NOT NULL DEFAULT CURRENT_DATE,
+    date_deleted  DATE DEFAULT NULL
+)
 
 
 CREATE TABLE ARTICLE_TAG_IN_ARTICLE
