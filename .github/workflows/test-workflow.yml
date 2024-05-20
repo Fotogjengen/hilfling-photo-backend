@@ -61,4 +61,4 @@ jobs:
             --registry-username ${{ secrets.ACR_USERNAME }} \
             --registry-password ${{ secrets.ACR_PASSWORD }} \
              --ip-address public \
-            --ports 80
+            --ports 8000
