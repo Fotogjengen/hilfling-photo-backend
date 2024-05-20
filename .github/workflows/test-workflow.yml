@@ -55,7 +55,7 @@ jobs:
         run: |
           az container create \
             --resource-group hilfling-backend_group \
-            --name hilfling-backend \
+            --name hilfling-backend2 \
             --image ${{ secrets.ACR_LOGIN_SERVER }}/hilfling-backend:${{ github.sha }} \
             --registry-login-server ${{ secrets.ACR_LOGIN_SERVER }} \
             --registry-username ${{ secrets.ACR_USERNAME }} \
