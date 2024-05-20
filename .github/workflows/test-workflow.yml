@@ -49,7 +49,7 @@ jobs:
 
       - name: Delete existing Azure Container Instance
         run: |
-          az container delete --resource-group hilfling-backend_group --name hilfling-backend --yes --no-wait
+          az container delete --resource-group hilfling-backend_group --name hilfling-backend --yes
 
       - name: Deploy to Azure Container Instance
         run: |
