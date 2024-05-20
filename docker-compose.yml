@@ -45,8 +45,8 @@ services:
     #   - traefik
     environment:
       SPRING_DATASOURCE_URL: jdbc:postgresql://hilflingdb.postgres.database.azure.com/hilflingdb-dev
-      SPRING_DATASOURCE_USERNAME: ${DATABASE_USERNAME:-Hilfling}
-      SPRING_DATASOURCE_PASSWORD: ${DATABASE_PASSWORD:-wBCJD3qZ7D1I}
+      SPRING_DATASOURCE_USERNAME: ${secrets.DATABASE_USERNAME:-Hilfling}
+      SPRING_DATASOURCE_PASSWORD: ${secrets.DATABASE_PASSWORD:-wBCJD3qZ7D1I}
     ports:
       - "8000:8000" # map port 8000 of the host to port 8080 of the container
     labels:

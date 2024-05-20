@@ -5,8 +5,8 @@ spring:
     hikari:
       connection-timeout: 20000
       maximum-pool-size: 5
-    username: ${DATABASE_USERNAME:Hilfling}
-    password: ${DATABASE_PASSWORD:wBCJD3qZ7D1I}
+    username: ${secrets.DATABASE_USERNAME:Hilfling}
+    password: ${secrets.DATABASE_PASSWORD:wBCJD3qZ7D1I}
 
   logging:
     level:
