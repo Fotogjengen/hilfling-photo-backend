@@ -15,9 +15,9 @@ spring:
     hikari:
       connection-timeout: 20000
       maximum-pool-size: 5
-    username: ${secrets.DATABASE_USERNAME:Hilfling}
+    username: ${secrets.DATABASE_USERNAME:hilfling}
     url: ${secrets.DATABASE_URL_DEV:jdbc:postgresql://hilflingdb.postgres.database.azure.com/hilflingdb-dev}
-    password: ${secrets.DATABASE_PASSWORD:wBCJD3qZ7D1I}
+    password: ${secrets.DATABASE_PASSWORD:password}
     driver-class-name: ${DATABASE_DRIVER:org.postgresql.Driver}
   logging:
     level:
