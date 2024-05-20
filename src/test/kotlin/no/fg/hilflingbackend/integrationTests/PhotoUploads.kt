@@ -1,3 +1,3 @@
-package no.fg.hilflingbackend.integrationTests
+// package no.fg.hilflingbackend.integrationTests
 
-class PhotoUploads
+// class PhotoUploads
