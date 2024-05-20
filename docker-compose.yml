@@ -7,32 +7,32 @@ networks:
   hilfling-network: # Used for internal networking
     driver: bridge
 
-volumes:
-  db-data: # Data volume for the database
+# volumes:
+#   db-data: # Data volume for the database
 
 services:
-  traefik:
-    image: "traefik:v2.10"
-    container_name: "traefik"
-    command:
-      #- "--log.level=DEBUG"
-      - "--api.insecure=true"
-      - "--providers.docker=true"
-      - "--providers.docker.exposedbydefault=false"
-      - "--entrypoints.web.address=:8000"
-      - "--entrypoints.websecure.address=:443"
-    ports:
-      - "8080:8080"
-      - "443:443"
-    volumes:
-      - "/var/run/docker.sock:/var/run/docker.sock:ro"
-    labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.traefik.rule=Host(`127.0.0.1`)"
-      - "traefik.http.routers.traefik.entrypoints=web"
-      - "traefik.http.routers.traefik.service=api@internal"
-      - "traefik.http.routers.traefik.middlewares=traefik-auth"
-      - "traefik.http.middlewares.traefik-auth.basicauth.users=user:$$2y$$05$$6m8MvyzgJ4Kl7/3rL4X6VurX1huMas8a7oPB3xRfBjFbGCR8MUi7W"
+  # traefik:
+  #   image: "traefik:v2.10"
+  #   container_name: "traefik"
+  #   command:
+  #     #- "--log.level=DEBUG"
+  #     - "--api.insecure=true"
+  #     - "--providers.docker=true"
+  #     - "--providers.docker.exposedbydefault=false"
+  #     - "--entrypoints.web.address=:8000"
+  #     - "--entrypoints.websecure.address=:443"
+  #   ports:
+  #     - "8080:8080"
+  #     - "443:443"
+  #   volumes:
+  #     - "/var/run/docker.sock:/var/run/docker.sock:ro"
+  #   labels:
+  #     - "traefik.enable=true"
+  #     - "traefik.http.routers.traefik.rule=Host(`127.0.0.1`)"
+  #     - "traefik.http.routers.traefik.entrypoints=web"
+  #     - "traefik.http.routers.traefik.service=api@internal"
+  #     - "traefik.http.routers.traefik.middlewares=traefik-auth"
+  #     - "traefik.http.middlewares.traefik-auth.basicauth.users=user:$$2y$$05$$6m8MvyzgJ4Kl7/3rL4X6VurX1huMas8a7oPB3xRfBjFbGCR8MUi7W"
 
   backend:
     container_name: backend
@@ -41,8 +41,8 @@ services:
       dockerfile: ./Dockerfile # specify the Dockerfile
     networks:
       - hilfling-network
-    depends_on:
-      - traefik
+    # depends_on:
+    #   - traefik
     environment:
       SPRING_DATASOURCE_URL: jdbc:postgresql://hilflingdb.postgres.database.azure.com/hilflingdb-dev
       SPRING_DATASOURCE_USERNAME: ${DATABASE_USERNAME:-Hilfling}
