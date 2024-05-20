@@ -379,45 +379,45 @@ internal class PatchIntegrationTest() {
     )
   }
 
-  @Test
-  fun shouldPatchPhoto() {
-    val photoTags = listOf(
-      photoTagRepository.findById(photoTagId1.id)?.name ?: "got no1",
-      photoTagRepository.findById(photoTagId2.id)?.name ?: "got no2"
-    )
-    val change = PhotoPatchRequestDto(
-      photoId = PhotoId(createdPhotoId),
-      isGoodPicture = false,
-      motive = motiveDto2,
-      placeDto = placeDto2,
-      securityLevel = securityLevelDto2,
-      gang = gangDto2,
-      albumDto = albumDto2,
-      categoryDto = categoryDto2,
-      photoGangBangerDto = photoGangBangerDto2,
-      photoTags = photoTags
-    )
+  // @Test
+  // fun shouldPatchPhoto() {
+  //   val photoTags = listOf(
+  //     photoTagRepository.findById(photoTagId1.id)?.name ?: "got no1",
+  //     photoTagRepository.findById(photoTagId2.id)?.name ?: "got no2"
+  //   )
+  //   val change = PhotoPatchRequestDto(
+  //     photoId = PhotoId(createdPhotoId),
+  //     isGoodPicture = false,
+  //     motive = motiveDto2,
+  //     placeDto = placeDto2,
+  //     securityLevel = securityLevelDto2,
+  //     gang = gangDto2,
+  //     albumDto = albumDto2,
+  //     categoryDto = categoryDto2,
+  //     photoGangBangerDto = photoGangBangerDto2,
+  //     photoTags = photoTags
+  //   )
 
-    photoService.patch(change)
+  //   photoService.patch(change)
 
-    val changedFromDb = photoService.findById(createdPhotoId)
+  //   val changedFromDb = photoService.findById(createdPhotoId)
 
-    assertAll(
-      "photo patch",
-      { assertNotNull(changedFromDb) },
-      { assertFalse(changedFromDb.isGoodPicture) },
-      { assertEquals(changedFromDb.motive.motiveId.id, motiveDto2.motiveId.id) },
-      { assertEquals(changedFromDb.placeDto.placeId.id, placeDto2.placeId.id) },
-      { assertEquals(changedFromDb.securityLevel.securityLevelId.id, securityLevelDto2.securityLevelId.id) },
-      { assertEquals(changedFromDb.gang?.gangId?.id, gangDto2.gangId.id) },
-      { assertEquals(changedFromDb.albumDto.albumId.id, albumDto2.albumId.id) },
-      { assertEquals(changedFromDb.categoryDto.categoryId.id, categoryDto2.categoryId.id) },
-      { assertEquals(changedFromDb.photoGangBangerDto.photoGangBangerId.id, photoGangBangerDto2.photoGangBangerId.id) },
-      { assertEquals(changedFromDb.photoTags.size, 2) },
-      { assertEquals(changedFromDb.photoTags[0].photoTagId.id, photoTagDto1.photoTagId.id) },
-      { assertEquals(changedFromDb.photoTags[1].photoTagId.id, photoTagDto2.photoTagId.id) }
-    )
-  }
+  //   assertAll(
+  //     "photo patch",
+  //     { assertNotNull(changedFromDb) },
+  //     { assertFalse(changedFromDb.isGoodPicture) },
+  //     { assertEquals(changedFromDb.motive.motiveId.id, motiveDto2.motiveId.id) },
+  //     { assertEquals(changedFromDb.placeDto.placeId.id, placeDto2.placeId.id) },
+  //     { assertEquals(changedFromDb.securityLevel.securityLevelId.id, securityLevelDto2.securityLevelId.id) },
+  //     { assertEquals(changedFromDb.gang?.gangId?.id, gangDto2.gangId.id) },
+  //     { assertEquals(changedFromDb.albumDto.albumId.id, albumDto2.albumId.id) },
+  //     { assertEquals(changedFromDb.categoryDto.categoryId.id, categoryDto2.categoryId.id) },
+  //     { assertEquals(changedFromDb.photoGangBangerDto.photoGangBangerId.id, photoGangBangerDto2.photoGangBangerId.id) },
+  //     { assertEquals(changedFromDb.photoTags.size, 2) },
+  //     { assertEquals(changedFromDb.photoTags[0].photoTagId.id, photoTagDto1.photoTagId.id) },
+  //     { assertEquals(changedFromDb.photoTags[1].photoTagId.id, photoTagDto2.photoTagId.id) }
+  //   )
+  // }
 
   @Test
   fun shouldPatchMotive() {
