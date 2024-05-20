@@ -40,9 +40,7 @@ jobs:
       - name: Azure CLI Login
         uses: azure/login@v2
         with:
-          azure-tenant-id: ${{ secrets.AZURE_TENANT_ID }}
-          azure-subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
-          azure-client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
 
       - name: Delete existing Azure Container Instance
         run: |
