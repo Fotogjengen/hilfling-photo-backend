@@ -1,12 +1,12 @@
 spring:
   datasource:
     driver-class-name: org.h2.Driver
-    url: ${secrets.DATABASE_URL_DEV:jdbc:postgresql://postgres:5432/hilflingdb}
+    url: ${secrets.HILFLINGDB_URL_DEV:jdbc:postgresql://postgres:5432/hilflingdb}
     hikari:
       connection-timeout: 20000
       maximum-pool-size: 5
-    username: ${secrets.DATABASE_USERNAME:hilfling}
-    password: ${secrets.DATABASE_PASSWORD:password}
+    username: ${secrets.HILFLINGDB_USERNAME:hilfling}
+    password: ${secrets.HILFLINGDB_PASSWORD:password}
 
   logging:
     level:
@@ -15,9 +15,9 @@ spring:
 
   flyway:
     driver-class-name: org.h2.Driver
-    url: ${secrets.DATABASE_URL_DEV:jdbc:postgresql://postgres:5432/hilflingdb}
-    user: ${secrets.DATABASE_USERNAME:hilfling}
-    password: ${secrets.DATABASE_PASSWORD:password}
+    url: ${secrets.HILFLINGDB_URL_DEV:jdbc:postgresql://postgres:5432/hilflingdb}
+    user: ${secrets.HILFLINGDB_USERNAME:hilfling}
+    password: ${secrets.HILFLINGDB_PASSWORD:password}
     enabled: true
     validate-on-migrate: true
     locations: classpath:/db/migration
