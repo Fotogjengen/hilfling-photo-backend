@@ -60,5 +60,4 @@ jobs:
             --registry-login-server ${{ secrets.ACR_LOGIN_SERVER }} \
             --registry-username ${{ secrets.ACR_USERNAME }} \
             --registry-password ${{ secrets.ACR_PASSWORD }} \
-            --dns-name-label hilfling-backend \
             --ports 80
