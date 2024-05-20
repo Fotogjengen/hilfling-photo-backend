@@ -29,17 +29,6 @@ spring:
       max-file-size: 50MB
       max-request-size: 60MB
 
-  azure:
-    tenant-id:
-    client:
-      client-id:
-      client-secret:
-    storage:
-      storage-id:
-      storage-endpoint:
-      container:
-      blob-storage:
-        connection-string: ${AZURE_STORAGE_CONNECTION_STRING:DefaultEndpointsProtocol=http;AccountName=devstoreaccount1;AccountKey=Eby8vdM02xNOcqFlqUwJPLlmEtlCDXJ1OUzFT50uSRZ6IFsuFq2UVErCz4I6tq/K1SZFPTOtr/KBHBeksoGMGw==;BlobEndpoint=http://127.0.0.1:10000/devstoreaccount1;QueueEndpoint=http://127.0.0.1:10001/devstoreaccount1;TableEndpoint=http://127.0.0.1:10002/devstoreaccount1;}
 file:
   large-upload-dir: photos/large/
   medium-upload-dir: photos/medium/

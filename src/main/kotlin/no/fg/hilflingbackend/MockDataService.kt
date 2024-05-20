@@ -1,9 +1,6 @@
 package no.fg.hilflingbackend
-
-import com.azure.storage.blob.models.PublicAccessType
 import me.liuwj.ktorm.database.Database
 import me.liuwj.ktorm.dsl.batchInsert
-import no.fg.hilflingbackend.blobStorage.AzureBlobStorage
 import no.fg.hilflingbackend.controller.PhotoController
 import no.fg.hilflingbackend.dto.AlbumDto
 import no.fg.hilflingbackend.dto.AlbumId
@@ -112,16 +109,6 @@ class MockDataService {
 
   @Autowired
   lateinit var photoRepository: PhotoRepository
-
-  @Autowired
-  lateinit var azureBlobStorage: AzureBlobStorage
-
-  fun initializeAzureBlobStorageContainers() {
-    listOf("alle", "fggjeng", "husfolk").forEach {
-      val containerClient = azureBlobStorage.blobServiceClient.createBlobContainer(it)
-      containerClient.setAccessPolicy(PublicAccessType.BLOB, null)
-    }
-  }
 
   fun generateSecurityLevelData(): List<SecurityLevelDto> =
     listOf(
@@ -449,7 +436,6 @@ class MockDataService {
         }
       }
     }
-    initializeAzureBlobStorageContainers()
     println("Photos Seeded")
   }
 }
