@@ -61,5 +61,6 @@ jobs:
             --registry-username ${{ secrets.ACR_USERNAME }} \
             --registry-password ${{ secrets.ACR_PASSWORD }} \
              --ip-address public \
+             --dns-name-label hilfling-backend2 \
             --ports 8000 \
             --environment-variables HILFLINGDB_USERNAME=${{ secrets.HILFLINGDB_USERNAME }} HILFLINGDB_URL_DEV=${{ secrets.HILFLINGDB_URL_DEV }} HILFLINGDB_PASSWORD=${{ secrets.HILFLINGDB_PASSWORD }}
