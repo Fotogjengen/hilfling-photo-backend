@@ -68,3 +68,20 @@ jobs:
               --ports 8000 \
               --environment-variables HILFLINGDB_USERNAME=${{ secrets.HILFLINGDB_USERNAME }} HILFLINGDB_URL_DEV=${{ secrets.HILFLINGDB_URL_DEV }} HILFLINGDB_PASSWORD=${{ secrets.HILFLINGDB_PASSWORD }}
           done
+
+      - name: Deploy Traefik container
+        run: |
+          az container create \
+            --resource-group hilfling-backend_group \
+            --name traefik \
+            --image traefik:v2.10 \
+            --ip-address public \
+            --dns-name-label hilfling-traefik \
+            --ports 8080 \
+            --environment-variables \
+              "TRAEFIK_API=true" \
+              "TRAEFIK_API_DASHBOARD=true" \
+              "TRAEFIK_ENTRYPOINTS_HTTP_ADDRESS=:8080" \
+              "TRAEFIK_PROVIDERS_DOCKER=true" \
+            --volume-mounts \
+              "source=traefik-config,target=/etc/traefik"

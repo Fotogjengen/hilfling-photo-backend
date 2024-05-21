@@ -1,0 +1,16 @@
+http:
+  routers:
+    backend:
+      rule: "Host(`backend.localhost`)"
+      service: backend-service
+      entryPoints:
+        - web
+
+  services:
+    backend-service:
+      loadBalancer:
+        servers:
+          - url: "http://hilfling-backend1:8000"
+          - url: "http://hilfling-backend2:8000"
+          - url: "http://hilfling-backend3:8000"
+          - url: "http://hilfling-backend4:8000"
