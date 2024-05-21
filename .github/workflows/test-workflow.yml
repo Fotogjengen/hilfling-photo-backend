@@ -47,13 +47,11 @@ jobs:
         with:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
 
-      - name: Delete existing Azure Container Instances
+      - name: Delete existing Azure Container Instance
         run: |
-          for i in 1 2 3 4; do
-            az container delete --resource-group hilfling-backend_group --name hilfling-backend$i --yes || true
-          done
+          az container delete --resource-group hilfling-backend_group --name hilfling-backend2 --yes
 
-      - name: Deploy hilfling-backend1 to Azure Container Instance
+      - name: Deploy to Azure Container Instance
         run: |
           az container create \
             --resource-group hilfling-backend_group \
@@ -62,13 +60,11 @@ jobs:
             --registry-login-server ${{ secrets.ACR_LOGIN_SERVER }} \
             --registry-username ${{ secrets.ACR_USERNAME }} \
             --registry-password ${{ secrets.ACR_PASSWORD }} \
-            --ip-address public \
-            --dns-name-label hilfling-backend1 \
+             --ip-address public \
+             --dns-name-label hilfling-backend1 \
             --ports 8000 \
             --environment-variables HILFLINGDB_USERNAME=${{ secrets.HILFLINGDB_USERNAME }} HILFLINGDB_URL_DEV=${{ secrets.HILFLINGDB_URL_DEV }} HILFLINGDB_PASSWORD=${{ secrets.HILFLINGDB_PASSWORD }}
 
-      - name: Deploy hilfling-backend2 to Azure Container Instance
-        run: |
           az container create \
             --resource-group hilfling-backend_group \
             --name hilfling-backend2 \
@@ -76,13 +72,11 @@ jobs:
             --registry-login-server ${{ secrets.ACR_LOGIN_SERVER }} \
             --registry-username ${{ secrets.ACR_USERNAME }} \
             --registry-password ${{ secrets.ACR_PASSWORD }} \
-            --ip-address public \
-            --dns-name-label hilfling-backend2 \
+             --ip-address public \
+             --dns-name-label hilfling-backend2 \
             --ports 8000 \
             --environment-variables HILFLINGDB_USERNAME=${{ secrets.HILFLINGDB_USERNAME }} HILFLINGDB_URL_DEV=${{ secrets.HILFLINGDB_URL_DEV }} HILFLINGDB_PASSWORD=${{ secrets.HILFLINGDB_PASSWORD }}
 
-      - name: Deploy hilfling-backend3 to Azure Container Instance
-        run: |
           az container create \
             --resource-group hilfling-backend_group \
             --name hilfling-backend3 \
@@ -90,13 +84,11 @@ jobs:
             --registry-login-server ${{ secrets.ACR_LOGIN_SERVER }} \
             --registry-username ${{ secrets.ACR_USERNAME }} \
             --registry-password ${{ secrets.ACR_PASSWORD }} \
-            --ip-address public \
-            --dns-name-label hilfling-backend3 \
+             --ip-address public \
+             --dns-name-label hilfling-backend3 \
             --ports 8000 \
             --environment-variables HILFLINGDB_USERNAME=${{ secrets.HILFLINGDB_USERNAME }} HILFLINGDB_URL_DEV=${{ secrets.HILFLINGDB_URL_DEV }} HILFLINGDB_PASSWORD=${{ secrets.HILFLINGDB_PASSWORD }}
 
-      - name: Deploy hilfling-backend4 to Azure Container Instance
-        run: |
           az container create \
             --resource-group hilfling-backend_group \
             --name hilfling-backend4 \
@@ -104,7 +96,7 @@ jobs:
             --registry-login-server ${{ secrets.ACR_LOGIN_SERVER }} \
             --registry-username ${{ secrets.ACR_USERNAME }} \
             --registry-password ${{ secrets.ACR_PASSWORD }} \
-            --ip-address public \
-            --dns-name-label hilfling-backend4 \
+             --ip-address public \
+             --dns-name-label hilfling-backend4 \
             --ports 8000 \
             --environment-variables HILFLINGDB_USERNAME=${{ secrets.HILFLINGDB_USERNAME }} HILFLINGDB_URL_DEV=${{ secrets.HILFLINGDB_URL_DEV }} HILFLINGDB_PASSWORD=${{ secrets.HILFLINGDB_PASSWORD }}
