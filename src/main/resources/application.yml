@@ -15,9 +15,9 @@ spring:
     hikari:
       connection-timeout: 20000
       maximum-pool-size: 5
-    username: ${secrets.HILFLINGDB_USERNAME:hilfling}
-    url: ${secrets.HILFLINGDB_URL_DEV:jdbc:postgresql://hilflingdb.postgres.database.azure.com/hilflingdb-dev}
-    password: ${secrets.HILFLINGDB_PASSWORD:password}
+    username: ${HILFLINGDB_USERNAME:hilfling}
+    url: ${HILFLINGDB_URL_DEV:jdbc:jdbc:postgresql://postgres:5432/hilflingdb}
+    password: ${HILFLINGDB_PASSWORD:password}
     driver-class-name: ${DATABASE_DRIVER:org.postgresql.Driver}
   logging:
     level:
@@ -25,9 +25,9 @@ spring:
       me.liuwj.ktorm: debug
       org.springframework.web: DEBUG
   flyway:
-    user: ${secrets.HILFLINGDB_USERNAME:Hilfling}
-    url: ${secrets.HILFLINGDB_URL_DEV:jdbc:postgresql://hilflingdb.postgres.database.azure.com/hilflingdb-dev}
-    password: ${HILFLINGDB_PASSWORD:wBCJD3qZ7D1I}
+    user: ${HILFLINGDB_USERNAME:hilfling}
+    url: ${HILFLINGDB_URL_DEV:jdbc:jdbc:postgresql://postgres:5432/hilflingdb}
+    password: ${HILFLINGDB_PASSWORD:password}
     enabled: true
     validate-on-migrate: true
     locations: classpath:/db/migration
