@@ -26,10 +26,15 @@ services:
       - "443:443"
     volumes:
       - "/var/run/docker.sock:/var/run/docker.sock:ro"
-      - "./traefik:/etc/traefik"
+    loadBalancer:
+      servers:
+        - url: "http://hilfling-backend1.norwayeast.azurecontainer.io:8000"
+        - url: "http://hilfling-backend2.norwayeast.azurecontainer.io:8000"
+        - url: "http://hilfling-backend3.norwayeast.azurecontainer.io:8000"
+        - url: "http://hilfling-backend4.norwayeast.azurecontainer.io:8000"
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.traefik.rule=Host(`127.0.0.1`)"
+      - "traefik.http.routers.traefik.rule=Host(`http://hilfling-traefik.norwayeast.azurecontainer.io`)"
       - "traefik.http.routers.traefik.entrypoints=web"
       - "traefik.http.routers.traefik.service=api@internal"
       - "traefik.http.routers.traefik.middlewares=traefik-auth"

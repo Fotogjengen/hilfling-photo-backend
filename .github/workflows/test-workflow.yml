@@ -82,6 +82,4 @@ jobs:
               "TRAEFIK_API=true" \
               "TRAEFIK_API_DASHBOARD=true" \
               "TRAEFIK_ENTRYPOINTS_HTTP_ADDRESS=:8080" \
-              "TRAEFIK_PROVIDERS_DOCKER=true" \
-            --volume-mounts \
-              "source=traefik-config,target=/etc/traefik"
+              "TRAEFIK_PROVIDERS_DOCKER=true"
