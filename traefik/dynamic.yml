@@ -1,7 +1,7 @@
 http:
   routers:
     traefik-router:
-      rule: "Host(`hilfling-traefik.norwayeast.azurecontainer.io`)"
+      rule: "Host(`127.0.0.1`)"
       service: api@internal
       entryPoints:
         - web

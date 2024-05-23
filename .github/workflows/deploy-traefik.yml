@@ -51,3 +51,9 @@ jobs:
             --ip-address public \
             --dns-name-label hilfling-traefik \
             --ports 8080 8000 443 \
+            --labels "traefik.enable=true"\
+            --labels "traefik.http.routers.traefik.rule=Host(`127.0.0.1`)"\
+            --labels "traefik.http.routers.traefik.entrypoints=web"\
+            --labels "traefik.http.routers.traefik.service=api@internal"\
+            --labels "traefik.http.routers.traefik.middlewares=traefik-auth"\
+            --labels "traefik.http.middlewares.traefik-auth.basicauth.users=user:$$2y$$05$$6m8MvyzgJ4Kl7/3rL4X6VurX1huMas8a7oPB3xRfBjFbGCR8MUi7W"\

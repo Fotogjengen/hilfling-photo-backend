@@ -1,0 +1,24 @@
+{
+  "Account": {
+    "Email": "your_email@example.com",
+    "Registration": {
+      "body": {
+        "status": "valid",
+        "contact": ["mailto:your_email@example.com"]
+      },
+      "uri": "https://acme-v02.api.letsencrypt.org/acme/acct/12345678"
+    },
+    "PrivateKey": "-----BEGIN EC PRIVATE KEY-----\nMIIBAAAA...==\n-----END EC PRIVATE KEY-----",
+    "KeyType": "EC256"
+  },
+  "Certificates": [
+    {
+      "Domain": {
+        "Main": "example.com",
+        "SANs": ["www.example.com"]
+      },
+      "Certificate": "-----BEGIN CERTIFICATE-----\nMIIBdzCCAR6gAwIBAgIUf6UpFX...==\n-----END CERTIFICATE-----",
+      "Key": "-----BEGIN RSA PRIVATE KEY-----\nMIIEowIBAAKCAQEAgXl8Kvm6L...==\n-----END RSA PRIVATE KEY-----"
+    }
+  ]
+}

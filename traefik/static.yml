@@ -1,44 +1,23 @@
-global:
-  checkNewVersion: true
-  sendAnonymousUsage: false
-serversTransport:
-  insecureSkipVerify: true
-
-entryPoints:
-  http:
-    address: :80
-    http:
-      redirections:
-      entryPoint:
-        to: https
-        scheme: https
-
-  https:
-    address: :443
-    http:
-      tls:
-        certResolver: letsencrypt
-        domains:
-          - main: yourdomain.com
-            sans:
-              - "*.yourdomain.com"
-      middlewares:
-        - securityHeaders@file
+# Static configuration for Traefik
 
 api:
   dashboard: true
 
+entryPoints:
+  web:
+    address: ":80"
+  websecure:
+    address: ":443"
+
 providers:
-  providersThrottleDuration: 2s
-
   file:
-    filename: /etc/traefik/dynamic.yml
+    directory: /etc/traefik/dynamic
     watch: true
 
-  docker:
-    watch: true
-    network: proxy
-
-    defaultRule: "Host(`{{ lower (trimprefix `/` .Name)}}yourdomain.com`)"
-    swarmModeRefreshSeconds: 15s
-    exposedByDefault: false
+certificatesResolvers:
+  mytlschallenge:
+    acme:
+      email: your_email@example.com
+      storage: acme.json
+      httpChallenge:
+        entryPoint: web
