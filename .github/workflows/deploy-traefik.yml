@@ -1,0 +1,7 @@
+name: Build and deploy Traefik app to Azure Container Instance - hilfling-backend
+
+on:
+  push:
+    branches:
+      - master
+  workflow_dispatch:
