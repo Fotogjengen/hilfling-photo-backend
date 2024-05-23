@@ -84,6 +84,9 @@ jobs:
             --resource-group hilfling-backend_group \
             --name traefik \
             --image ${{ secrets.ACR_LOGIN_SERVER }}/my-traefik:${{ github.sha }} \
+            --registry-login-server ${{ secrets.ACR_LOGIN_SERVER }} \
+            --registry-username ${{ secrets.ACR_USERNAME }} \
+            --registry-password ${{ secrets.ACR_PASSWORD }} \
             --ip-address public \
             --dns-name-label hilfling-traefik \
             --ports 8080 443 \
