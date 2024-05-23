@@ -89,5 +89,5 @@ jobs:
             --registry-password ${{ secrets.ACR_PASSWORD }} \
             --ip-address public \
             --dns-name-label hilfling-traefik \
-            --ports 8080 443 \
+            --ports 8080 8081 443 \
             --environment-variables TRAEFIK_API=true TRAEFIK_API_DASHBOARD=true TRAEFIK_ENTRYPOINTS_HTTP_ADDRESS=:8080 TRAEFIK_ENTRYPOINTS_HTTPS_ADDRESS=:443 TRAEFIK_PROVIDERS_DOCKER=true
