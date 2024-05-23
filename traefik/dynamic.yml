@@ -4,7 +4,10 @@ http:
       rule: "Host(`hilfling-traefik.norwayeast.azurecontainer.io`)"
       service: backend-service
       entryPoints:
-        - web
+        web:
+          address: :8000
+        websecure:
+          address: :443
 
   services:
     backend-service:
