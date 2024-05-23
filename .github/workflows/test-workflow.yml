@@ -43,7 +43,7 @@ jobs:
 
       - name: Push Docker Traefik image to Azure Container Registry
         run: |
-          docker tag my-traefik:${{ github.sha }} ${{ secrets.ACR_LOGIN_SERVER }}/my-traefik:${{ github.sha }}
+          docker tag hilfling-traefik:${{ github.sha }} ${{ secrets.ACR_LOGIN_SERVER }}/my-traefik:${{ github.sha }}
           docker push ${{ secrets.ACR_LOGIN_SERVER }}/my-traefik:${{ github.sha }}
 
   deploy:
