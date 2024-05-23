@@ -1,0 +1,70 @@
+name: Build and deploy JAR app to Azure Container Instance - hilfling-backend
+
+on:
+  push:
+    branches:
+      - master
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Java version
+        uses: actions/setup-java@v1
+        with:
+          java-version: "11"
+
+      - name: Build with Maven
+        run: mvn clean install
+
+      - name: Build Docker backend image
+        run: |
+          docker build -t hilfling-backend:${{ github.sha }} .
+
+      - name: Log in to Azure Container Registry
+        uses: azure/docker-login@v1
+        with:
+          login-server: ${{ secrets.ACR_LOGIN_SERVER }}
+          username: ${{ secrets.ACR_USERNAME }}
+          password: ${{ secrets.ACR_PASSWORD }}
+
+      - name: Push Docker backend image to Azure Container Registry
+        run: |
+          docker tag hilfling-backend:${{ github.sha }} ${{ secrets.ACR_LOGIN_SERVER }}/hilfling-backend:${{ github.sha }}
+          docker push ${{ secrets.ACR_LOGIN_SERVER }}/hilfling-backend:${{ github.sha }}
+
+  deploy:
+    runs-on: ubuntu-latest
+    needs: build
+
+    steps:
+      - name: Azure CLI Login
+        uses: azure/login@v2
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+      - name: Delete existing Azure Container Instances
+        run: |
+          for i in {1..4}; do
+            az container delete --resource-group hilfling-backend_group --name hilfling-backend$i --yes || true
+          done
+
+      - name: Deploy to Azure Container Instances
+        run: |
+          for i in {1..4}; do
+            az container create \
+              --resource-group hilfling-backend_group \
+              --name hilfling-backend$i \
+              --image ${{ secrets.ACR_LOGIN_SERVER }}/hilfling-backend:${{ github.sha }} \
+              --registry-login-server ${{ secrets.ACR_LOGIN_SERVER }} \
+              --registry-username ${{ secrets.ACR_USERNAME }} \
+              --registry-password ${{ secrets.ACR_PASSWORD }} \
+              --ip-address public \
+              --dns-name-label hilfling-backend$i \
+              --ports 8000 \
+              --environment-variables HILFLINGDB_USERNAME=${{ secrets.HILFLINGDB_USERNAME }} HILFLINGDB_URL_DEV=${{ secrets.HILFLINGDB_URL_DEV }} HILFLINGDB_PASSWORD=${{ secrets.HILFLINGDB_PASSWORD }}
+          done

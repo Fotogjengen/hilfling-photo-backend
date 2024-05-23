@@ -1,10 +1,18 @@
 http:
   routers:
-    backend-router:
-      rule: Host(`localhost`) && (PathPrefix(`/dashboard`) || PathPrefix(`/api`))
+    traefik-router:
+      rule: "Host(`hilfling-traefik.norwayeast.azurecontainer.io`)"
       service: api@internal
       entryPoints:
         - web
+      middlewares:
+        - traefik-auth
+
+  middlewares:
+    traefik-auth:
+      basicAuth:
+        users:
+          - "user:$$2y$$05$$6m8MvyzgJ4Kl7/3rL4X6VurX1huMas8a7oPB3xRfBjFbGCR8MUi7W"
 
   services:
     backend-service:
