@@ -177,7 +177,7 @@
 		<dependency>
 			<groupId>org.jetbrains.kotlin</groupId>
 			<artifactId>kotlin-stdlib</artifactId>
-			<version>1.6.10</version>
+			<version>${kotlin.version}</version>
 		</dependency>
         <dependency>
             <groupId>org.springframework</groupId>
@@ -224,10 +224,12 @@
 			<plugin>
 				<groupId>org.jetbrains.kotlin</groupId>
 				<artifactId>kotlin-maven-plugin</artifactId>
+				<version>${kotlin.version}</version>
 			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
+				<version>3.10.1</version>
 				<executions>
 					<execution>
 						<id>compile</id>
@@ -340,5 +342,4 @@
 			</plugin>
 		</plugins>
 	</build>
-
 </project>
