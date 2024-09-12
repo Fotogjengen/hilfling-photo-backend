@@ -26,17 +26,19 @@ interface SamfundetUser : BaseModel<SamfundetUser> {
 
   var securityLevel: SecurityLevel
 }
-fun SamfundetUser.toDto() = SamfundetUserDto(
-  samfundetUserId = SamfundetUserId(this.id),
-  firstName = this.firstName,
-  lastName = this.lastName,
-  username = this.username,
-  email = Email(this.email),
-  profilePicturePath = this.profilePicture,
-  phoneNumber = PhoneNumber(this.phoneNumber),
-  securityLevel = this.securityLevel.toDto(),
-  sex = this.sex
-)
+
+fun SamfundetUser.toDto() =
+        SamfundetUserDto(
+                samfundetUserId = SamfundetUserId(this.id),
+                firstName = this.firstName,
+                lastName = this.lastName,
+                username = this.username,
+                email = Email(this.email),
+                profilePicturePath = this.profilePicture,
+                phoneNumber = PhoneNumber(this.phoneNumber),
+                securityLevel = this.securityLevel.toDto(),
+                sex = this.sex
+        )
 
 object SamfundetUsers : BaseTable<SamfundetUser>("samfundet_user") {
   val firstName = varchar("first_name").bindTo { it.firstName }
@@ -52,4 +54,5 @@ object SamfundetUsers : BaseTable<SamfundetUser>("samfundet_user") {
   val securityLevelId = uuid("security_level_id").references(SecurityLevels) { it.securityLevel }
 }
 
-val Database.samfundet_users get() = this.sequenceOf(SamfundetUsers)
+val Database.samfundet_users
+  get() = this.sequenceOf(SamfundetUsers)
