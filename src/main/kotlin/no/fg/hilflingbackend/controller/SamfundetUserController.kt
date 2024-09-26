@@ -10,8 +10,8 @@ import org.springframework.web.bind.annotation.RestController
 @RestController
 @RequestMapping("/users")
 open class SamfundetUserController(
-  override val repository: SamfundetUserRepository
-  ) : BaseController<SamfundetUser, SamfundetUserDto, SamfundetUserPatchRequestDto>(repository)
+  override val repository: SamfundetUserRepository,
+) : BaseController<SamfundetUser, SamfundetUserDto, SamfundetUserPatchRequestDto>(repository)
 
 // class SamfundetUserController {
 //     @Autowired lateinit var repository: SamfundetUserRepository

@@ -19,10 +19,12 @@ import no.fg.hilflingbackend.value_object.PhoneNumber
 import org.springframework.stereotype.Repository
 
 @Repository
-open class SamfundetUserRepository(database: Database) :
+open class SamfundetUserRepository(
+        database: Database
+        ) :
         BaseRepository<SamfundetUser, SamfundetUserDto, SamfundetUserPatchRequestDto>(
-                table = SamfundetUsers,
-                database = database
+          table = SamfundetUsers,
+          database = database
         ) {
 
         override fun convertToClass(qrs: QueryRowSet): SamfundetUserDto =
