@@ -1,31 +1,32 @@
 package no.fg.hilflingbackend.repository
 
 import javax.persistence.EntityNotFoundException
+import javax.sql.DataSource
+import kotlin.reflect.KClass
+
 import me.liuwj.ktorm.database.Database
 import me.liuwj.ktorm.dsl.QueryRowSet
 import me.liuwj.ktorm.entity.add
 import me.liuwj.ktorm.entity.update
+import me.liuwj.ktorm.entity.find
+
 import no.fg.hilflingbackend.dto.SamfundetUserDto
 import no.fg.hilflingbackend.dto.SamfundetUserId
 import no.fg.hilflingbackend.dto.SamfundetUserPatchRequestDto
-import no.fg.hilflingbackend.dto.SecurityLevelDto
-import no.fg.hilflingbackend.dto.SecurityLevelId
-import no.fg.hilflingbackend.dto.toEntity
 import no.fg.hilflingbackend.model.SamfundetUser
 import no.fg.hilflingbackend.model.SamfundetUsers
-import no.fg.hilflingbackend.model.samfundet_users
 import no.fg.hilflingbackend.value_object.Email
 import no.fg.hilflingbackend.value_object.PhoneNumber
+
 import org.springframework.stereotype.Repository
 
 @Repository
 open class SamfundetUserRepository(
   database: Database,
-) :
-  BaseRepository<SamfundetUser, SamfundetUserDto, SamfundetUserPatchRequestDto>(
-    table = SamfundetUsers,
-    database = database,        
-   ) {
+) : BaseRepository<SamfundetUser, SamfundetUserDto, SamfundetUserPatchRequestDto>(
+      table = SamfundetUsers,
+      database = database,
+    ) {
 
   override fun convertToClass(qrs: QueryRowSet): SamfundetUserDto =
     SamfundetUserDto(
@@ -46,9 +47,7 @@ open class SamfundetUserRepository(
         ),
     )
 
-  override fun create(dto: SamfundetUserDto): Int {
-    return database.samfundet_users.add(dto.toEntity())
-  }
+    override fun create(dto: SamfundetUserDto): Int = database.samfundet_users.add(dto.toEntity())      
 
   override fun patch(dto: SamfundetUserPatchRequestDto): SamfundetUserDto {
     val fromDb =
@@ -62,13 +61,13 @@ open class SamfundetUserRepository(
         username = dto.username ?: fromDb.username,
         phoneNumber = dto.phoneNumber ?: fromDb.phoneNumber,
         email = dto.email ?: fromDb.email,
-        profilePicturePath = dto.profilePicturePath
-          ?: fromDb.profilePicturePath,
+        profilePicturePath = 
+          dto.profilePicturePath ?: fromDb.profilePicturePath,
         sex = dto.sex ?: fromDb.sex,
         securityLevel = dto.securityLevel ?: fromDb.securityLevel,
      )
     val updated = database.samfundet_users.update(newDto.toEntity())
-    return if (updated == 1) newDto else fromDb
+     return if (updated == 1) newDto else fromDb
   }
 }
 
