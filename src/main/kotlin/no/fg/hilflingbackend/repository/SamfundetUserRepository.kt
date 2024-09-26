@@ -1,6 +1,5 @@
 package no.fg.hilflingbackend.repository
 
-import javax.persistence.EntityNotFoundException
 import me.liuwj.ktorm.database.Database
 import me.liuwj.ktorm.dsl.QueryRowSet
 import me.liuwj.ktorm.entity.add
@@ -14,6 +13,7 @@ import no.fg.hilflingbackend.model.SamfundetUsers
 import no.fg.hilflingbackend.value_object.Email
 import no.fg.hilflingbackend.value_object.PhoneNumber
 import org.springframework.stereotype.Repository
+import javax.persistence.EntityNotFoundException
 
 @Repository
 open class SamfundetUserRepository(
