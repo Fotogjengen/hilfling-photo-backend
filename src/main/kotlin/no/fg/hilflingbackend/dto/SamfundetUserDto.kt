@@ -48,6 +48,6 @@ fun SamfundetUserDto.toEntity(): SamfundetUser {
 
 data class SamfundetUserId(
   override val id: UUID = UUID.randomUUID(),
-  ) : UuidId {
+) : UuidId {
   override fun toString(): String = id.toString()
 }

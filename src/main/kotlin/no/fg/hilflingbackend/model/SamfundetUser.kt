@@ -37,7 +37,7 @@ fun SamfundetUser.toDto() =
   profilePicturePath = this.profilePicture,
   phoneNumber = PhoneNumber(this.phoneNumber),
   securityLevel = this.securityLevel.toDto(),
-  sex = this.sex,
+    sex = this.sex,
   )
 
 object SamfundetUsers : BaseTable<SamfundetUser>("samfundet_user") {
