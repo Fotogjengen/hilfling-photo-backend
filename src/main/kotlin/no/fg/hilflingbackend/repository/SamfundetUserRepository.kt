@@ -8,8 +8,12 @@ import me.liuwj.ktorm.entity.find
 import no.fg.hilflingbackend.dto.SamfundetUserDto
 import no.fg.hilflingbackend.dto.SamfundetUserId
 import no.fg.hilflingbackend.dto.SamfundetUserPatchRequestDto
+import no.fg.hilflingbackend.dto.SecurityLevelDto
+import no.fg.hilflingbackend.dto.SecurityLevelId
+import no.fg.hilflingbackend.dto.toEntity
 import no.fg.hilflingbackend.model.SamfundetUser
 import no.fg.hilflingbackend.model.SamfundetUsers
+import no.fg.hilflingbackend.model.samfundet_users
 import no.fg.hilflingbackend.value_object.Email
 import no.fg.hilflingbackend.value_object.PhoneNumber
 import org.springframework.stereotype.Repository
