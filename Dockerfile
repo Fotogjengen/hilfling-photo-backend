@@ -1,6 +1,9 @@
 # Stage 1: Build the project
 
-FROM maven:3.6.3-jdk-11-slim AS MAVEN_BUILD
+FROM openjdk:21-slim AS MAVEN_BUILD
+
+# Install Maven
+RUN apt-get update && apt-get install -y maven
 
 # Tomcat creates a working dir at /tmp by default. Might be optional
 VOLUME /tmp
@@ -11,8 +14,7 @@ RUN mvn package -DskipTests=true
 RUN ls /build/target
 
 # Stage 2: prepare launch environment
-FROM alpine:3.18.4
-RUN apk --no-cache add openjdk11
+FROM openjdk:21-slim
 # Running with user privileges helts to migate some risks: This is currently disabled bacause
 # The application did not have enough privileges to save images to disk
 #RUN addgroup -S spring && adduser -S spring -G spring
