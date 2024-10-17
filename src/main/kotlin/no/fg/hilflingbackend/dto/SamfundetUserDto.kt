@@ -14,7 +14,7 @@ data class SamfundetUserPatchRequestDto(
   val email: Email?,
   val profilePicturePath: String?,
   val sex: String?,
-  val securityLevel: SecurityLevelDto?
+  val securityLevel: SecurityLevelDto?,
 )
 
 data class SamfundetUserDto(
@@ -27,7 +27,7 @@ data class SamfundetUserDto(
   // TODO: Rename SQL-scheme and interface to match this variablename
   val profilePicturePath: String,
   val sex: String,
-  val securityLevel: SecurityLevelDto
+  val securityLevel: SecurityLevelDto,
 )
 
 // Extend Dto object with a converter to ktorm interface
@@ -40,7 +40,6 @@ fun SamfundetUserDto.toEntity(): SamfundetUser {
     lastName = dto.lastName
     username = dto.username
     phoneNumber = dto.phoneNumber.value
-    email = dto.email.value
     sex = dto.sex
     securityLevel = dto.securityLevel.toEntity()
     profilePicture = dto.profilePicturePath
@@ -48,7 +47,7 @@ fun SamfundetUserDto.toEntity(): SamfundetUser {
 }
 
 data class SamfundetUserId(
-  override val id: UUID = UUID.randomUUID()
+  override val id: UUID = UUID.randomUUID(),
 ) : UuidId {
   override fun toString(): String = id.toString()
 }
