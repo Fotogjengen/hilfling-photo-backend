@@ -18,7 +18,7 @@ import no.fg.hilflingbackend.model.photo_tag_references
 import no.fg.hilflingbackend.model.photo_tags
 import no.fg.hilflingbackend.model.toDto
 import org.springframework.stereotype.Repository
-import javax.persistence.EntityNotFoundException
+import jakarta.persistence.EntityNotFoundException
 
 @Repository
 open class PhotoTagRepository(database: Database) : BaseRepository<PhotoTag, PhotoTagDto, PhotoTagPatchRequestDto>(table = PhotoTags, database = database) {

@@ -7,7 +7,7 @@ import java.nio.file.Paths
 
 fun convertToValidFolderName(folderNameString: String): String {
   return folderNameString
-    .toLowerCase()
+    .lowercase()
     .replace("æ", "ae", ignoreCase = true)
     .replace("ø", "oe", ignoreCase = true)
     .replace("å", "aa", ignoreCase = true)

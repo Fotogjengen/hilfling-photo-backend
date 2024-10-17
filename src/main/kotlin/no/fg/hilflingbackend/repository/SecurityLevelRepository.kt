@@ -12,7 +12,7 @@ import no.fg.hilflingbackend.model.SecurityLevels
 import no.fg.hilflingbackend.model.security_levels
 import no.fg.hilflingbackend.value_object.SecurityLevelType
 import org.springframework.stereotype.Repository
-import javax.persistence.EntityNotFoundException
+import jakarta.persistence.EntityNotFoundException
 
 @Repository
 open class SecurityLevelRepository(database: Database) : BaseRepository<SecurityLevel, SecurityLevelDto, SecurityLevelPatchRequestDto>(table = SecurityLevels, database = database) {

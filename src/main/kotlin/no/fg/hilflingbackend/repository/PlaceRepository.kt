@@ -15,7 +15,7 @@ import no.fg.hilflingbackend.model.Places
 import no.fg.hilflingbackend.model.places
 import no.fg.hilflingbackend.model.toDto
 import org.springframework.stereotype.Repository
-import javax.persistence.EntityNotFoundException
+import jakarta.persistence.EntityNotFoundException
 
 @Repository
 open class PlaceRepository(database: Database) : BaseRepository<Place, PlaceDto, PlacePatchRequestDto>(table = Places, database = database) {

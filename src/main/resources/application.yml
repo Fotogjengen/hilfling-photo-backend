@@ -24,6 +24,7 @@ spring:
       root: debug
       me.liuwj.ktorm: debug
       org.springframework.web: DEBUG
+      org.springdoc: DEBUG
   flyway:
     user: ${DATABASE_USERNAME:hilfling}
     url: ${DATABASE_URL:jdbc:postgresql://postgres:5432/hilflingdb?createDatabaseIfNotExist=true}
@@ -33,6 +34,7 @@ spring:
     locations: classpath:/db/migration
 
   servlet:
+    context-path: "/${spring.application.api-version}"
     multipart:
       enabled: true # Enable multipart uploads (files)
       file-size-threshold: 2KB
@@ -53,10 +55,11 @@ spring:
 
 springdoc:
   api-docs:
-    #path: "/"
+    path: "/v3/api-docs"
     enabled: true
   swagger-ui:
     path: "/"
+    enabled: true
 
 # Doesn't currently work?
 static-files:

@@ -15,7 +15,7 @@ import no.fg.hilflingbackend.model.Category
 import no.fg.hilflingbackend.model.categories
 import no.fg.hilflingbackend.model.toDto
 import org.springframework.stereotype.Repository
-import javax.persistence.EntityNotFoundException
+import jakarta.persistence.EntityNotFoundException
 
 @Repository
 open class CategoryRepository(database: Database) : BaseRepository<Category, CategoryDto, CategoryPatchRequestDto>(table = Categories, database = database) {

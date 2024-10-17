@@ -12,7 +12,7 @@ import no.fg.hilflingbackend.model.ArticleTag
 import no.fg.hilflingbackend.model.ArticleTags
 import no.fg.hilflingbackend.model.article_tags
 import org.springframework.stereotype.Repository
-import javax.persistence.EntityNotFoundException
+import jakarta.persistence.EntityNotFoundException
 
 @Repository
 open class ArticleTagRepository(database: Database) :

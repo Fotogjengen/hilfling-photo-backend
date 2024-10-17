@@ -1,5 +1,7 @@
 package no.fg.hilflingbackend.exceptions
 
+import jakarta.persistence.EntityNotFoundException
+import java.lang.IllegalArgumentException
 import no.fg.hilflingbackend.exceptions.ErrorResponseEntity.Companion.badReqeust
 import no.fg.hilflingbackend.exceptions.ErrorResponseEntity.Companion.notFound
 import org.apache.tomcat.util.http.fileupload.impl.InvalidContentTypeException
@@ -14,8 +16,6 @@ import org.springframework.web.bind.annotation.ControllerAdvice
 import org.springframework.web.bind.annotation.ExceptionHandler
 import org.springframework.web.context.request.WebRequest
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler
-import java.lang.IllegalArgumentException
-import javax.persistence.EntityNotFoundException
 
 @Order(Ordered.HIGHEST_PRECEDENCE)
 @ControllerAdvice
@@ -39,7 +39,7 @@ open class GlobalExceptionHandler : ResponseEntityExceptionHandler() {
 
   // Handles missing request parameters
   @Override
-  override fun handleMissingServletRequestParameter(
+  fun handleMissingServletRequestParameter(
     ex: MissingServletRequestParameterException,
     headers: HttpHeaders,
     status: HttpStatus,

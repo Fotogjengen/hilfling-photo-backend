@@ -12,7 +12,7 @@ import no.fg.hilflingbackend.model.Gang
 import no.fg.hilflingbackend.model.Gangs
 import no.fg.hilflingbackend.model.gangs
 import org.springframework.stereotype.Repository
-import javax.persistence.EntityNotFoundException
+import jakarta.persistence.EntityNotFoundException
 
 @Repository
 open class GangRepository(database: Database) : BaseRepository<Gang, GangDto, GangPatchRequestDto>(table = Gangs, database = database) {

@@ -18,7 +18,7 @@ import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Repository
 import java.time.LocalDate
 import java.util.UUID
-import javax.persistence.EntityNotFoundException
+import jakarta.persistence.EntityNotFoundException
 
 @Repository
 open class PhotoRepository(

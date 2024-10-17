@@ -42,7 +42,7 @@ import java.nio.file.Paths
 import java.time.LocalDate
 import java.util.UUID
 import java.util.stream.Stream
-import javax.persistence.EntityNotFoundException
+import jakarta.persistence.EntityNotFoundException
 
 @Service
 class PhotoService(

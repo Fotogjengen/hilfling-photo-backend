@@ -13,7 +13,7 @@ import no.fg.hilflingbackend.model.Positions
 import no.fg.hilflingbackend.model.positions
 import no.fg.hilflingbackend.value_object.Email
 import org.springframework.stereotype.Repository
-import javax.persistence.EntityNotFoundException
+import jakarta.persistence.EntityNotFoundException
 
 @Repository
 open class PositionRepository(database: Database) : BaseRepository<Position, PositionDto, PositionPatchRequestDto>(table = Positions, database = database) {
