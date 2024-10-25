@@ -163,6 +163,7 @@ open class PhotoRepository(
     sortBy: String,
     desc: Boolean = true
   ): Page<PhotoDto> {
+    val offset = page * pageSize
     var ph = database.from(Photos)
       .innerJoin(Motives, on = Photos.motiveId eq Motives.id)
       .innerJoin(Places, on = Photos.placeId eq Places.id)
@@ -251,7 +252,7 @@ open class PhotoRepository(
             Photos.isGoodPicture eq false or Photos.isGoodPicture eq true
           }
           )
-      }.limit(page, pageSize)
+      }.limit(offset, pageSize)
       .map { row -> constructPhotoDto(row) }
 
     if (tag.isNotEmpty()) {
