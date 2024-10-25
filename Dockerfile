@@ -17,8 +17,8 @@ RUN ls /build/target
 FROM openjdk:21-slim
 # Running with user privileges helts to migate some risks: This is currently disabled bacause
 # The application did not have enough privileges to save images to disk
-#RUN addgroup -S spring && adduser -S spring -G spring
-#USER spring:spring
+RUN addgroup -S spring && adduser -S spring -G spring
+USER spring:spring
 WORKDIR /app
 COPY --from=MAVEN_BUILD /build/target/*.jar /app/
 RUN ls /app/
