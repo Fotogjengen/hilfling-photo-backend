@@ -6,8 +6,7 @@ import org.springframework.web.multipart.MultipartResolver
 import org.springframework.web.multipart.support.StandardServletMultipartResolver
 
 @Configuration
-class MultipartConfig {
-
+class FileUploadConfiguration {
   @Bean
   fun multipartResolver(): MultipartResolver {
     return StandardServletMultipartResolver()

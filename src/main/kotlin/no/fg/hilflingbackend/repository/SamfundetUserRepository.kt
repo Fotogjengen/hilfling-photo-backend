@@ -69,35 +69,3 @@ open class SamfundetUserRepository(
     return if (updated == 1) newDto else fromDb
   }
 }
-
-// open class SamfundetUserRepository {
-//   @Autowired
-//   open lateinit var database: Database
-
-//   fun findById(id: UUID): SamfundetUser? {
-//     return database.samfundet_users.find { it.id eq id }
-//   }
-
-//   fun findAll(): List<SamfundetUser> {
-//     return database.samfundet_users.toList()
-//   }
-
-//   fun create(
-//     samfundetUserDto: SamfundetUserDto
-//   ): SamfundetUserDto? {
-//     var success = 0
-//     try {
-//       success = database
-//         .samfundet_users
-//         .add(
-//           samfundetUserDto.toEntity()
-//         )
-//     } catch (error: Error) {
-//       return null
-//     }
-//     if (success == 1) {
-//       return findById(samfundetUserDto.samfundetUserId.id)?.toDto()
-//     }
-//     return null
-//   }
-// }
