@@ -16,7 +16,7 @@ import no.fg.hilflingbackend.model.BaseModel
 import no.fg.hilflingbackend.model.BaseTable
 import java.time.LocalDate
 import java.util.UUID
-import javax.persistence.EntityNotFoundException
+import jakarta.persistence.EntityNotFoundException
 
 abstract class BaseRepository<E : BaseModel<E>, D, R>(val table: BaseTable<E>, val database: Database) : IRepository<E, D, R> {
   override fun findById(id: UUID): D? {
