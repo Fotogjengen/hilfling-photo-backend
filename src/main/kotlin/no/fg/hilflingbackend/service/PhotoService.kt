@@ -378,12 +378,12 @@ class PhotoService(
 
     // Encrypting the URLS
     val encryptedUrls = numPhotoGenerated.map
-      { url ->
-        EncryptionUtils.encrypt(
-          url,
-          securityConfig.secretKey(),
-        ) // Encrypt each URL
-      }
+    { url ->
+      EncryptionUtils.encrypt(
+        url,
+        securityConfig.secretKey(),
+       ) // Encrypt each URL
+    }
 
     return encryptedUrls
   }
