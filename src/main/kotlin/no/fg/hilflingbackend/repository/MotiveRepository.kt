@@ -18,7 +18,7 @@ import no.fg.hilflingbackend.model.toDto
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Repository
 import java.util.UUID
-import javax.persistence.EntityNotFoundException
+import jakarta.persistence.EntityNotFoundException
 
 @Repository
 open class MotiveRepository {

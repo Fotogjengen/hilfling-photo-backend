@@ -21,7 +21,7 @@ import no.fg.hilflingbackend.model.samfundet_users
 import no.fg.hilflingbackend.model.toDto
 import org.springframework.stereotype.Repository
 import java.util.UUID
-import javax.persistence.EntityNotFoundException
+import jakarta.persistence.EntityNotFoundException
 
 interface IPhotoGangBangerRepository {
   fun findById(id: UUID): PhotoGangBangerDto?
