@@ -6,6 +6,9 @@ import javax.crypto.SecretKey
 import javax.crypto.spec.IvParameterSpec
 import javax.crypto.spec.SecretKeySpec
 
+
+
+//Functions for encrypting and decrypting data
 object EncryptionUtils {
   private const val ALGORITHM = "AES/CBC/PKCS5Padding"
   private const val KEY_SIZE = 256

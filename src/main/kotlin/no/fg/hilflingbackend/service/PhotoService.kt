@@ -379,6 +379,7 @@ class PhotoService(
       // Save shit
     }
 
+    // Encrypting the URLS 
     val encryptedUrls = numPhotoGenerated.map { url ->
       EncryptionUtils.encrypt(url, securityConfig.secretKey()) // Encrypt each URL
     }
