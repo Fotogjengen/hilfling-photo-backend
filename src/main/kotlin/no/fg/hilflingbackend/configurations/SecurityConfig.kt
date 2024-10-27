@@ -5,6 +5,7 @@ import org.springframework.context.annotation.Configuration
 import java.security.SecureRandom
 import javax.crypto.SecretKey
 import javax.crypto.spec.SecretKeySpec
+
 // Function for fetching encryption key from enviorments or creating a new encryption key
 // TODO: Change so the secret encryption key only gets fetched and not created before launch
 @Configuration
