@@ -128,6 +128,7 @@ class PhotoService(
       throw RuntimeException("Fail!")
     }
   }
+  
 
   // TODO: REMOVE FROM PROD
   fun createFilesystemIfNotExists() {
@@ -482,7 +483,15 @@ class PhotoService(
       sortBy,
       desc
     )
+  
+    fun getPhotoCount(): Long {
+      return photoRepository.countPhotos()
+    }
 }
+
+
+
+
   /*
   override fun getAll(page: Int, pageSize: Int): Page<PhotoDto> {
     return photoRepository

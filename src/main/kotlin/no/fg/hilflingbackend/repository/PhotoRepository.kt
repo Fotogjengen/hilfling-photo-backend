@@ -9,6 +9,9 @@ import me.liuwj.ktorm.entity.find
 import me.liuwj.ktorm.entity.take
 import me.liuwj.ktorm.entity.toList
 import me.liuwj.ktorm.entity.update
+import me.liuwj.ktorm.dsl.eq
+import me.liuwj.ktorm.dsl.count
+import me.liuwj.ktorm.entity.aggregateColumns
 import no.fg.hilflingbackend.dto.*
 import no.fg.hilflingbackend.model.*
 import no.fg.hilflingbackend.value_object.Email
@@ -556,5 +559,12 @@ open class PhotoRepository(
       .analog_photos
       .update(analogPhoto)
     return findAnalogPhotoById(analogPhoto.id)
+  }
+  fun countPhotos(): Long {
+    return database
+    .from(Photos)
+    .select(count(Photos.id)) 
+    .map { row -> row.getLong(1)} 
+    .first()
   }
 }

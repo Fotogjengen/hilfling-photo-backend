@@ -117,6 +117,7 @@ class PhotoController(
     )
   }
 
+  
   @PostMapping("/analog")
   fun createAnalogPhoto(
     @RequestBody analogPhoto: AnalogPhoto
@@ -239,5 +240,11 @@ class PhotoController(
     @RequestBody dto: PhotoPatchRequestDto
   ): PhotoDto {
     return photoService.patch(dto)
+  }
+
+  @GetMapping("/count")
+  fun getPhotoCount(): ResponseEntity<Long> {
+    val count = photoService.getPhotoCount()
+    return ResponseEntity.ok(count)
   }
 }
