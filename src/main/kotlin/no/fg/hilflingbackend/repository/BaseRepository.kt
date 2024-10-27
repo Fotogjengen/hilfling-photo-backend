@@ -37,9 +37,9 @@ abstract class BaseRepository<E : BaseModel<E>, D, R>(val table: BaseTable<E>, v
       .where { table.dateDeleted.isNull() }
       .limit(page, pageSize)
     return Page(
-      page,
-      pageSize,
-      1,
+      page = page,
+      pageSize = pageSize,
+      totalRecords = resultSet.totalRecords,
       currentList = resultSet.map { row -> convertToClass(row) }
     )
   }
