@@ -5,7 +5,7 @@
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>3.2.0</version>
+		<version>2.6.3</version>
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>no.fg.hilflingbackend</groupId>
@@ -17,17 +17,13 @@
 	<properties>
 		<java.version>21</java.version>
 		<kotlin.version>1.9.24</kotlin.version>
-		<kotlin.compiler.apiVersion>1.9</kotlin.compiler.apiVersion>
-		<jacoco.version>0.8.13</jacoco.version>
+		<kotlin.compiler.apiVersion>1.4</kotlin.compiler.apiVersion>
+		<jacoco.version>0.8.3</jacoco.version>
 		<kotlinx-coroutines.version>1.4.2-native-mt</kotlinx-coroutines.version>
 		<sonar.java.coveragePlugin>jacoco</sonar.java.coveragePlugin>
 		<sonar.dynamicAnalysis>reuseReports</sonar.dynamicAnalysis>
 		<sonar.jacoco.reportPath>${project.basedir}/../target/jacoco.exec</sonar.jacoco.reportPath>
 		<sonar.language>kotlin</sonar.language>
-		<flyway.version>9.22.1</flyway.version>
-		<jakarta.version>3.1.0</jakarta.version>
-		<ktorm.version>3.1.0</ktorm.version>
-		<springdoc.version>2.6.0</springdoc.version>
 	</properties>
 
 	<dependencies>
@@ -46,7 +42,7 @@
 		<dependency>
 			<groupId>io.projectreactor</groupId>
 			<artifactId>reactor-core</artifactId>
-			<version>3.6.10</version>
+			<version>3.4.14</version>
 		</dependency>
 
 		<!-- Thanks for using https://jar-download.com -->
@@ -65,13 +61,10 @@
 		<dependency>
 			<groupId>org.flywaydb</groupId>
 			<artifactId>flyway-core</artifactId>
-			<version>${flyway.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.jetbrains.kotlin</groupId>
 			<artifactId>kotlin-reflect</artifactId>
-			<version>${kotlin.version}</version>
-			
 		</dependency>
 		<dependency>
 			<groupId>org.jetbrains.kotlin</groupId>
@@ -79,38 +72,21 @@
 			<version>${kotlin.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>jakarta.persistence</groupId>
-			<artifactId>jakarta.persistence-api</artifactId>
-			<version>${jakarta.version}</version> <!-- Update to the latest version -->
+		   <groupId>org.jetbrains.kotlin</groupId>
+		   <artifactId>kotlin-runtime</artifactId>
+		   <version>1.2.71</version>
 		</dependency>
-		<dependency>
-			<groupId>jakarta.validation</groupId>
-			<artifactId>jakarta.validation-api</artifactId>
-			<version>${jakarta.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.springdoc</groupId>
-			<artifactId>springdoc-openapi-starter-webmvc-api</artifactId>
-			<version>${springdoc.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.springdoc</groupId>
-			<artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
-			<version>${springdoc.version}</version>
-		</dependency>
-
-
 
 		<!-- Database -->
 		<dependency>
 			<groupId>me.liuwj.ktorm</groupId>
 			<artifactId>ktorm-core</artifactId>
-			<version>${ktorm.version}</version>
+			<version>3.1.0</version>
 		</dependency>
 		<dependency>
 			<groupId>me.liuwj.ktorm</groupId>
 			<artifactId>ktorm-support-postgresql</artifactId>
-			<version>${ktorm.version}</version>
+			<version>3.1.0</version>
 		</dependency>
         <dependency>
 			<groupId>com.fasterxml.jackson.module</groupId>
@@ -119,7 +95,7 @@
 		<dependency>
 			<groupId>me.liuwj.ktorm</groupId>
 			<artifactId>ktorm-jackson</artifactId>
-			<version>${ktorm.version}</version>
+			<version>3.1.0</version>
 		</dependency>
 		<dependency>
 			<groupId>com.h2database</groupId>
@@ -136,7 +112,19 @@
 			<artifactId>spring-boot-starter-test</artifactId>
 			<scope>test</scope>
 		</dependency>
-
+		<!-- Documentation -->
+		<dependency>
+		  <groupId>org.springdoc</groupId>
+		  <artifactId>springdoc-openapi-ui</artifactId>
+		  <version>1.6.5</version>
+	   </dependency>
+		<!-- https://mvnrepository.com/artifact/org.springdoc/springdoc-openapi-maven-plugin -->
+		<dependency>
+			<groupId>org.springdoc</groupId>
+			<artifactId>springdoc-openapi-maven-plugin</artifactId>
+			<version>1.3</version>
+			<type>maven-plugin</type>
+		</dependency>
 
 		<!-- Image scaler -->
 		<dependency>
@@ -157,7 +145,7 @@
 		<dependency>
 			<groupId>com.azure</groupId>
 			<artifactId>azure-storage-blob</artifactId>
-			<version>12.28.0</version>
+			<version>12.14.3</version>
 		</dependency>
 
 
@@ -171,25 +159,25 @@
 		<dependency>
 			<groupId>org.spekframework.spek2</groupId>
 			<artifactId>spek-dsl-jvm</artifactId>
-			<version>2.0.19</version>
+			<version>2.0.17</version>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.spekframework.spek2</groupId>
 			<artifactId>spek-runner-junit5</artifactId>
-			<version>2.0.19</version>
+			<version>2.0.17</version>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.junit.platform</groupId>
 			<artifactId>junit-platform-runner</artifactId>
-			<version>1.11.1</version>
+			<version>1.8.2</version>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.jetbrains.kotlin</groupId>
 			<artifactId>kotlin-stdlib</artifactId>
-			<version>2.1.0-Beta1</version>
+			<version>1.6.10</version>
 		</dependency>
         <dependency>
             <groupId>org.springframework</groupId>
@@ -228,12 +216,7 @@
 			<id>central2</id>
 			<url>https://jcenter.bintray.com</url>
 		</repository>
-			<repository>
-				<id>spring-releases</id>
-				<url>https://repo.spring.io/release</url>
-			</repository>
 	</repositories>
-
 	<build>
 		<sourceDirectory>${project.basedir}/src/main/kotlin</sourceDirectory>
 		<testSourceDirectory>${project.basedir}/src/test/kotlin</testSourceDirectory>
@@ -245,7 +228,6 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
-				<version>3.13.0</version>
 				<executions>
 					<execution>
 						<id>compile</id>
@@ -266,7 +248,7 @@
 			</plugin>
 			<plugin>
 				<artifactId>maven-surefire-plugin</artifactId>
-				<version>3.3.1</version>
+				<version>2.22.2</version>
 			</plugin>
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
@@ -309,12 +291,17 @@
 						<artifactId>kotlin-maven-noarg</artifactId>
 						<version>${kotlin.version}</version>
 					</dependency>
+					<dependency>
+						<groupId>org.springdoc</groupId>
+						<artifactId>springdoc-openapi-ui</artifactId>
+						<version>1.6.5</version>
+					</dependency>
 				</dependencies>
 			</plugin>
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
-				<version>3.3.4</version>
+				<version>2.6.3</version>
 				<configuration>
 					<jvmArguments>-Dspring.application.admin.enabled=true</jvmArguments>
 				</configuration>
@@ -333,6 +320,25 @@
 					</execution>
 				</executions>
 			</plugin>
+			<plugin>
+				<groupId>org.springdoc</groupId>
+				<artifactId>springdoc-openapi-maven-plugin</artifactId>
+				<version>0.2</version>
+				<executions>
+					<execution>
+						<id>integration-test</id>
+						<goals>
+							<goal>generate</goal>
+						</goals>
+						<configuration>
+							<apiDocsUrl>http://localhost:8000/api-docs</apiDocsUrl>
+							<outputFileName>openapi.json</outputFileName>
+							<outputDir>${project.build.directory}</outputDir>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
 		</plugins>
 	</build>
+
 </project>

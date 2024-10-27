@@ -1,5 +1,7 @@
 package hilfling.backend.hilfling.exceptions
 
+import jakarta.persistence.EntityNotFoundException
+import jakarta.validation.ConstraintViolationException
 import no.fg.hilflingbackend.exceptions.ApiError
 import no.fg.hilflingbackend.exceptions.EntityCreationException
 import no.fg.hilflingbackend.exceptions.EntityExistsException
@@ -15,8 +17,6 @@ import org.springframework.web.bind.annotation.ControllerAdvice
 import org.springframework.web.bind.annotation.ExceptionHandler
 import org.springframework.web.context.request.WebRequest
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler
-import javax.persistence.EntityNotFoundException
-import javax.validation.ConstraintViolationException
 
 @Order(Ordered.HIGHEST_PRECEDENCE)
 @ControllerAdvice // This annotation makes the class handle all exceptions
@@ -27,7 +27,7 @@ class RestExceptionHandler : ResponseEntityExceptionHandler() {
       But we can also add or improve exceptionsHandlers by adding them like we do below.
    */
 
-  override fun handleHttpMessageNotReadable(
+  fun handleHttpMessageNotReadable(
     ex: HttpMessageNotReadableException,
     headers: HttpHeaders,
     status: HttpStatus,

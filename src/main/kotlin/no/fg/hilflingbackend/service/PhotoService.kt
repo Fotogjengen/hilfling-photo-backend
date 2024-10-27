@@ -47,7 +47,7 @@ import java.util.UUID
 import java.util.stream.Stream
 import javax.crypto.SecretKey
 import javax.crypto.spec.SecretKeySpec
-import javax.persistence.EntityNotFoundException
+import jakarta.persistence.EntityNotFoundException
 
 @Service
 class PhotoService(
