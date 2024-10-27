@@ -17,7 +17,7 @@ import no.fg.hilflingbackend.model.samfundet_users
 import no.fg.hilflingbackend.value_object.Email
 import no.fg.hilflingbackend.value_object.PhoneNumber
 import org.springframework.stereotype.Repository
-import javax.persistence.EntityNotFoundException
+import jakarta.persistence.EntityNotFoundException
 
 @Repository
 open class SamfundetUserRepository(
