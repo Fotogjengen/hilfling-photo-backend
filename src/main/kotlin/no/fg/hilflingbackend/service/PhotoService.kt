@@ -42,11 +42,8 @@ import java.nio.file.Files
 import java.nio.file.Path
 import java.nio.file.Paths
 import java.time.LocalDate
-import java.util.Base64
 import java.util.UUID
 import java.util.stream.Stream
-import javax.crypto.SecretKey
-import javax.crypto.spec.SecretKeySpec
 import jakarta.persistence.EntityNotFoundException
 
 @Service
@@ -381,7 +378,7 @@ class PhotoService(
 
     // Encrypting the URLS 
     val encryptedUrls = numPhotoGenerated.map { url ->
-      EncryptionUtils.encrypt(url, securityConfig.secretKey()) // Encrypt each URL
+      EncryptionUtils.encrypt(url, securityConfig.secretKey())// Encrypt each URL
     }
 
     return encryptedUrls

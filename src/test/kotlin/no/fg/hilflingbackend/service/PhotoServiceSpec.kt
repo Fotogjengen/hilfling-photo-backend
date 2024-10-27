@@ -110,8 +110,6 @@ class PhotoServiceSpec : Spek({
       eventOwnerRepository = eventOwnerReposity,
       photoTagRepository = photoTagRepository,
       securityConfig = securityConfig,
-
-
     )
   }
 })

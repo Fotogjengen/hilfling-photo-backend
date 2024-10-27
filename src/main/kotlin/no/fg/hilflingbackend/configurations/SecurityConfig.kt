@@ -1,17 +1,14 @@
 package no.fg.hilflingbackend.configurations
 
-import javax.crypto.SecretKey
-import javax.crypto.spec.SecretKeySpec
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import java.security.SecureRandom
-
-
-//Function for fetching encryption key from enviorments or creating a new encryption key
-//TODO: Change so the secret encryption key only gets fetched and not created before launch
+import javax.crypto.SecretKey
+import javax.crypto.spec.SecretKeySpec
+// Function for fetching encryption key from enviorments or creating a new encryption key
+// TODO: Change so the secret encryption key only gets fetched and not created before launch
 @Configuration
 class SecurityConfig {
-
   @Bean
   fun secretKey(): SecretKey {
     // You can either load from environment or generate a random key

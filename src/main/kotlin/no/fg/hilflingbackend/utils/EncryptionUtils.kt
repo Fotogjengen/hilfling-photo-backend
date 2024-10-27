@@ -7,8 +7,7 @@ import javax.crypto.spec.IvParameterSpec
 import javax.crypto.spec.SecretKeySpec
 
 
-
-//Functions for encrypting and decrypting data
+// Functions for encrypting and decrypting data
 object EncryptionUtils {
   private const val ALGORITHM = "AES/CBC/PKCS5Padding"
   private const val KEY_SIZE = 256
@@ -22,7 +21,10 @@ object EncryptionUtils {
   }
 
   // Encrypt a plain text string using AES
-  fun encrypt(data: String, secretKey: SecretKey): String {
+  fun encrypt(
+    data: String,
+    secretKey: SecretKey
+  ): String {
     // Generate a random IV (Initialization Vector)
     val iv = ByteArray(IV_SIZE)
     java.security.SecureRandom().nextBytes(iv)
@@ -41,7 +43,10 @@ object EncryptionUtils {
   }
 
   // Decrypt a Base64 encoded string using AES
-  fun decrypt(encryptedData: String, secretKey: SecretKey): String {
+  fun decrypt(
+    encryptedData: String,
+    secretKey: SecretKey
+  ): String {
     // Decode Base64 encoded data
     val decodedBytes = Base64.getDecoder().decode(encryptedData)
 
