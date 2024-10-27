@@ -382,7 +382,7 @@ class PhotoService(
       EncryptionUtils.encrypt(
         url,
         securityConfig.secretKey(),
-       ) // Encrypt each URL
+      ) // Encrypt each URL
     }
 
     return encryptedUrls
