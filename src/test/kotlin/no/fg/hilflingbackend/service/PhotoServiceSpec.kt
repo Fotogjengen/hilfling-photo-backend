@@ -2,6 +2,7 @@ package no.fg.hilflingbackend.service
 
 import com.nhaarman.mockitokotlin2.mock
 import no.fg.hilflingbackend.configurations.ImageFileStorageProperties
+import no.fg.hilflingbackend.configurations.SecurityConfig
 import no.fg.hilflingbackend.repository.AlbumRepository
 import no.fg.hilflingbackend.repository.CategoryRepository
 import no.fg.hilflingbackend.repository.EventOwnerRepository
@@ -31,8 +32,11 @@ class PhotoServiceSpec : Spek({
   val eventOwnerReposity = mock<EventOwnerRepository> {}
   val photoTagRepository = mock<PhotoTagRepository> {}
   val environment = mock<Environment> {}
+  val securityConfig = mock<SecurityConfig> {}
   describe("PhotoServiceSpec") {
+
     /*
+
 
   val log = LoggerFactory.getLogger(this::class.java)
   val mockDataService = MockDataService()
@@ -104,7 +108,8 @@ class PhotoServiceSpec : Spek({
       albumRepository = albumRepository,
       categoryRepository = categoryRepository,
       eventOwnerRepository = eventOwnerReposity,
-      photoTagRepository = photoTagRepository
+      photoTagRepository = photoTagRepository,
+      securityConfig = securityConfig,
     )
   }
 })
