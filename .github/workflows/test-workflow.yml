@@ -21,7 +21,7 @@ jobs:
       - name: Build with Maven
         run: mvn clean install
 
-      - name: Build Docker image
+      - name: Build Docker backend image
         run: |
           docker build -t hilfling-backend:${{ github.sha }} .
 
@@ -31,6 +31,11 @@ jobs:
           login-server: ${{ secrets.ACR_LOGIN_SERVER }}
           username: ${{ secrets.ACR_USERNAME }}
           password: ${{ secrets.ACR_PASSWORD }}
+
+      - name: Push Docker backend image to Azure Container Registry
+        run: |
+          docker tag hilfling-backend:${{ github.sha }} ${{ secrets.ACR_LOGIN_SERVER }}/hilfling-backend:${{ github.sha }}
+          docker push ${{ secrets.ACR_LOGIN_SERVER }}/hilfling-backend:${{ github.sha }}
 
   deploy:
     runs-on: ubuntu-latest
@@ -42,14 +47,20 @@ jobs:
         with:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
 
-      - name: Deploy to Azure Container Instance
+      - name: Delete existing Azure Container Instances
+        run: |
+            az container delete --resource-group hilfling-backend_group --name hilfling-backend1 --yes || true
+
+      - name: Deploy to Azure Container Instances
         run: |
           az container create \
             --resource-group hilfling-backend_group \
-            --name hilfling-backend \
+            --name hilfling-backend1 \
             --image ${{ secrets.ACR_LOGIN_SERVER }}/hilfling-backend:${{ github.sha }} \
             --registry-login-server ${{ secrets.ACR_LOGIN_SERVER }} \
             --registry-username ${{ secrets.ACR_USERNAME }} \
             --registry-password ${{ secrets.ACR_PASSWORD }} \
-            --dns-name-label hilfling-backend \
-            --ports 80
+            --ip-address public \
+            --dns-name-label hilfling-backend1 \
+            --ports 8000 \
+            --environment-variables HILFLINGDB_USERNAME=${{ secrets.HILFLINGDB_USERNAME }} SPRING_DATASOURCE_URL=${{ secrets.HILFLINGDB_URL_DEV }} HILFLINGDB_PASSWORD=${{ secrets.HILFLINGDB_PASSWORD }}
