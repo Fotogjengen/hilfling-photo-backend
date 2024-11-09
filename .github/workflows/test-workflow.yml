@@ -59,5 +59,14 @@ jobs:
           DATABASE_PASSWORD=${{ secrets.HILFLINGDB_PASSWORD }} \
           --ingress 'external' \
           --target-port 8000 \
+
+      # Delete Docker image from Azure Container Registry after deployment
+      - name: Delete Docker image from ACR
+        run: |
+          az acr repository delete \
+            --name ${{ secrets.ACR_LOGIN_SERVER }} \
+            --repository hilfling-backend \
+            --tag ${{ github.sha }} \
+            --yes
           
 
