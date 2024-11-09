@@ -75,7 +75,7 @@ jobs:
               --http-settings-protocol Http \
               --public-ip-address hilfling-backend-ip \
               --routing-rule-type Basic \
-              --backend-addresses hilfling-backend1-dns.norwayeast.azurecontainer.io hilfling-backend2-dns.norwayeast.azurecontainer.io hilfling-backend3-dns.norwayeast.azurecontainer.io
+              --servers hilfling-backend1-dns.norwayeast.azurecontainer.io hilfling-backend2-dns.norwayeast.azurecontainer.io hilfling-backend3-dns.norwayeast.azurecontainer.io
           fi
 
       - name: Update Application Gateway Backend Pool
