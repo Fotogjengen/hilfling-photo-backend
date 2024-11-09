@@ -75,7 +75,7 @@ jobs:
           DATABASE_PASSWORD=${{ secrets.HILFLINGDB_PASSWORD }} \
           --ingress 'external' \
           --target-port 8000 \
-          --registry-server ${ACR_LOGIN_SERVER} \
+          --registry-server "${ACR_LOGIN_SERVER}" \
           --registry-username ${ACR_USERNAME} \
           --registry-password ${ACR_PASSWORD}
 
