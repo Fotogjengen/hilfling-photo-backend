@@ -69,13 +69,13 @@ jobs:
           --resource-group hilfling-backend_group \
           --image ${ACR_NAME}.azurecr.io/hilfling-backend:${{ github.sha }} \
           --cpu 1 --memory 2Gi \
-          --environment ${ENV_NAME} \
+          --environment hilfling-environment \
           --env-vars DATABASE_USERNAME=${{ secrets.HILFLINGDB_USERNAME }} \
           DATABASE_URL=${{ secrets.HILFLINGDB_URL_DEV }} \
           DATABASE_PASSWORD=${{ secrets.HILFLINGDB_PASSWORD }} \
           --ingress 'external' \
           --target-port 8000 \
-          --registry-server ${ACR_NAME}.azurecr.io \
+          --registry-server ${ACR_LOGIN_SERVER} \
           --registry-username ${ACR_USERNAME} \
           --registry-password ${ACR_PASSWORD}
 
