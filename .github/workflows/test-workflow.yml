@@ -49,8 +49,6 @@ jobs:
             az container create \
               --name hilfling-backend${i} \
               --resource-group hilfling-backend_group \
-              --registry-username ${{ secrets.ACR_USERNAME}} \
-              --registry-password ${{ secrets.ACR_PASSWORD}} \
               --image ${{ secrets.ACR_LOGIN_SERVER }}/hilfling-backend:${{ github.sha }} \
               --cpu 1 --memory 2 \
               --environment-variables DATABASE_USERNAME=${{ secrets.HILFLINGDB_USERNAME }} \
@@ -60,6 +58,24 @@ jobs:
               --dns-name-label hilfling-backend${i}-dns \
               --location norwayeast
           done
+
+      - name: Check and Create Application Gateway if it does not exist
+        run: |
+          if ! az network application-gateway show --name hilfling-gateway --resource-group hilfling-backend_group &>/dev/null; then
+            az network application-gateway create \
+              --name hilfling-gateway \
+              --resource-group hilfling-backend_group \
+              --location norwayeast \
+              --sku Standard_v2 \
+              --capacity 2 \
+              --frontend-port 80 \
+              --http-settings-port 8000 \
+              --http-settings-protocol Http \
+              --public-ip-address hilfling-gateway-ip \
+              --frontend-ip hilfling-frontend-ip \
+              --routing-rule-type Basic \
+              --servers hilfling-backend1-dns.norwayeast.azurecontainer.io hilfling-backend2-dns.norwayeast.azurecontainer.io hilfling-backend3-dns.norwayeast.azurecontainer.io
+          fi
 
       - name: Update Application Gateway Backend Pool
         run: |
