@@ -70,12 +70,12 @@ jobs:
               --location norwayeast \
               --sku Standard_v2 \
               --capacity 2 \
-              --frontend-port 80 \
-              --http-settings-port 8000 \
+              --frontend-port 8000 \
+              --http-settings-port 80 \
               --http-settings-protocol Http \
               --public-ip-address hilfling-backend-ip \
               --routing-rule-type Basic \
-#              --servers hilfling-backend1-dns.norwayeast.azurecontainer.io hilfling-backend2-dns.norwayeast.azurecontainer.io hilfling-backend3-dns.norwayeast.azurecontainer.io
+              --servers hilfling-backend1-dns.norwayeast.azurecontainer.io hilfling-backend2-dns.norwayeast.azurecontainer.io hilfling-backend3-dns.norwayeast.azurecontainer.io
               --priority 1
           fi
 
