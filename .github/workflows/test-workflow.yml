@@ -68,7 +68,7 @@ jobs:
           --name hilfling-backend1 \
           --resource-group hilfling-backend_group \
           --environment hilfling-environment \
-          --image ${{ACR_LOGIN_SERVER}}/hilfling-backend:${{ github.sha }} \
+          --image ${{ secrets.ACR_LOGIN_SERVER }}/hilfling-backend:${{ github.sha }} \
           --cpu 1 --memory 2Gi \
           --env-vars DATABASE_USERNAME=${{ secrets.HILFLINGDB_USERNAME }} \
           DATABASE_URL=${{ secrets.HILFLINGDB_URL_DEV }} \
