@@ -48,13 +48,6 @@ jobs:
         with:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
 
-      - name: Log in to Azure Container Registry
-        uses: azure/docker-login@v1
-        with:
-          login-server: ${{ secrets.ACR_LOGIN_SERVER }}
-          username: ${{ secrets.ACR_USERNAME }}
-          password: ${{ secrets.ACR_PASSWORD }}
-
       - name: Delete existing Azure Container Apps (if any)
         run: |
           az containerapp delete \
@@ -67,6 +60,8 @@ jobs:
           az containerapp create \
             --name hilfling-backend1 \
             --resource-group hilfling-backend_group \
+            --registry-username ${{secrets.ACR_USERNAME}}
+            --registry-password ${{secrets.ACR_PASSWORD}} \
             --image ${{ secrets.ACR_LOGIN_SERVER }}/hilfling-backend:${{ github.sha }} \
             --cpu 1 --memory 2Gi \
             --environment hilfling-environment \
