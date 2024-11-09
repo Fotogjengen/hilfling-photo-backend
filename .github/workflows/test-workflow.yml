@@ -76,6 +76,6 @@ jobs:
           --ingress 'external' \
           --target-port 8000 \
           --registry-server "${ACR_LOGIN_SERVER}" \
-          --registry-username ${ACR_USERNAME} \
-          --registry-password ${ACR_PASSWORD}
+          --registry-username "${ACR_USERNAME}" \
+          --registry-password "${ACR_PASSWORD}"
 
