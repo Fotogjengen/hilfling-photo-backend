@@ -18,12 +18,12 @@ jobs:
         with:
           java-version: "21"
 
-      - name: Build with Maven
-        run:
-          mvn clean install -DskipTests \
-          -Ddatabase.username=${{ secrets.HILFLINGDB_USERNAME }} \
-          -Ddatabase.url="${{ secrets.HILFLINGDB_URL_DEV }}" \
-          -Ddatabase.password=${{ secrets.HILFLINGDB_PASSWORD }} \
+#      - name: Build with Maven
+#        run:
+#          mvn clean install -DskipTests \
+#          -Ddatabase.username=${{ secrets.HILFLINGDB_USERNAME }} \
+#          -Ddatabase.url=${{ secrets.HILFLINGDB_URL_DEV }} \
+#          -Ddatabase.password=${{ secrets.HILFLINGDB_PASSWORD }} \
 
       - name: Build Docker backend image
         run: |
