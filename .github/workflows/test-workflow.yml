@@ -73,10 +73,10 @@ jobs:
               --frontend-port 80 \
               --http-settings-port 8000 \
               --http-settings-protocol Http \
-              --public-ip-address hilfling-gateway-ip \
-              --frontend-ip hilfling-frontend-ip \
+              --frontend-ip-name hilfling-frontend-ip \
+              --frontend-ip-private-ip \
               --routing-rule-type Basic \
-              --servers hilfling-backend1-dns.norwayeast.azurecontainer.io hilfling-backend2-dns.norwayeast.azurecontainer.io hilfling-backend3-dns.norwayeast.azurecontainer.io
+              --backend-addresses hilfling-backend1-dns.norwayeast.azurecontainer.io hilfling-backend2-dns.norwayeast.azurecontainer.io hilfling-backend3-dns.norwayeast.azurecontainer.io
           fi
 
       - name: Update Application Gateway Backend Pool
