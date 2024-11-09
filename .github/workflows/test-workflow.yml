@@ -60,11 +60,11 @@ jobs:
           az containerapp create \
             --name hilfling-backend1 \
             --resource-group hilfling-backend_group \
+            --environment hilfling-environment \
             --registry-server ${{secrets.ACR_LOGIN_SERVER}}
             --registry-username ${{secrets.ACR_USERNAME}}
             --registry-password ${{secrets.ACR_PASSWORD}} \
             --image ${{ secrets.ACR_LOGIN_SERVER }}/hilfling-backend:${{ github.sha }} \
             --cpu 1 --memory 2Gi \
-            --environment hilfling-environment \
             --env-vars DATABASE_USERNAME=${{ secrets.HILFLINGDB_USERNAME }} DATABASE_URL=${{ secrets.HILFLINGDB_URL_DEV }} DATABASE_PASSWORD=${{ secrets.HILFLINGDB_PASSWORD }} \
             --ingress 'external' --target-port 8000
