@@ -1,4 +1,4 @@
-name: Build and deploy JAR app to Azure Container App - hilfling-backend
+name: Build and deploy JAR app to Azure Container Instances - hilfling-backend
 
 on:
   push:
@@ -10,16 +10,13 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
 
-
-
     steps:
-      # Checkout the repository code
       - name: Checkout code
         uses: actions/checkout@v2
 
-      # Set up Docker Buildx for multi-platform builds (optional)
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v2
+
       - name: Azure CLI Login
         uses: azure/login@v2
         with:
@@ -32,35 +29,72 @@ jobs:
           username: ${{ secrets.ACR_USERNAME }}
           password: ${{ secrets.ACR_PASSWORD }}
 
-      # Build and Push Docker Image to ACR
       - name: Build and push Docker image to ACR
         run: |
           docker build -t ${{ secrets.ACR_LOGIN_SERVER }}/hilfling-backend:${{ github.sha }} .
           docker push ${{ secrets.ACR_LOGIN_SERVER }}/hilfling-backend:${{ github.sha }}
 
-
-      - name: Delete existing Azure Container Apps (if any)
+      - name: Delete existing container instances
         run: |
-          az containerapp delete \
-            --name hilfling-backend1 \
+          for i in 1 2 3; do
+            az container delete \
+              --name hilfling-backend${i} \
+              --resource-group hilfling-backend_group \
+              --yes || true
+          done
+
+      - name: Deploy new container instances
+        run: |
+          for i in 1 2 3; do
+            az container create \
+              --name hilfling-backend${i} \
+              --resource-group hilfling-backend_group \
+              --image ${{ secrets.ACR_LOGIN_SERVER }}/hilfling-backend:${{ github.sha }} \
+              --cpu 1 --memory 2 \
+              --environment-variables DATABASE_USERNAME=${{ secrets.HILFLINGDB_USERNAME }} \
+              DATABASE_URL=${{ secrets.HILFLINGDB_URL_DEV }} \
+              DATABASE_PASSWORD=${{ secrets.HILFLINGDB_PASSWORD }} \
+              --ports 8000 \
+              --dns-name-label hilfling-backend${i}-dns \
+              --location norwayeast \
+              --vnet hilfling-network \
+              --subnet hilfling-network-1
+          done
+
+      - name: Create Application Gateway Health Probe
+        run: |
+          az network application-gateway probe create \
+            --gateway-name hilfling-gateway \
             --resource-group hilfling-backend_group \
-            --yes || true
+            --name hilfling-backend-health-probe \
+            --protocol Http \
+            --host hilfling-backend1-dns.norwayeast.azurecontainer.io \
+            --path /health \
+            --interval 30 \
+            --timeout 30 \
+            --threshold 3
 
-      - name: Deploy to Azure Container App
+      - name: Update Application Gateway Backend Pool
         run: |
-          az containerapp create \
-          --name hilfling-backend1 \
-          --resource-group hilfling-backend_group \
-          --environment hilfling-environment \
-          --image ${{ secrets.ACR_LOGIN_SERVER }}/hilfling-backend:${{ github.sha }} \
-          --cpu 1 --memory 2Gi \
-          --env-vars DATABASE_USERNAME=${{ secrets.HILFLINGDB_USERNAME }} \
-          DATABASE_URL=${{ secrets.HILFLINGDB_URL_DEV }} \
-          DATABASE_PASSWORD=${{ secrets.HILFLINGDB_PASSWORD }} \
-          --ingress 'external' \
-          --target-port 8000 \
+          az network application-gateway address-pool delete \
+            --gateway-name hilfling-gateway \
+            --resource-group hilfling-backend_group \
+            --name hilfling-backend-pool || true
+          az network application-gateway address-pool create \
+            --gateway-name hilfling-gateway \
+            --resource-group hilfling-backend_group \
+            --name hilfling-backend-pool \
+            --servers $(az container list --resource-group hilfling-backend_group --query "[].ipAddress.ip" -o tsv | paste -sd "," -)
 
-      # Delete Docker image from Azure Container Registry after deployment
+      - name: Update Application Gateway Routing Rule
+        run: |
+          az network application-gateway rule update \
+            --gateway-name hilfling-gateway \
+            --resource-group hilfling-backend_group \
+            --name hilfling-backend-rule \
+            --address-pool hilfling-backend-pool \
+            --probe hilfling-backend-health-probe
+
       - name: Delete Docker image from ACR
         run: |
           az acr repository delete \
@@ -68,5 +102,3 @@ jobs:
             --repository hilfling-backend \
             --tag ${{ github.sha }} \
             --yes
-          
-
