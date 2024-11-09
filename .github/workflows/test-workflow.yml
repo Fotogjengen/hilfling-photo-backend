@@ -3,7 +3,7 @@ name: Build and deploy JAR app to Azure Container Instance - hilfling-backend
 on:
   push:
     branches:
-      - master
+      - feature/fg-137
   workflow_dispatch:
 
 jobs:

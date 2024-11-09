@@ -21,7 +21,7 @@ public class ResourceConfiguration implements WebMvcConfigurer {
     public void addCorsMappings(CorsRegistry registry) {
         registry
         .addMapping("/**")
-        .allowedOrigins("http://localhost:3000")
+        .allowedOrigins("http://localhost:3000","https://test.masus.no")
         .allowedMethods("GET", "PATCH", "POST", "DELETE", "OPTIONS")
         .allowedHeaders("*");
     }
