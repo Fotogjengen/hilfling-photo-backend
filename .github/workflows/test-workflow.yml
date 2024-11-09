@@ -49,6 +49,8 @@ jobs:
             az container create \
               --name hilfling-backend${i} \
               --resource-group hilfling-backend_group \
+              --registry-username ${{ secrets.ACR_USERNAME }} \
+              --registry-password ${{ secrets.ACR_PASSWORD }} \
               --image ${{ secrets.ACR_LOGIN_SERVER }}/hilfling-backend:${{ github.sha }} \
               --cpu 1 --memory 2 \
               --environment-variables DATABASE_USERNAME=${{ secrets.HILFLINGDB_USERNAME }} \
