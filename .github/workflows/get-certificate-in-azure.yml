@@ -19,17 +19,33 @@ jobs:
         with:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
 
-      - name: Generate SSL certificate with Certbot
-        env:
-          DOMAIN: backend.masus.no
-          CERTBOT_EMAIL: fg-web@samfundet.no
+      - name: Install Certbot and the Domeneshop DNS plugin
         run: |
           sudo apt-get update
-          sudo apt-get install -y certbot
-          certbot certonly --standalone -d $DOMAIN --email $CERTBOT_EMAIL --agree-tos -n \
-            --config-dir ./certbot/config --work-dir ./certbot/work --logs-dir ./certbot/logs
-          openssl pkcs12 -export -out cert.pfx -inkey ./certbot/config/live/$DOMAIN/privkey.pem \
-            -in ./certbot/config/live/$DOMAIN/fullchain.pem -passout pass:$PFX_PASSWORD
+          sudo apt-get install -y python3-pip
+          pip3 install certbot certbot-dns-domeneshop
+
+      - name: Generate SSL certificate with Certbot (DNS-01 challenge)
+        env:
+          DOMAIN: backend.masus.no
+          DOMAIN_ALTERNATE: www.backend.masus.no  # Optional: if you want to include an additional domain (e.g., www)
+          CERTBOT_EMAIL: fg-web@samfundet.no
+          DNS_PROVIDER_CREDENTIALS: ${{ secrets.DOMENESHOP_CREDENTIALS }}  # Path to your credentials file in GitHub Secrets
+        run: |
+          # Create a temporary file for the credentials
+          echo "$DNS_PROVIDER_CREDENTIALS" > /tmp/domeneshop_credentials.ini
+          
+          # Run Certbot with DNS-01 challenge using Domeneshop
+          certbot certonly --dns-domeneshop \
+            --dns-domeneshop-credentials /tmp/domeneshop_credentials.ini \
+            --dns-domeneshop-propagation-seconds 120 \
+            --email $CERTBOT_EMAIL --agree-tos -n \
+            -d $DOMAIN \
+            -d $DOMAIN_ALTERNATE  # Include both domains for the certificate
+
+          # Export the certificate to a .pfx file
+          openssl pkcs12 -export -out cert.pfx -inkey /etc/letsencrypt/live/$DOMAIN/privkey.pem \
+            -in /etc/letsencrypt/live/$DOMAIN/fullchain.pem -passout pass:$PFX_PASSWORD
 
       - name: Upload certificate to Azure Application Gateway
         env:
@@ -38,7 +54,7 @@ jobs:
           AZURE_APPLICATION_GATEWAY_NAME: hilfling-gateway
           PFX_PASSWORD: ${{ secrets.PFX_PASSWORD }}
         run: |
-          # Create the SSL certificate in Azure Application Gateway
+          # Upload certificate to Azure Application Gateway
           az network application-gateway ssl-cert create \
             --resource-group $AZURE_RESOURCE_GROUP \
             --gateway-name $AZURE_APPLICATION_GATEWAY_NAME \
