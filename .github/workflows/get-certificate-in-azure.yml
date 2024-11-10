@@ -49,10 +49,11 @@ jobs:
 
       - name: Add certificate to Azure Application Gateway
         run: |
-          # Add the certificate to the Azure Application Gateway
+          # Add the base64-encoded certificate and key to the Application Gateway
           az network application-gateway ssl-cert create \
             --gateway-name "hilfling-gateway" \
             --resource-group "hilfling-backend_group" \
             --name "hilfling-gateway-ssl-cert" \
-            --cert-file "/etc/letsencrypt/live/$DOMAIN_NAME/fullchain.pem" \
-            --key-file "/etc/letsencrypt/live/$DOMAIN_NAME/privkey.pem"
+            --cert-password "" \
+            --cert-file <(echo "$CERT_PEM" | base64 -d) \
+            --key-file <(echo "$KEY_PEM" | base64 -d)
