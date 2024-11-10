@@ -42,7 +42,10 @@ jobs:
             --dns-domeneshop-propagation-seconds 120 \
             --email $CERTBOT_EMAIL --agree-tos -n \
             -d $DOMAIN \
-            -d $DOMAIN_ALTERNATE
+            -d $DOMAIN_ALTERNATE \
+            --config-dir /tmp/certbot/config \
+            --work-dir /tmp/certbot/work \
+            --logs-dir /tmp/certbot/logs
 
           # Export the certificate to a .pfx file
           openssl pkcs12 -export -out cert.pfx -inkey /etc/letsencrypt/live/$DOMAIN/privkey.pem \
