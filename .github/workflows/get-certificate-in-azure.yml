@@ -1,0 +1,57 @@
+name: Generate and Deploy SSL Certificate from Let's Encrypt
+
+on:
+  schedule:
+    - cron: '0 0 * * 0,14'  # Run every 2 weeks at midnight UTC
+  push:
+    branches:
+      - main
+
+jobs:
+  generate-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Install Certbot
+        run: |
+          sudo apt update
+          sudo apt install -y certbot
+
+      - name: Generate SSL Certificate with Certbot
+        run: |
+          # Define domain and email for Let's Encrypt registration
+          DOMAIN_NAME="backend.masus.no"
+          EMAIL="fg-web@samfundet.no"
+          
+          # Generate the certificate using Certbot with the HTTP-01 challenge
+          sudo certbot certonly --non-interactive --agree-tos --email $EMAIL --standalone -d $DOMAIN_NAME
+          
+          # Certbot stores the certificate and key in /etc/letsencrypt
+          CERT_PATH="/etc/letsencrypt/live/$DOMAIN_NAME/fullchain.pem"
+          KEY_PATH="/etc/letsencrypt/live/$DOMAIN_NAME/privkey.pem"
+          
+          # Base64 encode the certificate and key for use in Azure
+          CERT_PEM=$(cat $CERT_PATH | base64 -w 0)
+          KEY_PEM=$(cat $KEY_PATH | base64 -w 0)
+          
+          # Set environment variables to use later in the workflow
+          echo "CERT_PEM=$CERT_PEM" >> $GITHUB_ENV
+          echo "KEY_PEM=$KEY_PEM" >> $GITHUB_ENV
+
+      - name: Log in to Azure
+        uses: azure/login@v2
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+      - name: Add certificate to Azure Application Gateway
+        run: |
+          # Add the certificate to the Azure Application Gateway
+          az network application-gateway ssl-cert create \
+            --gateway-name "hilfling-gateway" \
+            --resource-group "hilfling-backend_group" \
+            --name "hilfling-gateway-ssl-cert" \
+            --cert-file "/etc/letsencrypt/live/$DOMAIN_NAME/fullchain.pem" \
+            --key-file "/etc/letsencrypt/live/$DOMAIN_NAME/privkey.pem"
