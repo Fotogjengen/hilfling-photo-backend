@@ -1,59 +1,44 @@
-name: Generate and Deploy SSL Certificate from Let's Encrypt
+name: Generate and Upload SSL Certificate
 
 on:
-  schedule:
-    - cron: '0 0 * * 0,14'  # Run every 2 weeks at midnight UTC
+  workflow_dispatch: # You can also schedule this with 'schedule' for regular updates
   push:
     branches:
-      - feature/fg-137
-  workflow_dispatch:
+      - main
 
 jobs:
-  generate-and-deploy:
+  generate-and-upload-cert:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout repository
+      - name: Checkout code
         uses: actions/checkout@v2
 
-      - name: Install Certbot
-        run: |
-          sudo apt update
-          sudo apt install -y certbot
-
-      - name: Generate SSL Certificate with Certbot
-        run: |
-          # Define domain and email for Let's Encrypt registration
-          DOMAIN_NAME="backend.masus.no"
-          EMAIL="fg-web@samfundet.no"
-          
-          # Generate the certificate using Certbot with the HTTP-01 challenge
-          sudo certbot certonly --non-interactive --agree-tos --email $EMAIL --standalone -d $DOMAIN_NAME
-          
-          # Certbot stores the certificate and key in /etc/letsencrypt
-          CERT_PATH="/etc/letsencrypt/live/$DOMAIN_NAME/fullchain.pem"
-          KEY_PATH="/etc/letsencrypt/live/$DOMAIN_NAME/privkey.pem"
-          
-          # Base64 encode the certificate and key for use in Azure
-          CERT_PEM=$(cat $CERT_PATH | base64 -w 0)
-          KEY_PEM=$(cat $KEY_PATH | base64 -w 0)
-          
-          # Set environment variables to use later in the workflow
-          echo "CERT_PEM=$CERT_PEM" >> $GITHUB_ENV
-          echo "KEY_PEM=$KEY_PEM" >> $GITHUB_ENV
-
       - name: Log in to Azure
-        uses: azure/login@v2
+        uses: azure/login@v1
         with:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
 
-      - name: Add certificate to Azure Application Gateway
+      - name: Generate SSL certificate with Certbot
+        env:
+          DOMAIN: ${{ backend.masus.no }}
+          CERTBOT_EMAIL: ${{ fg-web@samfundet.no }}
         run: |
-          # Add the base64-encoded certificate and key to the Application Gateway
+          sudo apt-get update
+          sudo apt-get install -y certbot
+          certbot certonly --standalone -d $DOMAIN --email $CERTBOT_EMAIL --agree-tos -n
+          openssl pkcs12 -export -out cert.pfx -inkey /etc/letsencrypt/live/$DOMAIN/privkey.pem -in /etc/letsencrypt/live/$DOMAIN/fullchain.pem -passout pass:YourPfxPassword
+
+      - name: Upload certificate to Azure Application Gateway
+        env:
+          AZURE_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+          AZURE_RESOURCE_GROUP: hilfling-backend_group
+          AZURE_APPLICATION_GATEWAY_NAME: hilfling-gateway
+          PFX_PASSWORD: ${{secrets.PFX_PASSWORD}}
+        run: |
           az network application-gateway ssl-cert create \
-            --gateway-name "hilfling-gateway" \
-            --resource-group "hilfling-backend_group" \
-            --name "hilfling-gateway-ssl-cert" \
-            --cert-password "" \
-            --cert-file <(echo "$CERT_PEM" | base64 -d) \
-            --key-file <(echo "$KEY_PEM" | base64 -d)
+            --resource-group $AZURE_RESOURCE_GROUP \
+            --gateway-name $AZURE_APPLICATION_GATEWAY_NAME \
+            --name app-gateway-cert \
+            --cert-file cert.pfx \
+            --cert-password $PFX_PASSWORD
