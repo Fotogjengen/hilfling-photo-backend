@@ -5,7 +5,8 @@ on:
     - cron: '0 0 * * 0,14'  # Run every 2 weeks at midnight UTC
   push:
     branches:
-      - main
+      - feature/fg-137
+  workflow_dispatch:
 
 jobs:
   generate-and-deploy:
