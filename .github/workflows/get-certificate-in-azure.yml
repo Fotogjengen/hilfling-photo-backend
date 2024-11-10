@@ -23,7 +23,9 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt-get install -y python3-pip
-          pip3 install certbot certbot-dns-domeneshop
+          sudo apt-get install -y python3-dev
+          pip3 install certbot
+          pip3 install certbot-dns-domeneshop  # Ensure the DNS plugin is installed
 
       - name: Generate SSL certificate with Certbot (DNS-01 challenge)
         env:
@@ -37,7 +39,7 @@ jobs:
           
           # Run Certbot with DNS-01 challenge using Domeneshop
           certbot certonly \
-            --authenticator certbot-dns-domeneshop:dns-domeneshop \
+            --authenticator dns-domeneshop \
             --dns-domeneshop-credentials /tmp/domeneshop_credentials.ini \
             --dns-domeneshop-propagation-seconds 120 \
             --email $CERTBOT_EMAIL --agree-tos -n \
