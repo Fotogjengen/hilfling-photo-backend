@@ -26,16 +26,19 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt-get install -y certbot
-          certbot certonly --standalone -d $DOMAIN --email $CERTBOT_EMAIL --agree-tos -n
-          openssl pkcs12 -export -out cert.pfx -inkey /etc/letsencrypt/live/$DOMAIN/privkey.pem -in /etc/letsencrypt/live/$DOMAIN/fullchain.pem -passout pass:YourPfxPassword
+          certbot certonly --standalone -d $DOMAIN --email $CERTBOT_EMAIL --agree-tos -n \
+            --config-dir ./certbot/config --work-dir ./certbot/work --logs-dir ./certbot/logs
+          openssl pkcs12 -export -out cert.pfx -inkey ./certbot/config/live/$DOMAIN/privkey.pem \
+            -in ./certbot/config/live/$DOMAIN/fullchain.pem -passout pass:$PFX_PASSWORD
 
       - name: Upload certificate to Azure Application Gateway
         env:
           AZURE_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
           AZURE_RESOURCE_GROUP: hilfling-backend_group
           AZURE_APPLICATION_GATEWAY_NAME: hilfling-gateway
-          PFX_PASSWORD: ${{secrets.PFX_PASSWORD}}
+          PFX_PASSWORD: ${{ secrets.PFX_PASSWORD }}
         run: |
+          # Create the SSL certificate in Azure Application Gateway
           az network application-gateway ssl-cert create \
             --resource-group $AZURE_RESOURCE_GROUP \
             --gateway-name $AZURE_APPLICATION_GATEWAY_NAME \
