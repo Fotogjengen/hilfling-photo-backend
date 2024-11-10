@@ -1,10 +1,10 @@
 name: Generate and Upload SSL Certificate
 
 on:
-  workflow_dispatch: # You can also schedule this with 'schedule' for regular updates
   push:
     branches:
-      - main
+      - feature/fg-137
+  workflow_dispatch:
 
 jobs:
   generate-and-upload-cert:
