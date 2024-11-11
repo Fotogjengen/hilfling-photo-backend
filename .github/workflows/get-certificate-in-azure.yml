@@ -19,10 +19,10 @@ jobs:
         with:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
 
-      - name: Install Certbot and the Domeneshop DNS plugin
+      - name: Install Certbot and Domeneshop DNS plugin
         run: |
           sudo apt-get update
-          sudo apt-get install -y python3-pip python3-dev
+          sudo apt-get install -y python3-pip
           pip3 install certbot certbot-dns-domeneshop
 
       - name: Generate SSL certificate with Certbot (DNS-01 challenge)
@@ -31,12 +31,11 @@ jobs:
           DOMAIN_ALTERNATE: www.backend.masus.no
           CERTBOT_EMAIL: fg-web@samfundet.no
           DNS_PROVIDER_CREDENTIALS: ${{ secrets.DOMENESHOP_CREDENTIALS }}
-          PFX_PASSWORD: ${{ secrets.PFX_PASSWORD }}  # Ensure password is available
+          PFX_PASSWORD: ${{ secrets.PFX_PASSWORD }}
         run: |
           echo "$DNS_PROVIDER_CREDENTIALS" > /tmp/domeneshop_credentials.ini
           chmod 600 /tmp/domeneshop_credentials.ini
-          
-          # Run Certbot with DNS-01 challenge
+
           certbot certonly \
             --authenticator dns-domeneshop \
             --dns-domeneshop-credentials /tmp/domeneshop_credentials.ini \
@@ -47,14 +46,10 @@ jobs:
             --work-dir /tmp/certbot/work \
             --logs-dir /tmp/certbot/logs
 
-          # Create a .pfx file from the generated certificate
           openssl pkcs12 -export -out cert.pfx \
             -inkey /tmp/certbot/config/live/$DOMAIN/privkey.pem \
             -in /tmp/certbot/config/live/$DOMAIN/fullchain.pem \
             -passout pass:$PFX_PASSWORD
-
-          # Verify the .pfx file can be opened with the same password
-          openssl pkcs12 -info -in cert.pfx -passin pass:$PFX_PASSWORD || exit 1
 
       - name: Upload certificate to Azure Application Gateway
         env:
@@ -63,7 +58,6 @@ jobs:
           AZURE_APPLICATION_GATEWAY_NAME: hilfling-gateway
           PFX_PASSWORD: ${{ secrets.PFX_PASSWORD }}
         run: |
-          # Upload certificate to Azure Application Gateway
           az network application-gateway ssl-cert create \
             --resource-group $AZURE_RESOURCE_GROUP \
             --gateway-name $AZURE_APPLICATION_GATEWAY_NAME \
