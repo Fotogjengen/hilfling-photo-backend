@@ -32,7 +32,7 @@ jobs:
           DOMAIN: backend.masus.no
           DOMAIN_ALTERNATE: www.backend.masus.no  # Optional: if you want to include an additional domain (e.g., www)
           CERTBOT_EMAIL: fg-web@samfundet.no
-          DNS_PROVIDER_CREDENTIALS: ${{ secrets.DOMENESHOP_CREDENTIALS_FILE }}  # Path to your credentials file in GitHub Secrets
+          DNS_PROVIDER_CREDENTIALS: ${{ secrets.DOMENESHOP_CREDENTIALS }}  # Path to your credentials file in GitHub Secrets
         run: |
           # Create a temporary file for the credentials
           echo "$DNS_PROVIDER_CREDENTIALS" > /tmp/domeneshop_credentials.ini
