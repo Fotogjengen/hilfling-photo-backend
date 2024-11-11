@@ -31,6 +31,7 @@ jobs:
           DOMAIN_ALTERNATE: www.backend.masus.no
           CERTBOT_EMAIL: fg-web@samfundet.no
           DNS_PROVIDER_CREDENTIALS: ${{ secrets.DOMENESHOP_CREDENTIALS }}
+          PFX_PASSWORD: ${{ secrets.PFX_PASSWORD }}  # Ensure password is available
         run: |
           echo "$DNS_PROVIDER_CREDENTIALS" > /tmp/domeneshop_credentials.ini
           chmod 600 /tmp/domeneshop_credentials.ini
@@ -46,11 +47,14 @@ jobs:
             --work-dir /tmp/certbot/work \
             --logs-dir /tmp/certbot/logs
 
-          # Use Certbot's generated files for the .pfx file
+          # Create a .pfx file from the generated certificate
           openssl pkcs12 -export -out cert.pfx \
             -inkey /tmp/certbot/config/live/$DOMAIN/privkey.pem \
             -in /tmp/certbot/config/live/$DOMAIN/fullchain.pem \
             -passout pass:$PFX_PASSWORD
+
+          # Verify the .pfx file can be opened with the same password
+          openssl pkcs12 -info -in cert.pfx -passin pass:$PFX_PASSWORD || exit 1
 
       - name: Upload certificate to Azure Application Gateway
         env:
@@ -59,6 +63,7 @@ jobs:
           AZURE_APPLICATION_GATEWAY_NAME: hilfling-gateway
           PFX_PASSWORD: ${{ secrets.PFX_PASSWORD }}
         run: |
+          # Upload certificate to Azure Application Gateway
           az network application-gateway ssl-cert create \
             --resource-group $AZURE_RESOURCE_GROUP \
             --gateway-name $AZURE_APPLICATION_GATEWAY_NAME \
