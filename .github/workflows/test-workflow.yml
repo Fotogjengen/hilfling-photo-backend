@@ -36,7 +36,7 @@ jobs:
 
       - name: Delete existing container instances
         run: |
-          for i in 1 2 3; do
+          for i in 1 2; do
             az container delete \
               --name hilfling-backend${i} \
               --resource-group hilfling-backend_group \
@@ -45,7 +45,7 @@ jobs:
 
       - name: Deploy new container instances
         run: |
-          for i in 1 2 3; do
+          for i in 1 2; do
             az container create \
               --name hilfling-backend${i} \
               --resource-group hilfling-backend_group \
