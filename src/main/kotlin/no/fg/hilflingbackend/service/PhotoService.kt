@@ -123,11 +123,35 @@ class PhotoService(
                       this.profileLocation.resolve(photoDto.motive.motiveId.toString())
               else -> throw IllegalArgumentException("Invalid security level")
             }
-    if (!Files.isDirectory(directory)) {
-      Files.createDirectories(directory)
-    }
     val location = directory.resolve(imageFileName.filename)
-    Files.copy(file.inputStream, location).toString()
+    //Files.copy(file.inputStream, location).toString()
+
+    val uploadSuccess = runBlocking {
+      try {
+        val response: HttpResponse = client.submitFormWithBinaryData(
+          url = "http://host.docker.internal:3000/photos/upload",
+          formData = formData {
+            append("directory", "$directory")
+            append("photoFile", file.inputStream.readBytes(), Headers.build {
+              append(HttpHeaders.ContentType, "image/png")
+              append(HttpHeaders.ContentDisposition, "filename=\"${file.originalFilename}\"")
+            })
+          }
+        ) {
+          contentType(ContentType.MultiPart.FormData)
+        }
+
+        logger.info("API Response: ${response.bodyAsText()}")
+        response.status.value in 200..299 // Return true if success
+      } catch (e: Exception) {
+        logger.error("Failed to upload file: ${e.message}")
+        false
+      }
+    }
+    if (!uploadSuccess) {
+      throw RuntimeException("File upload failed for ${file.originalFilename}")
+    }
+
 
     return location.toString().subSequence(20, location.toString().length).toString()
   }
