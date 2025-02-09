@@ -467,7 +467,9 @@ class PhotoService(
     isGoodPic: Boolean,
     album: UUID,
     sortBy: String,
-    desc: Boolean
+    desc: Boolean,
+    securityLevel: String,
+    isAnalog: Boolean
   ): Page<PhotoDto> = photoRepository
     .findAll(
       page,
@@ -481,7 +483,9 @@ class PhotoService(
       isGoodPic,
       album,
       sortBy,
-      desc
+      desc,
+      securityLevel, 
+      isAnalog
     )
   
     fun getPhotoCount(): Long {

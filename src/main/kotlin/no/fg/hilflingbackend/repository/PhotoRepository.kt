@@ -164,9 +164,12 @@ open class PhotoRepository(
     isGoodPic: Boolean = false,
     album: UUID,
     sortBy: String,
-    desc: Boolean = true
+    desc: Boolean = true,
+    securityLevel: String,
+    isAnalog: Boolean = false
   ): Page<PhotoDto> {
     val offset = page * pageSize
+    
     var ph = database.from(Photos)
       .innerJoin(Motives, on = Photos.motiveId eq Motives.id)
       .innerJoin(Places, on = Photos.placeId eq Places.id)
@@ -254,13 +257,29 @@ open class PhotoRepository(
           } else {
             Photos.isGoodPicture eq false or Photos.isGoodPicture eq true
           }
+          ) and (
+          if (securityLevel != "") {
+            SecurityLevels.type eq securityLevel
+          } else {
+            SecurityLevels.type notEq securityLevel
+          }
+          ) and (
+          if (isAnalog) {
+            Albums.isAnalog eq true
+          } else {
+            Albums.isAnalog eq false or Albums.isAnalog eq true
+          }
           )
       }.limit(offset, pageSize)
       .map { row -> constructPhotoDto(row) }
 
+
     if (tag.isNotEmpty()) {
       ph = ph.filter { row -> row.photoTags.any { t -> tag.contains(t.name) } }
     }
+
+
+
     return Page(
       page = page,
       pageSize = pageSize,

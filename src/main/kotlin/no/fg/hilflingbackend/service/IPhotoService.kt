@@ -21,7 +21,9 @@ interface IBaseService<T> {
     isGoodPic: Boolean = false,
     album: UUID,
     sortBy: String,
-    desc: Boolean = true
+    desc: Boolean = true,
+    securityLevel: String,
+    isAnalog: Boolean = false
   ): Page<T>
 }
 interface IPhotoService : IBaseService<PhotoDto> {
