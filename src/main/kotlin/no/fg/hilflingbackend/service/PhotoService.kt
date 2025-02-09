@@ -1,13 +1,22 @@
 package no.fg.hilflingbackend.service
 
+import io.ktor.client.engine.cio.CIO
+import io.ktor.client.HttpClient
+import io.ktor.client.request.forms.formData
+import io.ktor.client.request.forms.submitFormWithBinaryData
+import io.ktor.client.statement.HttpResponse
+import io.ktor.http.ContentType
+import io.ktor.http.contentType
+import io.ktor.http.Headers
+import io.ktor.http.HttpHeaders
 import jakarta.persistence.EntityNotFoundException
-import java.io.IOException
 import java.nio.file.Files
 import java.nio.file.Path
 import java.nio.file.Paths
 import java.time.LocalDate
 import java.util.UUID
 import java.util.stream.Stream
+import kotlinx.coroutines.runBlocking
 import no.fg.hilflingbackend.configurations.ImageFileStorageProperties
 import no.fg.hilflingbackend.dto.AlbumDto
 import no.fg.hilflingbackend.dto.CategoryDto
@@ -43,14 +52,6 @@ import org.springframework.core.io.UrlResource
 import org.springframework.stereotype.Service
 import org.springframework.util.FileSystemUtils
 import org.springframework.web.multipart.MultipartFile
-import io.ktor.client.request.*
-import io.ktor.client.statement.*
-import io.ktor.http.*
-import io.ktor.client.*
-import io.ktor.client.engine.cio.*
-import io.ktor.client.request.forms.*
-import io.ktor.utils.io.*
-import kotlinx.coroutines.*
 
 
 val client = HttpClient(CIO)
@@ -82,6 +83,33 @@ class PhotoService(
   fun savePhotosToDisk() {
     throw NotImplementedError()
   }
+
+  private fun uploadFile(file: MultipartFile, directory: Path): Boolean {
+    return runBlocking {
+      try {
+        val response: HttpResponse = client.submitFormWithBinaryData(
+          url = "http://host.docker.internal:3000/photos/upload",
+          formData = formData {
+            append("directory", "$directory")
+            append("photoFile", file.inputStream.readBytes(), Headers.build {
+              append(HttpHeaders.ContentType, "image/png")
+              append(HttpHeaders.ContentDisposition, "filename=\"${file.originalFilename}\"")
+            })
+          }
+        ) {
+          contentType(ContentType.MultiPart.FormData)
+        }
+
+        logger.info("API Response: \${response.bodyAsText()}")
+        response.status.value in 200..299 // Return true if success
+      } catch (e: Exception) {
+        logger.error("Failed to upload file: \${e.message}")
+        false
+      }
+    }
+  }
+
+
 
   /** FilePath is generated as follows: basepath/<securityLevel>/<Album>/<Motive/<uuuid>.jpg */
   fun generateFilePath(
@@ -126,29 +154,7 @@ class PhotoService(
     val location = directory.resolve(imageFileName.filename)
     //Files.copy(file.inputStream, location).toString()
 
-    val uploadSuccess = runBlocking {
-      try {
-        val response: HttpResponse = client.submitFormWithBinaryData(
-          url = "http://host.docker.internal:3000/photos/upload",
-          formData = formData {
-            append("directory", "$directory")
-            append("photoFile", file.inputStream.readBytes(), Headers.build {
-              append(HttpHeaders.ContentType, "image/png")
-              append(HttpHeaders.ContentDisposition, "filename=\"${file.originalFilename}\"")
-            })
-          }
-        ) {
-          contentType(ContentType.MultiPart.FormData)
-        }
-
-        logger.info("API Response: ${response.bodyAsText()}")
-        response.status.value in 200..299 // Return true if success
-      } catch (e: Exception) {
-        logger.error("Failed to upload file: ${e.message}")
-        false
-      }
-    }
-    if (!uploadSuccess) {
+    if (!uploadFile(file, directory)) {
       throw RuntimeException("File upload failed for ${file.originalFilename}")
     }
 
@@ -288,31 +294,7 @@ class PhotoService(
               )
       logger.info("the file path: $filePath")
       // Save file to disk
-
-      val uploadSuccess = runBlocking {
-        try {
-          val response: HttpResponse = client.submitFormWithBinaryData(
-            url = "http://host.docker.internal:3000/photos",
-            formData = formData {
-              append("directoryList", "$filePath")
-              append("photoFileList", file.inputStream.readBytes(), Headers.build {
-                append(HttpHeaders.ContentType, "image/png")
-                append(HttpHeaders.ContentDisposition, "filename=\"${file.originalFilename}\"")
-              })
-            }
-          ) {
-            contentType(ContentType.MultiPart.FormData)
-          }
-
-          logger.info("API Response: ${response.bodyAsText()}")
-          response.status.value in 200..299 // Return true if success
-        } catch (e: Exception) {
-          logger.error("Failed to upload file: ${e.message}")
-          false
-        }
-      }
-
-      if (!uploadSuccess) {
+      if (!uploadFile(file, filePath)) {
         throw RuntimeException("File upload failed for ${file.originalFilename}")
       }
       // Add PhotoModel to Database
