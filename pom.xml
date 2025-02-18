@@ -99,6 +99,26 @@
 			<version>${springdoc.version}</version>
 		</dependency>
 
+		<dependency>
+			<groupId>io.ktor</groupId>
+			<artifactId>ktor-server-core-jvm</artifactId>
+			<version>3.0.3</version>
+		</dependency>
+		<dependency>
+			<groupId>io.ktor</groupId>
+			<artifactId>ktor-server-netty-jvm</artifactId>
+			<version>3.0.3</version>
+		</dependency>
+		<dependency>
+			<groupId>io.ktor</groupId>
+			<artifactId>ktor-client-core-jvm</artifactId>
+			<version>3.0.3</version>
+		</dependency>
+		<dependency>
+			<groupId>io.ktor</groupId>
+			<artifactId>ktor-client-cio-jvm</artifactId>
+			<version>3.0.3</version>
+		</dependency>
 
 
 		<!-- Database -->
@@ -195,6 +215,8 @@
             <groupId>org.springframework</groupId>
             <artifactId>spring-test</artifactId>
         </dependency>
+
+
 
         <!-- END TESTING -->
 	</dependencies>
