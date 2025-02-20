@@ -273,17 +273,41 @@ open class PhotoRepository(
       }.limit(offset, pageSize)
       .map { row -> constructPhotoDto(row) }
 
+    
+      var totalCount = database.from(Photos)
+      .innerJoin(Motives, on = Photos.motiveId eq Motives.id)
+      .innerJoin(Places, on = Photos.placeId eq Places.id)
+      .innerJoin(Albums, on = Photos.albumId eq Albums.id)
+      .innerJoin(Categories, on = Motives.categoryId eq Categories.id)
+      .innerJoin(EventOwners, on = Motives.eventOwnerId eq EventOwners.id)
+      .innerJoin(SecurityLevels, on = Photos.securityLevelId eq SecurityLevels.id)
+      .innerJoin(Gangs, on = Photos.gangId eq Gangs.id)
+      .innerJoin(PhotoGangBangers, on = Photos.photoGangBangerId eq PhotoGangBangers.id)
+      .innerJoin(SamfundetUsers, on = PhotoGangBangers.samfundetUserId eq SamfundetUsers.id)
+      .innerJoin(Positions, on = PhotoGangBangers.positionId eq Positions.id)
+      .select(count(Photos.id))
+      .where { 
+          (if (motive != UUID(0L, 0L)) Motives.id eq motive else Motives.id notEq UUID(0L, 0L)) and
+          (if (album != UUID(0L, 0L)) Albums.id eq album else Albums.id notEq UUID(0L, 0L)) and
+          (Photos.dateCreated.greaterEq(fromDate) and Photos.dateCreated.lessEq(toDate)) and
+          (if (category.isNotEmpty()) Categories.name eq category else Categories.name notEq category) and
+          (if (place != UUID(0L, 0L)) Places.id eq place else Places.id notEq UUID(0L, 0L)) and
+          (if (isGoodPic) Photos.isGoodPicture eq true else Photos.isGoodPicture eq false or Photos.isGoodPicture eq true) and
+          (if (securityLevel.isNotEmpty()) SecurityLevels.type eq securityLevel else SecurityLevels.type notEq securityLevel) and
+          (if (isAnalog) Albums.isAnalog eq true else Albums.isAnalog eq false or Albums.isAnalog eq true) 
+      }
+      .map { it.getInt(1) } 
+      .firstOrNull() ?: 0
+
 
     if (tag.isNotEmpty()) {
       ph = ph.filter { row -> row.photoTags.any { t -> tag.contains(t.name) } }
     }
 
-
-
     return Page(
       page = page,
       pageSize = pageSize,
-      totalRecords = ph.size,
+      totalRecords = totalCount,
       currentList = ph
     )
   }
