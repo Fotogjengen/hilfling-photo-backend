@@ -244,10 +244,4 @@ class PhotoController(
   ): PhotoDto {
     return photoService.patch(dto)
   }
-
-  @GetMapping("/count")
-  fun getPhotoCount(): ResponseEntity<Long> {
-    val count = photoService.getPhotoCount()
-    return ResponseEntity.ok(count)
-  }
 }

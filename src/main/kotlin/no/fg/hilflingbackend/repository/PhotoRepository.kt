@@ -603,11 +603,4 @@ open class PhotoRepository(
       .update(analogPhoto)
     return findAnalogPhotoById(analogPhoto.id)
   }
-  fun countPhotos(): Long {
-    return database
-    .from(Photos)
-    .select(count(Photos.id)) 
-    .map { row -> row.getLong(1)} 
-    .first()
-  }
 }

@@ -488,9 +488,6 @@ class PhotoService(
       isAnalog
     )
   
-    fun getPhotoCount(): Long {
-      return photoRepository.countPhotos()
-    }
 }
 
 
