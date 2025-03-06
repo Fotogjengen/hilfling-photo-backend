@@ -49,9 +49,6 @@ class MockDataService {
   lateinit var photoTagRepository: PhotoTagRepository
 
   @Autowired
-  lateinit var articleTagRepository: ArticleTagRepository
-
-  @Autowired
   lateinit var categoryRepository: CategoryRepository
 
   @Autowired
