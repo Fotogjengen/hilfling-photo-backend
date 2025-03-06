@@ -299,10 +299,9 @@ open class PhotoRepository(
       .map { it.getInt(1) } 
       .firstOrNull() ?: 0
 
-
-    if (tag.isNotEmpty()) {
-      ph = ph.filter { row -> row.photoTags.any { t -> tag.contains(t.name) } }
-    }
+    // if (tag.isNotEmpty()) {
+    //   ph = ph.filter { row -> row.photoTags.any { t -> tag.contains(t.name) } }
+    // }
 
     return Page(
       page = page,
