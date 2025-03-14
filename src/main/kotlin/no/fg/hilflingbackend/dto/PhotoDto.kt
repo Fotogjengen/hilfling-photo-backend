@@ -2,6 +2,7 @@ package no.fg.hilflingbackend.dto
 
 import no.fg.hilflingbackend.model.Photo
 import no.fg.hilflingbackend.value_object.ImageFileName
+import java.time.LocalDate
 import java.util.UUID
 
 data class PhotoPatchRequestDto(
@@ -14,7 +15,7 @@ data class PhotoPatchRequestDto(
   val albumDto: AlbumDto?,
   val categoryDto: CategoryDto?,
   val photoGangBangerDto: PhotoGangBangerDto?,
-  val photoTags: List<String>?
+  val photoTags: List<String>?,
 )
 
 data class PhotoDto(
@@ -30,7 +31,8 @@ data class PhotoDto(
   val albumDto: AlbumDto,
   val categoryDto: CategoryDto,
   val photoGangBangerDto: PhotoGangBangerDto,
-  val photoTags: List<PhotoTagDto>
+  val photoTags: List<PhotoTagDto>,
+  val dateTaken: LocalDate,
 ) {
   fun toEntity(): Photo {
     val photo = this
@@ -40,6 +42,7 @@ data class PhotoDto(
       this.smallUrl = photo.smallUrl
       this.mediumUrl = photo.mediumUrl
       this.largeUrl = photo.largeUrl
+      this.dateCreated = photo.dateTaken
       this.motive = photo.motive.toEntity()
       this.place = photo.placeDto.toEntity()
       this.securityLevel = photo.securityLevel.toEntity()
@@ -49,6 +52,7 @@ data class PhotoDto(
       this.photoGangBanger = photo.photoGangBangerDto.toEntity()
     }
   }
+
   companion object {
     fun createWithFileName(
       fileName: ImageFileName,
@@ -60,7 +64,8 @@ data class PhotoDto(
       albumDto: AlbumDto,
       photoTags: List<PhotoTagDto>,
       categoryDto: CategoryDto,
-      photoGangBangerDto: PhotoGangBangerDto
+      photoGangBangerDto: PhotoGangBangerDto,
+      dateTaken: LocalDate,
     ): Pair<PhotoDto, ImageFileName> {
       // Generate unique ID
       val photoId = PhotoId()
@@ -80,16 +85,17 @@ data class PhotoDto(
           categoryDto = categoryDto,
           securityLevel = securityLevel,
           photoGangBangerDto = photoGangBangerDto,
-          photoTags = photoTags
+          photoTags = photoTags,
+          dateTaken = dateTaken,
         ),
-        newUniqueFileName
+        newUniqueFileName,
       )
     }
   }
 }
 
 data class PhotoId(
-  override val id: UUID = UUID.randomUUID()
+  override val id: UUID = UUID.randomUUID(),
 ) : UuidId {
   override fun toString(): String = id.toString()
 }
