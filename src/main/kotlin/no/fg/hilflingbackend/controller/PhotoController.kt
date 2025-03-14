@@ -78,15 +78,6 @@ class PhotoController(
       logger.error("Parameter lists are unequal")
       throw InvalidParameterException("Parameter lists are unequal")
     }
-    /*
-    // TODO: Test speed
-    // This is a test cache results. Not in use at the moment
-    val cachedPlace = { id: UUID ->
-        placeRepository
-          .findById(id)
-          ?: throw EntityNotFoundException("Did not find place")
-    }.memoize()
-     */
 
     val createdPhotoList = photoService
       .saveDigitalPhotos(
