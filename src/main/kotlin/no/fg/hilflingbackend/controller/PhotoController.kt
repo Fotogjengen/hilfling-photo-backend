@@ -10,19 +10,25 @@ import no.fg.hilflingbackend.utils.ResponseOk
 import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
-import org.springframework.web.bind.annotation.*
+import org.springframework.web.bind.annotation.GetMapping
+import org.springframework.web.bind.annotation.PatchMapping
+import org.springframework.web.bind.annotation.PathVariable
+import org.springframework.web.bind.annotation.PostMapping
+import org.springframework.web.bind.annotation.RequestBody
+import org.springframework.web.bind.annotation.RequestMapping
+import org.springframework.web.bind.annotation.RequestParam
+import org.springframework.web.bind.annotation.RestController
 import org.springframework.web.multipart.MultipartFile
 import java.security.InvalidParameterException
 import java.time.LocalDate
-import java.util.*
+import java.util.UUID
 
 @RestController
 @RequestMapping("/photos")
 class PhotoController(
   val photoService: PhotoService,
-  val database: Database
+  val database: Database,
 ) : GlobalExceptionHandler() {
-
   // The main photo-upload endpoint used most of the time
   @PostMapping("/upload")
   fun uploadPhotos(
@@ -49,9 +55,9 @@ class PhotoController(
         tagList = tagList,
         categoryName = categoryName,
         isGoodPhotoList = isGoodPhotoList,
-        dateCreated = LocalDate.now()
+        dateCreated = LocalDate.now(),
       ),
-      HttpStatus.CREATED
+      HttpStatus.CREATED,
     )
 
   @PostMapping
@@ -64,7 +70,7 @@ class PhotoController(
     @RequestParam("photoGangBangerIdList") photoGangBangerIdList: List<UUID>,
     @RequestParam("albumIdList") albumIdList: List<UUID>,
     @RequestParam("categoryIdList") categoryIdList: List<UUID>,
-    @RequestParam("fileList") fileList: List<MultipartFile>
+    @RequestParam("fileList") fileList: List<MultipartFile>,
   ): ResponseEntity<List<String>> {
     // Assert all fields are populated
     if (
@@ -73,47 +79,52 @@ class PhotoController(
           placeIdList.size == securityLevelIdList.size &&
           gangIdList.size == photoGangBangerIdList.size &&
           isGoodPictureList.size == fileList.size
-        )
+      )
     ) {
       logger.error("Parameter lists are unequal")
       throw InvalidParameterException("Parameter lists are unequal")
     }
 
-    val createdPhotoList = photoService
-      .saveDigitalPhotos(
-        isGoodPictureList,
-        motiveIdList,
-        placeIdList,
-        securityLevelIdList,
-        gangIdList,
-        photoGangBangerIdList,
-        albumIdList,
-        categoryIdList,
-        fileList
-      )
+    val createdPhotoList =
+      photoService
+        .saveDigitalPhotos(
+          isGoodPictureList,
+          motiveIdList,
+          placeIdList,
+          securityLevelIdList,
+          gangIdList,
+          photoGangBangerIdList,
+          albumIdList,
+          categoryIdList,
+          fileList,
+        )
 
     return ResponseEntity<List<String>>(
       createdPhotoList,
       HttpHeaders(),
-      HttpStatus.CREATED
+      HttpStatus.CREATED,
     )
   }
 
   @GetMapping("/{id}")
-  fun getById(@PathVariable("id") id: UUID): ResponseEntity<PhotoDto> = ResponseOk(
-    photoService
-      .findById(id)
-  )
+  fun getById(
+    @PathVariable("id") id: UUID,
+  ): ResponseEntity<PhotoDto> =
+    ResponseOk(
+      photoService
+        .findById(id),
+    )
 
   @GetMapping("/motive/{id}")
   fun getByMotiveId(
     @PathVariable("id") id: UUID,
     @RequestParam("page", required = false) page: Int?,
-    @RequestParam("pageSize", required = false) pageSize: Int?
-  ): ResponseEntity<Page<PhotoDto>?> = ResponseOk(
-    photoService
-      .getByMotiveId(id, page ?: 0, pageSize ?: 100)
-  )
+    @RequestParam("pageSize", required = false) pageSize: Int?,
+  ): ResponseEntity<Page<PhotoDto>?> =
+    ResponseOk(
+      photoService
+        .getByMotiveId(id, page ?: 0, pageSize ?: 100),
+    )
 
   @GetMapping
   fun getAll(
@@ -145,27 +156,29 @@ class PhotoController(
           isGoodPic ?: false,
           album ?: UUID(0L, 0L),
           sortBy ?: "",
-          desc ?: true
+          desc ?: true,
         ),
     )
 
   @GetMapping("/carousel")
   fun getCarouselPhotos(
     @RequestParam("page", required = false) page: Int?,
-    @RequestParam("pageSize", required = false) pageSize: Int?
-  ): ResponseEntity<Page<PhotoDto>> = ResponseOk(
-    photoService
-      .getCarouselPhotos(page ?: 0, pageSize ?: 6)
-  )
+    @RequestParam("pageSize", required = false) pageSize: Int?,
+  ): ResponseEntity<Page<PhotoDto>> =
+    ResponseOk(
+      photoService
+        .getCarouselPhotos(page ?: 0, pageSize ?: 6),
+    )
 
   @GetMapping("/analog")
   fun getAllAnalogPhotos(
     @RequestParam("page", required = false) page: Int?,
-    @RequestParam("pageSize", required = false) pageSize: Int?
-  ): ResponseEntity<Page<PhotoDto>> = ResponseOk(
-    photoService
-      .getAllAnalogPhotos(page ?: 0, pageSize ?: 100)
-  )
+    @RequestParam("pageSize", required = false) pageSize: Int?,
+  ): ResponseEntity<Page<PhotoDto>> =
+    ResponseOk(
+      photoService
+        .getAllAnalogPhotos(page ?: 0, pageSize ?: 100),
+    )
 
   @GetMapping("/digital")
   fun getAllDigitalPhotos(
@@ -181,8 +194,8 @@ class PhotoController(
     @RequestParam("album", required = false) album: UUID?,
     @RequestParam("sortBy", required = false) sortBy: String?,
     @RequestParam("desc", required = false) desc: Boolean?,
-  ): ResponseEntity<Page<PhotoDto>> {
-    return ResponseOk(
+  ): ResponseEntity<Page<PhotoDto>> =
+    ResponseOk(
       photoService
         .getAllDigitalPhotos(
           page ?: 0,
@@ -196,15 +209,12 @@ class PhotoController(
           isGoodPic ?: false,
           album ?: UUID(0L, 0L),
           sortBy ?: "",
-          desc ?: true
-        )
+          desc ?: true,
+        ),
     )
-  }
 
   @PatchMapping
   fun patch(
-    @RequestBody dto: PhotoPatchRequestDto
-  ): PhotoDto {
-    return photoService.patch(dto)
-  }
+    @RequestBody dto: PhotoPatchRequestDto,
+  ): PhotoDto = photoService.patch(dto)
 }
