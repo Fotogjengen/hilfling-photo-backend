@@ -14,8 +14,8 @@ import org.springframework.web.bind.annotation.ControllerAdvice
 import org.springframework.web.bind.annotation.ExceptionHandler
 import org.springframework.web.context.request.WebRequest
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler
+import jakarta.persistence.EntityNotFoundException
 import java.lang.IllegalArgumentException
-import javax.persistence.EntityNotFoundException
 
 @Order(Ordered.HIGHEST_PRECEDENCE)
 @ControllerAdvice
@@ -39,7 +39,7 @@ open class GlobalExceptionHandler : ResponseEntityExceptionHandler() {
 
   // Handles missing request parameters
   @Override
-  override fun handleMissingServletRequestParameter(
+  fun handleMissingServletRequestParameter(
     ex: MissingServletRequestParameterException,
     headers: HttpHeaders,
     status: HttpStatus,

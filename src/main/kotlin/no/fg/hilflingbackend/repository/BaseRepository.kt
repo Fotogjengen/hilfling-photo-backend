@@ -16,7 +16,7 @@ import no.fg.hilflingbackend.model.BaseModel
 import no.fg.hilflingbackend.model.BaseTable
 import java.time.LocalDate
 import java.util.UUID
-import javax.persistence.EntityNotFoundException
+import jakarta.persistence.EntityNotFoundException
 
 abstract class BaseRepository<E : BaseModel<E>, D, R>(val table: BaseTable<E>, val database: Database) : IRepository<E, D, R> {
   override fun findById(id: UUID): D? {
@@ -37,9 +37,9 @@ abstract class BaseRepository<E : BaseModel<E>, D, R>(val table: BaseTable<E>, v
       .where { table.dateDeleted.isNull() }
       .limit(page, pageSize)
     return Page(
-      page,
-      pageSize,
-      1,
+      page = page,
+      pageSize = pageSize,
+      totalRecords = resultSet.totalRecords,
       currentList = resultSet.map { row -> convertToClass(row) }
     )
   }

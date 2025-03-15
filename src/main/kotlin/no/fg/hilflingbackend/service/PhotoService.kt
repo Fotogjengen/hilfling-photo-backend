@@ -1,6 +1,7 @@
 package no.fg.hilflingbackend.service
 
 import no.fg.hilflingbackend.configurations.ImageFileStorageProperties
+import no.fg.hilflingbackend.configurations.SecurityConfig
 import no.fg.hilflingbackend.dto.AlbumDto
 import no.fg.hilflingbackend.dto.CategoryDto
 import no.fg.hilflingbackend.dto.EventOwnerDto
@@ -24,6 +25,7 @@ import no.fg.hilflingbackend.repository.PhotoRepository
 import no.fg.hilflingbackend.repository.PhotoTagRepository
 import no.fg.hilflingbackend.repository.PlaceRepository
 import no.fg.hilflingbackend.repository.SecurityLevelRepository
+import no.fg.hilflingbackend.utils.EncryptionUtils
 import no.fg.hilflingbackend.utils.convertToValidFolderName
 import no.fg.hilflingbackend.value_object.ImageFileName
 import no.fg.hilflingbackend.value_object.PhotoSize
@@ -42,7 +44,7 @@ import java.nio.file.Paths
 import java.time.LocalDate
 import java.util.UUID
 import java.util.stream.Stream
-import javax.persistence.EntityNotFoundException
+import jakarta.persistence.EntityNotFoundException
 
 @Service
 class PhotoService(
@@ -58,6 +60,7 @@ class PhotoService(
   val albumRepository: AlbumRepository,
   val securityLevelRepository: SecurityLevelRepository,
   val photoGangBangerRepository: PhotoGangBangerRepository,
+  private val securityConfig: SecurityConfig,
 ) : IPhotoService {
 
   val logger = LoggerFactory.getLogger(this::class.java)
@@ -374,7 +377,16 @@ class PhotoService(
       // Save shit
     }
 
-    return numPhotoGenerated
+    // Encrypting the URLS
+    val encryptedUrls =
+      numPhotoGenerated.map { url ->
+        EncryptionUtils.encrypt(
+          url,
+          securityConfig.secretKey(),
+        ) // Encrypt each URL
+      }
+
+    return encryptedUrls
   }
   fun fetchOrCreatePlaceDto(placeName: String) = placeRepository
     .findByName(placeName)
