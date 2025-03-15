@@ -5,7 +5,6 @@ import no.fg.hilflingbackend.dto.Page
 import no.fg.hilflingbackend.dto.PhotoDto
 import no.fg.hilflingbackend.dto.PhotoPatchRequestDto
 import no.fg.hilflingbackend.exceptions.GlobalExceptionHandler
-import no.fg.hilflingbackend.model.AnalogPhoto
 import no.fg.hilflingbackend.service.PhotoService
 import no.fg.hilflingbackend.utils.ResponseOk
 import org.springframework.http.HttpHeaders
@@ -18,12 +17,11 @@ import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestParam
-import org.springframework.web.bind.annotation.RequestPart
 import org.springframework.web.bind.annotation.RestController
 import org.springframework.web.multipart.MultipartFile
 import java.security.InvalidParameterException
 import java.time.LocalDate
-import java.util.*
+import java.util.UUID
 
 @RestController
 @RequestMapping("/photos")
@@ -86,15 +84,6 @@ class PhotoController(
       logger.error("Parameter lists are unequal")
       throw InvalidParameterException("Parameter lists are unequal")
     }
-    /*
-    // TODO: Test speed
-    // This is a test cache results. Not in use at the moment
-    val cachedPlace = { id: UUID ->
-        placeRepository
-          .findById(id)
-          ?: throw EntityNotFoundException("Did not find place")
-    }.memoize()
-     */
 
     val createdPhotoList =
       photoService
@@ -115,21 +104,6 @@ class PhotoController(
       HttpHeaders(),
       HttpStatus.CREATED,
     )
-  }
-
-  @PostMapping("/analog")
-  fun createAnalogPhoto(
-    @RequestBody analogPhoto: AnalogPhoto,
-  ): AnalogPhoto {
-    TODO("Implement")
-  }
-
-  @PatchMapping("/analog")
-  fun uploadAnalogPhoto(
-    @RequestPart("photo") analogPhoto: AnalogPhoto,
-    @RequestPart("file") file: MultipartFile,
-  ): ResponseEntity<AnalogPhoto> {
-    TODO("Implement")
   }
 
   @GetMapping("/{id}")

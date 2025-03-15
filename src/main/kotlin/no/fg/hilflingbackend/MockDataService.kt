@@ -36,8 +36,6 @@ import no.fg.hilflingbackend.dto.SecurityLevelId
 import no.fg.hilflingbackend.dto.SemesterStart
 import no.fg.hilflingbackend.model.Photos
 import no.fg.hilflingbackend.repository.AlbumRepository
-import no.fg.hilflingbackend.repository.ArticleRepository
-import no.fg.hilflingbackend.repository.ArticleTagRepository
 import no.fg.hilflingbackend.repository.CategoryRepository
 import no.fg.hilflingbackend.repository.EventOwnerRepository
 import no.fg.hilflingbackend.repository.GangRepository
@@ -64,7 +62,6 @@ import java.util.UUID
 
 @Service
 class MockDataService {
-
   @Autowired
   lateinit var database: Database
 
@@ -87,13 +84,7 @@ class MockDataService {
   lateinit var samfundetUserRepository: SamfundetUserRepository
 
   @Autowired
-  lateinit var articleRepository: ArticleRepository
-
-  @Autowired
   lateinit var photoTagRepository: PhotoTagRepository
-
-  @Autowired
-  lateinit var articleTagRepository: ArticleTagRepository
 
   @Autowired
   lateinit var categoryRepository: CategoryRepository
@@ -127,36 +118,37 @@ class MockDataService {
     listOf(
       SecurityLevelDto(
         securityLevelId = SecurityLevelId(UUID.fromString("8214142f-7c08-48ad-9130-fd7ac6b23e51")),
-        securityLevelType = SecurityLevelType.FG
+        securityLevelType = SecurityLevelType.FG,
       ),
       SecurityLevelDto(
         securityLevelId = SecurityLevelId(UUID.fromString("8214142f-7c08-48ad-9130-fd7ac6b23e52")),
-        securityLevelType = SecurityLevelType.HUSFOLK
+        securityLevelType = SecurityLevelType.HUSFOLK,
       ),
       SecurityLevelDto(
         securityLevelId = SecurityLevelId(UUID.fromString("8314142f-7c08-48ad-9130-fd7ac6b23e52")),
-        securityLevelType = SecurityLevelType.ALLE
-      )
+        securityLevelType = SecurityLevelType.ALLE,
+      ),
     )
 
   fun generateGangData(): List<GangDto> =
     listOf(
       GangDto(
         gangId = GangId(UUID.fromString("b0bd026f-cc19-4474-989c-aec8d4a76bc9")),
-        name = "Fotogjengen"
+        name = "Fotogjengen",
       ),
-
       GangDto(
         gangId = GangId(UUID.fromString("b1bd026f-cc19-4474-989c-aec8d4a76bc9")),
-        name = "Diversegjengen"
-      )
+        name = "Diversegjengen",
+      ),
     )
 
   fun getPhotoFromApi(): String {
     val client = HttpClient.newBuilder().build()
-    val request = HttpRequest.newBuilder()
-      .uri(URI.create("https://picsum.photos/1200/800"))
-      .build()
+    val request =
+      HttpRequest
+        .newBuilder()
+        .uri(URI.create("https://picsum.photos/1200/800"))
+        .build()
     val response = client.send(request, HttpResponse.BodyHandlers.ofString())
     return response.headers().allValues("location")[0]
   }
@@ -184,8 +176,8 @@ class MockDataService {
           photoGangBangerDto = generatePhotoGangBangerData().first(),
           photoTags = generatePhotoTagData(),
           albumDto = generateAlbumData().first(),
-          categoryDto = generateCategoryData().first()
-        )
+          categoryDto = generateCategoryData().first(),
+        ),
       )
     }
     return list
@@ -195,13 +187,12 @@ class MockDataService {
     listOf(
       PlaceDto(
         placeId = PlaceId(UUID.fromString("9f4fa5d6-ad7c-419c-be58-1ee73f212675")),
-        name = "Klubben"
+        name = "Klubben",
       ),
-
       PlaceDto(
         placeId = PlaceId(UUID.fromString("8f4fa5d6-ad7c-419c-be58-1ee73f212675")),
-        name = "Storsalen"
-      )
+        name = "Storsalen",
+      ),
     )
 
   fun generateMotiveData(): List<MotiveDto> =
@@ -212,7 +203,7 @@ class MockDataService {
         albumDto = generateAlbumData().first(),
         eventOwnerDto = generateEventOwnerData().first(),
         categoryDto = generateCategoryData().first(),
-        dateCreated = LocalDate.now()
+        dateCreated = LocalDate.now(),
       ),
       MotiveDto(
         motiveId = MotiveId(UUID.fromString("94540f3c-77b8-4bc5-acc7-4dd7d8cc5bcd")),
@@ -220,83 +211,81 @@ class MockDataService {
         albumDto = generateAlbumData().first(),
         eventOwnerDto = generateEventOwnerData().first(),
         categoryDto = generateCategoryData().first(),
-        dateCreated = LocalDate.now()
+        dateCreated = LocalDate.now(),
       ),
     )
+
   fun generateCategoryData(): List<CategoryDto> =
     listOf(
       CategoryDto(
         categoryId = CategoryId(UUID.fromString("2832ee5e-3f11-4f11-8189-56ca4f70f418")),
-        name = "Gjengfoto"
+        name = "Gjengfoto",
       ),
-
       CategoryDto(
         categoryId = CategoryId(UUID.fromString("3832ee5e-3f11-4f11-8189-56ca4f70f418")),
-        name = "Konsert"
-      )
+        name = "Konsert",
+      ),
     )
 
   fun generateEventOwnerData(): List<EventOwnerDto> =
     listOf(
       EventOwnerDto(
         eventOwnerId = EventOwnerId(UUID.fromString("9265f73d-7b13-4673-9f3b-1db3b6c7d526")),
-        name = EventOwnerName.valueOf("Samfundet")
+        name = EventOwnerName.valueOf("Samfundet"),
       ),
       EventOwnerDto(
         eventOwnerId = EventOwnerId(UUID.fromString("afc308c4-06e2-47bb-b97b-70eb3f55e8d9")),
-        name = EventOwnerName.valueOf("ISFIT")
+        name = EventOwnerName.valueOf("ISFIT"),
       ),
       EventOwnerDto(
         eventOwnerId = EventOwnerId(UUID.fromString("e91f1201-e0bf-4d25-8026-b2a2d44c37c3")),
-        name = EventOwnerName.valueOf("UKA")
-      )
+        name = EventOwnerName.valueOf("UKA"),
+      ),
     )
 
-  fun generateAlbumData(): List<AlbumDto> {
-    return listOf(
+  fun generateAlbumData(): List<AlbumDto> =
+    listOf(
       AlbumDto(
         albumId = AlbumId(UUID.fromString("8a2bb663-1260-4c16-933c-a2af7420f5ff")),
-        title = "Vår 2017"
+        title = "Vår 2017",
       ),
       AlbumDto(
         albumId = AlbumId(UUID.fromString("91fcac35-4e68-400a-a43e-e8d3f81d10f1")),
-        title = "Høst 2017"
+        title = "Høst 2017",
       ),
       AlbumDto(
         albumId = AlbumId(UUID.fromString("91fcac35-4e68-400a-a43e-e8d3f81d10f2")),
-        title = "Vår 2018"
+        title = "Vår 2018",
       ),
       AlbumDto(
         albumId = AlbumId(UUID.fromString("91fcac35-4e68-400a-a43e-e8d3f81d10f3")),
-        title = "Høst 2018"
+        title = "Høst 2018",
       ),
       AlbumDto(
         albumId = AlbumId(UUID.fromString("91fcac35-4e68-400a-a43e-e8d3f81d10f4")),
-        title = "Vår 2019"
+        title = "Vår 2019",
       ),
       AlbumDto(
         albumId = AlbumId(UUID.fromString("91fcac35-4e68-400a-a43e-e8d3f81d10f5")),
-        title = "Høst 2019"
-      )
+        title = "Høst 2019",
+      ),
     )
-  }
 
-  fun generatePhotoTagData(): List<PhotoTagDto> {
-    return listOf(
+  fun generatePhotoTagData(): List<PhotoTagDto> =
+    listOf(
       PhotoTagDto(
         photoTagId = PhotoTagId(UUID.fromString(("d8771ab3-28a9-4b8c-991d-01f6123b8590"))),
-        name = "WowFactor100"
+        name = "WowFactor100",
       ),
       PhotoTagDto(
         photoTagId = PhotoTagId(UUID.fromString(("d8771ab3-28a9-4b8c-991d-01f6123b8590"))),
-        name = "insane!"
+        name = "insane!",
       ),
       PhotoTagDto(
         photoTagId = PhotoTagId(UUID.fromString(("d8771ab3-28a9-4b8c-991d-01f6123b8590"))),
-        name = "Meh"
-      )
+        name = "Meh",
+      ),
     )
-  }
 
   fun generateSamfundetUserData(): List<SamfundetUserDto> =
     listOf(
@@ -309,7 +298,7 @@ class MockDataService {
         sex = "Mann",
         username = "sjsivert",
         securityLevel = generateSecurityLevelData().first(),
-        phoneNumber = PhoneNumber("91382506")
+        phoneNumber = PhoneNumber("91382506"),
       ),
       SamfundetUserDto(
         samfundetUserId = SamfundetUserId(UUID.fromString("7a89444f-25f6-44d9-8a73-94587d72b822")),
@@ -320,8 +309,8 @@ class MockDataService {
         sex = "Kvinne",
         username = "Carossa",
         securityLevel = generateSecurityLevelData().first(),
-        phoneNumber = PhoneNumber("91382506")
-      )
+        phoneNumber = PhoneNumber("91382506"),
+      ),
     )
 
   fun generatePhotoGangBangerData(): List<PhotoGangBangerDto> =
@@ -336,9 +325,8 @@ class MockDataService {
         zipCode = "7051",
         semesterStart = SemesterStart("H2018"),
         samfundetUser = generateSamfundetUserData().first(),
-        position = generatePositionData().first()
+        position = generatePositionData().first(),
       ),
-
       PhotoGangBangerDto(
         photoGangBangerId = PhotoGangBangerId(UUID.fromString("7a89444f-25f6-44d9-8a73-94587d72b839")),
         address = "Odd Brochmanns Veg 52",
@@ -349,8 +337,8 @@ class MockDataService {
         zipCode = "7051",
         semesterStart = SemesterStart("H2018"),
         samfundetUser = generateSamfundetUserData()[1],
-        position = generatePositionData()[1]
-      )
+        position = generatePositionData()[1],
+      ),
     )
 
   fun generatePhotoGangBangerPositionData(): List<PhotoGangBangerPositionDto> =
@@ -359,14 +347,14 @@ class MockDataService {
         photoGangBangerPositionId = PhotoGangBangerPositionId(UUID.fromString("6a89444f-25f6-44d9-8a73-94587d72b831")),
         isCurrent = true,
         photoGangBangerDto = generatePhotoGangBangerData().first(),
-        position = generatePositionData().first()
+        position = generatePositionData().first(),
       ),
       PhotoGangBangerPositionDto(
         photoGangBangerPositionId = PhotoGangBangerPositionId(UUID.fromString("6a89444f-25f6-44d9-8a73-94587d72b832")),
         isCurrent = false,
         photoGangBangerDto = generatePhotoGangBangerData().first(),
-        position = generatePositionData().first()
-      )
+        position = generatePositionData().first(),
+      ),
     )
 
   fun generatePositionData(): List<PositionDto> =
@@ -374,13 +362,13 @@ class MockDataService {
       PositionDto(
         positionId = PositionId((UUID.fromString("bdd0cf5a-c952-41b8-8b83-c071da51f946"))),
         title = "Gjengsjef",
-        email = Email("fg-web@samfundet.no")
+        email = Email("fg-web@samfundet.no"),
       ),
       PositionDto(
         positionId = PositionId((UUID.fromString("bdd0cf5a-c952-41b8-8b83-c071da51f945"))),
         title = "Web",
-        email = Email("fg-web@samfundet.no")
-      )
+        email = Email("fg-web@samfundet.no"),
+      ),
     )
 
   fun seedMockData() {

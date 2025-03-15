@@ -20,16 +20,15 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Repository
 
 @Repository
-open class EventCardRepository() {
+open class EventCardRepository {
   @Autowired
   open lateinit var database: Database
 
   fun getLatestEventCards(
     numberOfEventCards: Int,
-    eventOwner: EventOwner
-  ): List<EventCardDto> {
-    // TODO: Test if this works
-    return database
+    eventOwner: EventOwner,
+  ): List<EventCardDto> =
+    database
       .from(Motives)
       .crossJoin(Places)
       .crossJoin(EventOwners)
@@ -38,9 +37,8 @@ open class EventCardRepository() {
         Motives.title,
         Motives.dateCreated,
         Places.name,
-        EventOwners.name
-      )
-      .where { EventOwners.name eq eventOwner.name }
+        EventOwners.name,
+      ).where { EventOwners.name eq eventOwner.name }
       .limit(0, 6)
       .map { row ->
         EventCardDto(
@@ -48,16 +46,14 @@ open class EventCardRepository() {
           date_crated = row[Motives.dateCreated],
           locationTaken = row[Places.name],
           eventOwnerName = row[EventOwners.name],
-          frontPageSmallPhotoUrl = database
-            .photos
-            .filter {
-              it.motiveId eq Motives.id
-              it.isGoodPicture eq true
-            }
-            .map { it.smallUrl }
-            .first()
+          frontPageSmallPhotoUrl =
+            database
+              .photos
+              .filter {
+                it.motiveId eq Motives.id
+                it.isGoodPicture eq true
+              }.map { it.smallUrl }
+              .first(),
         )
-      }
-      .toList()
-  }
+      }.toList()
 }
