@@ -23,6 +23,8 @@ interface IBaseService<T> {
     album: UUID,
     sortBy: String,
     desc: Boolean = true,
+    securityLevel: String,
+    isAnalog: Boolean = false,
   ): Page<T>
 }
 
@@ -70,7 +72,10 @@ interface IPhotoService : IBaseService<PhotoDto> {
     pageSize: Int = 100,
   ): Page<PhotoDto>
 
-  fun getAllAnalogPhotos(page: Int = 0, pageSize: Int = 100): Page<PhotoDto> // TODO: Need different DTO for analog
+  fun getAllAnalogPhotos(
+    page: Int = 0,
+    pageSize: Int = 100,
+  ): Page<PhotoDto> // TODO: Need different DTO for analog
 
   fun getAllDigitalPhotos(
     page: Int = 0,
@@ -85,6 +90,8 @@ interface IPhotoService : IBaseService<PhotoDto> {
     album: UUID,
     sortBy: String,
     desc: Boolean = true,
+    securityLevel: String,
+    isAnalog: Boolean = false,
   ): Page<PhotoDto>
 
   fun patch(dto: PhotoPatchRequestDto): PhotoDto

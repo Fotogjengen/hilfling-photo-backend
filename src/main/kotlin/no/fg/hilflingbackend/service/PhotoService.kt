@@ -72,10 +72,7 @@ class PhotoService(
 
   fun savePhotosToDisk(): Unit = throw NotImplementedError()
 
-  /**
-   * FilePath is generated as follows:
-   * basepath/<securityLevel>/<Album>/<Motive/<uuuid>.jpg
-   */
+  /** FilePath is generated as follows: basepath/<securityLevel>/<Album>/<Motive/<uuuid>.jpg */
   fun generateFilePath(
     fileName: ImageFileName,
     securityLevel: SecurityLevelDto,
@@ -95,7 +92,9 @@ class PhotoService(
       )
     println(fullFilePath)
     // TODO: Check if directories exiist before continou
-    if (!Files.isDirectory(fullFilePath)) throw IllegalStateException("The file path does not exist")
+    if (!Files.isDirectory(fullFilePath)) {
+      throw IllegalStateException("The file path does not exist")
+    }
     return fullFilePath
   }
 
@@ -108,10 +107,14 @@ class PhotoService(
 
     val directory =
       when (photoDto.securityLevel.securityLevelType) {
-        SecurityLevelType.FG -> this.photoGangBangerLocation.resolve(photoDto.motive.motiveId.toString())
-        SecurityLevelType.HUSFOLK -> this.houseMemberLocation.resolve(photoDto.motive.motiveId.toString())
-        SecurityLevelType.ALLE -> this.allLocation.resolve(photoDto.motive.motiveId.toString())
-        SecurityLevelType.PROFILE -> this.profileLocation.resolve(photoDto.motive.motiveId.toString())
+        SecurityLevelType.FG ->
+          this.photoGangBangerLocation.resolve(photoDto.motive.motiveId.toString())
+        SecurityLevelType.HUSFOLK ->
+          this.houseMemberLocation.resolve(photoDto.motive.motiveId.toString())
+        SecurityLevelType.ALLE ->
+          this.allLocation.resolve(photoDto.motive.motiveId.toString())
+        SecurityLevelType.PROFILE ->
+          this.profileLocation.resolve(photoDto.motive.motiveId.toString())
         else -> throw IllegalArgumentException("Invalid security level")
       }
     if (!Files.isDirectory(directory)) {
@@ -175,64 +178,57 @@ class PhotoService(
     dateTaken: LocalDate,
   ): List<String> =
     fileList.mapIndexed { index, file ->
-      /*
-      val cachedMotive = { id: UUID ->
-        motiveRepository
-          .findById(id)
-          ?: throw EntityNotFoundException("Did not find motive")
-      }.memoize()
+            /*
+            val cachedMotive = { id: UUID ->
+              motiveRepository
+                .findById(id)
+                ?: throw EntityNotFoundException("Did not find motive")
+            }.memoize()
 
-       */
+             */
 
       // TODO: Test speed
 
-      /*
-      val cachedPlace = { id: UUID ->
-        runBlocking {
-          placeRepository
-            .findById(id)
-            ?: throw EntityNotFoundException("Did not find place")
-        }
-      }.memoize()
+            /*
+            val cachedPlace = { id: UUID ->
+              runBlocking {
+                placeRepository
+                  .findById(id)
+                  ?: throw EntityNotFoundException("Did not find place")
+              }
+            }.memoize()
 
-       */
+             */
       logger.info(
         "Request with parameters: ${fileList.get(index).originalFilename}  ${isGoodPictureList.get(index)}, ${motiveIdList.get(index)}" +
           "PlaceId: $placeIdList",
       )
 
       val place =
-        placeRepository
-          .findById(placeIdList.get(index))
+        placeRepository.findById(placeIdList.get(index))
           ?: throw EntityNotFoundException("Did not find place")
 
       val securityLevelDto: SecurityLevelDto =
-        securityLevelRepository
-          .findById(securityLevelIdList.get(index))
+        securityLevelRepository.findById(securityLevelIdList.get(index))
           ?: throw EntityNotFoundException("Did not find securitulevel")
 
       val motive =
-        motiveRepository
-          .findById(motiveIdList.get(index))
+        motiveRepository.findById(motiveIdList.get(index))
           ?: throw EntityNotFoundException("Did not find motive")
 
       val gang: GangDto =
-        gangRepository
-          .findById(gangIdList.get(index))
+        gangRepository.findById(gangIdList.get(index))
           ?: throw EntityNotFoundException("Did not find gang")
 
       val photoGangBanger =
-        photoGangBangerRepository
-          .findById(photoGangBangerIdList.get(index))
+        photoGangBangerRepository.findById(photoGangBangerIdList.get(index))
           ?: throw EntityNotFoundException("Did not find photoGangBanger")
 
       val album =
-        albumRepository
-          .findById(albumIdList.get(index))
+        albumRepository.findById(albumIdList.get(index))
           ?: throw EntityNotFoundException("Did not find album")
       val category =
-        categoryRepository
-          .findById(categoryIdList.get(index))
+        categoryRepository.findById(categoryIdList.get(index))
           ?: throw EntityNotFoundException("Did not find category")
 
       val validatedFileName = ImageFileName(file.originalFilename ?: "")
@@ -274,8 +270,7 @@ class PhotoService(
       }
       // Add PhotoModel to Database
       try {
-        photoRepository
-          .createPhoto(photoDto)
+        photoRepository.createPhoto(photoDto)
         logger.info("Photo created: ${photoDto.largeUrl} ")
       } catch (ex: Exception) {
         logger.error("Failed to save Photo to Database. Deleting file")
@@ -311,37 +306,31 @@ class PhotoService(
     tagList: List<String>,
     dateTaken: LocalDate,
   ): List<String> {
-    val isValidRequest =
-      photoFileList.size > 0 &&
-        (
-          photoFileList.size == isGoodPhotoList.size
-        )
+    val isValidRequest = photoFileList.size > 0 && (photoFileList.size == isGoodPhotoList.size)
     logger.warn("Is valid request? $isValidRequest")
-    if (!isValidRequest) throw java.lang.IllegalArgumentException("photoFileList, isGoodPhotoList are of unequal length or not given")
+    if (!isValidRequest) {
+      throw java.lang.IllegalArgumentException(
+        "photoFileList, isGoodPhotoList are of unequal length or not given",
+      )
+    }
     logger.info("createNewMotiveAndSaveDigitalPhotos() $tagList")
     val eventOwnerDto =
-      eventOwnerRepository
-        .findByEventOwnerName(EventOwnerName.valueOf(eventOwnerString))
+      eventOwnerRepository.findByEventOwnerName(EventOwnerName.valueOf(eventOwnerString))
         ?: throw EntityNotFoundException("Did not find eventOwner")
 
     val albumDto =
-      albumRepository
-        .findById(albumId)
-        ?: throw EntityNotFoundException("Did not find album")
+      albumRepository.findById(albumId) ?: throw EntityNotFoundException("Did not find album")
 
     val photoGangBangerDto =
-      photoGangBangerRepository
-        .findById(photoGangBangerId)
+      photoGangBangerRepository.findById(photoGangBangerId)
         ?: throw EntityNotFoundException("Did not find photoGangBanger")
 
     val securityLevelDto =
-      securityLevelRepository
-        .findById(securityLevelId)
+      securityLevelRepository.findById(securityLevelId)
         ?: throw EntityNotFoundException("SecurityLevelNotFound")
 
     val categoryDto =
-      categoryRepository
-        .findByName(categoryName)
+      categoryRepository.findByName(categoryName)
         // Should we use categoryId instead of categoryName??
         ?: throw EntityNotFoundException("Did not find category")
 
@@ -363,15 +352,12 @@ class PhotoService(
       photoFileList.mapIndexed { index, photoFile ->
         val photoTagDtos =
           tagList.map {
-            photoTagRepository
-              .findByName(it)
-              ?: PhotoTagDto(name = it)
-                .apply {
-                  photoTagRepository
-                    .create(
-                      this,
-                    )
-                }
+            photoTagRepository.findByName(it)
+              ?: PhotoTagDto(name = it).apply {
+                photoTagRepository.create(
+                  this,
+                )
+              }
           }
         println(photoTagDtos)
         val isGoodPhoto = isGoodPhotoList.get(index)
@@ -394,8 +380,7 @@ class PhotoService(
           )
 
         // Generate PhotoDto
-        photoRepository
-          .createPhoto(photoDto)
+        photoRepository.createPhoto(photoDto)
 
         // GeneratePaths
         // TODO: Do not hard code this. Fetch from application
@@ -416,15 +401,12 @@ class PhotoService(
   }
 
   fun fetchOrCreatePlaceDto(placeName: String) =
-    placeRepository
-      .findByName(placeName)
-      ?: PlaceDto(name = placeName)
-        .also {
-          placeRepository
-            .create(
-              it,
-            )
-        }
+    placeRepository.findByName(placeName)
+      ?: PlaceDto(name = placeName).also {
+        placeRepository.create(
+          it,
+        )
+      }
 
   fun fetchOrCreateMotive(
     motiveTitle: String,
@@ -433,9 +415,7 @@ class PhotoService(
     albumDto: AlbumDto,
     dateCreated: LocalDate?,
   ): MotiveDto =
-    motiveRepository
-      .findByTitle(motiveTitle)
-      ?.toDto()
+    motiveRepository.findByTitle(motiveTitle)?.toDto()
       ?: motiveRepository.create(
         MotiveDto(
           title = motiveTitle,
@@ -449,16 +429,12 @@ class PhotoService(
   override fun getCarouselPhotos(
     page: Int,
     pageSize: Int,
-  ): Page<PhotoDto> =
-    photoRepository
-      .findCarouselPhotos(page, pageSize)
+  ): Page<PhotoDto> = photoRepository.findCarouselPhotos(page, pageSize)
 
   override fun getAllAnalogPhotos(
     page: Int,
     pageSize: Int,
-  ): Page<PhotoDto> =
-    photoRepository
-      .findAllAnalogPhotos(page, pageSize)
+  ): Page<PhotoDto> = photoRepository.findAllAnalogPhotos(page, pageSize)
 
   override fun getAllDigitalPhotos(
     page: Int,
@@ -473,22 +449,23 @@ class PhotoService(
     album: UUID,
     sortBy: String,
     desc: Boolean,
+    securityLevel: String,
+    isAnalog: Boolean,
   ): Page<PhotoDto> =
-    photoRepository
-      .findAllDigitalPhotos(
-        page,
-        pageSize,
-        motive,
-        tag,
-        fromDate,
-        toDate,
-        category,
-        place,
-        isGoodPic,
-        album,
-        sortBy,
-        desc,
-      )
+    photoRepository.findAllDigitalPhotos(
+      page,
+      pageSize,
+      motive,
+      tag,
+      fromDate,
+      toDate,
+      category,
+      place,
+      isGoodPic,
+      album,
+      sortBy,
+      desc,
+    )
 
   override fun patch(dto: PhotoPatchRequestDto): PhotoDto {
     TODO("Not yet implemented")
@@ -519,50 +496,54 @@ class PhotoService(
     album: UUID,
     sortBy: String,
     desc: Boolean,
+    securityLevel: String,
+    isAnalog: Boolean,
   ): Page<PhotoDto> =
-    photoRepository
-      .findAll(
-        page,
-        pageSize,
-        motive,
-        tag,
-        fromDate,
-        toDate,
-        category,
-        place,
-        isGoodPic,
-        album,
-        sortBy,
-        desc,
-      )
+    photoRepository.findAll(
+      page,
+      pageSize,
+      motive,
+      tag,
+      fromDate,
+      toDate,
+      category,
+      place,
+      isGoodPic,
+      album,
+      sortBy,
+      desc,
+      securityLevel,
+      isAnalog,
+    )
 }
-  /*
-  override fun getAll(page: Int, pageSize: Int): Page<PhotoDto> {
-    return photoRepository
-      .findAll(page, pageSize)
-  }
 
-  override fun patch(dto: PhotoPatchRequestDto): PhotoDto {
-    // TODO: Move photo to new location?
-    val photoTags = dto.photoTags?.map {
-      photoTagRepository
-        .findByName(it)
-        ?: PhotoTagDto(name = it)
-          .apply {
-            photoTagRepository
-              .create(
-                this
-              )
-          }
+  /*
+    override fun getAll(page: Int, pageSize: Int): Page<PhotoDto> {
+      return photoRepository
+        .findAll(page, pageSize)
     }
-    // Delete old PhotoTagReferences
-    val tags = photoRepository.findCorrespondingPhotoTagDtos(dto.photoId.id)
-    tags.forEach { oldTag ->
-      if (photoTags == null || !photoTags.contains(oldTag)) {
-        photoTagRepository.deletePhotoTagReference(oldTag.photoTagId, dto.photoId)
+
+    override fun patch(dto: PhotoPatchRequestDto): PhotoDto {
+      // TODO: Move photo to new location?
+      val photoTags = dto.photoTags?.map {
+        photoTagRepository
+          .findByName(it)
+          ?: PhotoTagDto(name = it)
+            .apply {
+              photoTagRepository
+                .create(
+                  this
+                )
+            }
       }
+      // Delete old PhotoTagReferences
+      val tags = photoRepository.findCorrespondingPhotoTagDtos(dto.photoId.id)
+      tags.forEach { oldTag ->
+        if (photoTags == null || !photoTags.contains(oldTag)) {
+          photoTagRepository.deletePhotoTagReference(oldTag.photoTagId, dto.photoId)
+        }
+      }
+      return photoRepository.patch(dto, photoTags)
     }
-    return photoRepository.patch(dto, photoTags)
   }
-}
-*/
+   */

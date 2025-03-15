@@ -3,6 +3,8 @@ package no.fg.hilflingbackend.repository
 import jakarta.persistence.EntityNotFoundException
 import me.liuwj.ktorm.database.Database
 import me.liuwj.ktorm.dsl.*
+import me.liuwj.ktorm.dsl.count
+import me.liuwj.ktorm.dsl.eq
 import me.liuwj.ktorm.entity.add
 import me.liuwj.ktorm.entity.drop
 import me.liuwj.ktorm.entity.filter
@@ -62,8 +64,12 @@ open class PhotoRepository(
             ),
           eventOwnerDto =
             EventOwnerDto(
-              eventOwnerId = EventOwnerId(row[EventOwners.id]!!),
-              name = EventOwnerName.valueOf(row[EventOwners.name]!!),
+              eventOwnerId =
+                EventOwnerId(row[EventOwners.id]!!),
+              name =
+                EventOwnerName.valueOf(
+                  row[EventOwners.name]!!,
+                ),
             ),
           albumDto =
             AlbumDto(
@@ -81,7 +87,8 @@ open class PhotoRepository(
       securityLevel =
         SecurityLevelDto(
           securityLevelId = SecurityLevelId(row[SecurityLevels.id]!!),
-          securityLevelType = SecurityLevelType.valueOf(row[SecurityLevels.type]!!),
+          securityLevelType =
+            SecurityLevelType.valueOf(row[SecurityLevels.type]!!),
         ),
       gang =
         GangDto(
@@ -102,7 +109,9 @@ open class PhotoRepository(
       photoGangBangerDto =
         PhotoGangBangerDto(
           PhotoGangBangerId(row[PhotoGangBangers.id]!!),
-          RelationshipStatus.valueOf(row[PhotoGangBangers.relationshipStatus]!!),
+          RelationshipStatus.valueOf(
+            row[PhotoGangBangers.relationshipStatus]!!,
+          ),
           SemesterStart(row[PhotoGangBangers.semesterStart]!!),
           row[PhotoGangBangers.isActive]!!,
           row[PhotoGangBangers.isPang]!!,
@@ -119,7 +128,9 @@ open class PhotoRepository(
             row[SamfundetUsers.profilePicture]!!,
             row[SamfundetUsers.sex]!!,
             SecurityLevelDto(
-              SecurityLevelId(row[SamfundetUsers.securityLevelId]!!),
+              SecurityLevelId(
+                row[SamfundetUsers.securityLevelId]!!,
+              ),
             ),
           ),
           PositionDto(
@@ -132,13 +143,11 @@ open class PhotoRepository(
     )
 
   fun findById(id: UUID): PhotoDto? {
-    return database.photos
-      .find { it.id eq id }
-      ?.let { photo ->
-        return photo.toDto(
-          findCorrespondingPhotoTagDtos(id),
-        )
-      }
+    return database.photos.find { it.id eq id }?.let { photo ->
+      return photo.toDto(
+        findCorrespondingPhotoTagDtos(id),
+      )
+    }
   }
 
   fun findByMotiveId(
@@ -146,14 +155,8 @@ open class PhotoRepository(
     page: Int,
     pageSize: Int,
   ): Page<PhotoDto>? {
-    val photos =
-      database.photos.filter {
-        it.motiveId eq id
-      }
-    val photoDtos =
-      photos
-        .toList()
-        .map { it.toDto(findCorrespondingPhotoTagDtos(it.id)) }
+    val photos = database.photos.filter { it.motiveId eq id }
+    val photoDtos = photos.toList().map { it.toDto(findCorrespondingPhotoTagDtos(it.id)) }
     return Page(
       page = page,
       pageSize = pageSize,
@@ -177,7 +180,11 @@ open class PhotoRepository(
     album: UUID,
     sortBy: String,
     desc: Boolean = true,
+    securityLevel: String,
+    isAnalog: Boolean = false,
   ): Page<PhotoDto> {
+    val offset = page * pageSize
+
     var ph =
       database
         .from(Photos)
@@ -188,9 +195,13 @@ open class PhotoRepository(
         .innerJoin(EventOwners, on = Motives.eventOwnerId eq EventOwners.id)
         .innerJoin(SecurityLevels, on = Photos.securityLevelId eq SecurityLevels.id)
         .innerJoin(Gangs, on = Photos.gangId eq Gangs.id)
-        .innerJoin(PhotoGangBangers, on = Photos.photoGangBangerId eq PhotoGangBangers.id)
-        .innerJoin(SamfundetUsers, on = PhotoGangBangers.samfundetUserId eq SamfundetUsers.id)
-        .innerJoin(Positions, on = PhotoGangBangers.positionId eq Positions.id)
+        .innerJoin(
+          PhotoGangBangers,
+          on = Photos.photoGangBangerId eq PhotoGangBangers.id,
+        ).innerJoin(
+          SamfundetUsers,
+          on = PhotoGangBangers.samfundetUserId eq SamfundetUsers.id,
+        ).innerJoin(Positions, on = PhotoGangBangers.positionId eq Positions.id)
         .select(
           Photos.id,
           Photos.isGoodPicture,
@@ -240,43 +251,143 @@ open class PhotoRepository(
             } else {
               Motives.id notEq UUID(0L, 0L)
             }
-          ) and (
-            if (album != UUID(0L, 0L)) {
-              Albums.id eq album
-            } else {
-              Albums.id notEq UUID(0L, 0L)
-            }
-          ) and (
-            Photos.dateCreated.greaterEq(fromDate) and Photos.dateCreated.lessEq(toDate)
-          ) and (
-            if (category != "") {
-              Categories.name eq category
-            } else {
-              Categories.name notEq category
-            }
-          ) and (
-            if (place != UUID(0L, 0L)) {
-              Places.id eq place
-            } else {
-              Places.id notEq UUID(0L, 0L)
-            }
-          ) and (
-            if (isGoodPic) {
-              Photos.isGoodPicture eq true
-            } else {
-              Photos.isGoodPicture eq false or Photos.isGoodPicture eq true
-            }
-          )
-        }.limit(page, pageSize)
+          ) and
+            (
+              if (album != UUID(0L, 0L)) {
+                Albums.id eq album
+              } else {
+                Albums.id notEq UUID(0L, 0L)
+              }
+            ) and
+            (
+              Photos.dateCreated.greaterEq(fromDate) and
+                Photos.dateCreated.lessEq(toDate)
+            ) and
+            (
+              if (category != "") {
+                Categories.name eq category
+              } else {
+                Categories.name notEq category
+              }
+            ) and
+            (
+              if (place != UUID(0L, 0L)) {
+                Places.id eq place
+              } else {
+                Places.id notEq UUID(0L, 0L)
+              }
+            ) and
+            (
+              if (isGoodPic) {
+                Photos.isGoodPicture eq true
+              } else {
+                Photos.isGoodPicture eq false or Photos.isGoodPicture eq true
+              }
+            ) and
+            (
+              if (securityLevel != "") {
+                SecurityLevels.type eq securityLevel
+              } else {
+                SecurityLevels.type notEq securityLevel
+              }
+            ) and
+            (
+              if (isAnalog) {
+                Albums.isAnalog eq true
+              } else {
+                Albums.isAnalog eq false or Albums.isAnalog eq true
+              }
+            )
+        }.limit(offset, pageSize)
         .map { row -> constructPhotoDto(row) }
 
-    if (tag.isNotEmpty()) {
-      ph = ph.filter { row -> row.photoTags.any { t -> tag.contains(t.name) } }
-    }
+    var totalCount =
+      database
+        .from(Photos)
+        .innerJoin(Motives, on = Photos.motiveId eq Motives.id)
+        .innerJoin(Places, on = Photos.placeId eq Places.id)
+        .innerJoin(Albums, on = Photos.albumId eq Albums.id)
+        .innerJoin(Categories, on = Motives.categoryId eq Categories.id)
+        .innerJoin(EventOwners, on = Motives.eventOwnerId eq EventOwners.id)
+        .innerJoin(SecurityLevels, on = Photos.securityLevelId eq SecurityLevels.id)
+        .innerJoin(Gangs, on = Photos.gangId eq Gangs.id)
+        .innerJoin(
+          PhotoGangBangers,
+          on = Photos.photoGangBangerId eq PhotoGangBangers.id,
+        ).innerJoin(
+          SamfundetUsers,
+          on = PhotoGangBangers.samfundetUserId eq SamfundetUsers.id,
+        ).innerJoin(Positions, on = PhotoGangBangers.positionId eq Positions.id)
+        .select(count(Photos.id))
+        .where {
+          (
+            if (motive != UUID(0L, 0L)) {
+              Motives.id eq motive
+            } else {
+              Motives.id notEq UUID(0L, 0L)
+            }
+          ) and
+            (
+              if (album != UUID(0L, 0L)) {
+                Albums.id eq album
+              } else {
+                Albums.id notEq UUID(0L, 0L)
+              }
+            ) and
+            (
+              Photos.dateCreated.greaterEq(fromDate) and
+                Photos.dateCreated.lessEq(toDate)
+            ) and
+            (
+              if (category.isNotEmpty()) {
+                Categories.name eq category
+              } else {
+                Categories.name notEq category
+              }
+            ) and
+            (
+              if (place != UUID(0L, 0L)) {
+                Places.id eq place
+              } else {
+                Places.id notEq UUID(0L, 0L)
+              }
+            ) and
+            (
+              if (isGoodPic) {
+                Photos.isGoodPicture eq true
+              } else {
+                Photos.isGoodPicture eq
+                  false or
+                  Photos.isGoodPicture eq
+                  true
+              }
+            ) and
+            (
+              if (securityLevel.isNotEmpty()) {
+                SecurityLevels.type eq securityLevel
+              } else {
+                SecurityLevels.type notEq securityLevel
+              }
+            ) and
+            (
+              if (isAnalog) {
+                Albums.isAnalog eq true
+              } else {
+                Albums.isAnalog eq false or Albums.isAnalog eq true
+              }
+            )
+        }.map { it.getInt(1) }
+        .firstOrNull()
+        ?: 0
+
+    // if (tag.isNotEmpty()) {
+    //   ph = ph.filter { row -> row.photoTags.any { t -> tag.contains(t.name) } }
+    // }
+
     return Page(
       page = page,
       pageSize = pageSize,
-      totalRecords = ph.size,
+      totalRecords = totalCount,
       currentList = ph,
     )
   }
@@ -293,9 +404,7 @@ open class PhotoRepository(
     dto: PhotoPatchRequestDto,
     photoTags: List<PhotoTagDto>?,
   ): PhotoDto {
-    val fromDb =
-      findById(dto.photoId.id)
-        ?: throw EntityNotFoundException("Could not find Photo")
+    val fromDb = findById(dto.photoId.id) ?: throw EntityNotFoundException("Could not find Photo")
     val (smallUrl, mediumUrl, largeUrl) = calculateNewUrls(fromDb, dto)
 
     if (photoTags != null) {
@@ -345,27 +454,19 @@ open class PhotoRepository(
     page: Int,
     pageSize: Int,
   ): Page<PhotoDto> {
-    val analogAlbums =
-      database.albums
-        .filter { it.isAnalog eq true }
+    val analogAlbums = database.albums.filter { it.isAnalog eq true }
 
     val photos =
-      analogAlbums.toList().map { album ->
-        database.photos.filter {
-          it.albumId eq album.id
-        }
-      }
+      analogAlbums.toList().map { album -> database.photos.filter { it.albumId eq album.id } }
 
     val totalRecords = photos.sumOf { it.totalRecords }
 
     val photoDtos =
       photos
         .map { photoList ->
-          photoList
-            .drop(page)
-            .take(pageSize)
-            .toList()
-            .map { it.toDto(findCorrespondingPhotoTagDtos(it.id)) }
+          photoList.drop(page).take(pageSize).toList().map {
+            it.toDto(findCorrespondingPhotoTagDtos(it.id))
+          }
         }.flatten()
 
     return Page(
@@ -400,9 +501,13 @@ open class PhotoRepository(
         .innerJoin(EventOwners, on = Motives.eventOwnerId eq EventOwners.id)
         .innerJoin(SecurityLevels, on = Photos.securityLevelId eq SecurityLevels.id)
         .innerJoin(Gangs, on = Photos.gangId eq Gangs.id)
-        .innerJoin(PhotoGangBangers, on = Photos.photoGangBangerId eq PhotoGangBangers.id)
-        .innerJoin(SamfundetUsers, on = PhotoGangBangers.samfundetUserId eq SamfundetUsers.id)
-        .innerJoin(Positions, on = PhotoGangBangers.positionId eq Positions.id)
+        .innerJoin(
+          PhotoGangBangers,
+          on = Photos.photoGangBangerId eq PhotoGangBangers.id,
+        ).innerJoin(
+          SamfundetUsers,
+          on = PhotoGangBangers.samfundetUserId eq SamfundetUsers.id,
+        ).innerJoin(Positions, on = PhotoGangBangers.positionId eq Positions.id)
         .select(
           Photos.id,
           Photos.isGoodPicture,
@@ -452,35 +557,40 @@ open class PhotoRepository(
             } else {
               Motives.id notEq UUID(0L, 0L)
             }
-          ) and (
-            if (album != UUID(0L, 0L)) {
-              Albums.id eq album
-            } else {
-              Albums.id notEq UUID(0L, 0L)
-            }
-          ) and (
-            Photos.dateCreated.greaterEq(fromDate) and Photos.dateCreated.lessEq(toDate)
-          ) and (
-            if (category != "") {
-              Categories.name eq category
-            } else {
-              Categories.name notEq category
-            }
-          ) and (
-            if (place != UUID(0L, 0L)) {
-              Places.id eq place
-            } else {
-              Places.id notEq UUID(0L, 0L)
-            }
-          ) and (
-            if (isGoodPic) {
-              Photos.isGoodPicture eq true
-            } else {
-              Photos.isGoodPicture eq false or Photos.isGoodPicture eq true
-            }
-          ) and (
-            Albums.isAnalog eq false
-          )
+          ) and
+            (
+              if (album != UUID(0L, 0L)) {
+                Albums.id eq album
+              } else {
+                Albums.id notEq UUID(0L, 0L)
+              }
+            ) and
+            (
+              Photos.dateCreated.greaterEq(fromDate) and
+                Photos.dateCreated.lessEq(toDate)
+            ) and
+            (
+              if (category != "") {
+                Categories.name eq category
+              } else {
+                Categories.name notEq category
+              }
+            ) and
+            (
+              if (place != UUID(0L, 0L)) {
+                Places.id eq place
+              } else {
+                Places.id notEq UUID(0L, 0L)
+              }
+            ) and
+            (
+              if (isGoodPic) {
+                Photos.isGoodPicture eq true
+              } else {
+                Photos.isGoodPicture eq false or Photos.isGoodPicture eq true
+              }
+            ) and
+            (Albums.isAnalog eq false)
         }.limit(page, pageSize)
         .map { row -> constructPhotoDto(row) }
 
@@ -499,16 +609,11 @@ open class PhotoRepository(
     page: Int,
     pageSize: Int,
   ): Page<PhotoDto> {
-    val photos =
-      database
-        .photos
-        .filter { it.isGoodPicture eq true }
+    val photos = database.photos.filter { it.isGoodPicture eq true }
     val photoDtos =
-      photos
-        .drop(page)
-        .take(pageSize)
-        .toList()
-        .map { it.toDto(findCorrespondingPhotoTagDtos(it.id)) }
+      photos.drop(page).take(pageSize).toList().map {
+        it.toDto(findCorrespondingPhotoTagDtos(it.id))
+      }
 
     return Page(
       page = page,
@@ -524,18 +629,14 @@ open class PhotoRepository(
     pageSize: Int,
   ): Page<PhotoDto> {
     val photos =
-      database
-        .photos
-        .filter {
-          val securityLevelFromDatabase = it.securityLevelId.referenceTable as SecurityLevels
-          securityLevelFromDatabase.id eq securityLevel.id
-        }
+      database.photos.filter {
+        val securityLevelFromDatabase = it.securityLevelId.referenceTable as SecurityLevels
+        securityLevelFromDatabase.id eq securityLevel.id
+      }
     val photoDtos =
-      photos
-        .drop(page)
-        .take(pageSize)
-        .toList()
-        .map { it.toDto(findCorrespondingPhotoTagDtos(it.id)) }
+      photos.drop(page).take(pageSize).toList().map {
+        it.toDto(findCorrespondingPhotoTagDtos(it.id))
+      }
 
     return Page(
       page = page,
@@ -601,9 +702,7 @@ open class PhotoRepository(
   fun patchAnalogPhoto(
     analogPhoto: AnalogPhoto,
   ): AnalogPhoto? {
-    database
-      .analog_photos
-      .update(analogPhoto)
+    database.analog_photos.update(analogPhoto)
     return findAnalogPhotoById(analogPhoto.id)
   }
 }

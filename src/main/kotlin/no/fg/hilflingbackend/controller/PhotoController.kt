@@ -43,7 +43,7 @@ class PhotoController(
     @RequestParam("eventOwnerName") eventOwnerName: String,
     @RequestParam("photoFileList") photoFileList: List<MultipartFile>,
     @RequestParam("isGoodPhotoList") isGoodPhotoList: List<Boolean>,
-    @RequestParam("tagList")tagList: List<String>,
+    @RequestParam("tagList") tagList: List<String>,
     @RequestParam("dateTaken") dateTaken: LocalDate,
   ): ResponseEntity<List<String>> =
     ResponseEntity(
@@ -78,8 +78,7 @@ class PhotoController(
     @RequestParam("dateTaken") dateTaken: LocalDate,
   ): ResponseEntity<List<String>> {
     // Assert all fields are populated
-    if (
-      !(
+    if (!(
         isGoodPictureList.size == motiveIdList.size &&
           placeIdList.size == securityLevelIdList.size &&
           gangIdList.size == photoGangBangerIdList.size &&
@@ -100,19 +99,18 @@ class PhotoController(
      */
 
     val createdPhotoList =
-      photoService
-        .saveDigitalPhotos(
-          isGoodPictureList,
-          motiveIdList,
-          placeIdList,
-          securityLevelIdList,
-          gangIdList,
-          photoGangBangerIdList,
-          albumIdList,
-          categoryIdList,
-          fileList,
-          dateTaken,
-        )
+      photoService.saveDigitalPhotos(
+        isGoodPictureList,
+        motiveIdList,
+        placeIdList,
+        securityLevelIdList,
+        gangIdList,
+        photoGangBangerIdList,
+        albumIdList,
+        categoryIdList,
+        fileList,
+        dateTaken,
+      )
 
     return ResponseEntity<List<String>>(
       createdPhotoList,
@@ -141,8 +139,7 @@ class PhotoController(
     @PathVariable("id") id: UUID,
   ): ResponseEntity<PhotoDto> =
     ResponseOk(
-      photoService
-        .findById(id),
+      photoService.findById(id),
     )
 
   @GetMapping("/motive/{id}")
@@ -152,8 +149,7 @@ class PhotoController(
     @RequestParam("pageSize", required = false) pageSize: Int?,
   ): ResponseEntity<Page<PhotoDto>?> =
     ResponseOk(
-      photoService
-        .getByMotiveId(id, page ?: 0, pageSize ?: 100),
+      photoService.getByMotiveId(id, page ?: 0, pageSize ?: 100),
     )
 
   @GetMapping
@@ -171,23 +167,25 @@ class PhotoController(
     @RequestParam("sortBy", required = false) sortBy: String?,
     @RequestParam("desc", required = false) desc: Boolean?,
     @RequestParam("isAnalog", required = false) isAnalog: Boolean?,
+    @RequestParam("securityLevel", required = false) securityLevel: String?,
   ): ResponseEntity<Page<PhotoDto>> =
     ResponseOk(
-      photoService
-        .getAll(
-          page ?: 0,
-          pageSize ?: 100,
-          motive ?: UUID(0L, 0L),
-          tag ?: listOf<String>(),
-          LocalDate.parse(fromDate ?: "1970-01-01") ?: LocalDate.now(),
-          LocalDate.parse(toDate ?: LocalDate.now().toString()) ?: LocalDate.now(),
-          category ?: "",
-          place ?: UUID(0L, 0L),
-          isGoodPic ?: false,
-          album ?: UUID(0L, 0L),
-          sortBy ?: "",
-          desc ?: true,
-        ),
+      photoService.getAll(
+        page ?: 0,
+        pageSize ?: 100,
+        motive ?: UUID(0L, 0L),
+        tag ?: listOf<String>(),
+        LocalDate.parse(fromDate ?: "1970-01-01") ?: LocalDate.now(),
+        LocalDate.parse(toDate ?: LocalDate.now().toString()) ?: LocalDate.now(),
+        category ?: "",
+        place ?: UUID(0L, 0L),
+        isGoodPic ?: false,
+        album ?: UUID(0L, 0L),
+        sortBy ?: "",
+        desc ?: true,
+        securityLevel ?: "",
+        isAnalog ?: false,
+      ),
     )
 
   @GetMapping("/carousel")
@@ -196,8 +194,7 @@ class PhotoController(
     @RequestParam("pageSize", required = false) pageSize: Int?,
   ): ResponseEntity<Page<PhotoDto>> =
     ResponseOk(
-      photoService
-        .getCarouselPhotos(page ?: 0, pageSize ?: 6),
+      photoService.getCarouselPhotos(page ?: 0, pageSize ?: 6),
     )
 
   @GetMapping("/analog")
@@ -206,8 +203,7 @@ class PhotoController(
     @RequestParam("pageSize", required = false) pageSize: Int?,
   ): ResponseEntity<Page<PhotoDto>> =
     ResponseOk(
-      photoService
-        .getAllAnalogPhotos(page ?: 0, pageSize ?: 100),
+      photoService.getAllAnalogPhotos(page ?: 0, pageSize ?: 100),
     )
 
   @GetMapping("/digital")
@@ -226,21 +222,22 @@ class PhotoController(
     @RequestParam("desc", required = false) desc: Boolean?,
   ): ResponseEntity<Page<PhotoDto>> =
     ResponseOk(
-      photoService
-        .getAllDigitalPhotos(
-          page ?: 0,
-          pageSize ?: 100,
-          motive ?: UUID(0L, 0L),
-          tag ?: listOf<String>(),
-          fromDate?.let { LocalDate.parse(it) } ?: LocalDate.now(),
-          toDate?.let { LocalDate.parse(it) } ?: LocalDate.now(),
-          category ?: "",
-          place ?: UUID(0L, 0L),
-          isGoodPic ?: false,
-          album ?: UUID(0L, 0L),
-          sortBy ?: "",
-          desc ?: true,
-        ),
+      photoService.getAllDigitalPhotos(
+        page ?: 0,
+        pageSize ?: 100,
+        motive ?: UUID(0L, 0L),
+        tag ?: listOf<String>(),
+        fromDate?.let { LocalDate.parse(it) } ?: LocalDate.now(),
+        toDate?.let { LocalDate.parse(it) } ?: LocalDate.now(),
+        category ?: "",
+        place ?: UUID(0L, 0L),
+        isGoodPic ?: false,
+        album ?: UUID(0L, 0L),
+        sortBy ?: "",
+        desc ?: true,
+        securityLevel = "ALLE",
+        isAnalog = false,
+      ),
     )
 
   @PatchMapping
