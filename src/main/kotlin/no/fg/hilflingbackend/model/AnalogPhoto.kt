@@ -4,6 +4,7 @@ import me.liuwj.ktorm.database.Database
 import me.liuwj.ktorm.entity.Entity
 import me.liuwj.ktorm.entity.sequenceOf
 import me.liuwj.ktorm.schema.int
+import me.liuwj.ktorm.schema.uuid
 
 interface AnalogPhoto : BaseModel<AnalogPhoto> {
   companion object : Entity.Factory<AnalogPhoto>()
@@ -20,7 +21,7 @@ object AnalogPhotos : BaseTable<AnalogPhoto>("analog_photos") {
   val pageNumber = int("page_number").bindTo { it.pageNumber }
 
   // Foreign keys
-  val photo = int("photo_id").references(Photos) { it.photo }
+  val photo = uuid("photo_id").references(Photos) { it.photo }
 }
 
 val Database.analog_photos get() = this.sequenceOf(AnalogPhotos)
