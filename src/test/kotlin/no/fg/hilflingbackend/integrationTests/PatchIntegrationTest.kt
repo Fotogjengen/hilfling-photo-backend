@@ -67,7 +67,7 @@ import kotlin.test.assertNotNull
 @RunWith(SpringRunner::class)
 @SpringBootTest()
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-internal class PatchIntegrationTest() {
+internal class PatchIntegrationTest {
   @Autowired
   lateinit var photoService: PhotoService
 
@@ -130,134 +130,156 @@ internal class PatchIntegrationTest() {
   final val photoTagId1 = PhotoTagId()
   final val photoTagId2 = PhotoTagId()
 
-  final val photoTagDto1 = PhotoTagDto(
-    photoTagId = photoTagId1,
-    name = "photo tag 1"
-  )
-  final val photoTagDto2 = PhotoTagDto(
-    photoTagId = photoTagId2,
-    name = "photo tag 2"
-  )
-  final val gangDto1 = GangDto(
-    gangId = gangId1,
-    name = "gang name 1"
-  )
-  final val gangDto2 = GangDto(
-    gangId = gangId2,
-    name = "gang name 2"
-  )
-  final val positionDto1 = PositionDto(
-    positionId = positionId1,
-    title = "position title 1",
-    email = Email("position1@email.com")
-  )
-  final val positionDto2 = PositionDto(
-    positionId = positionId2,
-    title = "position title 2",
-    email = Email("position2@email.com")
-  )
-  final val placeDto1 = PlaceDto(
-    placeId = placeId1,
-    name = "place name 1"
-  )
-  final val placeDto2 = PlaceDto(
-    placeId = placeId2,
-    name = "place name 2"
-  )
-  final val securityLevelDto1 = SecurityLevelDto(
-    securityLevelId = securityLevelId1,
-    securityLevelType = SecurityLevelType.FG
-  )
-  final val securityLevelDto2 = SecurityLevelDto(
-    securityLevelId = securityLevelId2,
-    securityLevelType = SecurityLevelType.ALLE
-  )
-  final val albumDto1 = AlbumDto(
-    albumId = albumId1,
-    title = "album title 1"
-  )
-  final val albumDto2 = AlbumDto(
-    albumId = albumId2,
-    title = "album title 2"
-  )
-  final val categoryDto1 = CategoryDto(
-    categoryId = categoryId1,
-    name = "category name 1"
-  )
-  final val categoryDto2 = CategoryDto(
-    categoryId = categoryId2,
-    name = "category name 2"
-  )
-  final val eventOwnerDto1 = EventOwnerDto(
-    eventOwnerId = eventOwnerId1,
-    name = EventOwnerName.Samfundet
-  )
-  final val eventOwnerDto2 = EventOwnerDto(
-    eventOwnerId = eventOwnerId2,
-    name = EventOwnerName.ISFIT
-  )
-  final val samfundetUserDto1 = SamfundetUserDto(
-    samfundetUserId = samfundetUserId1,
-    firstName = "Caroline",
-    lastName = "Sandsbråten",
-    username = "carosa",
-    phoneNumber = PhoneNumber("22225555"),
-    email = Email("mymail@samfundet.no"),
-    profilePicturePath = "https://static.independent.co.uk/2021/12/07/10/PRI213893584.jpg?quality=75&width=982&height=726&auto=webp",
-    sex = "Ja",
-    securityLevel = securityLevelDto1
-  )
-  final val samfundetUserDto2 = SamfundetUserDto(
-    samfundetUserId = samfundetUserId2,
-    firstName = "Sindre",
-    lastName = "Sivertsen",
-    username = "sinsiv",
-    phoneNumber = PhoneNumber("12345678"),
-    email = Email("sindre@samfundet.no"),
-    profilePicturePath = "https://static.independent.co.uk/2021/12/07/10/PRI213893584.jpg?quality=75&width=982&height=726&auto=webp",
-    sex = "Ja",
-    securityLevel = securityLevelDto2
-  )
-  final val photoGangBangerDto1 = PhotoGangBangerDto(
-    photoGangBangerId = photoGangBangerId1,
-    relationShipStatus = RelationshipStatus.married,
-    semesterStart = SemesterStart.invoke("H2019"),
-    isActive = true,
-    isPang = true,
-    address = "Gang banger address",
-    position = positionDto1,
-    zipCode = "1476",
-    city = "Trondheim",
-    samfundetUser = samfundetUserDto1
-  )
-  final val photoGangBangerDto2 = PhotoGangBangerDto(
-    photoGangBangerId = photoGangBangerId2,
-    relationShipStatus = RelationshipStatus.relationship,
-    semesterStart = SemesterStart.invoke("H2018"),
-    isActive = true,
-    isPang = true,
-    address = "Gang banger address 2",
-    position = positionDto2,
-    zipCode = "1473",
-    city = "Trondheim 2",
-    samfundetUser = samfundetUserDto2
-  )
-  final val motiveDto1 = MotiveDto(
-    motiveId = motiveId1,
-    title = "motive title 1",
-    categoryDto = categoryDto1,
-    eventOwnerDto = eventOwnerDto1,
-    albumDto = albumDto1,
-    dateCreated = LocalDate.now()
-  )
-  final val motiveDto2 = MotiveDto(
-    motiveId = motiveId2,
-    title = "motive title 2",
-    categoryDto = categoryDto2,
-    eventOwnerDto = eventOwnerDto2,
-    albumDto = albumDto2,
-    dateCreated = LocalDate.now()
-  )
+  final val photoTagDto1 =
+    PhotoTagDto(
+      photoTagId = photoTagId1,
+      name = "photo tag 1",
+    )
+  final val photoTagDto2 =
+    PhotoTagDto(
+      photoTagId = photoTagId2,
+      name = "photo tag 2",
+    )
+  final val gangDto1 =
+    GangDto(
+      gangId = gangId1,
+      name = "gang name 1",
+    )
+  final val gangDto2 =
+    GangDto(
+      gangId = gangId2,
+      name = "gang name 2",
+    )
+  final val positionDto1 =
+    PositionDto(
+      positionId = positionId1,
+      title = "position title 1",
+      email = Email("position1@email.com"),
+    )
+  final val positionDto2 =
+    PositionDto(
+      positionId = positionId2,
+      title = "position title 2",
+      email = Email("position2@email.com"),
+    )
+  final val placeDto1 =
+    PlaceDto(
+      placeId = placeId1,
+      name = "place name 1",
+    )
+  final val placeDto2 =
+    PlaceDto(
+      placeId = placeId2,
+      name = "place name 2",
+    )
+  final val securityLevelDto1 =
+    SecurityLevelDto(
+      securityLevelId = securityLevelId1,
+      securityLevelType = SecurityLevelType.FG,
+    )
+  final val securityLevelDto2 =
+    SecurityLevelDto(
+      securityLevelId = securityLevelId2,
+      securityLevelType = SecurityLevelType.ALLE,
+    )
+  final val albumDto1 =
+    AlbumDto(
+      albumId = albumId1,
+      title = "album title 1",
+    )
+  final val albumDto2 =
+    AlbumDto(
+      albumId = albumId2,
+      title = "album title 2",
+    )
+  final val categoryDto1 =
+    CategoryDto(
+      categoryId = categoryId1,
+      name = "category name 1",
+    )
+  final val categoryDto2 =
+    CategoryDto(
+      categoryId = categoryId2,
+      name = "category name 2",
+    )
+  final val eventOwnerDto1 =
+    EventOwnerDto(
+      eventOwnerId = eventOwnerId1,
+      name = EventOwnerName.Samfundet,
+    )
+  final val eventOwnerDto2 =
+    EventOwnerDto(
+      eventOwnerId = eventOwnerId2,
+      name = EventOwnerName.ISFIT,
+    )
+  final val samfundetUserDto1 =
+    SamfundetUserDto(
+      samfundetUserId = samfundetUserId1,
+      firstName = "Caroline",
+      lastName = "Sandsbråten",
+      username = "carosa",
+      phoneNumber = PhoneNumber("22225555"),
+      email = Email("mymail@samfundet.no"),
+      profilePicturePath = "https://static.independent.co.uk/2021/12/07/10/PRI213893584.jpg?quality=75&width=982&height=726&auto=webp",
+      sex = "Ja",
+      securityLevel = securityLevelDto1,
+    )
+  final val samfundetUserDto2 =
+    SamfundetUserDto(
+      samfundetUserId = samfundetUserId2,
+      firstName = "Sindre",
+      lastName = "Sivertsen",
+      username = "sinsiv",
+      phoneNumber = PhoneNumber("12345678"),
+      email = Email("sindre@samfundet.no"),
+      profilePicturePath = "https://static.independent.co.uk/2021/12/07/10/PRI213893584.jpg?quality=75&width=982&height=726&auto=webp",
+      sex = "Ja",
+      securityLevel = securityLevelDto2,
+    )
+  final val photoGangBangerDto1 =
+    PhotoGangBangerDto(
+      photoGangBangerId = photoGangBangerId1,
+      relationShipStatus = RelationshipStatus.married,
+      semesterStart = SemesterStart.invoke("H2019"),
+      isActive = true,
+      isPang = true,
+      address = "Gang banger address",
+      position = positionDto1,
+      zipCode = "1476",
+      city = "Trondheim",
+      samfundetUser = samfundetUserDto1,
+    )
+  final val photoGangBangerDto2 =
+    PhotoGangBangerDto(
+      photoGangBangerId = photoGangBangerId2,
+      relationShipStatus = RelationshipStatus.relationship,
+      semesterStart = SemesterStart.invoke("H2018"),
+      isActive = true,
+      isPang = true,
+      address = "Gang banger address 2",
+      position = positionDto2,
+      zipCode = "1473",
+      city = "Trondheim 2",
+      samfundetUser = samfundetUserDto2,
+    )
+  final val motiveDto1 =
+    MotiveDto(
+      motiveId = motiveId1,
+      title = "motive title 1",
+      categoryDto = categoryDto1,
+      eventOwnerDto = eventOwnerDto1,
+      albumDto = albumDto1,
+      dateCreated = LocalDate.now(),
+    )
+  final val motiveDto2 =
+    MotiveDto(
+      motiveId = motiveId2,
+      title = "motive title 2",
+      categoryDto = categoryDto2,
+      eventOwnerDto = eventOwnerDto2,
+      albumDto = albumDto2,
+      dateCreated = LocalDate.now(),
+    )
 
   @BeforeAll
   fun fillDb() {
@@ -284,119 +306,136 @@ internal class PatchIntegrationTest() {
     motiveRepository.create(motiveDto1)
     motiveRepository.create(motiveDto2)
 
-    createdPhotoId = UUID.fromString(
-      photoService.createNewMotiveAndSaveDigitalPhotos(
-        motiveString = motiveDto1.title,
-        placeString = placeDto1.name,
-        eventOwnerString = eventOwnerDto1.name.eventOwnerName,
-        securityLevelId = securityLevelId1.id,
-        albumId = albumId1.id,
-        photoGangBangerId = photoGangBangerId1.id,
-        photoFileList = listOf(mockMultiPartFile),
-        tagList = listOf(photoTagDto1.name),
-        categoryName = categoryDto1.name,
-        isGoodPhotoList = listOf(true),
-        dateCreated = LocalDate.now()
-      )[0].split("/").last().split(".").first()
-    )
+    createdPhotoId =
+      UUID.fromString(
+        photoService
+          .createNewMotiveAndSaveDigitalPhotos(
+            motiveString = motiveDto1.title,
+            placeString = placeDto1.name,
+            eventOwnerString = eventOwnerDto1.name.eventOwnerName,
+            securityLevelId = securityLevelId1.id,
+            albumId = albumId1.id,
+            photoGangBangerId = photoGangBangerId1.id,
+            photoFileList = listOf(mockMultiPartFile),
+            tagList = listOf(photoTagDto1.name),
+            categoryName = categoryDto1.name,
+            isGoodPhotoList = listOf(true),
+            dateCreated = LocalDate.now(),
+            dateTaken = LocalDate.now(),
+          )[0]
+          .split("/")
+          .last()
+          .split(".")
+          .first(),
+      )
   }
 
   @Test
   fun shouldPatchSecurityLevel() {
-    val change = SecurityLevelPatchRequestDto(
-      securityLevelId = securityLevelId1,
-      securityLevelType = SecurityLevelType.FG
-    )
+    val change =
+      SecurityLevelPatchRequestDto(
+        securityLevelId = securityLevelId1,
+        securityLevelType = SecurityLevelType.FG,
+      )
     securityLevelRepository.patch(change)
 
-    val changedFromDb = securityLevelRepository.findById(
-      securityLevelId1.id
-    )
+    val changedFromDb =
+      securityLevelRepository.findById(
+        securityLevelId1.id,
+      )
 
     assertAll(
       "patch SecurityLevel",
       { assertNotNull(changedFromDb) },
-      { assertEquals(changedFromDb?.securityLevelType, change.securityLevelType) }
+      { assertEquals(changedFromDb?.securityLevelType, change.securityLevelType) },
     )
   }
 
   @Test
   fun shouldPatchPosition() {
-    val change = PositionPatchRequestDto(
-      positionId = positionId1,
-      title = "changed",
-      email = Email("changed@email.com")
-    )
+    val change =
+      PositionPatchRequestDto(
+        positionId = positionId1,
+        title = "changed",
+        email = Email("changed@email.com"),
+      )
     positionRepository.patch(change)
 
-    val changedFromDb = positionRepository.findById(
-      positionId1.id
-    )
+    val changedFromDb =
+      positionRepository.findById(
+        positionId1.id,
+      )
 
     assertAll(
       "patch position",
       { assertNotNull(changedFromDb) },
       { assertEquals(changedFromDb?.title, change.title) },
-      { assertEquals(changedFromDb?.email, change.email) }
+      { assertEquals(changedFromDb?.email, change.email) },
     )
   }
 
   @Test
   fun shouldPatchPlace() {
-    val change = PlacePatchRequestDto(
-      placeId = placeId1,
-      name = "changed"
-    )
+    val change =
+      PlacePatchRequestDto(
+        placeId = placeId1,
+        name = "changed",
+      )
     placeRepository.patch(change)
 
-    val changedFromDb = placeRepository.findById(
-      placeId1.id
-    )
+    val changedFromDb =
+      placeRepository.findById(
+        placeId1.id,
+      )
 
     assertAll(
       "patch place",
       { assertNotNull(changedFromDb) },
-      { assertEquals(changedFromDb?.name, change.name) }
+      { assertEquals(changedFromDb?.name, change.name) },
     )
   }
 
   @Test
   fun shouldPatchPhotoTag() {
-    val change = PhotoTagPatchRequestDto(
-      photoTagId = photoTagId1,
-      name = "changed"
-    )
+    val change =
+      PhotoTagPatchRequestDto(
+        photoTagId = photoTagId1,
+        name = "changed",
+      )
     photoTagRepository.patch(change)
 
-    val changedFromDb = photoTagRepository.findById(
-      photoTagId1.id
-    )
+    val changedFromDb =
+      photoTagRepository.findById(
+        photoTagId1.id,
+      )
 
     assertAll(
       "patch PhotoTag",
       { assertNotNull(changedFromDb) },
-      { assertEquals(changedFromDb?.name, change.name) }
+      { assertEquals(changedFromDb?.name, change.name) },
     )
   }
 
   @Test
   fun shouldPatchPhoto() {
-    val photoTags = listOf(
-      photoTagRepository.findById(photoTagId1.id)?.name ?: "got no1",
-      photoTagRepository.findById(photoTagId2.id)?.name ?: "got no2"
-    )
-    val change = PhotoPatchRequestDto(
-      photoId = PhotoId(createdPhotoId),
-      isGoodPicture = false,
-      motive = motiveDto2,
-      placeDto = placeDto2,
-      securityLevel = securityLevelDto2,
-      gang = gangDto2,
-      albumDto = albumDto2,
-      categoryDto = categoryDto2,
-      photoGangBangerDto = photoGangBangerDto2,
-      photoTags = photoTags
-    )
+    val photoTags =
+      listOf(
+        photoTagRepository.findById(photoTagId1.id)?.name ?: "got no1",
+        photoTagRepository.findById(photoTagId2.id)?.name ?: "got no2",
+      )
+    val change =
+      PhotoPatchRequestDto(
+        photoId = PhotoId(createdPhotoId),
+        isGoodPicture = false,
+        motive = motiveDto2,
+        placeDto = placeDto2,
+        securityLevel = securityLevelDto2,
+        gang = gangDto2,
+        albumDto = albumDto2,
+        categoryDto = categoryDto2,
+        photoGangBangerDto = photoGangBangerDto2,
+        photoTags = photoTags,
+      )
 
     photoService.patch(change)
 
@@ -415,52 +454,55 @@ internal class PatchIntegrationTest() {
       { assertEquals(changedFromDb.photoGangBangerDto.photoGangBangerId.id, photoGangBangerDto2.photoGangBangerId.id) },
       { assertEquals(changedFromDb.photoTags.size, 2) },
       { assertEquals(changedFromDb.photoTags[0].photoTagId.id, photoTagDto1.photoTagId.id) },
-      { assertEquals(changedFromDb.photoTags[1].photoTagId.id, photoTagDto2.photoTagId.id) }
+      { assertEquals(changedFromDb.photoTags[1].photoTagId.id, photoTagDto2.photoTagId.id) },
     )
   }
 
   @Test
   fun shouldPatchMotive() {
-    val change = MotivePatchRequestDto(
-      motiveId = motiveId1,
-      title = "new title hehe",
-      categoryDto = categoryDto2,
-      eventOwnerDto = eventOwnerDto2,
-      albumDto = albumDto2
-    )
+    val change =
+      MotivePatchRequestDto(
+        motiveId = motiveId1,
+        title = "new title hehe",
+        categoryDto = categoryDto2,
+        eventOwnerDto = eventOwnerDto2,
+        albumDto = albumDto2,
+      )
     motiveRepository.patch(change)
     val changedFromDb = motiveRepository.findById(motiveId1.id)
 
     assertAll(
       "motive patch",
       { assertNotNull(changedFromDb) },
-      { assertEquals(change.title, changedFromDb?.title) }
+      { assertEquals(change.title, changedFromDb?.title) },
     )
   }
 
   @Test
   fun shouldPatchCategory() {
-    val change = CategoryPatchRequestDto(
-      categoryId = categoryId1,
-      name = "SAY WHAT"
-    )
+    val change =
+      CategoryPatchRequestDto(
+        categoryId = categoryId1,
+        name = "SAY WHAT",
+      )
     categoryRepository.patch(change)
     val changedFromDb = categoryRepository.findById(change.categoryId.id)
 
     assertAll(
       "category patch",
       { assertNotNull(changedFromDb) },
-      { assertEquals(change.name, changedFromDb?.name) }
+      { assertEquals(change.name, changedFromDb?.name) },
     )
   }
 
   @Test
   fun shouldPatchAlbum() {
-    val change = AlbumPatchRequestDto(
-      albumId = albumId1,
-      title = "CAROLINE",
-      isAnalog = true
-    )
+    val change =
+      AlbumPatchRequestDto(
+        albumId = albumId1,
+        title = "CAROLINE",
+        isAnalog = true,
+      )
     albumRepository.patch(change)
     val changedFromDb = albumRepository.findById(change.albumId.id)
 
@@ -468,7 +510,7 @@ internal class PatchIntegrationTest() {
       "album patch",
       { assertNotNull(changedFromDb) },
       { assertEquals(change.title, changedFromDb?.title) },
-      { assertEquals(change.isAnalog, changedFromDb?.isAnalog) }
+      { assertEquals(change.isAnalog, changedFromDb?.isAnalog) },
     )
   }
 }

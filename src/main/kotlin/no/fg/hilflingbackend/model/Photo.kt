@@ -63,5 +63,6 @@ fun Photo.toDto(photoTags: List<PhotoTagDto> = listOf()): PhotoDto =
     gang = this.gang?.toDto(),
     albumDto = this.album.toDto(),
     categoryDto = this.category.toDto(),
-    photoTags = photoTags
+    photoTags = photoTags,
+    dateTaken = this.dateCreated,
   )
