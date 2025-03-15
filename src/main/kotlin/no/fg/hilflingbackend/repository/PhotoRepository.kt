@@ -11,7 +11,6 @@ import me.liuwj.ktorm.entity.toList
 import me.liuwj.ktorm.entity.update
 import me.liuwj.ktorm.dsl.eq
 import me.liuwj.ktorm.dsl.count
-import me.liuwj.ktorm.entity.aggregateColumns
 import no.fg.hilflingbackend.dto.*
 import no.fg.hilflingbackend.model.*
 import no.fg.hilflingbackend.value_object.Email
@@ -166,7 +165,7 @@ open class PhotoRepository(
     sortBy: String,
     desc: Boolean = true,
     securityLevel: String,
-    isAnalog: Boolean = false
+    isAnalog: Boolean = false,
   ): Page<PhotoDto> {
     val offset = page * pageSize
     

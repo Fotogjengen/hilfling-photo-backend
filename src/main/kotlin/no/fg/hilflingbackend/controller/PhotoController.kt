@@ -116,7 +116,6 @@ class PhotoController(
       HttpStatus.CREATED
     )
   }
-
   
   @PostMapping("/analog")
   fun createAnalogPhoto(
@@ -164,7 +163,7 @@ class PhotoController(
     @RequestParam("sortBy", required = false) sortBy: String?,
     @RequestParam("desc", required = false) desc: Boolean?,
     @RequestParam("isAnalog", required = false) isAnalog: Boolean?,
-    @RequestParam("securityLevel", required = false) securityLevel: String?
+    @RequestParam("securityLevel", required = false) securityLevel: String?,
   ): ResponseEntity<Page<PhotoDto>> =
     ResponseOk(
       photoService
@@ -182,7 +181,7 @@ class PhotoController(
           sortBy ?: "",
           desc ?: true,
           securityLevel ?: "",
-          isAnalog ?: false
+          isAnalog ?: false,
         ),
     )
 
