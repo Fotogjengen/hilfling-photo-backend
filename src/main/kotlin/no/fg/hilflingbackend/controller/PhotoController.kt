@@ -141,6 +141,7 @@ class PhotoController(
     @RequestParam("sortBy", required = false) sortBy: String?,
     @RequestParam("desc", required = false) desc: Boolean?,
     @RequestParam("isAnalog", required = false) isAnalog: Boolean?,
+    @RequestParam("securityLevel", required = false) securityLevel: String?,
   ): ResponseEntity<Page<PhotoDto>> =
     ResponseOk(
       photoService
@@ -157,6 +158,8 @@ class PhotoController(
           album ?: UUID(0L, 0L),
           sortBy ?: "",
           desc ?: true,
+          securityLevel ?: "",
+          isAnalog ?: false,
         ),
     )
 
