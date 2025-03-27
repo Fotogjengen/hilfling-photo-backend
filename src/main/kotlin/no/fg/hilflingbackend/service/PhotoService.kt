@@ -426,10 +426,10 @@ class PhotoService(
         ),
       )
 
-  override fun getCarouselPhotos(
+  override fun getGoodPhotos(
     page: Int,
     pageSize: Int,
-  ): Page<PhotoDto> = photoRepository.findCarouselPhotos(page, pageSize)
+  ): Page<PhotoDto> = photoRepository.findGoodPhotos(page, pageSize)
 
   override fun getAllAnalogPhotos(
     page: Int,

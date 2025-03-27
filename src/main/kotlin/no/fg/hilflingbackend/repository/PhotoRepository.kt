@@ -605,21 +605,22 @@ open class PhotoRepository(
     )
   }
 
-  fun findCarouselPhotos(
+  fun findGoodPhotos(
     page: Int,
     pageSize: Int,
   ): Page<PhotoDto> {
-    val photos = database.photos.filter { it.isGoodPicture eq true }
-    val photoDtos =
-      photos.drop(page).take(pageSize).toList().map {
+
+    val offset = page * pageSize
+
+    val photos = database.photos.filter { it.isGoodPicture eq true }.drop(offset).take(pageSize).toList().map {
         it.toDto(findCorrespondingPhotoTagDtos(it.id))
-      }
+    }
 
     return Page(
       page = page,
       pageSize = pageSize,
-      totalRecords = photos.totalRecords,
-      currentList = photoDtos,
+      totalRecords = photos.size,
+      currentList = photos,
     )
   }
 
