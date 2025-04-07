@@ -1,5 +1,6 @@
 package no.fg.hilflingbackend.repository
 
+import jakarta.persistence.EntityNotFoundException
 import me.liuwj.ktorm.database.Database
 import me.liuwj.ktorm.dsl.and
 import me.liuwj.ktorm.dsl.eq
@@ -16,13 +17,17 @@ import no.fg.hilflingbackend.model.BaseModel
 import no.fg.hilflingbackend.model.BaseTable
 import java.time.LocalDate
 import java.util.UUID
-import jakarta.persistence.EntityNotFoundException
 
-abstract class BaseRepository<E : BaseModel<E>, D, R>(val table: BaseTable<E>, val database: Database) : IRepository<E, D, R> {
+abstract class BaseRepository<E : BaseModel<E>, D, R>(
+  val table: BaseTable<E>,
+  val database: Database,
+) : IRepository<E, D, R> {
   override fun findById(id: UUID): D? {
-    val resultSet = database.from(table)
-      .select()
-      .where { (table.id eq id) and (table.dateDeleted.isNull()) }
+    val resultSet =
+      database
+        .from(table)
+        .select()
+        .where { (table.id eq id) and (table.dateDeleted.isNull()) }
     var t: D? = null
     resultSet.forEach { row -> t = convertToClass(row) }
     if (t == null) {
@@ -31,29 +36,32 @@ abstract class BaseRepository<E : BaseModel<E>, D, R>(val table: BaseTable<E>, v
     return t
   }
 
-  override fun findAll(page: Int, pageSize: Int): Page<D> {
-    val resultSet = database.from(table)
-      .select()
-      .where { table.dateDeleted.isNull() }
-      .limit(page, pageSize)
+  override fun findAll(
+    page: Int,
+    pageSize: Int,
+  ): Page<D> {
+    val offset = page * pageSize
+    val resultSet =
+      database
+        .from(table)
+        .select()
+        .where { table.dateDeleted.isNull() }
+        .limit(offset, pageSize)
     return Page(
       page = page,
       pageSize = pageSize,
       totalRecords = resultSet.totalRecords,
-      currentList = resultSet.map { row -> convertToClass(row) }
+      currentList = resultSet.map { row -> convertToClass(row) },
     )
   }
 
-  override fun delete(id: UUID): Int {
-    return database.update(table) {
+  override fun delete(id: UUID): Int =
+    database.update(table) {
       set(it.dateDeleted, LocalDate.now())
       where {
         it.id eq id
       }
     }
-  }
 
-  override fun patch(dto: R): D {
-    throw NotImplementedError("Patch function is not implemented.")
-  }
+  override fun patch(dto: R): D = throw NotImplementedError("Patch function is not implemented.")
 }
