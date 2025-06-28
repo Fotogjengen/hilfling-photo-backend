@@ -162,13 +162,13 @@ class PhotoController(
       ),
     )
 
-  @GetMapping("/carousel")
-  fun getCarouselPhotos(
+  @GetMapping("/goodPhotos")
+  fun getGoodPhotos(
     @RequestParam("page", required = false) page: Int?,
     @RequestParam("pageSize", required = false) pageSize: Int?,
   ): ResponseEntity<Page<PhotoDto>> =
     ResponseOk(
-      photoService.getCarouselPhotos(page ?: 0, pageSize ?: 6),
+      photoService.getGoodPhotos(page ?: 0, pageSize ?: 10),
     )
 
   @GetMapping("/analog")
