@@ -609,12 +609,17 @@ open class PhotoRepository(
     page: Int,
     pageSize: Int,
   ): Page<PhotoDto> {
-
     val offset = page * pageSize
 
-    val photos = database.photos.filter { it.isGoodPicture eq true }.drop(offset).take(pageSize).toList().map {
-        it.toDto(findCorrespondingPhotoTagDtos(it.id))
-    }
+    val photos =
+      database.photos
+        .filter { it.isGoodPicture eq true }
+        .drop(offset)
+        .take(pageSize)
+        .toList()
+        .map {
+          it.toDto(findCorrespondingPhotoTagDtos(it.id))
+        }
 
     return Page(
       page = page,
