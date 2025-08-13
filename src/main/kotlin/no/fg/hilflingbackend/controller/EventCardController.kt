@@ -3,6 +3,7 @@ package no.fg.hilflingbackend.controller
 import jakarta.persistence.EntityNotFoundException
 import no.fg.hilflingbackend.dto.EventCardDto
 import no.fg.hilflingbackend.dto.EventOwnerName
+import no.fg.hilflingbackend.dto.Page
 import no.fg.hilflingbackend.dto.toEntity
 import no.fg.hilflingbackend.exceptions.GlobalExceptionHandler
 import no.fg.hilflingbackend.repository.EventCardRepository
@@ -18,7 +19,7 @@ class EventCardController(
   val eventCardRepository: EventCardRepository,
   val eventOwnerRepository: EventOwnerRepository,
 ) : GlobalExceptionHandler() {
-  @GetMapping()
+  @GetMapping("/latest")
   fun getNLatestEventCardsOfType(
     @RequestParam("eventOwnerName") eventOwnerName: String,
     @RequestParam("numberOfEventCards") numberOfEventCards: Int,
@@ -26,11 +27,74 @@ class EventCardController(
     val eventOwnerFromDb =
       eventOwnerRepository.findByEventOwnerName(
         EventOwnerName.valueOf(eventOwnerName),
-      ) ?: throw EntityNotFoundException("Did not find eventOwner")
+      )
+        ?: throw EntityNotFoundException("Did not find eventOwner")
 
     return eventCardRepository.getLatestEventCards(
       numberOfEventCards = numberOfEventCards,
       eventOwner = eventOwnerFromDb.toEntity(),
     )
   }
+
+  @GetMapping("/paginated")
+  fun getLatestEventCardsOfType(
+    @RequestParam("eventOwnerName") eventOwnerName: String,
+    @RequestParam("page") page: Int,
+    @RequestParam("pageSize") pageSize: Int,
+  ): Page<EventCardDto> {
+    val eventOwnerFromDb =
+      eventOwnerRepository.findByEventOwnerName(
+        EventOwnerName.valueOf(eventOwnerName),
+      )
+        ?: throw EntityNotFoundException("Did not find eventOwner")
+
+    return eventCardRepository.getPaginatedEventCards(
+      eventOwner = eventOwnerFromDb.toEntity(),
+      page = page,
+      pageSize = pageSize,
+    )
+  }
+
+  @GetMapping("/all")
+  fun getLatestEventCards(
+    @RequestParam("page") page: Int,
+    @RequestParam("pageSize") pageSize: Int,
+  ): Page<EventCardDto> =
+    eventCardRepository.getAllPaginatedEventCards(
+      page = page,
+      pageSize = pageSize,
+    )
+
+  @GetMapping("/search")
+  fun searchEventCards(
+    @RequestParam("eventOwnerName") eventOwnerName: String,
+    @RequestParam("page") page: Int,
+    @RequestParam("pageSize") pageSize: Int,
+    @RequestParam("searchString") searchString: String,
+  ): Page<EventCardDto> {
+    val eventOwnerFromDb =
+      eventOwnerRepository.findByEventOwnerName(
+        EventOwnerName.valueOf(eventOwnerName),
+      )
+        ?: throw EntityNotFoundException("Did not find eventOwner")
+
+    return eventCardRepository.searchEventCards(
+      eventOwner = eventOwnerFromDb.toEntity(),
+      page = page,
+      pageSize = pageSize,
+      searchTerm = searchString,
+    )
+  }
+
+  @GetMapping("/search/global")
+  fun searchEventCardsGlobal(
+    @RequestParam("searchString", required = false) searchString: String?,
+    @RequestParam("page") page: Int = 0,
+    @RequestParam("pageSize") pageSize: Int = 10,
+  ): Page<EventCardDto> =
+    eventCardRepository.searchEventCardsGlobal(
+      searchTerm = searchString ?: "",
+      page = page,
+      pageSize = pageSize,
+    )
 }
