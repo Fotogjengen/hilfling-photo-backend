@@ -36,63 +36,13 @@ class EventCardController(
     )
   }
 
-  @GetMapping("/paginated")
-  fun getLatestEventCardsOfType(
-    @RequestParam("eventOwnerName") eventOwnerName: String,
-    @RequestParam("page") page: Int,
-    @RequestParam("pageSize") pageSize: Int,
-  ): Page<EventCardDto> {
-    val eventOwnerFromDb =
-      eventOwnerRepository.findByEventOwnerName(
-        EventOwnerName.valueOf(eventOwnerName),
-      )
-        ?: throw EntityNotFoundException("Did not find eventOwner")
-
-    return eventCardRepository.getPaginatedEventCards(
-      eventOwner = eventOwnerFromDb.toEntity(),
-      page = page,
-      pageSize = pageSize,
-    )
-  }
-
-  @GetMapping("/all")
-  fun getLatestEventCards(
-    @RequestParam("page") page: Int,
-    @RequestParam("pageSize") pageSize: Int,
-  ): Page<EventCardDto> =
-    eventCardRepository.getAllPaginatedEventCards(
-      page = page,
-      pageSize = pageSize,
-    )
-
   @GetMapping("/search")
-  fun searchEventCards(
-    @RequestParam("eventOwnerName") eventOwnerName: String,
-    @RequestParam("page") page: Int,
-    @RequestParam("pageSize") pageSize: Int,
-    @RequestParam("searchString") searchString: String,
-  ): Page<EventCardDto> {
-    val eventOwnerFromDb =
-      eventOwnerRepository.findByEventOwnerName(
-        EventOwnerName.valueOf(eventOwnerName),
-      )
-        ?: throw EntityNotFoundException("Did not find eventOwner")
-
-    return eventCardRepository.searchEventCards(
-      eventOwner = eventOwnerFromDb.toEntity(),
-      page = page,
-      pageSize = pageSize,
-      searchTerm = searchString,
-    )
-  }
-
-  @GetMapping("/search/global")
   fun searchEventCardsGlobal(
     @RequestParam("searchString", required = false) searchString: String?,
     @RequestParam("page") page: Int = 0,
     @RequestParam("pageSize") pageSize: Int = 10,
   ): Page<EventCardDto> =
-    eventCardRepository.searchEventCardsGlobal(
+    eventCardRepository.searchEventCards(
       searchTerm = searchString ?: "",
       page = page,
       pageSize = pageSize,
