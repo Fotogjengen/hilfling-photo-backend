@@ -2,7 +2,6 @@
 # to override any settings add a file called '.env'
 # with new environment variable values
 # example: "DATABASE_USERNAME=NikZy"
-version: "3"
 networks:
   hilfling-network: # Used for internal networking
     driver: bridge

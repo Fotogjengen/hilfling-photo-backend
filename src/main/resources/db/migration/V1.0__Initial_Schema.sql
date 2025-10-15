@@ -36,7 +36,7 @@ CREATE TABLE PURCHASE_ORDER
 (
     id           uuid PRIMARY KEY,
     name         VARCHAR(30),
-    email        VARCHAR(30),
+    email        VARCHAR(50),
     address      VARCHAR(40),
     zip_code     INTEGER,
     city         VARCHAR(30),
@@ -110,7 +110,7 @@ CREATE TABLE SAMFUNDET_USER
     first_name        VARCHAR(20),
     last_name         VARCHAR(20),
     username          VARCHAR(20),
-    email             VARCHAR(30),
+    email             VARCHAR(50),
     profile_picture   VARCHAR(150),
     phone_number      VARCHAR(20),
     sex               VARCHAR(10),
