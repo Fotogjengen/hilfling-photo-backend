@@ -24,7 +24,7 @@
 		<sonar.dynamicAnalysis>reuseReports</sonar.dynamicAnalysis>
 		<sonar.jacoco.reportPath>${project.basedir}/../target/jacoco.exec</sonar.jacoco.reportPath>
 		<sonar.language>kotlin</sonar.language>
-		<flyway.version>9.22.1</flyway.version>
+		<flyway.version>11.20.2</flyway.version>
 		<jakarta.version>3.1.0</jakarta.version>
 		<ktorm.version>3.1.0</ktorm.version>
 		<springdoc.version>2.6.0</springdoc.version>
