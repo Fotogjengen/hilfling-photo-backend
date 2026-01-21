@@ -59,6 +59,7 @@ import java.net.http.HttpResponse
 import java.security.SecureRandom
 import java.time.LocalDate
 import java.util.UUID
+import java.time.Duration
 
 @Service
 class MockDataService {
@@ -127,12 +128,41 @@ class MockDataService {
       ),
     )
 
-  fun getPhotoFromApi(): String {
-    val client = HttpClient.newBuilder().build()
-    val request = HttpRequest.newBuilder().uri(URI.create("https://picsum.photos/1200/800")).build()
-    val response = client.send(request, HttpResponse.BodyHandlers.ofString())
-    return response.headers().allValues("location")[0]
-  }
+
+
+fun getPhotoFromApi(): String {
+    val client = HttpClient.newBuilder()
+        .followRedirects(HttpClient.Redirect.NEVER) // vi vil lese Location selv
+        .connectTimeout(Duration.ofSeconds(10))
+        .build()
+
+    // Velg tilfeldige størrelser (juster som du vil)
+    val widths = listOf(360, 420, 480, 600, 720, 840, 960, 1200)
+    val heights = listOf(240, 280, 320, 400, 480, 560, 640, 800)
+
+    val w = widths.random()
+    val h = heights.random()
+
+    // Cache-buster (hindrer at du får samme redirect/cache igjen)
+    val cacheBust = System.currentTimeMillis()
+
+    val url = "https://picsum.photos/$w/$h?random=$cacheBust"
+
+    val request = HttpRequest.newBuilder()
+        .uri(URI.create(url))
+        .timeout(Duration.ofSeconds(10))
+        .GET()
+        .build()
+
+    val response = client.send(request, HttpResponse.BodyHandlers.discarding())
+
+    // Picsum svarer ofte med 302 og Location-header -> den faktiske bildeadressen
+    val location = response.headers().firstValue("location").orElse(null)
+
+    return location ?: url
+}
+
+
 
   fun generatePhoto(): List<PhotoDto> {
     val list = mutableListOf<PhotoDto>()

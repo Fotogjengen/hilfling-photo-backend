@@ -1,6 +1,6 @@
 # Stage 1: Build the project
 
-FROM openjdk:21-slim AS MAVEN_BUILD
+FROM eclipse-temurin:21-jdk AS maven_build
 
 # Install Maven
 RUN apt-get update && apt-get install -y maven
@@ -14,7 +14,7 @@ RUN mvn package -DskipTests=true
 RUN ls /build/target
 
 # Stage 2: prepare launch environment
-FROM openjdk:21-slim
+FROM eclipse-temurin:21-jre
 # Running with user privileges helts to migate some risks: This is currently disabled bacause
 # The application did not have enough privileges to save images to disk
 RUN addgroup --system spring && adduser --system --ingroup spring spring
