@@ -9,6 +9,7 @@ import java.util.UUID
 
 interface IBaseService<T> {
   fun getById(id: UUID): PhotoDto?
+
   fun getAll(
     page: Int = 0,
     pageSize: Int = 100,
@@ -21,9 +22,12 @@ interface IBaseService<T> {
     isGoodPic: Boolean = false,
     album: UUID,
     sortBy: String,
-    desc: Boolean = true
+    desc: Boolean = true,
+    securityLevel: String,
+    isAnalog: Boolean = false,
   ): Page<T>
 }
+
 interface IPhotoService : IBaseService<PhotoDto> {
   fun saveDigitalPhotos(
     isGoodPictureList: List<Boolean>,
@@ -34,8 +38,10 @@ interface IPhotoService : IBaseService<PhotoDto> {
     photoGangBangerIdList: List<UUID>,
     albumIdList: List<UUID>,
     categoryIdList: List<UUID>,
-    fileList: List<MultipartFile>
+    fileList: List<MultipartFile>,
+    dateTaken: LocalDate,
   ): List<String>
+
   fun saveAnalogPhotos(
     isGoodPictureList: List<Boolean>,
     motiveIdList: List<UUID>,
@@ -43,8 +49,9 @@ interface IPhotoService : IBaseService<PhotoDto> {
     securityLevelIdList: List<UUID>,
     gangIdList: List<UUID>,
     photoGangBangerIdList: List<UUID>,
-    fileList: List<MultipartFile>
+    fileList: List<MultipartFile>,
   ): List<String>
+
   fun createNewMotiveAndSaveDigitalPhotos(
     motiveString: String,
     placeString: String,
@@ -57,9 +64,18 @@ interface IPhotoService : IBaseService<PhotoDto> {
     isGoodPhotoList: List<Boolean>,
     dateCreated: LocalDate,
     tagList: List<String>,
+    dateTaken: LocalDate,
   ): List<String>
-  fun getCarouselPhotos(page: Int = 0, pageSize: Int = 100): Page<PhotoDto>
-  fun getAllAnalogPhotos(page: Int = 0, pageSize: Int = 100): Page<PhotoDto> // TODO: Need different DTO for analog
+
+  fun getGoodPhotos(
+    page: Int = 0,
+    pageSize: Int = 100,
+  ): Page<PhotoDto>
+
+  fun getAllAnalogPhotos(
+    page: Int = 0,
+    pageSize: Int = 100,
+  ): Page<PhotoDto> // TODO: Need different DTO for analog
 
   fun getAllDigitalPhotos(
     page: Int = 0,
@@ -73,7 +89,9 @@ interface IPhotoService : IBaseService<PhotoDto> {
     isGoodPic: Boolean = false,
     album: UUID,
     sortBy: String,
-    desc: Boolean = true
+    desc: Boolean = true,
+    securityLevel: String,
+    isAnalog: Boolean = false,
   ): Page<PhotoDto>
 
   fun patch(dto: PhotoPatchRequestDto): PhotoDto
