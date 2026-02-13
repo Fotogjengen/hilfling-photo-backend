@@ -13,11 +13,10 @@ import no.fg.hilflingbackend.model.Albums
 import no.fg.hilflingbackend.model.albums
 import org.springframework.stereotype.Repository
 import jakarta.persistence.EntityNotFoundException
-
 import me.liuwj.ktorm.dsl.eq
 import me.liuwj.ktorm.dsl.select
 import me.liuwj.ktorm.dsl.where
-import me.liuwj.ktorm.entity.any  
+import me.liuwj.ktorm.entity.any
 
 @Repository
 open class AlbumRepository(database: Database) : BaseRepository<Album, AlbumDto, AlbumPatchRequestDto>(table = Albums, database = database) {
