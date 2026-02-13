@@ -14,6 +14,11 @@ import no.fg.hilflingbackend.model.albums
 import org.springframework.stereotype.Repository
 import jakarta.persistence.EntityNotFoundException
 
+import me.liuwj.ktorm.dsl.eq
+import me.liuwj.ktorm.dsl.select
+import me.liuwj.ktorm.dsl.where
+import me.liuwj.ktorm.entity.any  
+
 @Repository
 open class AlbumRepository(database: Database) : BaseRepository<Album, AlbumDto, AlbumPatchRequestDto>(table = Albums, database = database) {
   override fun convertToClass(qrs: QueryRowSet): AlbumDto = AlbumDto(
@@ -23,7 +28,10 @@ open class AlbumRepository(database: Database) : BaseRepository<Album, AlbumDto,
   )
 
   override fun create(dto: AlbumDto): Int {
-    return database.albums.add(dto.toEntity())
+    val exists = database.albums.any { it.id eq dto.albumId.id }
+    if (exists) return 0
+    database.albums.add(dto.toEntity())
+    return 1
   }
 
   override fun patch(dto: AlbumPatchRequestDto): AlbumDto {
