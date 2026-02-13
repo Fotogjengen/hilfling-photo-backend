@@ -749,8 +749,8 @@ class MockDataService {
         relationShipStatus = RelationshipStatus.valueOf("single"),
         zipCode = "7051",
         semesterStart = SemesterStart("H2018"),
-        samfundetUser = generateSamfundetUserData().random(),
-        position = generatePositionData().random(),
+        samfundetUser = generateSamfundetUserData()[0],
+        position = generatePositionData()[0],
       ),
       PhotoGangBangerDto(
         photoGangBangerId =
@@ -812,6 +812,7 @@ class MockDataService {
     )
 
   fun seedMockData() {
+    println(">>> seedMockData called at " + java.time.Instant.now())
     generateAlbumData().forEach { albumRepository.create(it) }
     generatePhotoTagData().forEach {
       // hotoTagRepository.create(it)
