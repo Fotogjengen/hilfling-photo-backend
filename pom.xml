@@ -269,10 +269,10 @@
 				</executions>
 
 			</plugin>
-			<plugin>
+			<!-- <plugin>
 				<artifactId>maven-surefire-plugin</artifactId>
-				<version>3.3.1</version>
-			</plugin>
+				<version>3.5.4</version>
+			</plugin> -->
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
