@@ -53,21 +53,21 @@ import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInstance
 import org.junit.jupiter.api.assertAll
-import org.junit.runner.RunWith
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.mock.web.MockMultipartFile
-import org.springframework.test.context.junit4.SpringRunner
 import java.time.LocalDate
 import java.util.UUID
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse
 import kotlin.test.assertNotNull
+// import org.junit.runner.RunWith
+// import org.springframework.test.context.junit4.SpringRunner
 
-@RunWith(SpringRunner::class)
+// @RunWith(SpringRunner::class)      
 @SpringBootTest()
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-internal class PatchIntegrationTest {
+class PatchIntegrationTest {
   @Autowired
   lateinit var photoService: PhotoService
 
