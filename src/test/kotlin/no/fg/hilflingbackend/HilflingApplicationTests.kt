@@ -17,6 +17,7 @@ class HilflingApplicationTests {
 
   @Test
   fun contextLoads() {
+    // error("Force failure")
   }
 
   @AfterAll
