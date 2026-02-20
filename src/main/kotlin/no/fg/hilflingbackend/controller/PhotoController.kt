@@ -123,7 +123,7 @@ class PhotoController(
     @RequestParam("pageSize", required = false) pageSize: Int?,
   ): ResponseEntity<Page<PhotoDto>> =
     ResponseOk(
-      photoService.getByMotiveId(id, page ?: 0, pageSize ?: 100,)
+      photoService.getByMotiveId(id, page ?: 0, pageSize ?: 100),
     )
 
   @GetMapping
