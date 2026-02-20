@@ -21,10 +21,15 @@ spring:
     driver-class-name: ${DATABASE_DRIVER:org.postgresql.Driver}
   logging:
     level:
-      root: debug
-      me.liuwj.ktorm: debug
-      org.springframework.web: DEBUG
-      org.springdoc: DEBUG
+      # root: debug
+      # me.liuwj.ktorm: debug
+      # org.springframework.web: DEBUG
+      # org.springdoc: DEBUG
+      root: info
+      org.flywaydb: debug
+      org.springframework.jdbc.datasource.init: debug
+      org.springframework.web: debug
+      org.springdoc: debug
   flyway:
     user: ${DATABASE_USERNAME:hilfling}
     url: ${DATABASE_URL:jdbc:postgresql://postgres:5432/hilflingdb?createDatabaseIfNotExist=true}
