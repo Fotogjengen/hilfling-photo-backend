@@ -154,7 +154,7 @@ open class PhotoRepository(
     id: UUID,
     page: Int,
     pageSize: Int,
-  ): Page<PhotoDto>? {
+  ): Page<PhotoDto> {
     val photos = database.photos.filter { it.motiveId eq id }
     val photoDtos = photos.toList().map { it.toDto(findCorrespondingPhotoTagDtos(it.id)) }
     return Page(
@@ -402,15 +402,17 @@ open class PhotoRepository(
 
   fun patch(
     dto: PhotoPatchRequestDto,
-    photoTags: List<PhotoTagDto>?,
+    photoTags: List<PhotoTagDto>,
   ): PhotoDto {
-    val fromDb = findById(dto.photoId.id) ?: throw EntityNotFoundException("Could not find Photo")
+    val fromDb = findById(dto.photoId.id)
+      ?: throw EntityNotFoundException("Could not find Photo")
+
     val (smallUrl, mediumUrl, largeUrl) = calculateNewUrls(fromDb, dto)
 
-    if (photoTags != null) {
+    if (photoTags.isNotEmpty()) {
       try {
         database.batchInsert(PhotoTagReferences) {
-          photoTags.map { photoTagDto ->
+          photoTags.forEach { photoTagDto ->
             item {
               set(it.id, UUID.randomUUID())
               set(it.photoTagId, photoTagDto.photoTagId.id)
@@ -419,12 +421,7 @@ open class PhotoRepository(
           }
         }
       } catch (e: Exception) {
-        logger.info(
-          String.format(
-            "Tried to create a PhotoTagReference that already existed. Ignoring error.",
-            e.message,
-          ),
-        )
+        logger.info("Tried to create a PhotoTagReference that already existed. Ignoring error. ${e.message}")
       }
     }
 
@@ -442,7 +439,7 @@ open class PhotoRepository(
         albumDto = dto.albumDto ?: fromDb.albumDto,
         categoryDto = dto.categoryDto ?: fromDb.categoryDto,
         photoGangBangerDto = dto.photoGangBangerDto ?: fromDb.photoGangBangerDto,
-        photoTags = photoTags ?: fromDb.photoTags,
+        photoTags = if (photoTags.isNotEmpty()) photoTags else fromDb.photoTags,
         dateTaken = fromDb.dateTaken,
       )
     val updated = database.photos.update(newDto.toEntity())

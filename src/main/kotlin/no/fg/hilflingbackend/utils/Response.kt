@@ -4,7 +4,7 @@ import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 
-class ResponseOk<T> : ResponseEntity<T> {
+class ResponseOk<T : Any> : ResponseEntity<T> {
   constructor(
     t: T,
     headers: HttpHeaders = HttpHeaders(),
@@ -12,7 +12,7 @@ class ResponseOk<T> : ResponseEntity<T> {
   ) : super(t, headers, status)
 }
 
-class ResponseCreated<T> : ResponseEntity<T> {
+class ResponseCreated<T : Any> : ResponseEntity<T> {
   constructor(
     t: T,
     headers: HttpHeaders = HttpHeaders(),
@@ -20,7 +20,7 @@ class ResponseCreated<T> : ResponseEntity<T> {
   ) : super(t, headers, status)
 }
 
-class ResponseNotCreated<T> : ResponseEntity<T> {
+class ResponseNotCreated<T : Any> : ResponseEntity<T> {
   constructor(
     t: T,
     headers: HttpHeaders = HttpHeaders(),
@@ -28,7 +28,7 @@ class ResponseNotCreated<T> : ResponseEntity<T> {
   ) : super(t, headers, status)
 }
 
-class ResponseUpdated<T> : ResponseEntity<T> {
+class ResponseUpdated<T : Any> : ResponseEntity<T> {
   constructor(
     t: T,
     headers: HttpHeaders = HttpHeaders(),

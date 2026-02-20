@@ -121,10 +121,9 @@ class PhotoController(
     @PathVariable("id") id: UUID,
     @RequestParam("page", required = false) page: Int?,
     @RequestParam("pageSize", required = false) pageSize: Int?,
-  ): ResponseEntity<Page<PhotoDto>?> =
-    ResponseOk(
-      photoService.getByMotiveId(id, page ?: 0, pageSize ?: 100),
-    )
+  ): ResponseEntity<Page<PhotoDto>> =
+    ResponseOk(photoService.getByMotiveId(id, page ?: 0, pageSize ?: 100))
+
 
   @GetMapping
   fun getAll(
