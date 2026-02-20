@@ -8,13 +8,16 @@ data class Page<T>(
   val currentList: List<T>
 ) {
   companion object {
-    fun <T> empty(page: Int = 0, pageSize: Int = 1): Page<T> =
+    fun <T> empty(
+      page: Int = 0, 
+      pageSize: Int = 1
+      ): Page<T> =
       Page(
         totalRecords = 0,
         pageSize = pageSize,
         page = page,
         totalPages = 0,
-        currentList = emptyList()
+        currentList = emptyList(),
       )
   }
 }
