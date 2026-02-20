@@ -9,9 +9,9 @@ data class Page<T>(
 ) {
   companion object {
     fun <T> empty(
-      page: Int = 0, 
-      pageSize: Int = 1
-      ): Page<T> =
+      page: Int = 0,
+      pageSize: Int = 1,
+    ): Page<T> =
       Page(
         totalRecords = 0,
         pageSize = pageSize,

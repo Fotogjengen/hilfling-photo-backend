@@ -404,8 +404,8 @@ open class PhotoRepository(
     dto: PhotoPatchRequestDto,
     photoTags: List<PhotoTagDto>,
   ): PhotoDto {
-    val fromDb = 
-    findById(dto.photoId.id) ?: throw EntityNotFoundException("Could not find Photo")
+    val fromDb =
+      findById(dto.photoId.id) ?: throw EntityNotFoundException("Could not find Photo")
 
     val (smallUrl, mediumUrl, largeUrl) = calculateNewUrls(fromDb, dto)
 
