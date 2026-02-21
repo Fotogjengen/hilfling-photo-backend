@@ -10,7 +10,6 @@ data class Email private constructor(
       if (value != null && isEmailValid(value)) {
         return Email(value = value)
       }
-      println("Invalid email passed to Email(): '$value'")
 
       throw IllegalArgumentException("Not an email")
     }
