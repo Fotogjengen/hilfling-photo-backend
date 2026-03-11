@@ -49,6 +49,7 @@ services:
       SPRING_DATASOURCE_PASSWORD: ${DATABASE_PASSWORD:-password}
     ports:
       - "8000:8000" # map port 8000 of the host to port 8080 of the container
+    # command: ["--debug"]
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.backend.rule=Host(`backend.localhost`)"
