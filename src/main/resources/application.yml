@@ -19,12 +19,7 @@ spring:
     url: ${DATABASE_URL:jdbc:postgresql://postgres:5432/hilflingdb}
     password: ${DATABASE_PASSWORD:password}
     driver-class-name: ${DATABASE_DRIVER:org.postgresql.Driver}
-  logging:
-    level:
-      root: debug
-      me.liuwj.ktorm: debug
-      org.springframework.web: DEBUG
-      org.springdoc: DEBUG
+
   flyway:
     user: ${DATABASE_USERNAME:hilfling}
     url: ${DATABASE_URL:jdbc:postgresql://postgres:5432/hilflingdb?createDatabaseIfNotExist=true}
@@ -52,6 +47,17 @@ spring:
       blob-storage:
         connection-string: ${AZURE_STORAGE_CONNECTION_STRING:DefaultEndpointsProtocol=http;AccountName=devstoreaccount1;AccountKey=Eby8vdM02xNOcqFlqUwJPLlmEtlCDXJ1OUzFT50uSRZ6IFsuFq2UVErCz4I6tq/K1SZFPTOtr/KBHBeksoGMGw==;BlobEndpoint=http://127.0.0.1:10000/devstoreaccount1;QueueEndpoint=http://127.0.0.1:10001/devstoreaccount1;TableEndpoint=http://127.0.0.1:10002/devstoreaccount1;}
 
+logging:
+  level:
+    # root: debug
+    # me.liuwj.ktorm: debug
+    # org.springframework.web: DEBUG
+    # org.springdoc: DEBUG
+    root: info
+    org.flywaydb: debug
+    org.springframework.jdbc.datasource.init: debug
+    org.springframework.web: debug
+    org.springdoc: debug
 
 springdoc:
   api-docs:

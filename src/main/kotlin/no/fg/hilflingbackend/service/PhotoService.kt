@@ -479,7 +479,7 @@ class PhotoService(
     id: UUID,
     page: Int,
     pageSize: Int,
-  ): Page<PhotoDto>? = photoRepository.findByMotiveId(id, page, pageSize)
+  ): Page<PhotoDto> = photoRepository.findByMotiveId(id, page, pageSize) ?: Page.empty(page, pageSize)
 
   fun findById(id: UUID): PhotoDto = photoRepository.findById(id) ?: throw EntityNotFoundException("Did not find photo")
 
