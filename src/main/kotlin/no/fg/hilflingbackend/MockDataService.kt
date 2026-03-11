@@ -126,46 +126,46 @@ class MockDataService {
         name = "Diversegjengen",
       ),
     )
-    
-fun getPhotoFromApi(): String {
-  val seed = UUID.randomUUID().toString()
-  return "https://picsum.photos/seed/$seed/1200/800"
-}
 
-fun generatePhoto(): List<PhotoDto> {
-  val list = mutableListOf<PhotoDto>()
-  val motives = generateMotiveData()
-  val places = generatePlaceData()
-  val securityLevels = generateSecurityLevelData()
-  val gangs = generateGangData()
-  val photoGangBangers = generatePhotoGangBangerData()
-  val photoTags = generatePhotoTagData()
-  val albums = generateAlbumData()
-  val categories = generateCategoryData()
-  for (i in 1..1000) {
-    val uuid = UUID.randomUUID()
-    val url = getPhotoFromApi()
-    list.add(
-      PhotoDto(
-        photoId = PhotoId(uuid),
-        largeUrl = url,
-        motive = motives.random(),
-        placeDto = places.random(),
-        securityLevel = securityLevels.random(),
-        gang = gangs.random(),
-        isGoodPicture = true,
-        smallUrl = url,
-        mediumUrl = url,
-        photoGangBangerDto = photoGangBangers.random(),
-        photoTags = photoTags,
-        albumDto = albums.random(),
-        categoryDto = categories.random(),
-        dateTaken = LocalDate.now(),
-      ),
-    )
+  fun getPhotoFromApi(): String {
+    val seed = UUID.randomUUID().toString()
+    return "https://picsum.photos/seed/$seed/1200/800"
   }
-  return list
-}
+
+  fun generatePhoto(): List<PhotoDto> {
+    val list = mutableListOf<PhotoDto>()
+    val motives = generateMotiveData()
+    val places = generatePlaceData()
+    val securityLevels = generateSecurityLevelData()
+    val gangs = generateGangData()
+    val photoGangBangers = generatePhotoGangBangerData()
+    val photoTags = generatePhotoTagData()
+    val albums = generateAlbumData()
+    val categories = generateCategoryData()
+    for (i in 1..1000) {
+      val uuid = UUID.randomUUID()
+      val url = getPhotoFromApi()
+      list.add(
+        PhotoDto(
+          photoId = PhotoId(uuid),
+          largeUrl = url,
+          motive = motives.random(),
+          placeDto = places.random(),
+          securityLevel = securityLevels.random(),
+          gang = gangs.random(),
+          isGoodPicture = true,
+          smallUrl = url,
+          mediumUrl = url,
+          photoGangBangerDto = photoGangBangers.random(),
+          photoTags = photoTags,
+          albumDto = albums.random(),
+          categoryDto = categories.random(),
+          dateTaken = LocalDate.now(),
+        ),
+      )
+    }
+    return list
+  }
 
   fun generatePlaceData(): List<PlaceDto> =
     listOf(
