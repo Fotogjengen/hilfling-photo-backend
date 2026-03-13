@@ -11,6 +11,7 @@ COPY pom.xml /build/
 COPY src /build/src/
 WORKDIR /build/
 RUN mvn package -DskipTests=true
+# RUN mvn -U test
 RUN ls /build/target
 
 # Stage 2: prepare launch environment
