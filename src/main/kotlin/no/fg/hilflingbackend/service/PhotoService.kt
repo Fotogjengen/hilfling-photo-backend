@@ -46,6 +46,7 @@ import java.time.LocalDate
 import java.util.UUID
 import java.util.stream.Stream
 
+
 @Service
 class PhotoService(
   val imageFileStorageProperties: ImageFileStorageProperties,
@@ -422,7 +423,7 @@ class PhotoService(
           categoryDto = categoryDto,
           eventOwnerDto = eventOwnerDto,
           albumDto = albumDto,
-          dateCreated = dateCreated ?: null,
+          dateCreated = dateCreated,
         ),
       )
 
@@ -467,9 +468,44 @@ class PhotoService(
       desc,
     )
 
-  override fun patch(dto: PhotoPatchRequestDto): PhotoDto {
-    TODO("Not yet implemented")
+
+override fun patch(dto: PhotoPatchRequestDto): PhotoDto {
+  logger.info("PATCH DTO: $dto")
+
+  val photoTags = dto.photoTags?.map {
+    photoTagRepository.findByName(it)
+      ?: PhotoTagDto(name = it).apply {
+        photoTagRepository.create(this)
+      }
   }
+
+  val tags = photoRepository.findCorrespondingPhotoTagDtos(dto.photoId.id)
+
+  tags.forEach { oldTag ->
+    if (photoTags == null || !photoTags.contains(oldTag)) {
+      photoTagRepository.deletePhotoTagReference(oldTag.photoTagId, dto.photoId)
+    }
+  }
+
+  return photoRepository.patch(dto, photoTags)
+}
+
+override fun getById(id: UUID): PhotoDto? {
+  return photoRepository.findById(id)
+}
+
+
+  fun getByMotiveId(
+    id: UUID,
+    page: Int,
+    pageSize: Int,
+  ): Page<PhotoDto>? = photoRepository.findByMotiveId(id, page, pageSize)
+
+  fun findById(id: UUID): PhotoDto =
+    photoRepository.findById(id)
+      ?: throw EntityNotFoundException("Did not find photo")
+
+
 
   override fun getById(id: UUID): PhotoDto? {
     TODO("Not yet implemented")

@@ -218,4 +218,11 @@ class PhotoController(
   fun patch(
     @RequestBody dto: PhotoPatchRequestDto,
   ): PhotoDto = photoService.patch(dto)
+
+  @PatchMapping("/photos")
+    fun patchPhoto(
+      @RequestBody dto: PhotoPatchRequestDto,
+    ): PhotoDto {
+      return photoService.patch(dto)
+    }
 }
