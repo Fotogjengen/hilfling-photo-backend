@@ -1,11 +1,12 @@
 package no.fg.hilflingbackend.dto
 
+import com.fasterxml.jackson.annotation.JsonCreator
+import com.fasterxml.jackson.annotation.JsonValue
 import no.fg.hilflingbackend.model.PhotoGangBanger
 import java.util.UUID
 
 data class PhotoGangBangerPatchRequestDto(
   val photoGangBangerId: PhotoGangBangerId,
-  val relationshipStatus: RelationshipStatus?,
   val semesterStart: SemesterStart?,
   val isActive: Boolean?,
   val isPang: Boolean?,
@@ -18,7 +19,6 @@ data class PhotoGangBangerPatchRequestDto(
 
 data class PhotoGangBangerDto(
   val photoGangBangerId: PhotoGangBangerId = PhotoGangBangerId(),
-  val relationShipStatus: RelationshipStatus,
   val semesterStart: SemesterStart,
   val isActive: Boolean,
   var isPang: Boolean,
@@ -35,7 +35,6 @@ fun PhotoGangBangerDto.toEntity(): PhotoGangBanger {
   val dto = this
   return PhotoGangBanger {
     id = dto.photoGangBangerId.id
-    relationshipStatus = dto.relationShipStatus.status
     semesterStart = dto.semesterStart.value
     isPang = dto.isPang
     isActive = dto.isActive
@@ -54,34 +53,24 @@ data class PhotoGangBangerId(
 }
 
 // TODO: Move to value objects
-enum class RelationshipStatus(val status: String) {
-  single("single"),
-  relationship("relationship"),
-  married("married")
-}
+data class SemesterStart(val value: String) {
+  init {
+    require(isValidSemesterStart(value)) { "Invalid semesterStart: $value" }
+  }
 
-// TODO: Move to value objects
-data class SemesterStart private constructor(val value: String) {
+  @JsonValue
+  fun toJson(): String = value
+
   companion object {
-    // Overrides default constructor and adds a validator to it
-    operator fun invoke(value: String): SemesterStart {
-      // Validated
-      return if (isValidSemesterStart(value)) {
-        SemesterStart(value)
-      } else {
-        throw IllegalArgumentException(isValidSemesterStart(value).toString())
-      }
-    }
+    @JvmStatic
+    @JsonCreator
+    fun from(value: String): SemesterStart = SemesterStart(value)
+
+    operator fun invoke(value: String): SemesterStart = SemesterStart(value)
 
     fun isValidSemesterStart(semesterStart: String): Boolean {
-      // TODO: Implement
+      // TODO: kan lage semesterstart check
       return true
     }
-    /*
-    return Pattern.compile(
-      "([HV])\d\w"
-    ).matcher(semesterStart).matches()
-  }
-     */
   }
 }

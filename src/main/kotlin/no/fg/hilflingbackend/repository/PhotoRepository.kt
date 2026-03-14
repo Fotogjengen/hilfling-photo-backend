@@ -109,9 +109,6 @@ open class PhotoRepository(
       photoGangBangerDto =
         PhotoGangBangerDto(
           PhotoGangBangerId(row[PhotoGangBangers.id]!!),
-          RelationshipStatus.valueOf(
-            row[PhotoGangBangers.relationshipStatus]!!,
-          ),
           SemesterStart(row[PhotoGangBangers.semesterStart]!!),
           row[PhotoGangBangers.isActive]!!,
           row[PhotoGangBangers.isPang]!!,
@@ -235,7 +232,6 @@ open class PhotoRepository(
           Gangs.name,
           PhotoGangBangers.id,
           PhotoGangBangers.semesterStart,
-          PhotoGangBangers.relationshipStatus,
           PhotoGangBangers.isActive,
           PhotoGangBangers.isPang,
           PhotoGangBangers.address,
@@ -538,7 +534,6 @@ open class PhotoRepository(
           Gangs.name,
           PhotoGangBangers.id,
           PhotoGangBangers.semesterStart,
-          PhotoGangBangers.relationshipStatus,
           PhotoGangBangers.isActive,
           PhotoGangBangers.isPang,
           PhotoGangBangers.address,

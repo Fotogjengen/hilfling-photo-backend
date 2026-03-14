@@ -28,7 +28,6 @@ import no.fg.hilflingbackend.dto.PlaceDto
 import no.fg.hilflingbackend.dto.PlaceId
 import no.fg.hilflingbackend.dto.PositionDto
 import no.fg.hilflingbackend.dto.PositionId
-import no.fg.hilflingbackend.dto.RelationshipStatus
 import no.fg.hilflingbackend.dto.SamfundetUserDto
 import no.fg.hilflingbackend.dto.SamfundetUserId
 import no.fg.hilflingbackend.dto.SecurityLevelDto
@@ -748,7 +747,6 @@ class MockDataService {
         city = "Trondheim",
         isActive = true,
         isPang = true,
-        relationShipStatus = RelationshipStatus.valueOf("single"),
         zipCode = "7051",
         semesterStart = SemesterStart("H2018"),
         samfundetUser = generateSamfundetUserData()[0],
@@ -763,7 +761,6 @@ class MockDataService {
         city = "Trondheim",
         isActive = true,
         isPang = true,
-        relationShipStatus = RelationshipStatus.single,
         zipCode = "7051",
         semesterStart = SemesterStart("H2018"),
         samfundetUser = generateSamfundetUserData()[1],

@@ -8,13 +8,11 @@ import me.liuwj.ktorm.schema.uuid
 import me.liuwj.ktorm.schema.varchar
 import no.fg.hilflingbackend.dto.PhotoGangBangerDto
 import no.fg.hilflingbackend.dto.PhotoGangBangerId
-import no.fg.hilflingbackend.dto.RelationshipStatus
 import no.fg.hilflingbackend.dto.SemesterStart
 
 interface PhotoGangBanger : BaseModel<PhotoGangBanger> {
   companion object : Entity.Factory<PhotoGangBanger>()
 
-  var relationshipStatus: String
   var semesterStart: String
   var isActive: Boolean
   var isPang: Boolean
@@ -30,7 +28,6 @@ interface PhotoGangBanger : BaseModel<PhotoGangBanger> {
 }
 fun PhotoGangBanger.toDto(): PhotoGangBangerDto = PhotoGangBangerDto(
   photoGangBangerId = PhotoGangBangerId(this.id),
-  relationShipStatus = RelationshipStatus.valueOf(this.relationshipStatus),
   semesterStart = SemesterStart(this.semesterStart),
   isActive = this.isActive,
   isPang = this.isPang,
@@ -42,7 +39,6 @@ fun PhotoGangBanger.toDto(): PhotoGangBangerDto = PhotoGangBangerDto(
 )
 
 object PhotoGangBangers : BaseTable<no.fg.hilflingbackend.model.PhotoGangBanger>("photo_gang_banger") {
-  val relationshipStatus = varchar("relationship_status").bindTo { it.relationshipStatus }
   val semesterStart = varchar("semester_start").bindTo { it.semesterStart }
   val isActive = boolean("is_active").bindTo { it.isActive }
   val isPang = boolean("is_pang").bindTo { it.isPang }

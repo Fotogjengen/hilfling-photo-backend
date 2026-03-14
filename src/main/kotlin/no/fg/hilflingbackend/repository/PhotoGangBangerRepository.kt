@@ -131,7 +131,6 @@ class PhotoGangBangerRepository(
       set(it.address, dto.address)
       set(it.city, dto.city)
       set(it.positionId, dto.position.positionId.id)
-      set(it.relationshipStatus, dto.relationShipStatus.status)
       set(it.samfundetUserId, dto.samfundetUser.samfundetUserId.id)
       set(it.semesterStart, dto.semesterStart.value)
       set(it.zipCode, dto.zipCode)
@@ -172,7 +171,6 @@ class PhotoGangBangerRepository(
       isPang = dto.isPang ?: photoGangBangerDtoFromDb.isPang,
       isActive = dto.isActive ?: photoGangBangerDtoFromDb.isActive,
       semesterStart = dto.semesterStart ?: photoGangBangerDtoFromDb.semesterStart,
-      relationShipStatus = dto.relationshipStatus ?: photoGangBangerDtoFromDb.relationShipStatus,
       position = dto.position ?: photoGangBangerDtoFromDb.position
     )
 

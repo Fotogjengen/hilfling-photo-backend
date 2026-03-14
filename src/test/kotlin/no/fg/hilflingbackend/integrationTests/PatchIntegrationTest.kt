@@ -27,7 +27,6 @@ import no.fg.hilflingbackend.dto.PlacePatchRequestDto
 import no.fg.hilflingbackend.dto.PositionDto
 import no.fg.hilflingbackend.dto.PositionId
 import no.fg.hilflingbackend.dto.PositionPatchRequestDto
-import no.fg.hilflingbackend.dto.RelationshipStatus
 import no.fg.hilflingbackend.dto.SamfundetUserDto
 import no.fg.hilflingbackend.dto.SamfundetUserId
 import no.fg.hilflingbackend.dto.SecurityLevelDto
@@ -239,7 +238,6 @@ class PatchIntegrationTest {
   final val photoGangBangerDto1 =
     PhotoGangBangerDto(
       photoGangBangerId = photoGangBangerId1,
-      relationShipStatus = RelationshipStatus.married,
       semesterStart = SemesterStart.invoke("H2019"),
       isActive = true,
       isPang = true,
@@ -252,7 +250,6 @@ class PatchIntegrationTest {
   final val photoGangBangerDto2 =
     PhotoGangBangerDto(
       photoGangBangerId = photoGangBangerId2,
-      relationShipStatus = RelationshipStatus.relationship,
       semesterStart = SemesterStart.invoke("H2018"),
       isActive = true,
       isPang = true,
