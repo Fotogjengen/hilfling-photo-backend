@@ -517,7 +517,7 @@ override fun getById(id: UUID): PhotoDto? {
     pageSize: Int,
   ): Page<PhotoDto>? = photoRepository.findByMotiveId(id, page, pageSize)
 
-  fun findById(id: UUID): PhotoDto = photoRepository.findById(id) ?: throw EntityNotFoundException("Did not find photo")
+
 
   override fun getAll(
     page: Int,
