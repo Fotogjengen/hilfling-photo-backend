@@ -9,7 +9,8 @@ data class MotivePatchRequestDto(
   val title: String?,
   val categoryDto: CategoryDto?,
   val eventOwnerDto: EventOwnerDto?,
-  val albumDto: AlbumDto?
+  val albumDto: AlbumDto?,
+  val dateCreated: LocalDate? = null
 )
 
 data class MotiveDto(
@@ -19,6 +20,7 @@ data class MotiveDto(
   val eventOwnerDto: EventOwnerDto,
   val albumDto: AlbumDto,
   val dateCreated: LocalDate?
+  
 )
 
 data class MotiveId(
@@ -36,5 +38,6 @@ fun MotiveDto.toEntity(): Motive {
     eventOwner = dto.eventOwnerDto.toEntity()
     album = dto.albumDto.toEntity()
     dateCreated = dto.dateCreated!!
+
   }
 }

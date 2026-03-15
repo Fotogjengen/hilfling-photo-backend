@@ -61,20 +61,29 @@ open class MotiveRepository {
     database.motives.add(motive.toEntity())
     return motive
   }
+fun patch(dto: MotivePatchRequestDto): MotiveDto {
+  val fromDb = findById(dto.motiveId.id)
+    ?: throw EntityNotFoundException("Could not find Motive")
 
-  fun patch(dto: MotivePatchRequestDto): MotiveDto {
-    val fromDb = findById(dto.motiveId.id)
-      ?: throw EntityNotFoundException("Could not find Motive")
-    val newDto = MotiveDto(
-      motiveId = fromDb.motiveId,
-      title = dto.title ?: fromDb.title,
-      categoryDto = dto.categoryDto ?: fromDb.categoryDto,
-      eventOwnerDto = dto.eventOwnerDto ?: fromDb.eventOwnerDto,
-      albumDto = dto.albumDto ?: fromDb.albumDto,
-      dateCreated = fromDb.dateCreated
-    )
-    val updated = database.motives.update(newDto.toEntity())
+  val newDto = MotiveDto(
+    motiveId = fromDb.motiveId,
+    title = dto.title ?: fromDb.title,
+    categoryDto = dto.categoryDto ?: fromDb.categoryDto,
+    eventOwnerDto = dto.eventOwnerDto ?: fromDb.eventOwnerDto,
+    albumDto = fromDb.albumDto,
+    dateCreated = dto.dateCreated ?: fromDb.dateCreated
+  )
 
-    return if (updated == 1) newDto else fromDb
-  }
+  println("dto.dateCreated = ${dto.dateCreated}")
+  println("fromDb.dateCreated = ${fromDb.dateCreated}")
+  println("newDto.dateCreated = ${newDto.dateCreated}")
+
+  val updated = database.motives.update(newDto.toEntity())
+  println("updated rows = $updated")
+
+  val after = findById(dto.motiveId.id)
+  println("after patch dateCreated = ${after?.dateCreated}")
+
+  return if (updated == 1) newDto else fromDb
+}
 }

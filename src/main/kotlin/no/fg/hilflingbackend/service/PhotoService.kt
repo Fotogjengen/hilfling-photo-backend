@@ -494,22 +494,12 @@ override fun getById(id: UUID): PhotoDto? {
   return photoRepository.findById(id)
 }
 
-
-  fun getByMotiveId(
-    id: UUID,
-    page: Int,
-    pageSize: Int,
-  ): Page<PhotoDto>? = photoRepository.findByMotiveId(id, page, pageSize)
-
   fun findById(id: UUID): PhotoDto =
     photoRepository.findById(id)
       ?: throw EntityNotFoundException("Did not find photo")
 
 
 
-  override fun getById(id: UUID): PhotoDto? {
-    TODO("Not yet implemented")
-  }
 
   fun getByMotiveId(
     id: UUID,

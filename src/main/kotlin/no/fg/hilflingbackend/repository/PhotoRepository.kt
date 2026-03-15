@@ -428,6 +428,8 @@ open class PhotoRepository(
       }
     }
 
+    val updatedMotive = dto.motive ?: fromDb.motive
+
     val newDto =
       PhotoDto(
         photoId = fromDb.photoId,
@@ -443,7 +445,7 @@ open class PhotoRepository(
         categoryDto = dto.categoryDto ?: fromDb.categoryDto,
         photoGangBangerDto = dto.photoGangBangerDto ?: fromDb.photoGangBangerDto,
         photoTags = photoTags ?: fromDb.photoTags,
-        dateTaken = fromDb.dateTaken,
+        dateTaken = updatedMotive.dateCreated,
       )
     val updated = database.photos.update(newDto.toEntity())
 

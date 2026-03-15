@@ -43,10 +43,9 @@ class MotiveController {
     )
   }
 
-  @PatchMapping
-  fun patch(
-    @RequestBody dto: MotivePatchRequestDto
-  ): MotiveDto {
-    return repository.patch(dto)
-  }
+@PatchMapping
+fun patch(@RequestBody dto: MotivePatchRequestDto): MotiveDto {
+  println("PATCH DTO: $dto")
+  return repository.patch(dto)
+}
 }
