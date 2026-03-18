@@ -1,9 +1,9 @@
 package no.fg.hilflingbackend.model
 
-import me.liuwj.ktorm.database.Database
-import me.liuwj.ktorm.entity.Entity
-import me.liuwj.ktorm.entity.sequenceOf
-import me.liuwj.ktorm.schema.uuid
+import org.ktorm.database.Database
+import org.ktorm.entity.Entity
+import org.ktorm.entity.sequenceOf
+import org.ktorm.schema.uuid
 
 interface PhotoTagReference : BaseModel<PhotoTagReference> {
   companion object : Entity.Factory<PhotoTagReference>()

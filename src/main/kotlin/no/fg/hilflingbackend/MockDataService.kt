@@ -1,8 +1,8 @@
 package no.fg.hilflingbackend
 
 import com.azure.storage.blob.models.PublicAccessType
-import me.liuwj.ktorm.database.Database
-import me.liuwj.ktorm.dsl.batchInsert
+import org.ktorm.database.Database
+import org.ktorm.dsl.batchInsert
 import no.fg.hilflingbackend.blobStorage.AzureBlobStorage
 import no.fg.hilflingbackend.controller.PhotoController
 import no.fg.hilflingbackend.dto.AlbumDto
@@ -32,7 +32,6 @@ import no.fg.hilflingbackend.dto.SamfundetUserDto
 import no.fg.hilflingbackend.dto.SamfundetUserId
 import no.fg.hilflingbackend.dto.SecurityLevelDto
 import no.fg.hilflingbackend.dto.SecurityLevelId
-import no.fg.hilflingbackend.dto.SemesterStart
 import no.fg.hilflingbackend.model.Photos
 import no.fg.hilflingbackend.repository.AlbumRepository
 import no.fg.hilflingbackend.repository.CategoryRepository
@@ -46,8 +45,6 @@ import no.fg.hilflingbackend.repository.PlaceRepository
 import no.fg.hilflingbackend.repository.PositionRepository
 import no.fg.hilflingbackend.repository.SamfundetUserRepository
 import no.fg.hilflingbackend.repository.SecurityLevelRepository
-import no.fg.hilflingbackend.value_object.Email
-import no.fg.hilflingbackend.value_object.PhoneNumber
 import no.fg.hilflingbackend.value_object.SecurityLevelType
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
@@ -709,7 +706,7 @@ class MockDataService {
           SamfundetUserId(
             UUID.fromString("6a89444f-25f6-44d9-8a73-94587d72b822"),
           ),
-        email = Email("emailtest@gmail.com"),
+        email = "emailtest@gmail.com",
         firstName = "Sindre",
         lastName = "Sivertsen",
         profilePicturePath =
@@ -717,14 +714,14 @@ class MockDataService {
         sex = "Mann",
         username = "sjsivert",
         securityLevel = generateSecurityLevelData()[0],
-        phoneNumber = PhoneNumber("91382506"),
+        phoneNumber = "91382506",
       ),
       SamfundetUserDto(
         samfundetUserId =
           SamfundetUserId(
             UUID.fromString("7a89444f-25f6-44d9-8a73-94587d72b822"),
           ),
-        email = Email("emailtest@gmail.com"),
+        email = "emailtest@gmail.com",
         firstName = "Caroline",
         lastName = "Sandbråten",
         profilePicturePath =
@@ -732,7 +729,7 @@ class MockDataService {
         sex = "Kvinne",
         username = "Carossa",
         securityLevel = generateSecurityLevelData()[1],
-        phoneNumber = PhoneNumber("91382506"),
+        phoneNumber = "91382506",
       ),
     )
 
@@ -748,7 +745,7 @@ class MockDataService {
         isActive = true,
         isPang = true,
         zipCode = "7051",
-        semesterStart = SemesterStart("H2018"),
+        semesterStart = "H2018",
         samfundetUser = generateSamfundetUserData()[0],
         position = generatePositionData()[0],
       ),
@@ -762,7 +759,7 @@ class MockDataService {
         isActive = true,
         isPang = true,
         zipCode = "7051",
-        semesterStart = SemesterStart("H2018"),
+        semesterStart = "H2018",
         samfundetUser = generateSamfundetUserData()[1],
         position = generatePositionData()[1],
       ),
@@ -798,7 +795,7 @@ class MockDataService {
             (UUID.fromString("bdd0cf5a-c952-41b8-8b83-c071da51f946")),
           ),
         title = "Gjengsjef",
-        email = Email("fg-web@samfundet.no"),
+        email = "fg-web@samfundet.no",
       ),
       PositionDto(
         positionId =
@@ -806,7 +803,7 @@ class MockDataService {
             (UUID.fromString("bdd0cf5a-c952-41b8-8b83-c071da51f945")),
           ),
         title = "Web",
-        email = Email("fg-web@samfundet.no"),
+        email = "fg-web@samfundet.no",
       ),
     )
 

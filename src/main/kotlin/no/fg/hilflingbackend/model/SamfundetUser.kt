@@ -1,15 +1,13 @@
 package no.fg.hilflingbackend.model
 
-import me.liuwj.ktorm.database.Database
-import me.liuwj.ktorm.entity.Entity
-import me.liuwj.ktorm.entity.sequenceOf
-import me.liuwj.ktorm.schema.uuid
-import me.liuwj.ktorm.schema.varchar
+import org.ktorm.database.Database
+import org.ktorm.entity.Entity
+import org.ktorm.entity.sequenceOf
+import org.ktorm.schema.uuid
+import org.ktorm.schema.varchar
 import no.fg.hilflingbackend.dto.SamfundetUserDto
 import no.fg.hilflingbackend.dto.SamfundetUserId
 import no.fg.hilflingbackend.dto.toDto
-import no.fg.hilflingbackend.value_object.Email
-import no.fg.hilflingbackend.value_object.PhoneNumber
 
 interface SamfundetUser : BaseModel<SamfundetUser> {
   companion object : Entity.Factory<SamfundetUser>()
@@ -33,9 +31,9 @@ fun SamfundetUser.toDto() =
   firstName = this.firstName,
   lastName = this.lastName,
   username = this.username,
-  email = Email(this.email),
+  email = this.email,
   profilePicturePath = this.profilePicture,
-  phoneNumber = PhoneNumber(this.phoneNumber),
+  phoneNumber = this.phoneNumber,
   securityLevel = this.securityLevel.toDto(),
     sex = this.sex,
   )

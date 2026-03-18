@@ -1,6 +1,6 @@
 package no.fg.hilflingbackend.controller
 
-import me.liuwj.ktorm.database.Database
+import org.ktorm.database.Database
 import no.fg.hilflingbackend.dto.Page
 import no.fg.hilflingbackend.dto.PhotoDto
 import no.fg.hilflingbackend.dto.PhotoPatchRequestDto

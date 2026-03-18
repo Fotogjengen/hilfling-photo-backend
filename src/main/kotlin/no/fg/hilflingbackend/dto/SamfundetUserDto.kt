@@ -1,8 +1,6 @@
 package no.fg.hilflingbackend.dto
 
 import no.fg.hilflingbackend.model.SamfundetUser
-import no.fg.hilflingbackend.value_object.Email
-import no.fg.hilflingbackend.value_object.PhoneNumber
 import java.util.UUID
 
 data class SamfundetUserPatchRequestDto(
@@ -10,8 +8,8 @@ data class SamfundetUserPatchRequestDto(
   val firstName: String?,
   val lastName: String?,
   val username: String?,
-  val phoneNumber: PhoneNumber?,
-  val email: Email?,
+  val phoneNumber: String?,
+  val email: String?,
   val profilePicturePath: String?,
   val sex: String?,
   val securityLevel: SecurityLevelDto?,
@@ -22,8 +20,8 @@ data class SamfundetUserDto(
   val firstName: String,
   val lastName: String,
   val username: String,
-  val phoneNumber: PhoneNumber,
-  val email: Email,
+  val phoneNumber: String,
+  val email: String,
   // TODO: Rename SQL-scheme and interface to match this variablename
   val profilePicturePath: String,
   val sex: String,
@@ -35,11 +33,11 @@ fun SamfundetUserDto.toEntity(): SamfundetUser {
   val dto = this
   return SamfundetUser {
     id = dto.samfundetUserId.id
-    email = dto.email.value
+    email = dto.email
     firstName = dto.firstName
     lastName = dto.lastName
     username = dto.username
-    phoneNumber = dto.phoneNumber.value
+    phoneNumber = dto.phoneNumber
     sex = dto.sex
     securityLevel = dto.securityLevel.toEntity()
     profilePicture = dto.profilePicturePath

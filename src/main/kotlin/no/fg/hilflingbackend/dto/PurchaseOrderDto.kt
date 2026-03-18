@@ -1,14 +1,13 @@
 package no.fg.hilflingbackend.dto
 
 import no.fg.hilflingbackend.model.PurchaseOrder
-import no.fg.hilflingbackend.value_object.Email
 import no.fg.hilflingbackend.value_object.ZipCode
 import java.util.UUID
 
 data class PurchaseOrderDto(
   val purchaseOrderId: PurchaseOrderId = PurchaseOrderId(),
   val name: String,
-  val email: Email,
+  val email: String,
   val address: String,
   val zipCode: ZipCode,
   val city: String,
@@ -22,7 +21,7 @@ fun PurchaseOrderDto.toEntity(): PurchaseOrder {
   return PurchaseOrder {
     id = dto.purchaseOrderId.id
     name = dto.name
-    email = dto.email.value
+    email = dto.email
     address = dto.address
     zipCode = dto.zipCode.value
     city = dto.city

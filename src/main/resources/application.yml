@@ -50,7 +50,7 @@ spring:
 logging:
   level:
     # root: debug
-    # me.liuwj.ktorm: debug
+    # org.ktorm: debug
     # org.springframework.web: DEBUG
     # org.springdoc: DEBUG
     root: info

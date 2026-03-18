@@ -1,9 +1,9 @@
 package no.fg.hilflingbackend.repository
 
-import me.liuwj.ktorm.database.Database
-import me.liuwj.ktorm.dsl.QueryRowSet
-import me.liuwj.ktorm.entity.add
-import me.liuwj.ktorm.entity.update
+import org.ktorm.database.Database
+import org.ktorm.dsl.QueryRowSet
+import org.ktorm.entity.add
+import org.ktorm.entity.update
 import no.fg.hilflingbackend.dto.SecurityLevelDto
 import no.fg.hilflingbackend.dto.SecurityLevelId
 import no.fg.hilflingbackend.dto.SecurityLevelPatchRequestDto

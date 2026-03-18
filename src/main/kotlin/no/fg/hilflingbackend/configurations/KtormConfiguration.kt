@@ -1,8 +1,7 @@
 package no.fg.hilflingbackend.configurations
 
-import com.fasterxml.jackson.databind.Module
-import me.liuwj.ktorm.database.Database
-import me.liuwj.ktorm.jackson.KtormModule
+import tools.jackson.databind.JacksonModule
+import org.ktorm.database.Database
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
@@ -18,8 +17,4 @@ open class KtormConfiguration {
     return Database.connectWithSpringSupport(dataSource)
   }
 
-  @Bean
-  open fun ktormModule(): Module {
-    return KtormModule()
-  }
 }

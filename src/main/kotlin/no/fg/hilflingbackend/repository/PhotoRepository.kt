@@ -1,21 +1,19 @@
 package no.fg.hilflingbackend.repository
 
 import jakarta.persistence.EntityNotFoundException
-import me.liuwj.ktorm.database.Database
-import me.liuwj.ktorm.dsl.*
-import me.liuwj.ktorm.dsl.count
-import me.liuwj.ktorm.dsl.eq
-import me.liuwj.ktorm.entity.add
-import me.liuwj.ktorm.entity.drop
-import me.liuwj.ktorm.entity.filter
-import me.liuwj.ktorm.entity.find
-import me.liuwj.ktorm.entity.take
-import me.liuwj.ktorm.entity.toList
-import me.liuwj.ktorm.entity.update
+import org.ktorm.database.Database
+import org.ktorm.dsl.*
+import org.ktorm.dsl.count
+import org.ktorm.dsl.eq
+import org.ktorm.entity.add
+import org.ktorm.entity.drop
+import org.ktorm.entity.filter
+import org.ktorm.entity.find
+import org.ktorm.entity.take
+import org.ktorm.entity.toList
+import org.ktorm.entity.update
 import no.fg.hilflingbackend.dto.*
 import no.fg.hilflingbackend.model.*
-import no.fg.hilflingbackend.value_object.Email
-import no.fg.hilflingbackend.value_object.PhoneNumber
 import no.fg.hilflingbackend.value_object.SecurityLevelType
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Repository
@@ -109,7 +107,7 @@ open class PhotoRepository(
       photoGangBangerDto =
         PhotoGangBangerDto(
           PhotoGangBangerId(row[PhotoGangBangers.id]!!),
-          SemesterStart(row[PhotoGangBangers.semesterStart]!!),
+          row[PhotoGangBangers.semesterStart]!!,
           row[PhotoGangBangers.isActive]!!,
           row[PhotoGangBangers.isPang]!!,
           row[PhotoGangBangers.address]!!,
@@ -120,8 +118,8 @@ open class PhotoRepository(
             row[SamfundetUsers.firstName]!!,
             row[SamfundetUsers.lastName]!!,
             row[SamfundetUsers.username]!!,
-            PhoneNumber(row[SamfundetUsers.phoneNumber]!!),
-            Email(row[SamfundetUsers.email]!!),
+            row[SamfundetUsers.phoneNumber]!!,
+            row[SamfundetUsers.email]!!,
             row[SamfundetUsers.profilePicture]!!,
             row[SamfundetUsers.sex]!!,
             SecurityLevelDto(
@@ -133,7 +131,7 @@ open class PhotoRepository(
           PositionDto(
             PositionId(row[Positions.id]!!),
             row[Positions.title]!!,
-            Email(row[Positions.email]!!),
+            row[Positions.email]!!,
           ),
         ),
       photoTags = findCorrespondingPhotoTagDtos(row[Photos.id]!!),

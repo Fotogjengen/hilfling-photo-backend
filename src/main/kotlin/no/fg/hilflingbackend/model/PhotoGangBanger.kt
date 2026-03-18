@@ -1,14 +1,13 @@
 package no.fg.hilflingbackend.model
 
-import me.liuwj.ktorm.database.Database
-import me.liuwj.ktorm.entity.Entity
-import me.liuwj.ktorm.entity.sequenceOf
-import me.liuwj.ktorm.schema.boolean
-import me.liuwj.ktorm.schema.uuid
-import me.liuwj.ktorm.schema.varchar
+import org.ktorm.database.Database
+import org.ktorm.entity.Entity
+import org.ktorm.entity.sequenceOf
+import org.ktorm.schema.boolean
+import org.ktorm.schema.uuid
+import org.ktorm.schema.varchar
 import no.fg.hilflingbackend.dto.PhotoGangBangerDto
 import no.fg.hilflingbackend.dto.PhotoGangBangerId
-import no.fg.hilflingbackend.dto.SemesterStart
 
 interface PhotoGangBanger : BaseModel<PhotoGangBanger> {
   companion object : Entity.Factory<PhotoGangBanger>()
@@ -28,7 +27,7 @@ interface PhotoGangBanger : BaseModel<PhotoGangBanger> {
 }
 fun PhotoGangBanger.toDto(): PhotoGangBangerDto = PhotoGangBangerDto(
   photoGangBangerId = PhotoGangBangerId(this.id),
-  semesterStart = SemesterStart(this.semesterStart),
+  semesterStart = this.semesterStart,
   isActive = this.isActive,
   isPang = this.isPang,
   address = this.address,

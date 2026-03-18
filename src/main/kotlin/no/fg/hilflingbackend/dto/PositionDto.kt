@@ -1,19 +1,18 @@
 package no.fg.hilflingbackend.dto
 
 import no.fg.hilflingbackend.model.Position
-import no.fg.hilflingbackend.value_object.Email
 import java.util.UUID
 
 data class PositionPatchRequestDto(
   val positionId: PositionId,
   val title: String?,
-  val email: Email?,
+  val email: String?,
 )
 
 data class PositionDto(
   val positionId: PositionId = PositionId(),
   val title: String,
-  val email: Email,
+  val email: String,
 )
 
 fun PositionDto.toEntity(): Position {
@@ -21,7 +20,7 @@ fun PositionDto.toEntity(): Position {
   return Position {
     id = dto.positionId.id
     title = dto.title
-    email = dto.email.value
+    email = dto.email
   }
 }
 

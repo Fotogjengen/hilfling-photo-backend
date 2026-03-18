@@ -12,4 +12,4 @@ class PhotoGangBangerDtoSpec : Spek({
     // TODO: Test SemesterStart
     // TODO : Test PhotoGangBangerDto
   }
-})
+)

@@ -1,6 +1,6 @@
 package no.fg.hilflingbackend.repository
 
-import me.liuwj.ktorm.dsl.QueryRowSet
+import org.ktorm.dsl.QueryRowSet
 import no.fg.hilflingbackend.dto.Page
 import org.springframework.stereotype.Component
 import java.util.UUID

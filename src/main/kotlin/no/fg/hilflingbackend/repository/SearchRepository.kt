@@ -1,9 +1,9 @@
 package no.fg.hilflingbackend.repository
 
-import me.liuwj.ktorm.database.Database
-import me.liuwj.ktorm.entity.filter
-import me.liuwj.ktorm.entity.toList
-import me.liuwj.ktorm.support.postgresql.ilike
+import org.ktorm.database.Database
+import org.ktorm.entity.filter
+import org.ktorm.entity.toList
+import org.ktorm.support.postgresql.ilike
 import no.fg.hilflingbackend.dto.MotiveDto
 import no.fg.hilflingbackend.model.motives
 import no.fg.hilflingbackend.model.toDto

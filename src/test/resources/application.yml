@@ -11,7 +11,7 @@ spring:
   logging:
     level:
       root: error
-      me.liuwj.ktorm: debug
+      org.ktorm: debug
 
   flyway:
     driver-class-name: org.h2.Driver
