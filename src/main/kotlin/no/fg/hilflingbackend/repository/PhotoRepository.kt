@@ -52,7 +52,7 @@ open class PhotoRepository(
       smallUrl = row[Photos.smallUrl]!!,
       mediumUrl = row[Photos.mediumUrl]!!,
       largeUrl = row[Photos.largeUrl]!!,
-      dateTaken = row[Photos.dateCreated]!!,
+      dateCreated = row[Photos.dateCreated]!!,
       motive =
         MotiveDto(
           motiveId = MotiveId(row[Motives.id]!!),
@@ -445,7 +445,8 @@ open class PhotoRepository(
         categoryDto = dto.categoryDto ?: fromDb.categoryDto,
         photoGangBangerDto = dto.photoGangBangerDto ?: fromDb.photoGangBangerDto,
         photoTags = photoTags ?: fromDb.photoTags,
-        dateTaken = updatedMotive.dateCreated,
+        dateCreated = updatedMotive.dateCreated
+          ?: throw IllegalStateException("dateCreated is missing"),
       )
     val updated = database.photos.update(newDto.toEntity())
 

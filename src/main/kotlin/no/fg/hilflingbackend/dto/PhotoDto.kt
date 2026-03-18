@@ -16,6 +16,7 @@ data class PhotoPatchRequestDto(
   val categoryDto: CategoryDto?,
   val photoGangBangerDto: PhotoGangBangerDto?,
   val photoTags: List<String>?,
+  val dateCreated: LocalDate,
 )
 
 data class PhotoDto(
@@ -32,7 +33,8 @@ data class PhotoDto(
   val categoryDto: CategoryDto,
   val photoGangBangerDto: PhotoGangBangerDto,
   val photoTags: List<PhotoTagDto>,
-  val dateTaken: LocalDate,
+  val dateCreated: LocalDate,
+  
 ) {
   fun toEntity(): Photo {
     val photo = this
@@ -42,7 +44,7 @@ data class PhotoDto(
       this.smallUrl = photo.smallUrl
       this.mediumUrl = photo.mediumUrl
       this.largeUrl = photo.largeUrl
-      this.dateCreated = photo.dateTaken
+      this.dateCreated = photo.dateCreated
       this.motive = photo.motive.toEntity()
       this.place = photo.placeDto.toEntity()
       this.securityLevel = photo.securityLevel.toEntity()
@@ -65,7 +67,7 @@ data class PhotoDto(
       photoTags: List<PhotoTagDto>,
       categoryDto: CategoryDto,
       photoGangBangerDto: PhotoGangBangerDto,
-      dateTaken: LocalDate,
+      dateCreated: LocalDate,
     ): Pair<PhotoDto, ImageFileName> {
       // Generate unique ID
       val photoId = PhotoId()
@@ -86,7 +88,7 @@ data class PhotoDto(
           securityLevel = securityLevel,
           photoGangBangerDto = photoGangBangerDto,
           photoTags = photoTags,
-          dateTaken = dateTaken,
+          dateCreated = dateCreated,
         ),
         newUniqueFileName,
       )

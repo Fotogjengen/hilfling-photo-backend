@@ -321,7 +321,6 @@ class PatchIntegrationTest {
             categoryName = categoryDto1.name,
             isGoodPhotoList = listOf(true),
             dateCreated = LocalDate.now(),
-            dateTaken = LocalDate.now(),
           )[0]
           .split("/")
           .last()
@@ -435,6 +434,7 @@ class PatchIntegrationTest {
         categoryDto = categoryDto2,
         photoGangBangerDto = photoGangBangerDto2,
         photoTags = photoTags,
+        dateCreated = LocalDate.of(2024, 1, 1),
       )
 
     photoService.patch(change)

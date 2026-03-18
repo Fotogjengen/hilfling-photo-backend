@@ -42,7 +42,7 @@ class PhotoController(
     @RequestParam("photoFileList") photoFileList: List<MultipartFile>,
     @RequestParam("isGoodPhotoList") isGoodPhotoList: List<Boolean>,
     @RequestParam("tagList") tagList: List<String>,
-    @RequestParam("dateTaken") dateTaken: LocalDate,
+    @RequestParam("dateCreated") dateCreated: LocalDate
   ): ResponseEntity<List<String>> =
     ResponseEntity(
       photoService.createNewMotiveAndSaveDigitalPhotos(
@@ -56,8 +56,7 @@ class PhotoController(
         tagList = tagList,
         categoryName = categoryName,
         isGoodPhotoList = isGoodPhotoList,
-        dateCreated = LocalDate.now(),
-        dateTaken = dateTaken,
+        dateCreated = dateCreated
       ),
       HttpStatus.CREATED,
     )
@@ -73,7 +72,7 @@ class PhotoController(
     @RequestParam("albumIdList") albumIdList: List<UUID>,
     @RequestParam("categoryIdList") categoryIdList: List<UUID>,
     @RequestParam("fileList") fileList: List<MultipartFile>,
-    @RequestParam("dateTaken") dateTaken: LocalDate,
+    @RequestParam("dateCreated") dateCreated: LocalDate,
   ): ResponseEntity<List<String>> {
     // Assert all fields are populated
     if (!(
@@ -98,7 +97,7 @@ class PhotoController(
         albumIdList,
         categoryIdList,
         fileList,
-        dateTaken,
+        dateCreated,
       )
 
     return ResponseEntity<List<String>>(

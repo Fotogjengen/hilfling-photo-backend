@@ -158,7 +158,7 @@ class MockDataService {
           photoTags = generatePhotoTagData(),
           albumDto = generateAlbumData().random(),
           categoryDto = generateCategoryData().random(),
-          dateTaken = LocalDate.now(),
+          dateCreated = LocalDate.now(),
         ),
       )
     }

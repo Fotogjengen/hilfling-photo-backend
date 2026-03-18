@@ -176,7 +176,7 @@ class PhotoService(
     albumIdList: List<UUID>,
     categoryIdList: List<UUID>,
     fileList: List<MultipartFile>,
-    dateTaken: LocalDate,
+    dateCreated: LocalDate,
   ): List<String> =
     fileList.mapIndexed { index, file ->
             /*
@@ -247,7 +247,8 @@ class PhotoService(
           categoryDto = category,
           photoGangBangerDto = photoGangBanger,
           photoTags = listOf(), // TODO: Pass in photoTags
-          dateTaken = dateTaken,
+          dateCreated = motive.dateCreated
+            ?: throw IllegalStateException("dateCreated is missing"),
         )
 
       val filePath =
@@ -305,7 +306,6 @@ class PhotoService(
     isGoodPhotoList: List<Boolean>,
     dateCreated: LocalDate,
     tagList: List<String>,
-    dateTaken: LocalDate,
   ): List<String> {
     val isValidRequest = photoFileList.size > 0 && (photoFileList.size == isGoodPhotoList.size)
     logger.warn("Is valid request? $isValidRequest")
@@ -377,7 +377,8 @@ class PhotoService(
               ImageFileName(
                 photoFile.originalFilename ?: "",
               ),
-            dateTaken = dateTaken,
+            dateCreated = motiveDto.dateCreated
+              ?: throw IllegalStateException("dateCreated is missing"),
           )
 
         // Generate PhotoDto
@@ -488,6 +489,7 @@ override fun patch(dto: PhotoPatchRequestDto): PhotoDto {
   }
 
   return photoRepository.patch(dto, photoTags)
+
 }
 
 override fun getById(id: UUID): PhotoDto? {
