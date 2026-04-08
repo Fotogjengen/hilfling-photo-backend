@@ -55,5 +55,4 @@ class MotiveController {
   fun delete(
     @PathVariable("id") id: UUID,
   ): Int = return repository.delete(id)
-  
 }
