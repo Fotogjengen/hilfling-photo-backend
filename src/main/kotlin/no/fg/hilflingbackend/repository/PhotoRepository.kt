@@ -645,26 +645,16 @@ open class PhotoRepository(
   fun createPhoto(
     photoDto: PhotoDto,
   ): Int {
-    logger.info("Storing photo ${photoDto.photoId.id} to database")
+  logger.info("Storing photo ${photoDto.photoId.id} to database")
 
-    val numOfSavedPhotos = database.photos.add(photoDto.toEntity())
-    // TODO: Rewrite to batchInsert for perfomance gains
-    // TODO: Add photoTags as well
+  val numOfSavedPhotos = database.photos.add(photoDto.toEntity())
 
-    /*
-    photoDto.photoTags.forEach { photoTagDto: PhotoTagDto ->
-      logger.info("Adding photoTag ${photoTagDto.name} to ${photoDto.photoId.id}")
-      database.insert(PhotoTagReferences) {
-        set(it.id, UUID.randomUUID())
-        set(it.photoId, photoDto.photoId.id)
-        set(it.photoTagId, photoTagDto.photoTagId.id)
-      }
-    }
-     */
-    logger.info("Storing photo tags to database")
-    val photoTagDtoList = photoDto.photoTags
+  logger.info("Storing photo tags to database")
+  val photoTagDtoList = photoDto.photoTags
+
+  if (photoTagDtoList.isNotEmpty()) {
     database.batchInsert(PhotoTagReferences) {
-      photoTagDtoList.map { photoTagDto ->
+      photoTagDtoList.forEach { photoTagDto ->
         item {
           set(it.id, UUID.randomUUID())
           set(it.photoTagId, photoTagDto.photoTagId.id)
@@ -672,9 +662,10 @@ open class PhotoRepository(
         }
       }
     }
-
-    return numOfSavedPhotos
   }
+
+  return numOfSavedPhotos
+}
 
   fun createAnalogPhoto(
     analogPhoto: AnalogPhoto,

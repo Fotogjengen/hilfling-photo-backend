@@ -10,6 +10,8 @@ server:
     include-stacktrace: always
     include-exception: true
     include-binding-errors: always
+  tomcat:
+    max-part-count: 50
 spring:
   datasource:
     hikari:
