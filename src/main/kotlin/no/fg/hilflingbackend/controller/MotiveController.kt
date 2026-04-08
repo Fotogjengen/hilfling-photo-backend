@@ -53,7 +53,6 @@ class MotiveController {
 
   @RequestMapping("/{id}", method = [RequestMethod.DELETE])
   fun delete(
-    @PathVariable("id",) id: UUID
-  ): Int {return repository.delete(id)
-  }
+    @PathVariable("id"), id: UUID
+  ): Int {return repository.delete(id)}
 }
