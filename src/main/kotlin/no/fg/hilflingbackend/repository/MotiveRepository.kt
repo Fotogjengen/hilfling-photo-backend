@@ -19,6 +19,10 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Repository
 import java.util.UUID
 import jakarta.persistence.EntityNotFoundException
+import java.time.LocalDate
+import me.liuwj.ktorm.dsl.update
+import no.fg.hilflingbackend.model.Motives
+
 
 @Repository
 open class MotiveRepository {
@@ -77,4 +81,12 @@ open class MotiveRepository {
 
     return if (updated == 1) newDto else fromDb
   }
+
+  fun delete(id: UUID): Int =
+    database.update(Motives) {
+      set(it.dateDeleted, LocalDate.now())
+      where {
+        it.id eq id
+      }
+    }
 }
