@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
+import org.springframework.web.bind.annotation.RequestMethod
 import java.util.UUID
 
 @RestController
@@ -49,4 +50,9 @@ class MotiveController {
   ): MotiveDto {
     return repository.patch(dto)
   }
+
+  @RequestMapping("/{id}", method = [RequestMethod.DELETE])
+  fun delete(
+    @PathVariable("id") id: UUID,
+  ): Int = return repository.delete(id)
 }
