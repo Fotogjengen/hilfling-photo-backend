@@ -142,19 +142,16 @@ open class PhotoRepository(
       photoTags = findCorrespondingPhotoTagDtos(row[Photos.id]!!),
     )
 
+  fun updateDateCreatedByMotiveId(motiveId: UUID, dateCreated: LocalDate): Int {
+    val photos = database.photos.filter { it.motiveId eq motiveId }.toList()
 
-fun updateDateCreatedByMotiveId(motiveId: UUID, dateCreated: LocalDate): Int {
-  val photos = database.photos.filter { it.motiveId eq motiveId }.toList()
+    photos.forEach { photo ->
+      photo.dateCreated = dateCreated
+      database.photos.update(photo)
+    }
 
-  photos.forEach { photo ->
-    photo.dateCreated = dateCreated
-    database.photos.update(photo)
+    return photos.size
   }
-
-  return photos.size
-}
-
-
 
   fun findById(id: UUID): PhotoDto? {
     return database.photos.find { it.id eq id }?.let { photo ->
@@ -456,8 +453,9 @@ fun updateDateCreatedByMotiveId(motiveId: UUID, dateCreated: LocalDate): Int {
         categoryDto = dto.categoryDto ?: fromDb.categoryDto,
         photoGangBangerDto = dto.photoGangBangerDto ?: fromDb.photoGangBangerDto,
         photoTags = photoTags ?: fromDb.photoTags,
-        dateCreated = updatedMotive.dateCreated
-          ?: throw IllegalStateException("dateCreated is missing"),
+        dateCreated = 
+          updatedMotive.dateCreated
+            ?: throw IllegalStateException("dateCreated is missing"),
       )
     val updated = database.photos.update(newDto.toEntity())
 

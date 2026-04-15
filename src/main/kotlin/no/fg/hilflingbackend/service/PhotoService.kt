@@ -46,7 +46,6 @@ import java.time.LocalDate
 import java.util.UUID
 import java.util.stream.Stream
 
-
 @Service
 class PhotoService(
   val imageFileStorageProperties: ImageFileStorageProperties,
@@ -247,8 +246,9 @@ class PhotoService(
           categoryDto = category,
           photoGangBangerDto = photoGangBanger,
           photoTags = listOf(), // TODO: Pass in photoTags
-          dateCreated = motive.dateCreated
-            ?: throw IllegalStateException("dateCreated is missing"),
+          dateCreated = 
+            motive.dateCreated
+              ?: throw IllegalStateException("dateCreated is missing"),
         )
 
       val filePath =
@@ -377,8 +377,9 @@ class PhotoService(
               ImageFileName(
                 photoFile.originalFilename ?: "",
               ),
-            dateCreated = motiveDto.dateCreated
-              ?: throw IllegalStateException("dateCreated is missing"),
+            dateCreated = 
+              motiveDto.dateCreated
+                ?: throw IllegalStateException("dateCreated is missing"),
           )
 
         // Generate PhotoDto
@@ -469,47 +470,39 @@ class PhotoService(
       desc,
     )
 
+  override fun patch(dto: PhotoPatchRequestDto): PhotoDto {
+    logger.info("PATCH DTO: $dto")
 
-override fun patch(dto: PhotoPatchRequestDto): PhotoDto {
-  logger.info("PATCH DTO: $dto")
-
-  val photoTags = dto.photoTags?.map {
-    photoTagRepository.findByName(it)
-      ?: PhotoTagDto(name = it).apply {
-        photoTagRepository.create(this)
-      }
-  }
-
-  val tags = photoRepository.findCorrespondingPhotoTagDtos(dto.photoId.id)
-
-  tags.forEach { oldTag ->
-    if (photoTags == null || !photoTags.contains(oldTag)) {
-      photoTagRepository.deletePhotoTagReference(oldTag.photoTagId, dto.photoId)
+    val photoTags = dto.photoTags?.map {
+      photoTagRepository.findByName(it)
+        ?: PhotoTagDto(name = it).apply {
+          photoTagRepository.create(this)
+        }
     }
+
+    val tags = photoRepository.findCorrespondingPhotoTagDtos(dto.photoId.id)
+
+    tags.forEach { oldTag ->
+      if (photoTags == null || !photoTags.contains(oldTag)) {
+        photoTagRepository.deletePhotoTagReference(oldTag.photoTagId, dto.photoId)
+      }
+    }
+    return photoRepository.patch(dto, photoTags ?: emptyList())   //denne koden gjør at man hvis man sender inn tom liste (tom photoTags) så slettes også alle tagsa på bildet
   }
 
-  return photoRepository.patch(dto, photoTags ?: emptyList())   //denne koden gjør at man hvis man sender inn tom liste (tom photoTags) så slettes også alle tagsa på bildet
-
-}
-
-override fun getById(id: UUID): PhotoDto? {
-  return photoRepository.findById(id)
-}
+  override fun getById(id: UUID): PhotoDto? {
+    return photoRepository.findById(id)
+  }
 
   fun findById(id: UUID): PhotoDto =
     photoRepository.findById(id)
       ?: throw EntityNotFoundException("Did not find photo")
-
-
-
 
   fun getByMotiveId(
     id: UUID,
     page: Int,
     pageSize: Int,
   ): Page<PhotoDto> = photoRepository.findByMotiveId(id, page, pageSize) ?: Page.empty(page, pageSize)
-
-
 
   override fun getAll(
     page: Int,
