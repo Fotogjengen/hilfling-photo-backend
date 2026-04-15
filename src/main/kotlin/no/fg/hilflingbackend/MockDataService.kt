@@ -128,29 +128,31 @@ class MockDataService {
     )
 
   fun getPhotoFromApi(): String {
-    val client = HttpClient.newBuilder().build()
-    val request = HttpRequest.newBuilder().uri(URI.create("https://picsum.photos/1200/800")).build()
-    val response = client.send(request, HttpResponse.BodyHandlers.ofString())
-    return response.headers().allValues("location")[0]
+    val seed = UUID.randomUUID().toString()
+    return "https://picsum.photos/seed/$seed/1200/800"
   }
 
   fun generatePhoto(): List<PhotoDto> {
     val list = mutableListOf<PhotoDto>()
-
+    val motives = generateMotiveData()
+    val places = generatePlaceData()
+    val securityLevels = generateSecurityLevelData()
+    val gangs = generateGangData()
+    val photoGangBangers = generatePhotoGangBangerData()
+    val photoTags = generatePhotoTagData()
+    val albums = generateAlbumData()
+    val categories = generateCategoryData()
     for (i in 1..1000) {
-      val random = SecureRandom()
-      val byte = random.generateSeed(i)
-      val uuid = UUID.nameUUIDFromBytes(byte)
+      val uuid = UUID.randomUUID()
       val url = getPhotoFromApi()
-      val motive = generateMotiveData().random()
       list.add(
         PhotoDto(
           photoId = PhotoId(uuid),
           largeUrl = url,
-          motive = motive,
-          placeDto = generatePlaceData().random(),
-          securityLevel = generateSecurityLevelData().random(),
-          gang = generateGangData().random(),
+          motive = motives.random(),
+          placeDto = places.random(),
+          securityLevel = securityLevels.random(),
+          gang = gangs.random(),
           isGoodPicture = true,
           smallUrl = url,
           mediumUrl = url,
@@ -715,7 +717,7 @@ class MockDataService {
           "https://media1.tenor.com/images/79f8be09f39791c6462d30c5ce42e3be/tenor.gif?itemid=18386674",
         sex = "Mann",
         username = "sjsivert",
-        securityLevel = generateSecurityLevelData().random(),
+        securityLevel = generateSecurityLevelData()[0],
         phoneNumber = PhoneNumber("91382506"),
       ),
       SamfundetUserDto(
@@ -730,7 +732,7 @@ class MockDataService {
           "https://media1.tenor.com/images/79f8be09f39791c6462d30c5ce42e3be/tenor.gif?itemid=18386674",
         sex = "Kvinne",
         username = "Carossa",
-        securityLevel = generateSecurityLevelData().random(),
+        securityLevel = generateSecurityLevelData()[1],
         phoneNumber = PhoneNumber("91382506"),
       ),
     )

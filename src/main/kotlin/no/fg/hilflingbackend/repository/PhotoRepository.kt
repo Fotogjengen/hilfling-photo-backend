@@ -168,7 +168,7 @@ fun updateDateCreatedByMotiveId(motiveId: UUID, dateCreated: LocalDate): Int {
     id: UUID,
     page: Int,
     pageSize: Int,
-  ): Page<PhotoDto>? {
+  ): Page<PhotoDto> {
     val photos = database.photos.filter { it.motiveId eq id }
     val photoDtos = photos.toList().map { it.toDto(findCorrespondingPhotoTagDtos(it.id)) }
     return Page(
@@ -416,15 +416,17 @@ fun updateDateCreatedByMotiveId(motiveId: UUID, dateCreated: LocalDate): Int {
 
   fun patch(
     dto: PhotoPatchRequestDto,
-    photoTags: List<PhotoTagDto>?,
+    photoTags: List<PhotoTagDto>,
   ): PhotoDto {
-    val fromDb = findById(dto.photoId.id) ?: throw EntityNotFoundException("Could not find Photo")
+    val fromDb =
+      findById(dto.photoId.id) ?: throw EntityNotFoundException("Could not find Photo")
+
     val (smallUrl, mediumUrl, largeUrl) = calculateNewUrls(fromDb, dto)
 
-    if (photoTags != null) {
+    if (photoTags.isNotEmpty()) {
       try {
         database.batchInsert(PhotoTagReferences) {
-          photoTags.map { photoTagDto ->
+          photoTags.forEach { photoTagDto ->
             item {
               set(it.id, UUID.randomUUID())
               set(it.photoTagId, photoTagDto.photoTagId.id)
@@ -433,12 +435,7 @@ fun updateDateCreatedByMotiveId(motiveId: UUID, dateCreated: LocalDate): Int {
           }
         }
       } catch (e: Exception) {
-        logger.info(
-          String.format(
-            "Tried to create a PhotoTagReference that already existed. Ignoring error.",
-            e.message,
-          ),
-        )
+        logger.info("Tried to create a PhotoTagReference that already existed. Ignoring error. ${e.message}")
       }
     }
 

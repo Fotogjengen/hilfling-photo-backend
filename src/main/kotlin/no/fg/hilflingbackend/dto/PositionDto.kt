@@ -7,13 +7,13 @@ import java.util.UUID
 data class PositionPatchRequestDto(
   val positionId: PositionId,
   val title: String?,
-  val email: Email?
+  val email: Email?,
 )
 
 data class PositionDto(
   val positionId: PositionId = PositionId(),
   val title: String,
-  val email: Email
+  val email: Email,
 )
 
 fun PositionDto.toEntity(): Position {
@@ -26,7 +26,7 @@ fun PositionDto.toEntity(): Position {
 }
 
 data class PositionId(
-  override val id: UUID = UUID.randomUUID()
+  override val id: UUID = UUID.randomUUID(),
 ) : UuidId {
   override fun toString(): String = id.toString()
 }
