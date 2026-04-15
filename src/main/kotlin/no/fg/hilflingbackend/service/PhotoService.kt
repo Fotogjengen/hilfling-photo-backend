@@ -246,7 +246,7 @@ class PhotoService(
           categoryDto = category,
           photoGangBangerDto = photoGangBanger,
           photoTags = listOf(), // TODO: Pass in photoTags
-          dateCreated = 
+          dateCreated =
             motive.dateCreated
               ?: throw IllegalStateException("dateCreated is missing"),
         )
@@ -377,7 +377,7 @@ class PhotoService(
               ImageFileName(
                 photoFile.originalFilename ?: "",
               ),
-            dateCreated = 
+            dateCreated =
               motiveDto.dateCreated
                 ?: throw IllegalStateException("dateCreated is missing"),
           )
@@ -473,10 +473,11 @@ class PhotoService(
   override fun patch(dto: PhotoPatchRequestDto): PhotoDto {
     logger.info("PATCH DTO: $dto")
 
-    val photoTags = dto.photoTags?.map {
-      photoTagRepository.findByName(it)
-        ?: PhotoTagDto(name = it).apply {
-          photoTagRepository.create(this)
+    val photoTags =
+      dto.photoTags?.map {
+        photoTagRepository.findByName(it)
+          ?: PhotoTagDto(name = it).apply {
+            photoTagRepository.create(this)
         }
     }
 
@@ -487,7 +488,7 @@ class PhotoService(
         photoTagRepository.deletePhotoTagReference(oldTag.photoTagId, dto.photoId)
       }
     }
-    return photoRepository.patch(dto, photoTags ?: emptyList())   //denne koden gjør at man hvis man sender inn tom liste (tom photoTags) så slettes også alle tagsa på bildet
+    return photoRepository.patch(dto, photoTags ?: emptyList())// denne koden gjør at man hvis man sender inn tom liste (tom photoTags) så slettes også alle tagsa på bildet
   }
 
   override fun getById(id: UUID): PhotoDto? {
