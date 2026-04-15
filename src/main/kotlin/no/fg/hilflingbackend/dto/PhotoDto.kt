@@ -34,7 +34,6 @@ data class PhotoDto(
   val photoGangBangerDto: PhotoGangBangerDto,
   val photoTags: List<PhotoTagDto>,
   val dateCreated: LocalDate,
-  
 ) {
   fun toEntity(): Photo {
     val photo = this

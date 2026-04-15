@@ -42,7 +42,7 @@ class PhotoController(
     @RequestParam("photoFileList") photoFileList: List<MultipartFile>,
     @RequestParam("isGoodPhotoList") isGoodPhotoList: List<Boolean>,
     @RequestParam("tagList") tagList: List<String>,
-    @RequestParam("dateCreated") dateCreated: LocalDate
+    @RequestParam("dateCreated") dateCreated: LocalDate,
   ): ResponseEntity<List<String>> =
     ResponseEntity(
       photoService.createNewMotiveAndSaveDigitalPhotos(
@@ -56,7 +56,7 @@ class PhotoController(
         tagList = tagList,
         categoryName = categoryName,
         isGoodPhotoList = isGoodPhotoList,
-        dateCreated = dateCreated
+        dateCreated = dateCreated,
       ),
       HttpStatus.CREATED,
     )
@@ -219,9 +219,7 @@ class PhotoController(
   ): PhotoDto = photoService.patch(dto)
 
   @PatchMapping("/photos")
-    fun patchPhoto(
-      @RequestBody dto: PhotoPatchRequestDto,
-    ): PhotoDto {
-      return photoService.patch(dto)
-    }
+  fun patchPhoto(
+    @RequestBody dto: PhotoPatchRequestDto,
+  ): PhotoDto = photoService.patch(dto)
 }

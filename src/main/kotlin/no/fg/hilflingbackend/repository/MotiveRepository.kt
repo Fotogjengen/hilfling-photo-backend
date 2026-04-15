@@ -25,6 +25,7 @@ open class MotiveRepository {
 
   @Autowired
   open lateinit var database: Database
+
   @Autowired
   open lateinit var photoRepository: PhotoRepository
 
@@ -64,9 +65,9 @@ open class MotiveRepository {
     return motive
   }
 
-fun patch(dto: MotivePatchRequestDto): MotiveDto {
-  val fromDb = findById(dto.motiveId.id)
-    ?: throw EntityNotFoundException("Could not find Motive")
+  fun patch(dto: MotivePatchRequestDto): MotiveDto {
+    val fromDb = findById(dto.motiveId.id)
+      ?: throw EntityNotFoundException("Could not find Motive")
 
   val newDto = MotiveDto(
     motiveId = fromDb.motiveId,
