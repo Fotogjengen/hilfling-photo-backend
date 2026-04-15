@@ -488,7 +488,7 @@ override fun patch(dto: PhotoPatchRequestDto): PhotoDto {
     }
   }
 
-  return photoRepository.patch(dto, photoTags)
+  return photoRepository.patch(dto, photoTags ?: emptyList())   //denne koden gjør at man hvis man sender inn tom liste (tom photoTags) så slettes også alle tagsa på bildet
 
 }
 
