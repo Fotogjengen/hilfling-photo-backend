@@ -478,8 +478,8 @@ class PhotoService(
         photoTagRepository.findByName(it)
           ?: PhotoTagDto(name = it).apply {
             photoTagRepository.create(this)
-        }
-    }
+          }
+      }
 
     val tags = photoRepository.findCorrespondingPhotoTagDtos(dto.photoId.id)
 
@@ -488,7 +488,7 @@ class PhotoService(
         photoTagRepository.deletePhotoTagReference(oldTag.photoTagId, dto.photoId)
       }
     }
-    return photoRepository.patch(dto, photoTags ?: emptyList())// denne koden gjør at man hvis man sender inn tom liste (tom photoTags) så slettes også alle tagsa på bildet
+    return photoRepository.patch(dto, photoTags ?: emptyList()) // denne koden gjør at man hvis man sender inn tom liste (tom photoTags) så slettes også alle tagsa på bildet
   }
 
   override fun getById(id: UUID): PhotoDto? {

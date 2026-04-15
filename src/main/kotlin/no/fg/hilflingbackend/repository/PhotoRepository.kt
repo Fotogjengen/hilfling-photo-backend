@@ -143,9 +143,9 @@ open class PhotoRepository(
     )
 
   fun updateDateCreatedByMotiveId(
-    motiveId: UUID, 
+    motiveId: UUID,
     dateCreated: LocalDate,
-    ): Int {
+  ): Int {
     val photos = database.photos.filter { it.motiveId eq motiveId }.toList()
 
     photos.forEach { photo ->
