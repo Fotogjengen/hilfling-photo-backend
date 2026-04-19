@@ -109,7 +109,7 @@ CREATE TABLE SAMFUNDET_USER
     date_created      DATE NOT NULL DEFAULT CURRENT_DATE,
     first_name        VARCHAR(20),
     last_name         VARCHAR(20),
-    username          VARCHAR(20),
+    username          VARCHAR(20) UNIQUE,
     email             VARCHAR(50),
     profile_picture   VARCHAR(150),
     phone_number      VARCHAR(20),

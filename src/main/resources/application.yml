@@ -1,8 +1,8 @@
 server:
-  address: 
+  address:
     - ${LISTENING_IP:backend.localhost}
     - ${LISTENING_IP:localhost}
-  port: 
+  port:
     - ${LISTENING_PORT:8000}
     - 8000
   error:
@@ -46,6 +46,13 @@ spring:
       container:
       blob-storage:
         connection-string: ${AZURE_STORAGE_CONNECTION_STRING:DefaultEndpointsProtocol=http;AccountName=devstoreaccount1;AccountKey=Eby8vdM02xNOcqFlqUwJPLlmEtlCDXJ1OUzFT50uSRZ6IFsuFq2UVErCz4I6tq/K1SZFPTOtr/KBHBeksoGMGw==;BlobEndpoint=http://127.0.0.1:10000/devstoreaccount1;QueueEndpoint=http://127.0.0.1:10001/devstoreaccount1;TableEndpoint=http://127.0.0.1:10002/devstoreaccount1;}
+
+cors:
+  allowed-origins: ${CORS_ALLOWED_ORIGINS:http://localhost:3000,http://localhost:5173,http://localhost:8888}
+
+auth:
+  cors:
+    allowed-origins: ${AUTH_CORS_ALLOWED_ORIGINS:http://localhost:8888}
 
 logging:
   level:

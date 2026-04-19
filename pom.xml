@@ -16,7 +16,7 @@
 
 	<properties>
 		<java.version>21</java.version>
-		<kotlin.version>2.3.0</kotlin.version>
+		<kotlin.version>2.1.0</kotlin.version>
 		<!-- <kotlin.compiler.apiVersion>1.9</kotlin.compiler.apiVersion> -->
 		<jacoco.version>0.8.13</jacoco.version>
 		<kotlinx-coroutines.version>1.4.2-native-mt</kotlinx-coroutines.version>
@@ -36,6 +36,13 @@
 			<artifactId>spring-boot-configuration-processor</artifactId>
 			<optional>true</optional>
 		</dependency>
+		<!-- Devtools -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-devtools</artifactId>
+				<scope>runtime</scope>
+				<optional>true</optional>
+			</dependency>
 		<!-- https://mvnrepository.com/artifact/org.jetbrains.kotlin/kotlin-contracts -->
 		<!-- <dependency>
 			<groupId>org.jetbrains.kotlin</groupId>
@@ -215,7 +222,31 @@
         </dependency>
 
         <!-- END TESTING -->
+
+		<!-- AUTHENTICATION -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-security</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>io.jsonwebtoken</groupId>
+			<artifactId>jjwt-api</artifactId>
+			<version>0.13.0</version>
+		</dependency>
+		<dependency>
+			<groupId>io.jsonwebtoken</groupId>
+			<artifactId>jjwt-impl</artifactId>
+			<version>0.13.0</version>
+		</dependency>
+		<dependency>
+			<groupId>io.jsonwebtoken</groupId>
+			<artifactId>jjwt-jackson</artifactId>
+			<version>0.13.0</version>
+			<scope>runtime</scope>
+		</dependency>
+		<!-- END AUTHENTICATION -->
 	</dependencies>
+
 
 	<repositories>
 		<repository>
