@@ -24,7 +24,7 @@ interface IBaseService<T> {
     sortBy: String,
     desc: Boolean = true,
     securityLevel: String,
-    isAnalog: Boolean = false,
+    analog: Boolean = false,
   ): Page<T>
 }
 
@@ -90,7 +90,7 @@ interface IPhotoService : IBaseService<PhotoDto> {
     sortBy: String,
     desc: Boolean = true,
     securityLevel: String,
-    isAnalog: Boolean = false,
+    analog: Boolean = false,
   ): Page<PhotoDto>
 
   fun patch(dto: PhotoPatchRequestDto): PhotoDto

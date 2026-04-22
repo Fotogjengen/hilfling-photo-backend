@@ -453,7 +453,7 @@ class PhotoService(
     sortBy: String,
     desc: Boolean,
     securityLevel: String,
-    isAnalog: Boolean,
+    analog: Boolean,
   ): Page<PhotoDto> =
     photoRepository.findAllDigitalPhotos(
       page,
@@ -519,7 +519,7 @@ class PhotoService(
     sortBy: String,
     desc: Boolean,
     securityLevel: String,
-    isAnalog: Boolean,
+    analog: Boolean,
   ): Page<PhotoDto> =
     photoRepository.findAll(
       page,
@@ -535,7 +535,7 @@ class PhotoService(
       sortBy,
       desc,
       securityLevel,
-      isAnalog,
+      analog,
     )
 }
 

@@ -501,7 +501,7 @@ class PatchIntegrationTest {
       AlbumPatchRequestDto(
         albumId = albumId1,
         title = "CAROLINE",
-        isAnalog = true,
+        analog = true,
       )
     albumRepository.patch(change)
     val changedFromDb = albumRepository.findById(change.albumId.id)
@@ -510,7 +510,7 @@ class PatchIntegrationTest {
       "album patch",
       { assertNotNull(changedFromDb) },
       { assertEquals(change.title, changedFromDb?.title) },
-      { assertEquals(change.isAnalog, changedFromDb?.isAnalog) },
+      { assertEquals(change.analog, changedFromDb?.analog) },
     )
   }
 }

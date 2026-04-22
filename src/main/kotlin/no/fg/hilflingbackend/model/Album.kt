@@ -12,18 +12,18 @@ interface Album : BaseModel<Album> {
   companion object : Entity.Factory<Album>()
 
   var title: String
-  var isAnalog: Boolean
+  var analog: Boolean
 }
 
 fun Album.toDto(): AlbumDto = AlbumDto(
   albumId = AlbumId(this.id),
   title = this.title,
-  isAnalog = this.isAnalog
+  analog = this.analog
 )
 
 object Albums : BaseTable<Album>("album") {
   val title = varchar("title").bindTo { it.title }
-  val isAnalog = boolean("is_analog").bindTo { it.isAnalog }
+  val analog = boolean("is_analog").bindTo { it.analog }
 }
 
 val Database.albums get() = this.sequenceOf(Albums)

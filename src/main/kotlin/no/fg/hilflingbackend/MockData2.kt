@@ -40,7 +40,7 @@ class MockData2 {
         listOf(
                 Album{
                     title = "Vår 2017";
-                    isAnalog = true;
+                    analog = true;
                 },
                 Album{
                     title = "Høst 2017";
@@ -56,7 +56,7 @@ class MockData2 {
                 },
                 Album {
                     title = "Høst 2019"
-                    isAnalog = true
+                    analog = true
                 }
         ).forEach{
             albumRepository.create(it)
