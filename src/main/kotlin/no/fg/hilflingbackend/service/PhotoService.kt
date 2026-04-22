@@ -83,7 +83,6 @@ class PhotoService(
   ): Path {
     // BasePath
     val basePath = imageFileStorageProperties.savedPhotosPath
-    println("BaseBath from config: $basePath")
     val fullFilePath =
       Paths.get(
         "$basePath/" +
@@ -92,7 +91,6 @@ class PhotoService(
           "${convertToValidFolderName(motive.title)}" +
           "$size-${fileName.filename}",
       )
-    println(fullFilePath)
     // TODO: Check if directories exiist before continou
     if (!Files.isDirectory(fullFilePath)) {
       throw IllegalStateException("The file path does not exist")
@@ -364,7 +362,6 @@ class PhotoService(
                 )
               }
           }
-        println(photoTagDtos)
         val isGoodPhoto = isGoodPhotoList.get(index)
 
         validateContentType(photoFile.contentType)

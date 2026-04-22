@@ -55,9 +55,6 @@ open class EventCardRepository {
               .firstOrNull()
           }
 
-        println(
-          "Motive ID: $motiveId → Selected Small URL: $selectedPhotoUrl",
-        ) // Debugging
         EventCardDto(
           motiveId = motiveId,
           motiveTitle = row[Motives.title],
