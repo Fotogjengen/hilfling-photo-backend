@@ -175,7 +175,7 @@ class PhotoService(
     albumIdList: List<UUID>,
     categoryIdList: List<UUID>,
     fileList: List<MultipartFile>,
-    dateTaken: LocalDate,
+    dateCreated: LocalDate,
   ): List<String> =
     fileList.mapIndexed { index, file ->
             /*
@@ -246,7 +246,9 @@ class PhotoService(
           categoryDto = category,
           photoGangBangerDto = photoGangBanger,
           photoTags = listOf(), // TODO: Pass in photoTags
-          dateTaken = dateTaken,
+          dateCreated =
+            motive.dateCreated
+              ?: throw IllegalStateException("dateCreated is missing"),
         )
 
       val filePath =
@@ -304,7 +306,6 @@ class PhotoService(
     isGoodPhotoList: List<Boolean>,
     dateCreated: LocalDate,
     tagList: List<String>,
-    dateTaken: LocalDate,
   ): List<String> {
     val isValidRequest = photoFileList.size > 0 && (photoFileList.size == isGoodPhotoList.size)
     logger.warn("Is valid request? $isValidRequest")
@@ -376,7 +377,9 @@ class PhotoService(
               ImageFileName(
                 photoFile.originalFilename ?: "",
               ),
-            dateTaken = dateTaken,
+            dateCreated =
+              motiveDto.dateCreated
+                ?: throw IllegalStateException("dateCreated is missing"),
           )
 
         // Generate PhotoDto
@@ -422,7 +425,7 @@ class PhotoService(
           categoryDto = categoryDto,
           eventOwnerDto = eventOwnerDto,
           albumDto = albumDto,
-          dateCreated = dateCreated ?: null,
+          dateCreated = dateCreated,
         ),
       )
 
@@ -450,7 +453,7 @@ class PhotoService(
     sortBy: String,
     desc: Boolean,
     securityLevel: String,
-    isAnalog: Boolean,
+    analog: Boolean,
   ): Page<PhotoDto> =
     photoRepository.findAllDigitalPhotos(
       page,
@@ -468,20 +471,39 @@ class PhotoService(
     )
 
   override fun patch(dto: PhotoPatchRequestDto): PhotoDto {
-    TODO("Not yet implemented")
+    logger.info("PATCH DTO: $dto")
+
+    val photoTags =
+      dto.photoTags?.map {
+        photoTagRepository.findByName(it)
+          ?: PhotoTagDto(name = it).apply {
+            photoTagRepository.create(this)
+          }
+      }
+
+    val tags = photoRepository.findCorrespondingPhotoTagDtos(dto.photoId.id)
+
+    tags.forEach { oldTag ->
+      if (photoTags == null || !photoTags.contains(oldTag)) {
+        photoTagRepository.deletePhotoTagReference(oldTag.photoTagId, dto.photoId)
+      }
+    }
+    return photoRepository.patch(dto, photoTags ?: emptyList()) // denne koden gjør at man hvis man sender inn tom liste (tom photoTags) så slettes også alle tagsa på bildet
   }
 
   override fun getById(id: UUID): PhotoDto? {
-    TODO("Not yet implemented")
+    return photoRepository.findById(id)
   }
+
+  fun findById(id: UUID): PhotoDto =
+    photoRepository.findById(id)
+      ?: throw EntityNotFoundException("Did not find photo")
 
   fun getByMotiveId(
     id: UUID,
     page: Int,
     pageSize: Int,
   ): Page<PhotoDto> = photoRepository.findByMotiveId(id, page, pageSize) ?: Page.empty(page, pageSize)
-
-  fun findById(id: UUID): PhotoDto = photoRepository.findById(id) ?: throw EntityNotFoundException("Did not find photo")
 
   override fun getAll(
     page: Int,
@@ -497,7 +519,7 @@ class PhotoService(
     sortBy: String,
     desc: Boolean,
     securityLevel: String,
-    isAnalog: Boolean,
+    analog: Boolean,
   ): Page<PhotoDto> =
     photoRepository.findAll(
       page,
@@ -513,7 +535,7 @@ class PhotoService(
       sortBy,
       desc,
       securityLevel,
-      isAnalog,
+      analog,
     )
 }
 

@@ -24,7 +24,7 @@ interface IBaseService<T> {
     sortBy: String,
     desc: Boolean = true,
     securityLevel: String,
-    isAnalog: Boolean = false,
+    analog: Boolean = false,
   ): Page<T>
 }
 
@@ -39,7 +39,7 @@ interface IPhotoService : IBaseService<PhotoDto> {
     albumIdList: List<UUID>,
     categoryIdList: List<UUID>,
     fileList: List<MultipartFile>,
-    dateTaken: LocalDate,
+    dateCreated: LocalDate,
   ): List<String>
 
   fun saveAnalogPhotos(
@@ -64,7 +64,6 @@ interface IPhotoService : IBaseService<PhotoDto> {
     isGoodPhotoList: List<Boolean>,
     dateCreated: LocalDate,
     tagList: List<String>,
-    dateTaken: LocalDate,
   ): List<String>
 
   fun getGoodPhotos(
@@ -91,7 +90,7 @@ interface IPhotoService : IBaseService<PhotoDto> {
     sortBy: String,
     desc: Boolean = true,
     securityLevel: String,
-    isAnalog: Boolean = false,
+    analog: Boolean = false,
   ): Page<PhotoDto>
 
   fun patch(dto: PhotoPatchRequestDto): PhotoDto

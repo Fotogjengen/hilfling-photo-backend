@@ -23,7 +23,7 @@ open class AlbumRepository(database: Database) : BaseRepository<Album, AlbumDto,
   override fun convertToClass(qrs: QueryRowSet): AlbumDto = AlbumDto(
     albumId = AlbumId(qrs[Albums.id]!!),
     title = qrs[Albums.title]!!,
-    isAnalog = qrs[Albums.isAnalog]!!
+    analog = qrs[Albums.analog]!!
   )
 
   override fun create(dto: AlbumDto): Int {
@@ -39,7 +39,7 @@ open class AlbumRepository(database: Database) : BaseRepository<Album, AlbumDto,
     val newDto = AlbumDto(
       albumId = fromDb.albumId,
       title = dto.title ?: fromDb.title,
-      isAnalog = dto.isAnalog ?: fromDb.isAnalog
+      analog = dto.analog ?: fromDb.analog
     )
     val updated = database.albums.update(newDto.toEntity())
 

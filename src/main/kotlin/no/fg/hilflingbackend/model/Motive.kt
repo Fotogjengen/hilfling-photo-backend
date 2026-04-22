@@ -7,11 +7,15 @@ import me.liuwj.ktorm.schema.uuid
 import me.liuwj.ktorm.schema.varchar
 import no.fg.hilflingbackend.dto.MotiveDto
 import no.fg.hilflingbackend.dto.MotiveId
+import me.liuwj.ktorm.schema.date
+import java.time.LocalDate
+
 
 interface Motive : BaseModel<Motive> {
   companion object : Entity.Factory<Motive>()
 
   var title: String
+  override var dateCreated: LocalDate
 
   // Foreign keys
   var category: Category
@@ -30,8 +34,6 @@ fun Motive.toDto(): MotiveDto = MotiveDto(
 
 object Motives : BaseTable<Motive>("motive") {
   val title = varchar("title").bindTo { it.title }
-
-  // Foreign keys
   val categoryId = uuid("category_id").references(Categories) { it.category }
   val eventOwnerId = uuid("event_owner_id").references(EventOwners) { it.eventOwner }
   val albumId = uuid("album_id").references(Albums) { it.album }

@@ -156,11 +156,11 @@ class MockDataService {
           isGoodPicture = true,
           smallUrl = url,
           mediumUrl = url,
-          photoGangBangerDto = photoGangBangers.random(),
-          photoTags = photoTags,
-          albumDto = albums.random(),
-          categoryDto = categories.random(),
-          dateTaken = LocalDate.now(),
+          photoGangBangerDto = generatePhotoGangBangerData().random(),
+          photoTags = generatePhotoTagData(),
+          albumDto = generateAlbumData().random(),
+          categoryDto = generateCategoryData().random(),
+          dateCreated = LocalDate.now(),
         ),
       )
     }

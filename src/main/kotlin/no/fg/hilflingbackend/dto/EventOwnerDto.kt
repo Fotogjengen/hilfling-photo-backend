@@ -1,5 +1,7 @@
 package no.fg.hilflingbackend.dto
 
+import com.fasterxml.jackson.annotation.JsonCreator
+import com.fasterxml.jackson.annotation.JsonProperty
 import no.fg.hilflingbackend.model.EventOwner
 import java.util.UUID
 
@@ -9,11 +11,13 @@ import java.util.UUID
  * We can only use ENUMS
  * TODO: Remove EventOwner from database
  */
-data class EventOwnerDto(
+data class EventOwnerDto @JsonCreator constructor(
+  @JsonProperty("eventOwnerId")
   val eventOwnerId: EventOwnerId = EventOwnerId(),
+
+  @JsonProperty("name")
   val name: EventOwnerName
 ) {
-  // Constructor for Entity
   constructor(eventOwner: EventOwner) : this(
     EventOwnerId(eventOwner.id),
     EventOwnerName.valueOf(eventOwner.name)

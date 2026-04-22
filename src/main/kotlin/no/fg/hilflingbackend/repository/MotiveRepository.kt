@@ -26,6 +26,9 @@ open class MotiveRepository {
   @Autowired
   open lateinit var database: Database
 
+  @Autowired
+  open lateinit var photoRepository: PhotoRepository
+
   // TODO: Make return MotiveDto instead of Motive
   fun findByTitle(title: String): Motive? =
     database
@@ -65,15 +68,32 @@ open class MotiveRepository {
   fun patch(dto: MotivePatchRequestDto): MotiveDto {
     val fromDb = findById(dto.motiveId.id)
       ?: throw EntityNotFoundException("Could not find Motive")
+
     val newDto = MotiveDto(
       motiveId = fromDb.motiveId,
       title = dto.title ?: fromDb.title,
       categoryDto = dto.categoryDto ?: fromDb.categoryDto,
       eventOwnerDto = dto.eventOwnerDto ?: fromDb.eventOwnerDto,
-      albumDto = dto.albumDto ?: fromDb.albumDto,
-      dateCreated = fromDb.dateCreated
+      albumDto = fromDb.albumDto,
+      dateCreated = dto.dateCreated ?: fromDb.dateCreated,
     )
+
+    println("dto.dateCreated = ${dto.dateCreated}")
+    println("fromDb.dateCreated = ${fromDb.dateCreated}")
+    println("newDto.dateCreated = ${newDto.dateCreated}")
+
     val updated = database.motives.update(newDto.toEntity())
+    println("updated rows = $updated")
+
+    if (updated == 1 && newDto.dateCreated != null) {
+      photoRepository.updateDateCreatedByMotiveId(
+        dto.motiveId.id,
+        newDto.dateCreated,
+      )
+    }
+
+    val after = findById(dto.motiveId.id)
+    println("after patch dateCreated = ${after?.dateCreated}")
 
     return if (updated == 1) newDto else fromDb
   }

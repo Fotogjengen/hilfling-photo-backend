@@ -42,7 +42,7 @@ class PhotoController(
     @RequestParam("photoFileList") photoFileList: List<MultipartFile>,
     @RequestParam("isGoodPhotoList") isGoodPhotoList: List<Boolean>,
     @RequestParam("tagList") tagList: List<String>,
-    @RequestParam("dateTaken") dateTaken: LocalDate,
+    @RequestParam("dateCreated") dateCreated: LocalDate,
   ): ResponseEntity<List<String>> =
     ResponseEntity(
       photoService.createNewMotiveAndSaveDigitalPhotos(
@@ -56,8 +56,7 @@ class PhotoController(
         tagList = tagList,
         categoryName = categoryName,
         isGoodPhotoList = isGoodPhotoList,
-        dateCreated = LocalDate.now(),
-        dateTaken = dateTaken,
+        dateCreated = dateCreated,
       ),
       HttpStatus.CREATED,
     )
@@ -73,7 +72,7 @@ class PhotoController(
     @RequestParam("albumIdList") albumIdList: List<UUID>,
     @RequestParam("categoryIdList") categoryIdList: List<UUID>,
     @RequestParam("fileList") fileList: List<MultipartFile>,
-    @RequestParam("dateTaken") dateTaken: LocalDate,
+    @RequestParam("dateCreated") dateCreated: LocalDate,
   ): ResponseEntity<List<String>> {
     // Assert all fields are populated
     if (!(
@@ -98,7 +97,7 @@ class PhotoController(
         albumIdList,
         categoryIdList,
         fileList,
-        dateTaken,
+        dateCreated,
       )
 
     return ResponseEntity<List<String>>(
@@ -140,7 +139,7 @@ class PhotoController(
     @RequestParam("album", required = false) album: UUID?,
     @RequestParam("sortBy", required = false) sortBy: String?,
     @RequestParam("desc", required = false) desc: Boolean?,
-    @RequestParam("isAnalog", required = false) isAnalog: Boolean?,
+    @RequestParam("analog", required = false) analog: Boolean?,
     @RequestParam("securityLevel", required = false) securityLevel: String?,
   ): ResponseEntity<Page<PhotoDto>> =
     ResponseOk(
@@ -158,7 +157,7 @@ class PhotoController(
         sortBy ?: "",
         desc ?: true,
         securityLevel ?: "",
-        isAnalog ?: false,
+        analog ?: false,
       ),
     )
 
@@ -210,12 +209,17 @@ class PhotoController(
         sortBy ?: "",
         desc ?: true,
         securityLevel = "ALLE",
-        isAnalog = false,
+        analog = false,
       ),
     )
 
   @PatchMapping
   fun patch(
+    @RequestBody dto: PhotoPatchRequestDto,
+  ): PhotoDto = photoService.patch(dto)
+
+  @PatchMapping("/photos")
+  fun patchPhoto(
     @RequestBody dto: PhotoPatchRequestDto,
   ): PhotoDto = photoService.patch(dto)
 }

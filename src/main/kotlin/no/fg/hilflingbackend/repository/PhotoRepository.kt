@@ -52,7 +52,7 @@ open class PhotoRepository(
       smallUrl = row[Photos.smallUrl]!!,
       mediumUrl = row[Photos.mediumUrl]!!,
       largeUrl = row[Photos.largeUrl]!!,
-      dateTaken = row[Photos.dateCreated]!!,
+      dateCreated = row[Photos.dateCreated]!!,
       motive =
         MotiveDto(
           motiveId = MotiveId(row[Motives.id]!!),
@@ -74,7 +74,7 @@ open class PhotoRepository(
           albumDto =
             AlbumDto(
               albumId = AlbumId(row[Albums.id]!!),
-              isAnalog = row[Albums.isAnalog]!!,
+              analog = row[Albums.analog]!!,
               title = row[Albums.title]!!,
             ),
           dateCreated = row[Photos.dateCreated]!!,
@@ -99,7 +99,7 @@ open class PhotoRepository(
         AlbumDto(
           AlbumId(row[Albums.id]!!),
           row[Albums.title]!!,
-          row[Albums.isAnalog]!!,
+          row[Albums.analog]!!,
         ),
       categoryDto =
         CategoryDto(
@@ -142,6 +142,20 @@ open class PhotoRepository(
       photoTags = findCorrespondingPhotoTagDtos(row[Photos.id]!!),
     )
 
+  fun updateDateCreatedByMotiveId(
+    motiveId: UUID,
+    dateCreated: LocalDate,
+  ): Int {
+    val photos = database.photos.filter { it.motiveId eq motiveId }.toList()
+
+    photos.forEach { photo ->
+      photo.dateCreated = dateCreated
+      database.photos.update(photo)
+    }
+
+    return photos.size
+  }
+
   fun findById(id: UUID): PhotoDto? {
     return database.photos.find { it.id eq id }?.let { photo ->
       return photo.toDto(
@@ -181,7 +195,7 @@ open class PhotoRepository(
     sortBy: String,
     desc: Boolean = true,
     securityLevel: String,
-    isAnalog: Boolean = false,
+    analog: Boolean = false,
   ): Page<PhotoDto> {
     val offset = page * pageSize
 
@@ -212,7 +226,7 @@ open class PhotoRepository(
           Motives.id,
           Motives.title,
           Albums.id,
-          Albums.isAnalog,
+          Albums.analog,
           Albums.title,
           Categories.id,
           Categories.name,
@@ -292,10 +306,10 @@ open class PhotoRepository(
               }
             ) and
             (
-              if (isAnalog) {
-                Albums.isAnalog eq true
+              if (analog) {
+                Albums.analog eq true
               } else {
-                Albums.isAnalog eq false or Albums.isAnalog eq true
+                Albums.analog eq false or Albums.analog eq true
               }
             )
         }.limit(offset, pageSize)
@@ -370,10 +384,10 @@ open class PhotoRepository(
               }
             ) and
             (
-              if (isAnalog) {
-                Albums.isAnalog eq true
+              if (analog) {
+                Albums.analog eq true
               } else {
-                Albums.isAnalog eq false or Albums.isAnalog eq true
+                Albums.analog eq false or Albums.analog eq true
               }
             )
         }.map { it.getInt(1) }
@@ -425,6 +439,8 @@ open class PhotoRepository(
       }
     }
 
+    val updatedMotive = dto.motive ?: fromDb.motive
+
     val newDto =
       PhotoDto(
         photoId = fromDb.photoId,
@@ -439,8 +455,10 @@ open class PhotoRepository(
         albumDto = dto.albumDto ?: fromDb.albumDto,
         categoryDto = dto.categoryDto ?: fromDb.categoryDto,
         photoGangBangerDto = dto.photoGangBangerDto ?: fromDb.photoGangBangerDto,
-        photoTags = if (photoTags.isNotEmpty()) photoTags else fromDb.photoTags,
-        dateTaken = fromDb.dateTaken,
+        photoTags = photoTags ?: fromDb.photoTags,
+        dateCreated =
+          updatedMotive.dateCreated
+            ?: throw IllegalStateException("dateCreated is missing"),
       )
     val updated = database.photos.update(newDto.toEntity())
 
@@ -451,7 +469,7 @@ open class PhotoRepository(
     page: Int,
     pageSize: Int,
   ): Page<PhotoDto> {
-    val analogAlbums = database.albums.filter { it.isAnalog eq true }
+    val analogAlbums = database.albums.filter { it.analog eq true }
 
     val photos =
       analogAlbums.toList().map { album -> database.photos.filter { it.albumId eq album.id } }
@@ -515,7 +533,7 @@ open class PhotoRepository(
           Motives.id,
           Motives.title,
           Albums.id,
-          Albums.isAnalog,
+          Albums.analog,
           Albums.title,
           Categories.id,
           Categories.name,
@@ -587,7 +605,7 @@ open class PhotoRepository(
                 Photos.isGoodPicture eq false or Photos.isGoodPicture eq true
               }
             ) and
-            (Albums.isAnalog eq false)
+            (Albums.analog eq false)
         }.limit(page, pageSize)
         .map { row -> constructPhotoDto(row) }
 

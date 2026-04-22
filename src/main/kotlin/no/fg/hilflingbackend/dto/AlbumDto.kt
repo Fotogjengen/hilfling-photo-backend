@@ -6,13 +6,13 @@ import java.util.UUID
 data class AlbumPatchRequestDto(
   val albumId: AlbumId,
   val title: String?,
-  val isAnalog: Boolean?
+  val analog: Boolean?
 )
 
 data class AlbumDto(
   val albumId: AlbumId = AlbumId(),
   val title: String,
-  val isAnalog: Boolean = false
+  val analog: Boolean = false
 )
 
 data class AlbumId(
@@ -26,6 +26,6 @@ fun AlbumDto.toEntity(): Album {
   return Album {
     id = dto.albumId.id
     title = dto.title
-    isAnalog = dto.isAnalog
+    analog = dto.analog
   }
 }

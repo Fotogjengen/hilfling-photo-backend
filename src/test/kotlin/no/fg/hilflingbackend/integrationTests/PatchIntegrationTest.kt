@@ -321,7 +321,6 @@ class PatchIntegrationTest {
             categoryName = categoryDto1.name,
             isGoodPhotoList = listOf(true),
             dateCreated = LocalDate.now(),
-            dateTaken = LocalDate.now(),
           )[0]
           .split("/")
           .last()
@@ -435,6 +434,7 @@ class PatchIntegrationTest {
         categoryDto = categoryDto2,
         photoGangBangerDto = photoGangBangerDto2,
         photoTags = photoTags,
+        dateCreated = LocalDate.of(2024, 1, 1),
       )
 
     photoService.patch(change)
@@ -501,7 +501,7 @@ class PatchIntegrationTest {
       AlbumPatchRequestDto(
         albumId = albumId1,
         title = "CAROLINE",
-        isAnalog = true,
+        analog = true,
       )
     albumRepository.patch(change)
     val changedFromDb = albumRepository.findById(change.albumId.id)
@@ -510,7 +510,7 @@ class PatchIntegrationTest {
       "album patch",
       { assertNotNull(changedFromDb) },
       { assertEquals(change.title, changedFromDb?.title) },
-      { assertEquals(change.isAnalog, changedFromDb?.isAnalog) },
+      { assertEquals(change.analog, changedFromDb?.analog) },
     )
   }
 }
