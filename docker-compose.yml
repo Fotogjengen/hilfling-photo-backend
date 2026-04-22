@@ -47,6 +47,7 @@ services:
       SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/hilflingdb
       SPRING_DATASOURCE_USERNAME: ${DATABASE_USERNAME:-hilfling}
       SPRING_DATASOURCE_PASSWORD: ${DATABASE_PASSWORD:-password}
+      SPRING_PROFILES_ACTIVE: dev
     ports:
       - "8000:8000" # map port 8000 of the host to port 8080 of the container
     # command: ["--debug"]
@@ -80,6 +81,7 @@ services:
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.postgres.rule=Host(`hilfling-db.localhost`)"
+  # NOTE: PgAdmin is for development only. Do not include in production deployments.
   pgadmin:
     container_name: pgadmin
     image: dpage/pgadmin4
@@ -87,8 +89,8 @@ services:
     depends_on:
       - traefik
     environment:
-      PGADMIN_DEFAULT_EMAIL: ${PGADMIN_DEFAULT_EMAIL:-admin@admin.com}
-      PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_DEFAULT_PASSWORD:-password}
+      PGADMIN_DEFAULT_EMAIL: ${PGADMIN_DEFAULT_EMAIL}
+      PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_DEFAULT_PASSWORD}
     ports:
       - ${PGADMIN_PORT:-5050}:80
     networks:
