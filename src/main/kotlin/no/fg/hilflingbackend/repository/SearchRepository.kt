@@ -6,6 +6,7 @@ import me.liuwj.ktorm.entity.toList
 import me.liuwj.ktorm.support.postgresql.ilike
 import no.fg.hilflingbackend.dto.MotiveDto
 import no.fg.hilflingbackend.model.motives
+import no.fg.hilflingbackend.utils.escapeLikePattern
 import no.fg.hilflingbackend.model.toDto
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Repository
@@ -20,7 +21,7 @@ open class SearchRepository {
     database
       .motives
       .filter {
-        it.title ilike "%$searchTerm%"
+        it.title ilike "%${escapeLikePattern(searchTerm)}%"
       }.toList()
       .map { it.toDto() }
 }

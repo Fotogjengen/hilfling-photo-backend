@@ -14,6 +14,7 @@ import me.liuwj.ktorm.dsl.select
 import me.liuwj.ktorm.dsl.where
 import me.liuwj.ktorm.support.postgresql.ilike
 import no.fg.hilflingbackend.dto.EventCardDto
+import no.fg.hilflingbackend.utils.escapeLikePattern
 import no.fg.hilflingbackend.dto.Page
 import no.fg.hilflingbackend.model.EventOwner
 import no.fg.hilflingbackend.model.EventOwners
@@ -86,7 +87,7 @@ open class EventCardRepository {
             // Return all results, ordered by latest first
             Motives.id.isNotNull()
           } else {
-            Motives.title ilike "%$searchTerm%"
+            Motives.title ilike "%${escapeLikePattern(searchTerm)}%"
           }
         }.orderBy(Motives.dateCreated.desc())
         .limit(page * pageSize, pageSize)

@@ -7,6 +7,7 @@ import me.liuwj.ktorm.entity.take
 import me.liuwj.ktorm.entity.toList
 import me.liuwj.ktorm.support.postgresql.ilike
 import no.fg.hilflingbackend.model.motives
+import no.fg.hilflingbackend.utils.escapeLikePattern
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Repository
 
@@ -25,7 +26,7 @@ open class SearchSuggestionsRepository {
         .map { it.title }
     } else {
       // Return up to 10 filtered results when search term is provided
-      database.motives.filter { it.title ilike "%$searchTerm%" }.take(10).toList().map {
+      database.motives.filter { it.title ilike "%${escapeLikePattern(searchTerm)}%" }.take(10).toList().map {
         it.title
       }
     }
