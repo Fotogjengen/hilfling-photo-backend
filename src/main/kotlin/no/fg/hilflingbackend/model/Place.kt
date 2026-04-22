@@ -1,11 +1,11 @@
 package no.fg.hilflingbackend.model
 
+import no.fg.hilflingbackend.dto.PlaceDto
+import no.fg.hilflingbackend.dto.PlaceId
 import org.ktorm.database.Database
 import org.ktorm.entity.Entity
 import org.ktorm.entity.sequenceOf
 import org.ktorm.schema.varchar
-import no.fg.hilflingbackend.dto.PlaceDto
-import no.fg.hilflingbackend.dto.PlaceId
 
 interface Place : BaseModel<Place> {
   companion object : Entity.Factory<Place>()

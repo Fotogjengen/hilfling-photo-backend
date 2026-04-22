@@ -1,11 +1,11 @@
 package no.fg.hilflingbackend.model
 
+import no.fg.hilflingbackend.dto.GangDto
+import no.fg.hilflingbackend.dto.GangId
 import org.ktorm.database.Database
 import org.ktorm.entity.Entity
 import org.ktorm.entity.sequenceOf
 import org.ktorm.schema.varchar
-import no.fg.hilflingbackend.dto.GangDto
-import no.fg.hilflingbackend.dto.GangId
 
 interface Gang : BaseModel<Gang> {
   companion object : Entity.Factory<Gang>()

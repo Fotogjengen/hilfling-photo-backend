@@ -1,13 +1,13 @@
 package no.fg.hilflingbackend.model
 
+import no.fg.hilflingbackend.dto.ArticleDto
+import no.fg.hilflingbackend.dto.ArticleId
+import no.fg.hilflingbackend.dto.toDto
 import org.ktorm.database.Database
 import org.ktorm.entity.Entity
 import org.ktorm.entity.sequenceOf
 import org.ktorm.schema.int
 import org.ktorm.schema.varchar
-import no.fg.hilflingbackend.dto.ArticleDto
-import no.fg.hilflingbackend.dto.ArticleId
-import no.fg.hilflingbackend.dto.toDto
 
 interface Article : BaseModel<Article> {
   companion object : Entity.Factory<Article>()

@@ -1,13 +1,13 @@
 package no.fg.hilflingbackend.model
 
+import no.fg.hilflingbackend.dto.PhotoGangBangerDto
+import no.fg.hilflingbackend.dto.PhotoGangBangerId
 import org.ktorm.database.Database
 import org.ktorm.entity.Entity
 import org.ktorm.entity.sequenceOf
 import org.ktorm.schema.boolean
 import org.ktorm.schema.uuid
 import org.ktorm.schema.varchar
-import no.fg.hilflingbackend.dto.PhotoGangBangerDto
-import no.fg.hilflingbackend.dto.PhotoGangBangerId
 
 interface PhotoGangBanger : BaseModel<PhotoGangBanger> {
   companion object : Entity.Factory<PhotoGangBanger>()

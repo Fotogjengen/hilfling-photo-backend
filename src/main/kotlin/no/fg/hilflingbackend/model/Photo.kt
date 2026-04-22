@@ -1,15 +1,15 @@
 package no.fg.hilflingbackend.model
 
+import no.fg.hilflingbackend.dto.PhotoDto
+import no.fg.hilflingbackend.dto.PhotoId
+import no.fg.hilflingbackend.dto.PhotoTagDto
+import no.fg.hilflingbackend.dto.toDto
 import org.ktorm.database.Database
 import org.ktorm.entity.Entity
 import org.ktorm.entity.sequenceOf
 import org.ktorm.schema.boolean
 import org.ktorm.schema.uuid
 import org.ktorm.schema.varchar
-import no.fg.hilflingbackend.dto.PhotoDto
-import no.fg.hilflingbackend.dto.PhotoId
-import no.fg.hilflingbackend.dto.PhotoTagDto
-import no.fg.hilflingbackend.dto.toDto
 
 interface Photo : BaseModel<Photo> {
   companion object : Entity.Factory<Photo>()

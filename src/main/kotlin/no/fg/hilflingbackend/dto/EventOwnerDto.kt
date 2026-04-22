@@ -1,7 +1,7 @@
 package no.fg.hilflingbackend.dto
 
-import no.fg.hilflingbackend.model.EventOwner
 import java.util.UUID
+import no.fg.hilflingbackend.model.EventOwner
 
 /**
  * DEPRECATED

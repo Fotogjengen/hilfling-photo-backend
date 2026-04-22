@@ -1,12 +1,12 @@
 package no.fg.hilflingbackend.model
 
+import no.fg.hilflingbackend.dto.AlbumDto
+import no.fg.hilflingbackend.dto.AlbumId
 import org.ktorm.database.Database
 import org.ktorm.entity.Entity
 import org.ktorm.entity.sequenceOf
 import org.ktorm.schema.boolean
 import org.ktorm.schema.varchar
-import no.fg.hilflingbackend.dto.AlbumDto
-import no.fg.hilflingbackend.dto.AlbumId
 
 interface Album : BaseModel<Album> {
   companion object : Entity.Factory<Album>()
