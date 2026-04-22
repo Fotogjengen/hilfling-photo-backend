@@ -21,20 +21,20 @@ import java.lang.IllegalArgumentException
 @ControllerAdvice
 open class GlobalExceptionHandler : ResponseEntityExceptionHandler() {
 
-  val log = LoggerFactory.getLogger(this::class.java)
+  private val log = LoggerFactory.getLogger(this::class.java)
 
   @ExceptionHandler(value = [(EntityNotFoundException::class)])
   fun globalExceptionHandler(
     ex: EntityNotFoundException
   ): ResponseEntity<Any> {
-    log.error(ex.localizedMessage)
-    return notFound(ex?.message ?: "Something went wrong")
+    log.error("Entity not found", ex)
+    return notFound("Not found")
   }
 
   @ExceptionHandler(value = [(IllegalArgumentException::class)])
   fun handleIllegalArgumentException(ex: IllegalArgumentException): ResponseEntity<Any> {
-    log.warn(ex.toString())
-    return badReqeust(ex.localizedMessage)
+    log.warn("Illegal argument", ex)
+    return badReqeust("Invalid request")
   }
 
   // Handles missing request parameters
@@ -45,15 +45,15 @@ open class GlobalExceptionHandler : ResponseEntityExceptionHandler() {
     status: HttpStatus,
     request: WebRequest
   ): ResponseEntity<Any> {
-    log.error(ex.localizedMessage)
-    return badReqeust(ex.localizedMessage)
+    log.error("Missing request parameter", ex)
+    return badReqeust("Missing required parameter")
   }
 
   // Handles missing multipart form HEADER when uploading photos in PhotoController
   @ExceptionHandler(value = [(InvalidContentTypeException::class)])
   fun handleInvalidContentTypeException(ex: InvalidContentTypeException): ResponseEntity<Any> {
-    logger.warn(ex.localizedMessage)
-    return badReqeust(ex.localizedMessage)
+    log.warn("Invalid content type", ex)
+    return badReqeust("Invalid content type")
   }
   // TODO: Add service not available error
 
