@@ -15,7 +15,7 @@ services:
     container_name: "traefik"
     command:
       #- "--log.level=DEBUG"
-      - "--api.insecure=true"
+      - "--api.insecure=false"
       - "--providers.docker=true"
       - "--providers.docker.exposedbydefault=false"
       - "--entrypoints.web.address=:8000"
@@ -71,8 +71,6 @@ services:
         #- "./postgres/sql:/base-sql" # Think this was init sql schema?
     expose:
       - 5432
-    ports:
-      - "5432:5432"
     environment:
       # Use env variable if exists, fallback to hilfling
       POSTGRES_USER: ${DATABASE_USERNAME:-hilfling}
