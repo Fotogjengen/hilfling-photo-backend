@@ -1,10 +1,6 @@
 package no.fg.hilflingbackend.repository
 
-import org.ktorm.database.Database
-import org.ktorm.dsl.QueryRowSet
-import org.ktorm.entity.add
-import org.ktorm.entity.update
-import org.ktorm.entity.find
+import jakarta.persistence.EntityNotFoundException
 import no.fg.hilflingbackend.dto.SamfundetUserDto
 import no.fg.hilflingbackend.dto.SamfundetUserId
 import no.fg.hilflingbackend.dto.SamfundetUserPatchRequestDto
@@ -14,8 +10,12 @@ import no.fg.hilflingbackend.dto.toEntity
 import no.fg.hilflingbackend.model.SamfundetUser
 import no.fg.hilflingbackend.model.SamfundetUsers
 import no.fg.hilflingbackend.model.samfundet_users
+import org.ktorm.database.Database
+import org.ktorm.dsl.QueryRowSet
+import org.ktorm.entity.add
+import org.ktorm.entity.update
+import org.ktorm.entity.find
 import org.springframework.stereotype.Repository
-import jakarta.persistence.EntityNotFoundException
 
 @Repository
 open class SamfundetUserRepository(

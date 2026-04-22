@@ -1,9 +1,6 @@
 package no.fg.hilflingbackend.repository
 
-import org.ktorm.database.Database
-import org.ktorm.dsl.QueryRowSet
-import org.ktorm.entity.add
-import org.ktorm.entity.update
+import jakarta.persistence.EntityNotFoundException
 import no.fg.hilflingbackend.dto.SecurityLevelDto
 import no.fg.hilflingbackend.dto.SecurityLevelId
 import no.fg.hilflingbackend.dto.SecurityLevelPatchRequestDto
@@ -11,8 +8,11 @@ import no.fg.hilflingbackend.model.SecurityLevel
 import no.fg.hilflingbackend.model.SecurityLevels
 import no.fg.hilflingbackend.model.security_levels
 import no.fg.hilflingbackend.value_object.SecurityLevelType
+import org.ktorm.database.Database
+import org.ktorm.dsl.QueryRowSet
+import org.ktorm.entity.add
+import org.ktorm.entity.update
 import org.springframework.stereotype.Repository
-import jakarta.persistence.EntityNotFoundException
 
 @Repository
 open class SecurityLevelRepository(database: Database) : BaseRepository<SecurityLevel, SecurityLevelDto, SecurityLevelPatchRequestDto>(table = SecurityLevels, database = database) {

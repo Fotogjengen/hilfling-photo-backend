@@ -1,9 +1,5 @@
 package no.fg.hilflingbackend.repository
 
-import org.ktorm.database.Database
-import org.ktorm.dsl.QueryRowSet
-import org.ktorm.entity.add
-import org.ktorm.entity.update
 import no.fg.hilflingbackend.dto.PurchaseOrderDto
 import no.fg.hilflingbackend.dto.PurchaseOrderId
 import no.fg.hilflingbackend.dto.toEntity
@@ -11,6 +7,10 @@ import no.fg.hilflingbackend.model.PurchaseOrder
 import no.fg.hilflingbackend.model.PurchaseOrders
 import no.fg.hilflingbackend.model.purchase_orders
 import no.fg.hilflingbackend.value_object.ZipCode
+import org.ktorm.database.Database
+import org.ktorm.dsl.QueryRowSet
+import org.ktorm.entity.add
+import org.ktorm.entity.update
 import org.springframework.stereotype.Repository
 
 @Repository

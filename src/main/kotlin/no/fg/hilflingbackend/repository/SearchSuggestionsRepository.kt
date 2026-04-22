@@ -1,12 +1,12 @@
 package no.fg.hilflingbackend.repository
 
+import no.fg.hilflingbackend.model.motives
 import org.ktorm.database.Database
 import org.ktorm.entity.filter
 import org.ktorm.entity.sortedByDescending
 import org.ktorm.entity.take
 import org.ktorm.entity.toList
 import org.ktorm.support.postgresql.ilike
-import no.fg.hilflingbackend.model.motives
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Repository
 

@@ -1,15 +1,15 @@
 package no.fg.hilflingbackend.repository
 
+import java.util.UUID
+import no.fg.hilflingbackend.model.PhotographyRequest
+import no.fg.hilflingbackend.model.photography_requests
 import org.ktorm.database.Database
 import org.ktorm.dsl.eq
 import org.ktorm.entity.add
 import org.ktorm.entity.find
 import org.ktorm.entity.toList
-import no.fg.hilflingbackend.model.PhotographyRequest
-import no.fg.hilflingbackend.model.photography_requests
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Repository
-import java.util.UUID
 
 @Repository
 open class PhotographyRequestRepository {
