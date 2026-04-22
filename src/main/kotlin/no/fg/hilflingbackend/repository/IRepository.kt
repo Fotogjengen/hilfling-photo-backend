@@ -1,9 +1,9 @@
 package no.fg.hilflingbackend.repository
 
-import java.util.UUID
 import no.fg.hilflingbackend.dto.Page
 import org.ktorm.dsl.QueryRowSet
 import org.springframework.stereotype.Component
+import java.util.UUID
 
 @Component
 interface IRepository<E, D, R> {

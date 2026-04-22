@@ -3,9 +3,50 @@ package no.fg.hilflingbackend.repository
 import jakarta.persistence.EntityNotFoundException
 import java.time.LocalDate
 import java.util.UUID
-import no.fg.hilflingbackend.model.*
+import no.fg.hilflingbackend.dto.AlbumDto
+import no.fg.hilflingbackend.dto.ArticleDto
+import no.fg.hilflingbackend.dto.ArticleTagDto
+import no.fg.hilflingbackend.dto.CategoryDto
+import no.fg.hilflingbackend.dto.EventCardDto
+import no.fg.hilflingbackend.dto.EventOwnerDto
+import no.fg.hilflingbackend.dto.GangDto
+import no.fg.hilflingbackend.dto.MotiveDto
+import no.fg.hilflingbackend.dto.Page
+import no.fg.hilflingbackend.dto.PhotoDto
+import no.fg.hilflingbackend.dto.PhotoGangBangerDto
+import no.fg.hilflingbackend.dto.PhotoGangBangerPositionDto
+import no.fg.hilflingbackend.dto.PhotoOnPurchaseOrderDto
+import no.fg.hilflingbackend.dto.PhotoTagDto
+import no.fg.hilflingbackend.dto.PhotoTagReferenceDto
+import no.fg.hilflingbackend.dto.PlaceDto
+import no.fg.hilflingbackend.dto.PositionDto
+import no.fg.hilflingbackend.dto.PurchaseOrderDto
+import no.fg.hilflingbackend.dto.SamfundetUserDto
+import no.fg.hilflingbackend.dto.SecurityLevelDto
+import no.fg.hilflingbackend.dto.UuidId
+import no.fg.hilflingbackend.model.Album
+import no.fg.hilflingbackend.model.AnalogPhoto
+import no.fg.hilflingbackend.model.Article
+import no.fg.hilflingbackend.model.ArticleTag
+import no.fg.hilflingbackend.model.Base
+import no.fg.hilflingbackend.model.Category
+import no.fg.hilflingbackend.model.EventOwner
+import no.fg.hilflingbackend.model.Gang
+import no.fg.hilflingbackend.model.IdDto
+import no.fg.hilflingbackend.model.Motive
+import no.fg.hilflingbackend.model.Photo
+import no.fg.hilflingbackend.model.PhotoGangBanger
+import no.fg.hilflingbackend.model.PhotoGangBangerPosition
+import no.fg.hilflingbackend.model.PhotographyRequest
+import no.fg.hilflingbackend.model.PhotoOnPurchaseOrder
+import no.fg.hilflingbackend.model.PhotoTag
+import no.fg.hilflingbackend.model.PhotoTagReference
+import no.fg.hilflingbackend.model.Place
+import no.fg.hilflingbackend.model.Position
+import no.fg.hilflingbackend.model.PurchaseOrder
+import no.fg.hilflingbackend.model.SamfundetUser
+import no.fg.hilflingbackend.model.SecurityLevel
 import no.fg.hilflingbackend.value_object.SecurityLevelType
-import no.fg.hilflingbackend.dto.*
 import org.ktorm.database.Database
 import org.ktorm.dsl.QueryRowSet
 import org.ktorm.dsl.and
@@ -665,17 +706,17 @@ open class PhotoRepository(
     logger.info("Storing photo tags to database")
     val photoTagDtoList = photoDto.photoTags
 
-  if (photoTagDtoList.isNotEmpty()) {
-    database.batchInsert(PhotoTagReferences) {
-      photoTagDtoList.forEach { photoTagDto ->
-        item {
-          set(it.id, UUID.randomUUID())
-          set(it.photoTagId, photoTagDto.photoTagId.id)
-          set(it.photoId, photoDto.photoId.id)
+    if (photoTagDtoList.isNotEmpty()) {
+      database.batchInsert(PhotoTagReferences) {
+        photoTagDtoList.forEach { photoTagDto ->
+          item {
+            set(it.id, UUID.randomUUID())
+            set(it.photoTagId, photoTagDto.photoTagId.id)
+            set(it.photoId, photoDto.photoId.id)
+          }
         }
       }
     }
-  }
 
     return numOfSavedPhotos
   }

@@ -1,6 +1,5 @@
 package no.fg.hilflingbackend.repository
 
-import java.util.UUID
 import jakarta.persistence.EntityNotFoundException
 import no.fg.hilflingbackend.dto.MotiveDto
 import no.fg.hilflingbackend.dto.MotivePatchRequestDto
@@ -19,6 +18,7 @@ import org.ktorm.entity.toList
 import org.ktorm.entity.update
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Repository
+import java.util.UUID
 
 @Repository
 open class MotiveRepository {

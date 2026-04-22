@@ -1,6 +1,5 @@
 package no.fg.hilflingbackend.repository
 
-import java.util.UUID
 import jakarta.persistence.EntityNotFoundException
 import no.fg.hilflingbackend.dto.Page
 import no.fg.hilflingbackend.dto.PhotoGangBangerDto
@@ -22,6 +21,7 @@ import org.ktorm.entity.find
 import org.ktorm.entity.toList
 import org.ktorm.entity.update
 import org.springframework.stereotype.Repository
+import java.util.UUID
 
 interface IPhotoGangBangerRepository {
   fun findById(id: UUID): PhotoGangBangerDto?

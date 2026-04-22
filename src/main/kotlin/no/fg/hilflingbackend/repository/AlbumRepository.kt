@@ -10,13 +10,13 @@ import no.fg.hilflingbackend.model.Albums
 import no.fg.hilflingbackend.model.albums
 import org.ktorm.database.Database
 import org.ktorm.dsl.QueryRowSet
-import org.ktorm.entity.add
-import org.ktorm.entity.update
-import org.springframework.stereotype.Repository
 import org.ktorm.dsl.eq
 import org.ktorm.dsl.select
 import org.ktorm.dsl.where
+import org.ktorm.entity.add
 import org.ktorm.entity.any
+import org.ktorm.entity.update
+import org.springframework.stereotype.Repository
 
 @Repository
 open class AlbumRepository(database: Database) : BaseRepository<Album, AlbumDto, AlbumPatchRequestDto>(table = Albums, database = database) {

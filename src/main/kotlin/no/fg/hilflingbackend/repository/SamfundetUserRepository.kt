@@ -13,8 +13,8 @@ import no.fg.hilflingbackend.model.samfundet_users
 import org.ktorm.database.Database
 import org.ktorm.dsl.QueryRowSet
 import org.ktorm.entity.add
-import org.ktorm.entity.update
 import org.ktorm.entity.find
+import org.ktorm.entity.update
 import org.springframework.stereotype.Repository
 
 @Repository
