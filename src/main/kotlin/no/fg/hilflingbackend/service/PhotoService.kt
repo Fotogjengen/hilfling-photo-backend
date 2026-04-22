@@ -28,6 +28,8 @@ import no.fg.hilflingbackend.repository.PlaceRepository
 import no.fg.hilflingbackend.repository.SecurityLevelRepository
 import no.fg.hilflingbackend.utils.EncryptionUtils
 import no.fg.hilflingbackend.utils.convertToValidFolderName
+import no.fg.hilflingbackend.utils.validateContentType
+import no.fg.hilflingbackend.utils.validateImageMagicBytes
 import no.fg.hilflingbackend.value_object.ImageFileName
 import no.fg.hilflingbackend.value_object.PhotoSize
 import no.fg.hilflingbackend.value_object.SecurityLevelType
@@ -231,6 +233,9 @@ class PhotoService(
         categoryRepository.findById(categoryIdList.get(index))
           ?: throw EntityNotFoundException("Did not find category")
 
+      validateContentType(file.contentType)
+      validateImageMagicBytes(file.bytes)
+
       val validatedFileName = ImageFileName(file.originalFilename ?: "")
 
       // Generate Objects
@@ -361,6 +366,9 @@ class PhotoService(
           }
         println(photoTagDtos)
         val isGoodPhoto = isGoodPhotoList.get(index)
+
+        validateContentType(photoFile.contentType)
+        validateImageMagicBytes(photoFile.bytes)
 
         val (photoDto, imageFileName) =
           PhotoDto.createWithFileName(

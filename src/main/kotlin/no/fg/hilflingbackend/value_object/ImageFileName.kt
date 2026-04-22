@@ -1,15 +1,18 @@
 package no.fg.hilflingbackend.value_object
 
+import no.fg.hilflingbackend.utils.sanitizeFileName
+
 data class ImageFileName private constructor(
   val filename: String,
 ) {
   companion object {
-    operator fun invoke(filename: String): ImageFileName =
-      if (!isValidImageFileName(filename)) {
-        throw IllegalArgumentException("Not valid filename")
-      } else {
-        ImageFileName(filename)
+    operator fun invoke(filename: String): ImageFileName {
+      val sanitized = sanitizeFileName(filename)
+      if (!isValidImageFileName(sanitized)) {
+        throw IllegalArgumentException("Not valid filename: $sanitized")
       }
+      return ImageFileName(sanitized)
+    }
 
     private fun isValidImageFileName(filename: String): Boolean {
       // Must have a valid file extension
