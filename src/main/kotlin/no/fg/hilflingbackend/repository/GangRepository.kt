@@ -1,9 +1,6 @@
 package no.fg.hilflingbackend.repository
 
-import org.ktorm.database.Database
-import org.ktorm.dsl.QueryRowSet
-import org.ktorm.entity.add
-import org.ktorm.entity.update
+import jakarta.persistence.EntityNotFoundException
 import no.fg.hilflingbackend.dto.GangDto
 import no.fg.hilflingbackend.dto.GangId
 import no.fg.hilflingbackend.dto.GangPatchRequestDto
@@ -11,8 +8,11 @@ import no.fg.hilflingbackend.dto.toEntity
 import no.fg.hilflingbackend.model.Gang
 import no.fg.hilflingbackend.model.Gangs
 import no.fg.hilflingbackend.model.gangs
+import org.ktorm.database.Database
+import org.ktorm.dsl.QueryRowSet
+import org.ktorm.entity.add
+import org.ktorm.entity.update
 import org.springframework.stereotype.Repository
-import jakarta.persistence.EntityNotFoundException
 
 @Repository
 open class GangRepository(database: Database) : BaseRepository<Gang, GangDto, GangPatchRequestDto>(table = Gangs, database = database) {

@@ -1,5 +1,11 @@
 package no.fg.hilflingbackend.repository
 
+import no.fg.hilflingbackend.dto.EventCardDto
+import no.fg.hilflingbackend.dto.Page
+import no.fg.hilflingbackend.model.EventOwner
+import no.fg.hilflingbackend.model.EventOwners
+import no.fg.hilflingbackend.model.Motives
+import no.fg.hilflingbackend.model.Photos
 import org.ktorm.database.Database
 import org.ktorm.dsl.and
 import org.ktorm.dsl.desc
@@ -13,12 +19,6 @@ import org.ktorm.dsl.orderBy
 import org.ktorm.dsl.select
 import org.ktorm.dsl.where
 import org.ktorm.support.postgresql.ilike
-import no.fg.hilflingbackend.dto.EventCardDto
-import no.fg.hilflingbackend.dto.Page
-import no.fg.hilflingbackend.model.EventOwner
-import no.fg.hilflingbackend.model.EventOwners
-import no.fg.hilflingbackend.model.Motives
-import no.fg.hilflingbackend.model.Photos
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Repository
 

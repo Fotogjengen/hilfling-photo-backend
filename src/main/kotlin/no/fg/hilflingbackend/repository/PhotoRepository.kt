@@ -1,10 +1,28 @@
 package no.fg.hilflingbackend.repository
 
 import jakarta.persistence.EntityNotFoundException
+import java.time.LocalDate
+import java.util.UUID
+import no.fg.hilflingbackend.model.*
+import no.fg.hilflingbackend.value_object.SecurityLevelType
+import no.fg.hilflingbackend.dto.*
 import org.ktorm.database.Database
-import org.ktorm.dsl.*
+import org.ktorm.dsl.QueryRowSet
+import org.ktorm.dsl.and
+import org.ktorm.dsl.batchInsert
 import org.ktorm.dsl.count
 import org.ktorm.dsl.eq
+import org.ktorm.dsl.from
+import org.ktorm.dsl.getInt
+import org.ktorm.dsl.greaterEq
+import org.ktorm.dsl.innerJoin
+import org.ktorm.dsl.lessEq
+import org.ktorm.dsl.limit
+import org.ktorm.dsl.map
+import org.ktorm.dsl.notEq
+import org.ktorm.dsl.or
+import org.ktorm.dsl.select
+import org.ktorm.dsl.where
 import org.ktorm.entity.add
 import org.ktorm.entity.drop
 import org.ktorm.entity.filter
@@ -12,13 +30,8 @@ import org.ktorm.entity.find
 import org.ktorm.entity.take
 import org.ktorm.entity.toList
 import org.ktorm.entity.update
-import no.fg.hilflingbackend.dto.*
-import no.fg.hilflingbackend.model.*
-import no.fg.hilflingbackend.value_object.SecurityLevelType
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Repository
-import java.time.LocalDate
-import java.util.UUID
 
 @Repository
 open class PhotoRepository(

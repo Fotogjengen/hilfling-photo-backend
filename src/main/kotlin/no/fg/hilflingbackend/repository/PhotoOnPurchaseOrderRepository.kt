@@ -1,11 +1,11 @@
 package no.fg.hilflingbackend.repository
 
+import no.fg.hilflingbackend.model.PhotoOnPurchaseOrder
+import no.fg.hilflingbackend.model.photo_on_purchase_orders
 import org.ktorm.database.Database
 import org.ktorm.dsl.eq
 import org.ktorm.entity.find
 import org.ktorm.entity.toList
-import no.fg.hilflingbackend.model.PhotoOnPurchaseOrder
-import no.fg.hilflingbackend.model.photo_on_purchase_orders
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Repository
 import java.util.UUID
