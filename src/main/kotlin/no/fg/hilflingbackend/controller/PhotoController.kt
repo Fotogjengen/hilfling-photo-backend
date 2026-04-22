@@ -123,7 +123,7 @@ class PhotoController(
     @RequestParam("pageSize", required = false) pageSize: Int?,
   ): ResponseEntity<Page<PhotoDto>> =
     ResponseOk(
-      photoService.getByMotiveId(id, page ?: 0, pageSize ?: 100),
+      photoService.getByMotiveId(id, page ?: 0, clampPageSize(pageSize)),
     )
 
   @GetMapping
@@ -146,7 +146,7 @@ class PhotoController(
     ResponseOk(
       photoService.getAll(
         page ?: 0,
-        pageSize ?: 100,
+        clampPageSize(pageSize),
         motive ?: UUID(0L, 0L),
         tag ?: listOf<String>(),
         LocalDate.parse(fromDate ?: "1970-01-01") ?: LocalDate.now(),
@@ -168,7 +168,7 @@ class PhotoController(
     @RequestParam("pageSize", required = false) pageSize: Int?,
   ): ResponseEntity<Page<PhotoDto>> =
     ResponseOk(
-      photoService.getGoodPhotos(page ?: 0, pageSize ?: 10),
+      photoService.getGoodPhotos(page ?: 0, clampPageSize(pageSize)),
     )
 
   @GetMapping("/analog")
@@ -177,7 +177,7 @@ class PhotoController(
     @RequestParam("pageSize", required = false) pageSize: Int?,
   ): ResponseEntity<Page<PhotoDto>> =
     ResponseOk(
-      photoService.getAllAnalogPhotos(page ?: 0, pageSize ?: 100),
+      photoService.getAllAnalogPhotos(page ?: 0, clampPageSize(pageSize)),
     )
 
   @GetMapping("/digital")
@@ -198,7 +198,7 @@ class PhotoController(
     ResponseOk(
       photoService.getAllDigitalPhotos(
         page ?: 0,
-        pageSize ?: 100,
+        clampPageSize(pageSize),
         motive ?: UUID(0L, 0L),
         tag ?: listOf<String>(),
         fromDate?.let { LocalDate.parse(it) } ?: LocalDate.now(),
@@ -218,4 +218,7 @@ class PhotoController(
   fun patch(
     @RequestBody dto: PhotoPatchRequestDto,
   ): PhotoDto = photoService.patch(dto)
+
+  private fun clampPageSize(pageSize: Int?): Int =
+    (pageSize ?: 100).coerceIn(1, 200)
 }

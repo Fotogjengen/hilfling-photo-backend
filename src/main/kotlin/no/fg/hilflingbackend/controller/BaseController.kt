@@ -24,31 +24,37 @@ open class BaseController<E, D, R>(open val repository: IRepository<E, D, R>) {
   @GetMapping
   fun getAll(
     @RequestParam("page", required = false) page: Int?,
-    @RequestParam("pageSize", required = false) pageSize: Int?
+    @RequestParam("pageSize", required = false) pageSize: Int?,
   ): Page<D> {
-    return repository.findAll(page ?: 0, pageSize ?: 100)
+    return repository.findAll(page ?: 0, clampPageSize(pageSize))
   }
 
   @PostMapping
   open fun create(
-    @RequestBody dto: D
+    @RequestBody dto: D,
   ): Int {
-    return repository.create(
-      dto
-    )
+    return repository.create(dto)
   }
 
   @RequestMapping("/{id}", method = [RequestMethod.DELETE])
   fun delete(
-    @PathVariable("id") id: UUID
+    @PathVariable("id") id: UUID,
   ): Int {
     return repository.delete(id)
   }
 
   @PatchMapping
   fun patch(
-    @RequestBody dto: R
+    @RequestBody dto: R,
   ): D {
     return repository.patch(dto)
+  }
+
+  protected fun clampPageSize(pageSize: Int?): Int =
+    (pageSize ?: DEFAULT_PAGE_SIZE).coerceIn(1, MAX_PAGE_SIZE)
+
+  companion object {
+    const val MAX_PAGE_SIZE = 200
+    const val DEFAULT_PAGE_SIZE = 100
   }
 }
