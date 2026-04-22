@@ -1,13 +1,6 @@
 package no.fg.hilflingbackend.repository
 
-import me.liuwj.ktorm.database.Database
-import me.liuwj.ktorm.dsl.eq
-import me.liuwj.ktorm.dsl.insert
-import me.liuwj.ktorm.entity.add
-import me.liuwj.ktorm.entity.filter
-import me.liuwj.ktorm.entity.find
-import me.liuwj.ktorm.entity.toList
-import me.liuwj.ktorm.entity.update
+import jakarta.persistence.EntityNotFoundException
 import no.fg.hilflingbackend.dto.Page
 import no.fg.hilflingbackend.dto.PhotoGangBangerDto
 import no.fg.hilflingbackend.dto.PhotoGangBangerPatchRequestDto
@@ -19,9 +12,16 @@ import no.fg.hilflingbackend.model.PhotoGangBangers
 import no.fg.hilflingbackend.model.photo_gang_bangers
 import no.fg.hilflingbackend.model.samfundet_users
 import no.fg.hilflingbackend.model.toDto
+import org.ktorm.database.Database
+import org.ktorm.dsl.eq
+import org.ktorm.dsl.insert
+import org.ktorm.entity.add
+import org.ktorm.entity.filter
+import org.ktorm.entity.find
+import org.ktorm.entity.toList
+import org.ktorm.entity.update
 import org.springframework.stereotype.Repository
 import java.util.UUID
-import jakarta.persistence.EntityNotFoundException
 
 interface IPhotoGangBangerRepository {
   fun findById(id: UUID): PhotoGangBangerDto?
@@ -131,9 +131,8 @@ class PhotoGangBangerRepository(
       set(it.address, dto.address)
       set(it.city, dto.city)
       set(it.positionId, dto.position.positionId.id)
-      set(it.relationshipStatus, dto.relationShipStatus.status)
       set(it.samfundetUserId, dto.samfundetUser.samfundetUserId.id)
-      set(it.semesterStart, dto.semesterStart.value)
+      set(it.semesterStart, dto.semesterStart)
       set(it.zipCode, dto.zipCode)
     }
 
@@ -172,7 +171,6 @@ class PhotoGangBangerRepository(
       isPang = dto.isPang ?: photoGangBangerDtoFromDb.isPang,
       isActive = dto.isActive ?: photoGangBangerDtoFromDb.isActive,
       semesterStart = dto.semesterStart ?: photoGangBangerDtoFromDb.semesterStart,
-      relationShipStatus = dto.relationshipStatus ?: photoGangBangerDtoFromDb.relationShipStatus,
       position = dto.position ?: photoGangBangerDtoFromDb.position
     )
 

@@ -10,6 +10,8 @@ server:
     include-stacktrace: always
     include-exception: true
     include-binding-errors: always
+  tomcat:
+    max-part-count: 50
 spring:
   datasource:
     hikari:
@@ -50,7 +52,7 @@ spring:
 logging:
   level:
     # root: debug
-    # me.liuwj.ktorm: debug
+    # org.ktorm: debug
     # org.springframework.web: DEBUG
     # org.springdoc: DEBUG
     root: info

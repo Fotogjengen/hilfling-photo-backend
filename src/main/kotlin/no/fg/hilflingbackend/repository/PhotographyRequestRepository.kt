@@ -1,12 +1,12 @@
 package no.fg.hilflingbackend.repository
 
-import me.liuwj.ktorm.database.Database
-import me.liuwj.ktorm.dsl.eq
-import me.liuwj.ktorm.entity.add
-import me.liuwj.ktorm.entity.find
-import me.liuwj.ktorm.entity.toList
 import no.fg.hilflingbackend.model.PhotographyRequest
 import no.fg.hilflingbackend.model.photography_requests
+import org.ktorm.database.Database
+import org.ktorm.dsl.eq
+import org.ktorm.entity.add
+import org.ktorm.entity.find
+import org.ktorm.entity.toList
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Repository
 import java.util.UUID

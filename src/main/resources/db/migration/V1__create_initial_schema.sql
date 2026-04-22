@@ -123,7 +123,6 @@ CREATE TABLE PHOTO_GANG_BANGER
 (
     id                  uuid PRIMARY KEY,
     date_created        DATE NOT NULL DEFAULT CURRENT_DATE,
-    relationship_status VARCHAR(15),
     semester_start      VARCHAR(20),
     is_active           BOOLEAN,
     is_pang             BOOLEAN,

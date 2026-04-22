@@ -1,26 +1,78 @@
 package no.fg.hilflingbackend.repository
 
 import jakarta.persistence.EntityNotFoundException
-import me.liuwj.ktorm.database.Database
-import me.liuwj.ktorm.dsl.*
-import me.liuwj.ktorm.dsl.count
-import me.liuwj.ktorm.dsl.eq
-import me.liuwj.ktorm.entity.add
-import me.liuwj.ktorm.entity.drop
-import me.liuwj.ktorm.entity.filter
-import me.liuwj.ktorm.entity.find
-import me.liuwj.ktorm.entity.take
-import me.liuwj.ktorm.entity.toList
-import me.liuwj.ktorm.entity.update
-import no.fg.hilflingbackend.dto.*
-import no.fg.hilflingbackend.model.*
-import no.fg.hilflingbackend.value_object.Email
-import no.fg.hilflingbackend.value_object.PhoneNumber
-import no.fg.hilflingbackend.value_object.SecurityLevelType
-import org.slf4j.LoggerFactory
-import org.springframework.stereotype.Repository
 import java.time.LocalDate
 import java.util.UUID
+import no.fg.hilflingbackend.dto.AlbumDto
+import no.fg.hilflingbackend.dto.ArticleDto
+import no.fg.hilflingbackend.dto.ArticleTagDto
+import no.fg.hilflingbackend.dto.CategoryDto
+import no.fg.hilflingbackend.dto.EventCardDto
+import no.fg.hilflingbackend.dto.EventOwnerDto
+import no.fg.hilflingbackend.dto.GangDto
+import no.fg.hilflingbackend.dto.MotiveDto
+import no.fg.hilflingbackend.dto.Page
+import no.fg.hilflingbackend.dto.PhotoDto
+import no.fg.hilflingbackend.dto.PhotoGangBangerDto
+import no.fg.hilflingbackend.dto.PhotoGangBangerPositionDto
+import no.fg.hilflingbackend.dto.PhotoOnPurchaseOrderDto
+import no.fg.hilflingbackend.dto.PhotoTagDto
+import no.fg.hilflingbackend.dto.PhotoTagReferenceDto
+import no.fg.hilflingbackend.dto.PlaceDto
+import no.fg.hilflingbackend.dto.PositionDto
+import no.fg.hilflingbackend.dto.PurchaseOrderDto
+import no.fg.hilflingbackend.dto.SamfundetUserDto
+import no.fg.hilflingbackend.dto.SecurityLevelDto
+import no.fg.hilflingbackend.dto.UuidId
+import no.fg.hilflingbackend.model.Album
+import no.fg.hilflingbackend.model.AnalogPhoto
+import no.fg.hilflingbackend.model.Article
+import no.fg.hilflingbackend.model.ArticleTag
+import no.fg.hilflingbackend.model.Base
+import no.fg.hilflingbackend.model.Category
+import no.fg.hilflingbackend.model.EventOwner
+import no.fg.hilflingbackend.model.Gang
+import no.fg.hilflingbackend.model.IdDto
+import no.fg.hilflingbackend.model.Motive
+import no.fg.hilflingbackend.model.Photo
+import no.fg.hilflingbackend.model.PhotoGangBanger
+import no.fg.hilflingbackend.model.PhotoGangBangerPosition
+import no.fg.hilflingbackend.model.PhotographyRequest
+import no.fg.hilflingbackend.model.PhotoOnPurchaseOrder
+import no.fg.hilflingbackend.model.PhotoTag
+import no.fg.hilflingbackend.model.PhotoTagReference
+import no.fg.hilflingbackend.model.Place
+import no.fg.hilflingbackend.model.Position
+import no.fg.hilflingbackend.model.PurchaseOrder
+import no.fg.hilflingbackend.model.SamfundetUser
+import no.fg.hilflingbackend.model.SecurityLevel
+import no.fg.hilflingbackend.value_object.SecurityLevelType
+import org.ktorm.database.Database
+import org.ktorm.dsl.QueryRowSet
+import org.ktorm.dsl.and
+import org.ktorm.dsl.batchInsert
+import org.ktorm.dsl.count
+import org.ktorm.dsl.eq
+import org.ktorm.dsl.from
+import org.ktorm.dsl.getInt
+import org.ktorm.dsl.greaterEq
+import org.ktorm.dsl.innerJoin
+import org.ktorm.dsl.lessEq
+import org.ktorm.dsl.limit
+import org.ktorm.dsl.map
+import org.ktorm.dsl.notEq
+import org.ktorm.dsl.or
+import org.ktorm.dsl.select
+import org.ktorm.dsl.where
+import org.ktorm.entity.add
+import org.ktorm.entity.drop
+import org.ktorm.entity.filter
+import org.ktorm.entity.find
+import org.ktorm.entity.take
+import org.ktorm.entity.toList
+import org.ktorm.entity.update
+import org.slf4j.LoggerFactory
+import org.springframework.stereotype.Repository
 
 @Repository
 open class PhotoRepository(
@@ -109,10 +161,7 @@ open class PhotoRepository(
       photoGangBangerDto =
         PhotoGangBangerDto(
           PhotoGangBangerId(row[PhotoGangBangers.id]!!),
-          RelationshipStatus.valueOf(
-            row[PhotoGangBangers.relationshipStatus]!!,
-          ),
-          SemesterStart(row[PhotoGangBangers.semesterStart]!!),
+          row[PhotoGangBangers.semesterStart]!!,
           row[PhotoGangBangers.isActive]!!,
           row[PhotoGangBangers.isPang]!!,
           row[PhotoGangBangers.address]!!,
@@ -123,8 +172,8 @@ open class PhotoRepository(
             row[SamfundetUsers.firstName]!!,
             row[SamfundetUsers.lastName]!!,
             row[SamfundetUsers.username]!!,
-            PhoneNumber(row[SamfundetUsers.phoneNumber]!!),
-            Email(row[SamfundetUsers.email]!!),
+            row[SamfundetUsers.phoneNumber]!!,
+            row[SamfundetUsers.email]!!,
             row[SamfundetUsers.profilePicture]!!,
             row[SamfundetUsers.sex]!!,
             SecurityLevelDto(
@@ -136,7 +185,7 @@ open class PhotoRepository(
           PositionDto(
             PositionId(row[Positions.id]!!),
             row[Positions.title]!!,
-            Email(row[Positions.email]!!),
+            row[Positions.email]!!,
           ),
         ),
       photoTags = findCorrespondingPhotoTagDtos(row[Photos.id]!!),
@@ -235,7 +284,6 @@ open class PhotoRepository(
           Gangs.name,
           PhotoGangBangers.id,
           PhotoGangBangers.semesterStart,
-          PhotoGangBangers.relationshipStatus,
           PhotoGangBangers.isActive,
           PhotoGangBangers.isPang,
           PhotoGangBangers.address,
@@ -538,7 +586,6 @@ open class PhotoRepository(
           Gangs.name,
           PhotoGangBangers.id,
           PhotoGangBangers.semesterStart,
-          PhotoGangBangers.relationshipStatus,
           PhotoGangBangers.isActive,
           PhotoGangBangers.isPang,
           PhotoGangBangers.address,
@@ -655,27 +702,18 @@ open class PhotoRepository(
     logger.info("Storing photo ${photoDto.photoId.id} to database")
 
     val numOfSavedPhotos = database.photos.add(photoDto.toEntity())
-    // TODO: Rewrite to batchInsert for perfomance gains
-    // TODO: Add photoTags as well
 
-    /*
-    photoDto.photoTags.forEach { photoTagDto: PhotoTagDto ->
-      logger.info("Adding photoTag ${photoTagDto.name} to ${photoDto.photoId.id}")
-      database.insert(PhotoTagReferences) {
-        set(it.id, UUID.randomUUID())
-        set(it.photoId, photoDto.photoId.id)
-        set(it.photoTagId, photoTagDto.photoTagId.id)
-      }
-    }
-     */
     logger.info("Storing photo tags to database")
     val photoTagDtoList = photoDto.photoTags
-    database.batchInsert(PhotoTagReferences) {
-      photoTagDtoList.map { photoTagDto ->
-        item {
-          set(it.id, UUID.randomUUID())
-          set(it.photoTagId, photoTagDto.photoTagId.id)
-          set(it.photoId, photoDto.photoId.id)
+
+    if (photoTagDtoList.isNotEmpty()) {
+      database.batchInsert(PhotoTagReferences) {
+        photoTagDtoList.forEach { photoTagDto ->
+          item {
+            set(it.id, UUID.randomUUID())
+            set(it.photoTagId, photoTagDto.photoTagId.id)
+            set(it.photoId, photoDto.photoId.id)
+          }
         }
       }
     }

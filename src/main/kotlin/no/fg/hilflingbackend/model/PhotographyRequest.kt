@@ -1,11 +1,11 @@
 package no.fg.hilflingbackend.model
 
-import me.liuwj.ktorm.database.Database
-import me.liuwj.ktorm.entity.Entity
-import me.liuwj.ktorm.entity.sequenceOf
-import me.liuwj.ktorm.schema.boolean
-import me.liuwj.ktorm.schema.date
-import me.liuwj.ktorm.schema.varchar
+import org.ktorm.database.Database
+import org.ktorm.entity.Entity
+import org.ktorm.entity.sequenceOf
+import org.ktorm.schema.boolean
+import org.ktorm.schema.date
+import org.ktorm.schema.varchar
 import java.time.LocalDate
 
 interface PhotographyRequest : BaseModel<PhotographyRequest> {

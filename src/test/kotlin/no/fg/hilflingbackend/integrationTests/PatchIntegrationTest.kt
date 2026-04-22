@@ -27,13 +27,11 @@ import no.fg.hilflingbackend.dto.PlacePatchRequestDto
 import no.fg.hilflingbackend.dto.PositionDto
 import no.fg.hilflingbackend.dto.PositionId
 import no.fg.hilflingbackend.dto.PositionPatchRequestDto
-import no.fg.hilflingbackend.dto.RelationshipStatus
 import no.fg.hilflingbackend.dto.SamfundetUserDto
 import no.fg.hilflingbackend.dto.SamfundetUserId
 import no.fg.hilflingbackend.dto.SecurityLevelDto
 import no.fg.hilflingbackend.dto.SecurityLevelId
 import no.fg.hilflingbackend.dto.SecurityLevelPatchRequestDto
-import no.fg.hilflingbackend.dto.SemesterStart
 import no.fg.hilflingbackend.repository.AlbumRepository
 import no.fg.hilflingbackend.repository.CategoryRepository
 import no.fg.hilflingbackend.repository.EventOwnerRepository
@@ -46,8 +44,6 @@ import no.fg.hilflingbackend.repository.PositionRepository
 import no.fg.hilflingbackend.repository.SamfundetUserRepository
 import no.fg.hilflingbackend.repository.SecurityLevelRepository
 import no.fg.hilflingbackend.service.PhotoService
-import no.fg.hilflingbackend.value_object.Email
-import no.fg.hilflingbackend.value_object.PhoneNumber
 import no.fg.hilflingbackend.value_object.SecurityLevelType
 import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.Test
@@ -154,13 +150,13 @@ class PatchIntegrationTest {
     PositionDto(
       positionId = positionId1,
       title = "position title 1",
-      email = Email("position1@email.com"),
+      email = "position1@email.com",
     )
   final val positionDto2 =
     PositionDto(
       positionId = positionId2,
       title = "position title 2",
-      email = Email("position2@email.com"),
+      email = "position2@email.com",
     )
   final val placeDto1 =
     PlaceDto(
@@ -218,8 +214,8 @@ class PatchIntegrationTest {
       firstName = "Caroline",
       lastName = "Sandsbråten",
       username = "carosa",
-      phoneNumber = PhoneNumber("22225555"),
-      email = Email("mymail@samfundet.no"),
+      phoneNumber = "22225555",
+      email = "mymail@samfundet.no",
       profilePicturePath = "https://static.independent.co.uk/2021/12/07/10/PRI213893584.jpg?quality=75&width=982&height=726&auto=webp",
       sex = "Ja",
       securityLevel = securityLevelDto1,
@@ -230,8 +226,8 @@ class PatchIntegrationTest {
       firstName = "Sindre",
       lastName = "Sivertsen",
       username = "sinsiv",
-      phoneNumber = PhoneNumber("12345678"),
-      email = Email("sindre@samfundet.no"),
+      phoneNumber = "12345678",
+      email = "sindre@samfundet.no",
       profilePicturePath = "https://static.independent.co.uk/2021/12/07/10/PRI213893584.jpg?quality=75&width=982&height=726&auto=webp",
       sex = "Ja",
       securityLevel = securityLevelDto2,
@@ -239,8 +235,7 @@ class PatchIntegrationTest {
   final val photoGangBangerDto1 =
     PhotoGangBangerDto(
       photoGangBangerId = photoGangBangerId1,
-      relationShipStatus = RelationshipStatus.married,
-      semesterStart = SemesterStart.invoke("H2019"),
+      semesterStart = "H2019",
       isActive = true,
       isPang = true,
       address = "Gang banger address",
@@ -252,8 +247,7 @@ class PatchIntegrationTest {
   final val photoGangBangerDto2 =
     PhotoGangBangerDto(
       photoGangBangerId = photoGangBangerId2,
-      relationShipStatus = RelationshipStatus.relationship,
-      semesterStart = SemesterStart.invoke("H2018"),
+      semesterStart = "H2018",
       isActive = true,
       isPang = true,
       address = "Gang banger address 2",
@@ -357,7 +351,7 @@ class PatchIntegrationTest {
       PositionPatchRequestDto(
         positionId = positionId1,
         title = "changed",
-        email = Email("changed@email.com"),
+        email = "changed@email.com",
       )
     positionRepository.patch(change)
 

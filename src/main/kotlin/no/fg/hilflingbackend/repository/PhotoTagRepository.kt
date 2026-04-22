@@ -1,12 +1,6 @@
 package no.fg.hilflingbackend.repository
 
-import me.liuwj.ktorm.database.Database
-import me.liuwj.ktorm.dsl.QueryRowSet
-import me.liuwj.ktorm.dsl.delete
-import me.liuwj.ktorm.dsl.eq
-import me.liuwj.ktorm.entity.add
-import me.liuwj.ktorm.entity.find
-import me.liuwj.ktorm.entity.update
+import jakarta.persistence.EntityNotFoundException
 import no.fg.hilflingbackend.dto.PhotoId
 import no.fg.hilflingbackend.dto.PhotoTagDto
 import no.fg.hilflingbackend.dto.PhotoTagId
@@ -17,8 +11,14 @@ import no.fg.hilflingbackend.model.PhotoTags
 import no.fg.hilflingbackend.model.photo_tag_references
 import no.fg.hilflingbackend.model.photo_tags
 import no.fg.hilflingbackend.model.toDto
+import org.ktorm.database.Database
+import org.ktorm.dsl.QueryRowSet
+import org.ktorm.dsl.delete
+import org.ktorm.dsl.eq
+import org.ktorm.entity.add
+import org.ktorm.entity.find
+import org.ktorm.entity.update
 import org.springframework.stereotype.Repository
-import jakarta.persistence.EntityNotFoundException
 
 @Repository
 open class PhotoTagRepository(database: Database) : BaseRepository<PhotoTag, PhotoTagDto, PhotoTagPatchRequestDto>(table = PhotoTags, database = database) {

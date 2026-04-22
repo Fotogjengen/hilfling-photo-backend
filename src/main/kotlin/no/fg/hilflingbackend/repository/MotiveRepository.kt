@@ -1,13 +1,6 @@
 package no.fg.hilflingbackend.repository
 
-import me.liuwj.ktorm.database.Database
-import me.liuwj.ktorm.dsl.eq
-import me.liuwj.ktorm.entity.add
-import me.liuwj.ktorm.entity.drop
-import me.liuwj.ktorm.entity.find
-import me.liuwj.ktorm.entity.take
-import me.liuwj.ktorm.entity.toList
-import me.liuwj.ktorm.entity.update
+import jakarta.persistence.EntityNotFoundException
 import no.fg.hilflingbackend.dto.MotiveDto
 import no.fg.hilflingbackend.dto.MotivePatchRequestDto
 import no.fg.hilflingbackend.dto.Page
@@ -15,10 +8,17 @@ import no.fg.hilflingbackend.dto.toEntity
 import no.fg.hilflingbackend.model.Motive
 import no.fg.hilflingbackend.model.motives
 import no.fg.hilflingbackend.model.toDto
+import org.ktorm.database.Database
+import org.ktorm.dsl.eq
+import org.ktorm.entity.add
+import org.ktorm.entity.drop
+import org.ktorm.entity.find
+import org.ktorm.entity.take
+import org.ktorm.entity.toList
+import org.ktorm.entity.update
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Repository
 import java.util.UUID
-import jakarta.persistence.EntityNotFoundException
 
 @Repository
 open class MotiveRepository {

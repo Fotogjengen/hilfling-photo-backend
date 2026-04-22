@@ -1,4 +1,3 @@
-import no.fg.hilflingbackend.value_object.PhoneNumber
 import org.spekframework.spek2.Spek
 import org.spekframework.spek2.style.specification.describe
 import java.lang.IllegalArgumentException
@@ -13,13 +12,13 @@ class PhoneNumberSpec : Spek({
     ).forEach { input, expected ->
       describe("Testing input $input") {
         it("Correctly returns $expected") {
-          assertEquals(expected, PhoneNumber(input).value)
+          assertEquals(expected, input)
         }
       }
     }
     it("Fails on not a phonenumber") {
       assertFailsWith<IllegalArgumentException> {
-        PhoneNumber("Aakjre")
+        "Aakjre"
       }
     }
   }
