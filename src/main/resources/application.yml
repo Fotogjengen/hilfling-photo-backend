@@ -6,24 +6,24 @@ server:
     - ${LISTENING_PORT:8000}
     - 8000
   error:
-    include-message: always
-    include-stacktrace: always
-    include-exception: true
-    include-binding-errors: always
+    include-message: never
+    include-stacktrace: never
+    include-exception: false
+    include-binding-errors: never
 spring:
   datasource:
     hikari:
       connection-timeout: 20000
       maximum-pool-size: 5
-    username: ${DATABASE_USERNAME:hilfling}
-    url: ${DATABASE_URL:jdbc:postgresql://postgres:5432/hilflingdb}
-    password: ${DATABASE_PASSWORD:password}
+    username: ${DATABASE_USERNAME}
+    url: ${DATABASE_URL}
+    password: ${DATABASE_PASSWORD}
     driver-class-name: ${DATABASE_DRIVER:org.postgresql.Driver}
 
   flyway:
-    user: ${DATABASE_USERNAME:hilfling}
-    url: ${DATABASE_URL:jdbc:postgresql://postgres:5432/hilflingdb?createDatabaseIfNotExist=true}
-    password: ${DATABASE_PASSWORD:password}
+    user: ${DATABASE_USERNAME}
+    url: ${DATABASE_URL}
+    password: ${DATABASE_PASSWORD}
     enabled: true
     validate-on-migrate: true
     locations: classpath:/db/migration
@@ -49,23 +49,19 @@ spring:
 
 logging:
   level:
-    # root: debug
-    # me.liuwj.ktorm: debug
-    # org.springframework.web: DEBUG
-    # org.springdoc: DEBUG
     root: info
-    org.flywaydb: debug
-    org.springframework.jdbc.datasource.init: debug
-    org.springframework.web: debug
-    org.springdoc: debug
+    org.flywaydb: info
+    org.springframework.jdbc.datasource.init: info
+    org.springframework.web: warn
+    org.springdoc: warn
 
 springdoc:
   api-docs:
     path: "/v3/api-docs"
-    enabled: true
+    enabled: false
   swagger-ui:
-    path: "/"
-    enabled: true
+    path: "/swagger-ui"
+    enabled: false
 
 # Doesn't currently work?
 static-files:

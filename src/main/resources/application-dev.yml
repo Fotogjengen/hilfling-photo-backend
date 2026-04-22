@@ -1,0 +1,33 @@
+# Dev profile — verbose logging and tooling enabled.
+# Activate with: SPRING_PROFILES_ACTIVE=dev
+
+spring:
+  datasource:
+    username: ${DATABASE_USERNAME:hilfling}
+    url: ${DATABASE_URL:jdbc:postgresql://postgres:5432/hilflingdb}
+    password: ${DATABASE_PASSWORD:password}
+  flyway:
+    user: ${DATABASE_USERNAME:hilfling}
+    url: ${DATABASE_URL:jdbc:postgresql://postgres:5432/hilflingdb?createDatabaseIfNotExist=true}
+    password: ${DATABASE_PASSWORD:password}
+
+server:
+  error:
+    include-message: always
+    include-stacktrace: always
+    include-exception: true
+    include-binding-errors: always
+
+logging:
+  level:
+    root: info
+    org.flywaydb: debug
+    org.springframework.jdbc.datasource.init: debug
+    org.springframework.web: debug
+    org.springdoc: debug
+
+springdoc:
+  api-docs:
+    enabled: true
+  swagger-ui:
+    enabled: true
