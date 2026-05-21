@@ -6,8 +6,8 @@ import me.liuwj.ktorm.dsl.and
 import me.liuwj.ktorm.dsl.desc
 import me.liuwj.ktorm.dsl.eq
 import me.liuwj.ktorm.dsl.from
-import me.liuwj.ktorm.dsl.insert
 import me.liuwj.ktorm.dsl.innerJoin
+import me.liuwj.ktorm.dsl.insert
 import me.liuwj.ktorm.dsl.isNull
 import me.liuwj.ktorm.dsl.map
 import me.liuwj.ktorm.dsl.orderBy
@@ -62,7 +62,6 @@ interface IPhotoGangBangerRepository {
 class PhotoGangBangerRepository(
   val database: Database,
 ) : IPhotoGangBangerRepository {
-
   private fun findPositionsForMember(memberId: UUID): List<PositionDto> =
     database
       .from(PhotoGangBangerToPositions)
@@ -71,8 +70,7 @@ class PhotoGangBangerRepository(
       .where {
         (PhotoGangBangerToPositions.photoGangBangerId eq memberId)
           .and(PhotoGangBangerToPositions.dateDeleted.isNull())
-      }
-      .orderBy(PhotoGangBangerToPositions.semesterStart.desc())
+      }.orderBy(PhotoGangBangerToPositions.semesterStart.desc())
       .map { row ->
         PositionDto(
           positionId = PositionId(row[Positions.id]!!),
@@ -81,11 +79,13 @@ class PhotoGangBangerRepository(
         )
       }
 
-  private fun withPositions(dto: PhotoGangBangerDto): PhotoGangBangerDto =
-    dto.copy(positions = findPositionsForMember(dto.photoGangBangerId.id))
+  private fun withPositions(dto: PhotoGangBangerDto): PhotoGangBangerDto = dto.copy(positions = findPositionsForMember(dto.photoGangBangerId.id))
 
   override fun findById(id: UUID): PhotoGangBangerDto? =
-    database.photo_gang_bangers.find { it.id eq id }?.toDto()?.let { withPositions(it) }
+    database.photo_gang_bangers
+      .find { it.id eq id }
+      ?.toDto()
+      ?.let { withPositions(it) }
 
   override fun findAll(
     page: Int,
@@ -174,5 +174,8 @@ class PhotoGangBangerRepository(
   }
 
   fun findByUsername(username: String): PhotoGangBangerDto? =
-    database.photo_gang_bangers.find { it.username eq username }?.toDto()?.let { withPositions(it) }
+    database.photo_gang_bangers
+      .find { it.username eq username }
+      ?.toDto()
+      ?.let { withPositions(it) }
 }
