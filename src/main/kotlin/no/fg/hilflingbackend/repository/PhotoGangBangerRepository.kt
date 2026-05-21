@@ -2,8 +2,17 @@ package no.fg.hilflingbackend.repository
 
 import jakarta.persistence.EntityNotFoundException
 import me.liuwj.ktorm.database.Database
+import me.liuwj.ktorm.dsl.and
+import me.liuwj.ktorm.dsl.desc
 import me.liuwj.ktorm.dsl.eq
+import me.liuwj.ktorm.dsl.from
 import me.liuwj.ktorm.dsl.insert
+import me.liuwj.ktorm.dsl.innerJoin
+import me.liuwj.ktorm.dsl.isNull
+import me.liuwj.ktorm.dsl.map
+import me.liuwj.ktorm.dsl.orderBy
+import me.liuwj.ktorm.dsl.select
+import me.liuwj.ktorm.dsl.where
 import me.liuwj.ktorm.entity.add
 import me.liuwj.ktorm.entity.filter
 import me.liuwj.ktorm.entity.find
@@ -12,11 +21,16 @@ import me.liuwj.ktorm.entity.update
 import no.fg.hilflingbackend.dto.Page
 import no.fg.hilflingbackend.dto.PhotoGangBangerDto
 import no.fg.hilflingbackend.dto.PhotoGangBangerPatchRequestDto
+import no.fg.hilflingbackend.dto.PositionDto
+import no.fg.hilflingbackend.dto.PositionId
 import no.fg.hilflingbackend.dto.toEntity
 import no.fg.hilflingbackend.exceptions.EntityExistsException
+import no.fg.hilflingbackend.model.PhotoGangBangerToPositions
 import no.fg.hilflingbackend.model.PhotoGangBangers
+import no.fg.hilflingbackend.model.Positions
 import no.fg.hilflingbackend.model.photo_gang_bangers
 import no.fg.hilflingbackend.model.toDto
+import no.fg.hilflingbackend.valueobject.Email
 import org.springframework.stereotype.Repository
 import java.util.UUID
 
@@ -48,15 +62,38 @@ interface IPhotoGangBangerRepository {
 class PhotoGangBangerRepository(
   val database: Database,
 ) : IPhotoGangBangerRepository {
-  override fun findById(id: UUID): PhotoGangBangerDto? = database.photo_gang_bangers.find { it.id eq id }?.toDto()
+
+  private fun findPositionsForMember(memberId: UUID): List<PositionDto> =
+    database
+      .from(PhotoGangBangerToPositions)
+      .innerJoin(Positions, on = PhotoGangBangerToPositions.positionId eq Positions.id)
+      .select(Positions.id, Positions.title, Positions.email, PhotoGangBangerToPositions.semesterStart)
+      .where {
+        (PhotoGangBangerToPositions.photoGangBangerId eq memberId)
+          .and(PhotoGangBangerToPositions.dateDeleted.isNull())
+      }
+      .orderBy(PhotoGangBangerToPositions.semesterStart.desc())
+      .map { row ->
+        PositionDto(
+          positionId = PositionId(row[Positions.id]!!),
+          title = row[Positions.title]!!,
+          email = Email(row[Positions.email]!!),
+        )
+      }
+
+  private fun withPositions(dto: PhotoGangBangerDto): PhotoGangBangerDto =
+    dto.copy(positions = findPositionsForMember(dto.photoGangBangerId.id))
+
+  override fun findById(id: UUID): PhotoGangBangerDto? =
+    database.photo_gang_bangers.find { it.id eq id }?.toDto()?.let { withPositions(it) }
 
   override fun findAll(
     page: Int,
     pageSize: Int,
   ): Page<PhotoGangBangerDto> {
     val photoGangBangers = database.photo_gang_bangers
-    val photoGangBangerDtos = photoGangBangers.toList().map { it.toDto() }
-    return Page(page = page, pageSize = pageSize, totalRecords = photoGangBangers.totalRecords, currentList = photoGangBangerDtos)
+    val dtos = photoGangBangers.toList().map { withPositions(it.toDto()) }
+    return Page(page = page, pageSize = pageSize, totalRecords = photoGangBangers.totalRecords, currentList = dtos)
   }
 
   override fun findAllActives(
@@ -68,7 +105,7 @@ class PhotoGangBangerRepository(
         it.isActive eq true
         it.isPang eq false
       }
-    return Page(page = page, pageSize = pageSize, totalRecords = photoGangBangers.totalRecords, currentList = photoGangBangers.toList().map { it.toDto() })
+    return Page(page = page, pageSize = pageSize, totalRecords = photoGangBangers.totalRecords, currentList = photoGangBangers.toList().map { withPositions(it.toDto()) })
   }
 
   override fun findAllActivePangs(
@@ -80,7 +117,7 @@ class PhotoGangBangerRepository(
         it.isActive eq true
         it.isPang eq true
       }
-    return Page(page = page, pageSize = pageSize, totalRecords = photoGangBangers.totalRecords, currentList = photoGangBangers.toList().map { it.toDto() })
+    return Page(page = page, pageSize = pageSize, totalRecords = photoGangBangers.totalRecords, currentList = photoGangBangers.toList().map { withPositions(it.toDto()) })
   }
 
   override fun findAllInactivePangs(
@@ -92,7 +129,7 @@ class PhotoGangBangerRepository(
         it.isActive eq false
         it.isPang eq true
       }
-    return Page(page = page, pageSize = pageSize, totalRecords = photoGangBangers.totalRecords, currentList = photoGangBangers.toList().map { it.toDto() })
+    return Page(page = page, pageSize = pageSize, totalRecords = photoGangBangers.totalRecords, currentList = photoGangBangers.toList().map { withPositions(it.toDto()) })
   }
 
   fun create(dto: PhotoGangBangerDto): Int {
@@ -136,5 +173,6 @@ class PhotoGangBangerRepository(
     return findById(dto.photoGangBangerId.id)
   }
 
-  fun findByUsername(username: String): PhotoGangBangerDto? = database.photo_gang_bangers.find { it.username eq username }?.toDto()
+  fun findByUsername(username: String): PhotoGangBangerDto? =
+    database.photo_gang_bangers.find { it.username eq username }?.toDto()?.let { withPositions(it) }
 }

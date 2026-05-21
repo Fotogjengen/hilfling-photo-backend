@@ -27,6 +27,7 @@ data class PhotoGangBangerDto(
   val email: String,
   val profilePicture: String,
   val phoneNumber: String,
+  val positions: List<PositionDto> = emptyList(),
 )
 
 fun PhotoGangBangerDto.toEntity(): PhotoGangBanger =
