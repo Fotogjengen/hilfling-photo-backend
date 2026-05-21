@@ -15,11 +15,7 @@ open class PhotoOnPurchaseOrderRepository {
   @Autowired
   open lateinit var database: Database
 
-  fun findById(id: UUID): PhotoOnPurchaseOrder? {
-    return database.photo_on_purchase_orders.find { it.id eq id }
-  }
+  fun findById(id: UUID): PhotoOnPurchaseOrder? = database.photo_on_purchase_orders.find { it.id eq id }
 
-  fun findAll(): List<PhotoOnPurchaseOrder> {
-    return database.photo_on_purchase_orders.toList()
-  }
+  fun findAll(): List<PhotoOnPurchaseOrder> = database.photo_on_purchase_orders.toList()
 }

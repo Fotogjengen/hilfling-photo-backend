@@ -19,37 +19,36 @@ import org.springframework.web.filter.OncePerRequestFilter
  */
 @Component
 class JwtAuthFilter : OncePerRequestFilter() {
+  @Autowired private lateinit var jwtService: JwtService
 
-    @Autowired private lateinit var jwtService: JwtService
-
-    override fun doFilterInternal(
-            request: HttpServletRequest,
-            response: HttpServletResponse,
-            filterChain: FilterChain
-    ) {
-        val authHeader = request.getHeader("X-hilfling-token")
-        if (authHeader == null) {
-            filterChain.doFilter(request, response)
-            return
-        }
-
-        val token = authHeader.substring(7)
-        try {
-            val username = jwtService.extractUserName(token)
-            if (username != null &&
-                            SecurityContextHolder.getContext().authentication == null &&
-                            jwtService.isTokenValid(token)
-            ) {
-                val role = jwtService.extractRole(token)
-                val authorities = listOf(SimpleGrantedAuthority("ROLE_$role"))
-                val authToken = UsernamePasswordAuthenticationToken(username, null, authorities)
-                authToken.details = WebAuthenticationDetailsSource().buildDetails(request)
-                SecurityContextHolder.getContext().authentication = authToken
-            }
-        } catch (e: Exception) {
-            // Invalid or expired token — continue as unauthenticated
-        }
-
-        filterChain.doFilter(request, response)
+  override fun doFilterInternal(
+    request: HttpServletRequest,
+    response: HttpServletResponse,
+    filterChain: FilterChain,
+  ) {
+    val authHeader = request.getHeader("X-hilfling-token")
+    if (authHeader == null) {
+      filterChain.doFilter(request, response)
+      return
     }
+
+    val token = authHeader.substring(7)
+    try {
+      val username = jwtService.extractUserName(token)
+      if (username != null &&
+        SecurityContextHolder.getContext().authentication == null &&
+        jwtService.isTokenValid(token)
+      ) {
+        val role = jwtService.extractRole(token)
+        val authorities = listOf(SimpleGrantedAuthority("ROLE_$role"))
+        val authToken = UsernamePasswordAuthenticationToken(username, null, authorities)
+        authToken.details = WebAuthenticationDetailsSource().buildDetails(request)
+        SecurityContextHolder.getContext().authentication = authToken
+      }
+    } catch (e: Exception) {
+      // Invalid or expired token — continue as unauthenticated
+    }
+
+    filterChain.doFilter(request, response)
+  }
 }

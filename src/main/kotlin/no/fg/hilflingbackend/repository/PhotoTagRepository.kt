@@ -1,5 +1,6 @@
 package no.fg.hilflingbackend.repository
 
+import jakarta.persistence.EntityNotFoundException
 import me.liuwj.ktorm.database.Database
 import me.liuwj.ktorm.dsl.QueryRowSet
 import me.liuwj.ktorm.dsl.delete
@@ -18,51 +19,47 @@ import no.fg.hilflingbackend.model.photo_tag_references
 import no.fg.hilflingbackend.model.photo_tags
 import no.fg.hilflingbackend.model.toDto
 import org.springframework.stereotype.Repository
-import jakarta.persistence.EntityNotFoundException
 
 @Repository
-open class PhotoTagRepository(database: Database) : BaseRepository<PhotoTag, PhotoTagDto, PhotoTagPatchRequestDto>(table = PhotoTags, database = database) {
-  override fun convertToClass(qrs: QueryRowSet): PhotoTagDto = PhotoTagDto(
-    photoTagId = PhotoTagId(qrs[PhotoTags.id]!!),
-    name = qrs[PhotoTags.name]!!
-  )
+open class PhotoTagRepository(
+  database: Database,
+) : BaseRepository<PhotoTag, PhotoTagDto, PhotoTagPatchRequestDto>(
+    table = PhotoTags,
+    database = database,
+  ) {
+  override fun convertToClass(qrs: QueryRowSet): PhotoTagDto =
+    PhotoTagDto(
+      photoTagId = PhotoTagId(qrs[PhotoTags.id]!!),
+      name = qrs[PhotoTags.name]!!,
+    )
 
-  override fun create(dto: PhotoTagDto): Int {
-    return database.photo_tags.add(dto.toEntity())
-  }
+  override fun create(dto: PhotoTagDto): Int = database.photo_tags.add(dto.toEntity())
 
   override fun patch(dto: PhotoTagPatchRequestDto): PhotoTagDto {
-    val fromDb = findById(dto.photoTagId.id)
-      ?: throw EntityNotFoundException("Could not find PhotoTag")
-    val newDto = PhotoTagDto(
-      photoTagId = fromDb.photoTagId,
-      name = dto.name ?: fromDb.name
-    )
+    val fromDb =
+      findById(dto.photoTagId.id) ?: throw EntityNotFoundException("Could not find PhotoTag")
+    val newDto =
+      PhotoTagDto(
+        photoTagId = fromDb.photoTagId,
+        name = dto.name ?: fromDb.name,
+      )
     val updated = database.photo_tags.update(newDto.toEntity())
 
     return if (updated == 1) newDto else fromDb
   }
 
-  fun findByName(photoTagName: String) = database
-    .photo_tags
-    .find {
-      it.name eq photoTagName
-    }
-    ?.toDto()
+  fun findByName(photoTagName: String) = database.photo_tags.find { it.name eq photoTagName }?.toDto()
 
-  fun deletePhotoTagReference(photoTagId: PhotoTagId, photoId: PhotoId): Int {
-    val reference = database.photo_tag_references.find {
-      it.photoId eq photoId.id
-      it.photoTagId eq photoTagId.id
-    } ?: return 0
+  fun deletePhotoTagReference(
+    photoTagId: PhotoTagId,
+    photoId: PhotoId,
+  ): Int {
+    val reference =
+      database.photo_tag_references.find {
+        it.photoId eq photoId.id
+        it.photoTagId eq photoTagId.id
+      }
+        ?: return 0
     return reference.delete()
-    /*return database.photo_tag_references.removeIf {
-      it.photoTagId eq photoTagId.id
-      it.photoId eq photoId.id
-    }*/
-    /*return database.delete(PhotoTagReferences) {
-      it.id eq tag.id
-      *//*it.photoTagId eq photoTagId*//*
-    }*/
   }
 }

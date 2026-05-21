@@ -1,7 +1,7 @@
 package no.fg.hilflingbackend.dto
 
 import no.fg.hilflingbackend.model.Photo
-import no.fg.hilflingbackend.value_object.ImageFileName
+import no.fg.hilflingbackend.valueobject.ImageFileName
 import java.time.LocalDate
 import java.util.UUID
 

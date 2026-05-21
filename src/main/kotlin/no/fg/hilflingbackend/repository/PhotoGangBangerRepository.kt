@@ -1,7 +1,6 @@
 package no.fg.hilflingbackend.repository
 
 import jakarta.persistence.EntityNotFoundException
-import java.util.UUID
 import me.liuwj.ktorm.database.Database
 import me.liuwj.ktorm.dsl.eq
 import me.liuwj.ktorm.dsl.insert
@@ -19,49 +18,80 @@ import no.fg.hilflingbackend.model.PhotoGangBangers
 import no.fg.hilflingbackend.model.photo_gang_bangers
 import no.fg.hilflingbackend.model.toDto
 import org.springframework.stereotype.Repository
+import java.util.UUID
 
 interface IPhotoGangBangerRepository {
   fun findById(id: UUID): PhotoGangBangerDto?
-  fun findAll(page: Int = 0, pageSize: Int = 100): Page<PhotoGangBangerDto>
-  fun findAllActives(page: Int = 0, pageSize: Int = 100): Page<PhotoGangBangerDto>
-  fun findAllActivePangs(page: Int = 0, pageSize: Int = 100): Page<PhotoGangBangerDto>
-  fun findAllInactivePangs(page: Int = 0, pageSize: Int = 100): Page<PhotoGangBangerDto>
+
+  fun findAll(
+    page: Int = 0,
+    pageSize: Int = 100,
+  ): Page<PhotoGangBangerDto>
+
+  fun findAllActives(
+    page: Int = 0,
+    pageSize: Int = 100,
+  ): Page<PhotoGangBangerDto>
+
+  fun findAllActivePangs(
+    page: Int = 0,
+    pageSize: Int = 100,
+  ): Page<PhotoGangBangerDto>
+
+  fun findAllInactivePangs(
+    page: Int = 0,
+    pageSize: Int = 100,
+  ): Page<PhotoGangBangerDto>
 }
 
 @Repository
-class PhotoGangBangerRepository(val database: Database) : IPhotoGangBangerRepository {
+class PhotoGangBangerRepository(
+  val database: Database,
+) : IPhotoGangBangerRepository {
+  override fun findById(id: UUID): PhotoGangBangerDto? = database.photo_gang_bangers.find { it.id eq id }?.toDto()
 
-  override fun findById(id: UUID): PhotoGangBangerDto? {
-    return database.photo_gang_bangers.find { it.id eq id }?.toDto()
-  }
-
-  override fun findAll(page: Int, pageSize: Int): Page<PhotoGangBangerDto> {
+  override fun findAll(
+    page: Int,
+    pageSize: Int,
+  ): Page<PhotoGangBangerDto> {
     val photoGangBangers = database.photo_gang_bangers
     val photoGangBangerDtos = photoGangBangers.toList().map { it.toDto() }
     return Page(page = page, pageSize = pageSize, totalRecords = photoGangBangers.totalRecords, currentList = photoGangBangerDtos)
   }
 
-  override fun findAllActives(page: Int, pageSize: Int): Page<PhotoGangBangerDto> {
-    val photoGangBangers = database.photo_gang_bangers.filter {
-      it.isActive eq true
-      it.isPang eq false
-    }
+  override fun findAllActives(
+    page: Int,
+    pageSize: Int,
+  ): Page<PhotoGangBangerDto> {
+    val photoGangBangers =
+      database.photo_gang_bangers.filter {
+        it.isActive eq true
+        it.isPang eq false
+      }
     return Page(page = page, pageSize = pageSize, totalRecords = photoGangBangers.totalRecords, currentList = photoGangBangers.toList().map { it.toDto() })
   }
 
-  override fun findAllActivePangs(page: Int, pageSize: Int): Page<PhotoGangBangerDto> {
-    val photoGangBangers = database.photo_gang_bangers.filter {
-      it.isActive eq true
-      it.isPang eq true
-    }
+  override fun findAllActivePangs(
+    page: Int,
+    pageSize: Int,
+  ): Page<PhotoGangBangerDto> {
+    val photoGangBangers =
+      database.photo_gang_bangers.filter {
+        it.isActive eq true
+        it.isPang eq true
+      }
     return Page(page = page, pageSize = pageSize, totalRecords = photoGangBangers.totalRecords, currentList = photoGangBangers.toList().map { it.toDto() })
   }
 
-  override fun findAllInactivePangs(page: Int, pageSize: Int): Page<PhotoGangBangerDto> {
-    val photoGangBangers = database.photo_gang_bangers.filter {
-      it.isActive eq false
-      it.isPang eq true
-    }
+  override fun findAllInactivePangs(
+    page: Int,
+    pageSize: Int,
+  ): Page<PhotoGangBangerDto> {
+    val photoGangBangers =
+      database.photo_gang_bangers.filter {
+        it.isActive eq false
+        it.isPang eq true
+      }
     return Page(page = page, pageSize = pageSize, totalRecords = photoGangBangers.totalRecords, currentList = photoGangBangers.toList().map { it.toDto() })
   }
 
@@ -73,7 +103,6 @@ class PhotoGangBangerRepository(val database: Database) : IPhotoGangBangerReposi
       set(it.id, dto.photoGangBangerId.id)
       set(it.isActive, dto.isActive)
       set(it.isPang, dto.isPang)
-      set(it.relationshipStatus, dto.relationShipStatus.status)
       set(it.semesterStart, dto.semesterStart.value)
       set(it.firstName, dto.firstName)
       set(it.lastName, dto.lastName)
@@ -85,29 +114,27 @@ class PhotoGangBangerRepository(val database: Database) : IPhotoGangBangerReposi
   }
 
   fun patch(dto: PhotoGangBangerPatchRequestDto): PhotoGangBangerDto? {
-    val fromDb = findById(dto.photoGangBangerId.id)
-      ?: throw EntityNotFoundException("Could not find PhotoGangBanger")
+    val fromDb =
+      findById(dto.photoGangBangerId.id)
+        ?: throw EntityNotFoundException("Could not find PhotoGangBanger")
 
-    val updated = PhotoGangBangerDto(
-      photoGangBangerId = fromDb.photoGangBangerId,
-      relationShipStatus = dto.relationshipStatus ?: fromDb.relationShipStatus,
-      semesterStart = dto.semesterStart ?: fromDb.semesterStart,
-      isActive = dto.isActive ?: fromDb.isActive,
-      isPang = dto.isPang ?: fromDb.isPang,
-      firstName = dto.firstName ?: fromDb.firstName,
-      lastName = dto.lastName ?: fromDb.lastName,
-      username = dto.username ?: fromDb.username,
-      email = dto.email ?: fromDb.email,
-      profilePicture = dto.profilePicture ?: fromDb.profilePicture,
-      phoneNumber = dto.phoneNumber ?: fromDb.phoneNumber,
-    )
+    val updated =
+      PhotoGangBangerDto(
+        photoGangBangerId = fromDb.photoGangBangerId,
+        semesterStart = dto.semesterStart ?: fromDb.semesterStart,
+        isActive = dto.isActive ?: fromDb.isActive,
+        isPang = dto.isPang ?: fromDb.isPang,
+        firstName = dto.firstName ?: fromDb.firstName,
+        lastName = dto.lastName ?: fromDb.lastName,
+        username = dto.username ?: fromDb.username,
+        email = dto.email ?: fromDb.email,
+        profilePicture = dto.profilePicture ?: fromDb.profilePicture,
+        phoneNumber = dto.phoneNumber ?: fromDb.phoneNumber,
+      )
 
     database.photo_gang_bangers.update(updated.toEntity())
     return findById(dto.photoGangBangerId.id)
   }
 
-  fun findByUsername(username: String): PhotoGangBangerDto? {
-    return database.photo_gang_bangers.find { it.username eq username }?.toDto()
-  }
-
+  fun findByUsername(username: String): PhotoGangBangerDto? = database.photo_gang_bangers.find { it.username eq username }?.toDto()
 }

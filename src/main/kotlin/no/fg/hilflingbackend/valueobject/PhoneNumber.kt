@@ -1,4 +1,4 @@
-package no.fg.hilflingbackend.value_object
+package no.fg.hilflingbackend.valueobject
 
 import java.util.regex.Pattern
 

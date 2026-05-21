@@ -9,7 +9,6 @@ import org.springframework.boot.test.context.SpringBootTest
 @SpringBootTest
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class HilflingApplicationTests {
-
   @BeforeAll
   fun setup() {
     print(">> Setup")

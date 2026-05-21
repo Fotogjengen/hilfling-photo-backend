@@ -8,4 +8,6 @@ import org.springframework.web.bind.annotation.RestController
 
 @RestController
 @RequestMapping("/event_owners")
-open class EventOwnerController(override val repository: EventOwnerRepository) : BaseController<EventOwner, EventOwnerDto, NotImplementedError>(repository)
+open class EventOwnerController(
+  override val repository: EventOwnerRepository,
+) : BaseController<EventOwner, EventOwnerDto, NotImplementedError>(repository)

@@ -5,16 +5,16 @@ import java.util.UUID
 
 data class CategoryPatchRequestDto(
   val categoryId: CategoryId,
-  val name: String?
+  val name: String?,
 )
 
 data class CategoryDto(
   val categoryId: CategoryId = CategoryId(),
-  val name: String
+  val name: String,
 )
 
 data class CategoryId(
-  override val id: UUID = UUID.randomUUID()
+  override val id: UUID = UUID.randomUUID(),
 ) : UuidId {
   override fun toString(): String = id.toString()
 }

@@ -13,7 +13,9 @@ open interface BaseModel<E : Entity<E>> : Entity<E> {
   var dateDeleted: LocalDate
 }
 
-open class BaseTable<E : BaseModel<E>>(tableName: String) : Table<E>(tableName) {
+open class BaseTable<E : BaseModel<E>>(
+  tableName: String,
+) : Table<E>(tableName) {
   val id = uuid("id").primaryKey().bindTo { it.id }
   val dateCreated = date("date_created").bindTo { it.dateCreated }
   val dateDeleted = date("date_deleted").bindTo { it.dateDeleted }

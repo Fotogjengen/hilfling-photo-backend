@@ -27,7 +27,6 @@ import no.fg.hilflingbackend.dto.PlacePatchRequestDto
 import no.fg.hilflingbackend.dto.PositionDto
 import no.fg.hilflingbackend.dto.PositionId
 import no.fg.hilflingbackend.dto.PositionPatchRequestDto
-import no.fg.hilflingbackend.dto.RelationshipStatus
 import no.fg.hilflingbackend.dto.SecurityLevelDto
 import no.fg.hilflingbackend.dto.SemesterStart
 import no.fg.hilflingbackend.repository.AlbumRepository
@@ -40,8 +39,8 @@ import no.fg.hilflingbackend.repository.PhotoTagRepository
 import no.fg.hilflingbackend.repository.PlaceRepository
 import no.fg.hilflingbackend.repository.PositionRepository
 import no.fg.hilflingbackend.service.PhotoService
-import no.fg.hilflingbackend.value_object.Email
-import no.fg.hilflingbackend.value_object.SecurityLevelType
+import no.fg.hilflingbackend.valueobject.Email
+import no.fg.hilflingbackend.valueobject.SecurityLevelType
 import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInstance
@@ -188,7 +187,6 @@ class PatchIntegrationTest {
   final val photoGangBangerDto1 =
     PhotoGangBangerDto(
       photoGangBangerId = photoGangBangerId1,
-      relationShipStatus = RelationshipStatus.married,
       semesterStart = SemesterStart.invoke("H2019"),
       isActive = true,
       isPang = true,
@@ -202,7 +200,6 @@ class PatchIntegrationTest {
   final val photoGangBangerDto2 =
     PhotoGangBangerDto(
       photoGangBangerId = photoGangBangerId2,
-      relationShipStatus = RelationshipStatus.relationship,
       semesterStart = SemesterStart.invoke("H2018"),
       isActive = true,
       isPang = true,
@@ -269,8 +266,7 @@ class PatchIntegrationTest {
           categoryName = categoryDto1.name,
           isGoodPhoto = true,
           dateTaken = LocalDate.now(),
-        )
-        .first()
+        ).first()
         .photoId
         .id
   }

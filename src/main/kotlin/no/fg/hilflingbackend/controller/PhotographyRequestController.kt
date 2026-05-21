@@ -18,19 +18,15 @@ class PhotographyRequestController {
   lateinit var repository: PhotographyRequestRepository
 
   @GetMapping("/{id}")
-  fun getById(@PathVariable("id") id: UUID): PhotographyRequest? {
-    return repository.findById(id)
-  }
+  fun getById(
+    @PathVariable("id") id: UUID,
+  ): PhotographyRequest? = repository.findById(id)
 
   @GetMapping
-  fun getAll(): List<PhotographyRequest> {
-    return repository.findAll()
-  }
+  fun getAll(): List<PhotographyRequest> = repository.findAll()
 
   @PostMapping
   fun create(
-    @RequestBody photographyRequest: PhotographyRequest
-  ): PhotographyRequest {
-    return repository.create(photographyRequest)
-  }
+    @RequestBody photographyRequest: PhotographyRequest,
+  ): PhotographyRequest = repository.create(photographyRequest)
 }

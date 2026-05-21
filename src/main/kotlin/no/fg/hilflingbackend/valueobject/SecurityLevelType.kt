@@ -1,7 +1,7 @@
-package no.fg.hilflingbackend.value_object
+package no.fg.hilflingbackend.valueobject
 
 enum class SecurityLevelType(
-        val type: String,
+  val type: String,
 ) {
   FG("FG"),
   HUSFOLK("HUSFOLK"),

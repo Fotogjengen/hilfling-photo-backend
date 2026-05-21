@@ -9,4 +9,6 @@ import org.springframework.web.bind.annotation.RestController
 
 @RestController
 @RequestMapping("/gangs")
-open class GangController(override val repository: GangRepository) : BaseController<Gang, GangDto, GangPatchRequestDto>(repository)
+open class GangController(
+  override val repository: GangRepository,
+) : BaseController<Gang, GangDto, GangPatchRequestDto>(repository)

@@ -9,7 +9,7 @@ data class MotivePatchRequestDto(
   val title: String?,
   val categoryDto: CategoryDto?,
   val eventOwnerDto: EventOwnerDto?,
-  val albumDto: AlbumDto?
+  val albumDto: AlbumDto?,
 )
 
 data class MotiveDto(
@@ -18,11 +18,11 @@ data class MotiveDto(
   val categoryDto: CategoryDto,
   val eventOwnerDto: EventOwnerDto,
   val albumDto: AlbumDto,
-  val dateCreated: LocalDate?
+  val dateCreated: LocalDate?,
 )
 
 data class MotiveId(
-  override val id: UUID = UUID.randomUUID()
+  override val id: UUID = UUID.randomUUID(),
 ) : UuidId {
   override fun toString(): String = id.toString()
 }

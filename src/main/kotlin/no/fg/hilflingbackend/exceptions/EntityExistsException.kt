@@ -1,3 +1,5 @@
 package no.fg.hilflingbackend.exceptions
 
-class EntityExistsException(message: String) : Exception(message)
+class EntityExistsException(
+  message: String,
+) : Exception(message)

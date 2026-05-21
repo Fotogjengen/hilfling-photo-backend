@@ -22,9 +22,7 @@ class EventCardController(
   val eventOwnerRepository: EventOwnerRepository,
   val jwtService: JwtService,
 ) : GlobalExceptionHandler() {
-
-  private fun allowedSecurityLevels(request: HttpServletRequest): List<String> =
-    jwtService.allowedSecurityLevels(request.getHeader("X-hilfling-token"))
+  private fun allowedSecurityLevels(request: HttpServletRequest): List<String> = jwtService.allowedSecurityLevels(request.getHeader("X-hilfling-token"))
 
   @GetMapping("/latest")
   fun getNLatestEventCardsOfType(

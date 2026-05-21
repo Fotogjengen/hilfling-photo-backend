@@ -22,47 +22,38 @@ import java.util.UUID
 class PhotoGangBangerController(
   val repository: PhotoGangBangerRepository,
 ) : RestExceptionHandler() {
-
   @GetMapping("/{id}")
-  fun getById(@PathVariable("id") id: UUID): PhotoGangBangerDto? {
-    return repository.findById(id)
-  }
+  fun getById(
+    @PathVariable("id") id: UUID,
+  ): PhotoGangBangerDto? = repository.findById(id)
 
   @GetMapping
   fun getAll(
     @RequestParam("page", required = false) page: Int?,
-    @RequestParam("pageSize", required = false) pageSize: Int?
-  ): Page<PhotoGangBangerDto> {
-    return repository.findAll(page = 0, pageSize = 100)
-  }
+    @RequestParam("pageSize", required = false) pageSize: Int?,
+  ): Page<PhotoGangBangerDto> = repository.findAll(page = 0, pageSize = 100)
 
   @GetMapping("/actives")
   fun getActives(
     @RequestParam("page", required = false) page: Int?,
-    @RequestParam("pageSize", required = false) pageSize: Int?
-  ): Page<PhotoGangBangerDto> {
-    return repository.findAllActives(page = 0, pageSize = 100)
-  }
+    @RequestParam("pageSize", required = false) pageSize: Int?,
+  ): Page<PhotoGangBangerDto> = repository.findAllActives(page = 0, pageSize = 100)
 
   @GetMapping("/active_pangs")
   fun getActivePangs(
     @RequestParam("page", required = false) page: Int?,
-    @RequestParam("pageSize", required = false) pageSize: Int?
-  ): Page<PhotoGangBangerDto> {
-    return repository.findAllActivePangs(page = 0, pageSize = 100)
-  }
+    @RequestParam("pageSize", required = false) pageSize: Int?,
+  ): Page<PhotoGangBangerDto> = repository.findAllActivePangs(page = 0, pageSize = 100)
 
   @GetMapping("/inactive_pangs")
   fun getInActivePangs(
     @RequestParam("page", required = false) page: Int?,
-    @RequestParam("pageSize", required = false) pageSize: Int?
-  ): Page<PhotoGangBangerDto> {
-    return repository.findAllInactivePangs(page = 0, pageSize = 100)
-  }
+    @RequestParam("pageSize", required = false) pageSize: Int?,
+  ): Page<PhotoGangBangerDto> = repository.findAllInactivePangs(page = 0, pageSize = 100)
 
   @PostMapping
   fun create(
-    @RequestBody dto: PhotoGangBangerDto
+    @RequestBody dto: PhotoGangBangerDto,
   ): ResponseEntity<Int> {
     val created = repository.create(dto)
     return ResponseCreated(created)
@@ -70,8 +61,6 @@ class PhotoGangBangerController(
 
   @PatchMapping()
   fun patch(
-    @RequestBody dto: PhotoGangBangerPatchRequestDto
-  ): PhotoGangBangerDto? {
-    return repository.patch(dto)
-  }
+    @RequestBody dto: PhotoGangBangerPatchRequestDto,
+  ): PhotoGangBangerDto? = repository.patch(dto)
 }

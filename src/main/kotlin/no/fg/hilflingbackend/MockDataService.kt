@@ -28,7 +28,6 @@ import no.fg.hilflingbackend.dto.PlaceDto
 import no.fg.hilflingbackend.dto.PlaceId
 import no.fg.hilflingbackend.dto.PositionDto
 import no.fg.hilflingbackend.dto.PositionId
-import no.fg.hilflingbackend.dto.RelationshipStatus
 import no.fg.hilflingbackend.dto.SecurityLevelDto
 import no.fg.hilflingbackend.dto.SemesterStart
 import no.fg.hilflingbackend.model.Photos
@@ -42,10 +41,9 @@ import no.fg.hilflingbackend.repository.PhotoRepository
 import no.fg.hilflingbackend.repository.PhotoTagRepository
 import no.fg.hilflingbackend.repository.PlaceRepository
 import no.fg.hilflingbackend.repository.PositionRepository
-
-import no.fg.hilflingbackend.value_object.Email
-import no.fg.hilflingbackend.value_object.PhoneNumber
-import no.fg.hilflingbackend.value_object.SecurityLevelType
+import no.fg.hilflingbackend.valueobject.Email
+import no.fg.hilflingbackend.valueobject.PhoneNumber
+import no.fg.hilflingbackend.valueobject.SecurityLevelType
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import java.net.URI
@@ -686,7 +684,6 @@ class MockDataService {
           ),
         isActive = true,
         isPang = true,
-        relationShipStatus = RelationshipStatus.valueOf("single"),
         semesterStart = SemesterStart("H2018"),
         firstName = "Sindre",
         lastName = "Sivertsen",
@@ -702,7 +699,6 @@ class MockDataService {
           ),
         isActive = true,
         isPang = true,
-        relationShipStatus = RelationshipStatus.single,
         semesterStart = SemesterStart("H2018"),
         firstName = "Caroline",
         lastName = "Sandbråten",

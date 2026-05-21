@@ -11,7 +11,7 @@ import no.fg.hilflingbackend.dto.PhotoId
 import no.fg.hilflingbackend.dto.PhotoTagDto
 import no.fg.hilflingbackend.dto.SecurityLevelDto
 import no.fg.hilflingbackend.dto.toDto
-import no.fg.hilflingbackend.value_object.SecurityLevelType
+import no.fg.hilflingbackend.valueobject.SecurityLevelType
 
 interface Photo : BaseModel<Photo> {
   companion object : Entity.Factory<Photo>()

@@ -1,8 +1,14 @@
 package no.fg.hilflingbackend.repository
 
+import jakarta.persistence.EntityNotFoundException
 import me.liuwj.ktorm.database.Database
 import me.liuwj.ktorm.dsl.QueryRowSet
+import me.liuwj.ktorm.dsl.eq
+import me.liuwj.ktorm.dsl.select
+import me.liuwj.ktorm.dsl.where
 import me.liuwj.ktorm.entity.add
+import me.liuwj.ktorm.entity.any
+import me.liuwj.ktorm.entity.find
 import me.liuwj.ktorm.entity.update
 import no.fg.hilflingbackend.dto.AlbumDto
 import no.fg.hilflingbackend.dto.AlbumId
@@ -13,20 +19,17 @@ import no.fg.hilflingbackend.model.Albums
 import no.fg.hilflingbackend.model.albums
 import no.fg.hilflingbackend.model.toDto
 import org.springframework.stereotype.Repository
-import jakarta.persistence.EntityNotFoundException
-import me.liuwj.ktorm.dsl.eq
-import me.liuwj.ktorm.dsl.select
-import me.liuwj.ktorm.dsl.where
-import me.liuwj.ktorm.entity.any
-import me.liuwj.ktorm.entity.find
 
 @Repository
-open class AlbumRepository(database: Database) : BaseRepository<Album, AlbumDto, AlbumPatchRequestDto>(table = Albums, database = database) {
-  override fun convertToClass(qrs: QueryRowSet): AlbumDto = AlbumDto(
-    albumId = AlbumId(qrs[Albums.id]!!),
-    title = qrs[Albums.title]!!,
-    isAnalog = qrs[Albums.isAnalog]!!
-  )
+open class AlbumRepository(
+  database: Database,
+) : BaseRepository<Album, AlbumDto, AlbumPatchRequestDto>(table = Albums, database = database) {
+  override fun convertToClass(qrs: QueryRowSet): AlbumDto =
+    AlbumDto(
+      albumId = AlbumId(qrs[Albums.id]!!),
+      title = qrs[Albums.title]!!,
+      isAnalog = qrs[Albums.isAnalog]!!,
+    )
 
   override fun create(dto: AlbumDto): Int {
     val exists = database.albums.any { it.id eq dto.albumId.id }
@@ -35,17 +38,18 @@ open class AlbumRepository(database: Database) : BaseRepository<Album, AlbumDto,
     return 1
   }
 
-  fun findByTitle(title: String): AlbumDto? =
-    database.albums.find { it.title eq title }?.toDto()
+  fun findByTitle(title: String): AlbumDto? = database.albums.find { it.title eq title }?.toDto()
 
   override fun patch(dto: AlbumPatchRequestDto): AlbumDto {
-    val fromDb = findById(dto.albumId.id)
-      ?: throw EntityNotFoundException("Could not find SecurityLevel")
-    val newDto = AlbumDto(
-      albumId = fromDb.albumId,
-      title = dto.title ?: fromDb.title,
-      isAnalog = dto.isAnalog ?: fromDb.isAnalog
-    )
+    val fromDb =
+      findById(dto.albumId.id)
+        ?: throw EntityNotFoundException("Could not find SecurityLevel")
+    val newDto =
+      AlbumDto(
+        albumId = fromDb.albumId,
+        title = dto.title ?: fromDb.title,
+        isAnalog = dto.isAnalog ?: fromDb.isAnalog,
+      )
     val updated = database.albums.update(newDto.toEntity())
 
     return if (updated == 1) newDto else fromDb

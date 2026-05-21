@@ -17,24 +17,29 @@ import no.fg.hilflingbackend.model.toDto
 import org.springframework.stereotype.Repository
 
 @Repository
-class GangRepository(database: Database) : BaseRepository<Gang, GangDto, GangPatchRequestDto>(
-  table = Gangs,
-  database = database,
-) {
-  override fun convertToClass(qrs: QueryRowSet): GangDto = GangDto(
-    gangId = GangId(qrs[Gangs.id]!!),
-    name = qrs[Gangs.name]!!,
-  )
+class GangRepository(
+  database: Database,
+) : BaseRepository<Gang, GangDto, GangPatchRequestDto>(
+    table = Gangs,
+    database = database,
+  ) {
+  override fun convertToClass(qrs: QueryRowSet): GangDto =
+    GangDto(
+      gangId = GangId(qrs[Gangs.id]!!),
+      name = qrs[Gangs.name]!!,
+    )
 
   override fun create(dto: GangDto): Int = database.gangs.add(dto.toEntity())
 
   override fun patch(dto: GangPatchRequestDto): GangDto {
-    val fromDb = findById(dto.gangId.id)
-      ?: throw EntityNotFoundException("Could not find Gang")
-    val newDto = GangDto(
-      gangId = fromDb.gangId,
-      name = dto.name ?: fromDb.name,
-    )
+    val fromDb =
+      findById(dto.gangId.id)
+        ?: throw EntityNotFoundException("Could not find Gang")
+    val newDto =
+      GangDto(
+        gangId = fromDb.gangId,
+        name = dto.name ?: fromDb.name,
+      )
     val updated = database.gangs.update(newDto.toEntity())
     return if (updated == 1) newDto else fromDb
   }

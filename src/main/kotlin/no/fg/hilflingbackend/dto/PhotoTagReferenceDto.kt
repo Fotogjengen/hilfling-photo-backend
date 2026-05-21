@@ -8,11 +8,11 @@ import java.util.UUID
 data class PhotoTagReferenceDto(
   val photoTagReferenceId: PhotoTagReferenceId = PhotoTagReferenceId(),
   val photoTag: PhotoTag,
-  val photo: Photo
+  val photo: Photo,
 )
 
 data class PhotoTagReferenceId(
-  override val id: UUID = UUID.randomUUID()
+  override val id: UUID = UUID.randomUUID(),
 ) : UuidId {
   override fun toString(): String = id.toString()
 }

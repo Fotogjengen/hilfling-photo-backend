@@ -13,10 +13,11 @@ interface Place : BaseModel<Place> {
   var name: String
 }
 
-fun Place.toDto(): PlaceDto = PlaceDto(
-  placeId = PlaceId(this.id),
-  name = this.name
-)
+fun Place.toDto(): PlaceDto =
+  PlaceDto(
+    placeId = PlaceId(this.id),
+    name = this.name,
+  )
 
 object Places : BaseTable<Place>("place") {
   val name = varchar("name").bindTo { it.name }

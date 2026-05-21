@@ -13,10 +13,11 @@ interface Category : BaseModel<Category> {
   var name: String
 }
 
-fun Category.toDto(): CategoryDto = CategoryDto(
-  categoryId = CategoryId(this.id),
-  name = this.name
-)
+fun Category.toDto(): CategoryDto =
+  CategoryDto(
+    categoryId = CategoryId(this.id),
+    name = this.name,
+  )
 
 object Categories : BaseTable<Category>("category") {
   val name = varchar("name").bindTo { it.name }

@@ -12,35 +12,34 @@ import no.fg.hilflingbackend.dto.toEntity
 import no.fg.hilflingbackend.model.Position
 import no.fg.hilflingbackend.model.Positions
 import no.fg.hilflingbackend.model.positions
-import no.fg.hilflingbackend.value_object.Email
+import no.fg.hilflingbackend.valueobject.Email
 import org.springframework.stereotype.Repository
 
 @Repository
-open class PositionRepository(database: Database) :
-        BaseRepository<Position, PositionDto, PositionPatchRequestDto>(
-                table = Positions,
-                database = database
-        ) {
+open class PositionRepository(
+  database: Database,
+) : BaseRepository<Position, PositionDto, PositionPatchRequestDto>(
+    table = Positions,
+    database = database,
+  ) {
   override fun convertToClass(qrs: QueryRowSet): PositionDto =
-          PositionDto(
-                  positionId = PositionId(qrs[Positions.id]!!),
-                  title = qrs[Positions.title]!!,
-                  email = Email(qrs[Positions.email]!!)
-          )
+    PositionDto(
+      positionId = PositionId(qrs[Positions.id]!!),
+      title = qrs[Positions.title]!!,
+      email = Email(qrs[Positions.email]!!),
+    )
 
-  override fun create(dto: PositionDto): Int {
-    return database.positions.add(dto.toEntity())
-  }
+  override fun create(dto: PositionDto): Int = database.positions.add(dto.toEntity())
 
   override fun patch(dto: PositionPatchRequestDto): PositionDto {
     val fromDb =
-            findById(dto.positionId.id) ?: throw EntityNotFoundException("Could not find Position")
+      findById(dto.positionId.id) ?: throw EntityNotFoundException("Could not find Position")
     val newDto =
-            PositionDto(
-                    positionId = fromDb.positionId,
-                    title = dto.title ?: fromDb.title,
-                    email = dto.email ?: fromDb.email
-            )
+      PositionDto(
+        positionId = fromDb.positionId,
+        title = dto.title ?: fromDb.title,
+        email = dto.email ?: fromDb.email,
+      )
     val updated = database.positions.update(newDto.toEntity())
 
     return if (updated == 1) newDto else fromDb

@@ -53,8 +53,7 @@ open class EventCardRepository {
                 (Photos.motiveId eq id)
                   .and(Photos.isGoodPicture eq true)
                   .and(Photos.securityLevel.inList(allowedSecurityLevels))
-              }
-              .limit(0, 1)
+              }.limit(0, 1)
               .map { it[Photos.smallUrl] ?: it[Photos.largeUrl] }
               .firstOrNull()
               ?: database
@@ -63,12 +62,10 @@ open class EventCardRepository {
                 .where {
                   (Photos.motiveId eq id)
                     .and(Photos.securityLevel.inList(allowedSecurityLevels))
-                }
-                .limit(0, 1)
+                }.limit(0, 1)
                 .map { it[Photos.smallUrl] ?: it[Photos.largeUrl] }
                 .firstOrNull()
           }
-
 
         EventCardDto(
           motiveId = motiveId,
@@ -124,8 +121,7 @@ open class EventCardRepository {
                   .where {
                     (Photos.motiveId eq id)
                       .and(Photos.securityLevel.inList(allowedSecurityLevels))
-                  }
-                  .limit(0, 1)
+                  }.limit(0, 1)
                   .map { it[Photos.smallUrl] ?: it[Photos.largeUrl] }
                   .firstOrNull()
             }

@@ -11,24 +11,25 @@ import org.springframework.web.bind.annotation.RestController
 @RestController
 @RequestMapping("/auth")
 class LoginController(
-        private val authService: AuthService,
+  private val authService: AuthService,
 ) {
+  data class LoginRequest(
+    val username: String,
+  )
 
-    data class LoginRequest(
-            val username: String,
-    )
+  data class LoginResponse(
+    val token: String,
+  )
 
-    data class LoginResponse(
-            val token: String,
-    )
-
-    @PostMapping("/login")
-    fun login(@RequestBody request: LoginRequest): ResponseEntity<LoginResponse> {
-        val token = authService.login(request.username)
-        return if (token != null) {
-            ResponseEntity.ok(LoginResponse(token))
-        } else {
-            ResponseEntity.status(HttpStatus.UNAUTHORIZED).build()
-        }
+  @PostMapping("/login")
+  fun login(
+    @RequestBody request: LoginRequest,
+  ): ResponseEntity<LoginResponse> {
+    val token = authService.login(request.username)
+    return if (token != null) {
+      ResponseEntity.ok(LoginResponse(token))
+    } else {
+      ResponseEntity.status(HttpStatus.UNAUTHORIZED).build()
     }
+  }
 }

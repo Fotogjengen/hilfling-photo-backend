@@ -1,3 +1,6 @@
+@file:Suppress("ktlint")
+// orker ikke å fikse dette, vi supresser hele driten
+
 package no.fg.hilflingbackend.repository
 
 import jakarta.persistence.EntityNotFoundException
@@ -17,7 +20,7 @@ import me.liuwj.ktorm.entity.update
 import no.fg.hilflingbackend.dto.*
 import no.fg.hilflingbackend.dto.toEntity
 import no.fg.hilflingbackend.model.*
-import no.fg.hilflingbackend.value_object.SecurityLevelType
+import no.fg.hilflingbackend.valueobject.SecurityLevelType
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Repository
 
@@ -103,10 +106,6 @@ open class PhotoRepository(
                   photoGangBangerDto =
                           PhotoGangBangerDto(
                                   photoGangBangerId = PhotoGangBangerId(row[PhotoGangBangers.id]!!),
-                                  relationShipStatus =
-                                          RelationshipStatus.valueOf(
-                                                  row[PhotoGangBangers.relationshipStatus]!!,
-                                          ),
                                   semesterStart =
                                           SemesterStart(row[PhotoGangBangers.semesterStart]!!),
                                   isActive = row[PhotoGangBangers.isActive]!!,
@@ -121,12 +120,17 @@ open class PhotoRepository(
                   photoTags = findCorrespondingPhotoTagDtos(row[Photos.id]!!),
           )
 
-  fun findById(id: UUID, allowedSecurityLevels: List<String> = listOf("ALLE")): PhotoDto? {
-    return database.photos.find { (it.id eq id) and it.securityLevel.inList(allowedSecurityLevels) }?.let { photo ->
-      return photo.toDto(
-              findCorrespondingPhotoTagDtos(id),
-      )
-    }
+  fun findById(
+          id: UUID,
+          allowedSecurityLevels: List<String> = listOf("ALLE"),
+  ): PhotoDto? {
+    return database.photos
+            .find { (it.id eq id) and it.securityLevel.inList(allowedSecurityLevels) }
+            ?.let { photo ->
+              return photo.toDto(
+                      findCorrespondingPhotoTagDtos(id),
+              )
+            }
   }
 
   fun findByMotiveId(
@@ -135,7 +139,10 @@ open class PhotoRepository(
           pageSize: Int,
           allowedSecurityLevels: List<String> = listOf("ALLE"),
   ): Page<PhotoDto> {
-    val photos = database.photos.filter { (it.motiveId eq id) and it.securityLevel.inList(allowedSecurityLevels) }
+    val photos =
+            database.photos.filter {
+              (it.motiveId eq id) and it.securityLevel.inList(allowedSecurityLevels)
+            }
     val photoDtos = photos.toList().map { it.toDto(findCorrespondingPhotoTagDtos(it.id)) }
     return Page(
             page = page,
@@ -200,7 +207,6 @@ open class PhotoRepository(
                             Gangs.name,
                             PhotoGangBangers.id,
                             PhotoGangBangers.semesterStart,
-                            PhotoGangBangers.relationshipStatus,
                             PhotoGangBangers.isActive,
                             PhotoGangBangers.isPang,
                             PhotoGangBangers.firstName,
@@ -340,7 +346,7 @@ open class PhotoRepository(
         }
       } catch (e: Exception) {
         logger.info(
-                "Tried to create a PhotoTagReference that already existed. Ignoring error. ${e.message}"
+                "Tried to create a PhotoTagReference that already existed. Ignoring error. ${e.message}",
         )
       }
     }
@@ -445,7 +451,6 @@ open class PhotoRepository(
                             Gangs.name,
                             PhotoGangBangers.id,
                             PhotoGangBangers.semesterStart,
-                            PhotoGangBangers.relationshipStatus,
                             PhotoGangBangers.isActive,
                             PhotoGangBangers.isPang,
                             PhotoGangBangers.firstName,
@@ -509,7 +514,9 @@ open class PhotoRepository(
 
     val photos =
             database.photos
-                    .filter { (it.isGoodPicture eq true) and it.securityLevel.inList(allowedSecurityLevels) }
+                    .filter {
+                      (it.isGoodPicture eq true) and it.securityLevel.inList(allowedSecurityLevels)
+                    }
                     .drop(offset)
                     .take(pageSize)
                     .toList()

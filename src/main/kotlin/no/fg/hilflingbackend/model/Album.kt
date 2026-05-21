@@ -15,11 +15,12 @@ interface Album : BaseModel<Album> {
   var isAnalog: Boolean
 }
 
-fun Album.toDto(): AlbumDto = AlbumDto(
-  albumId = AlbumId(this.id),
-  title = this.title,
-  isAnalog = this.isAnalog
-)
+fun Album.toDto(): AlbumDto =
+  AlbumDto(
+    albumId = AlbumId(this.id),
+    title = this.title,
+    isAnalog = this.isAnalog,
+  )
 
 object Albums : BaseTable<Album>("album") {
   val title = varchar("title").bindTo { it.title }
