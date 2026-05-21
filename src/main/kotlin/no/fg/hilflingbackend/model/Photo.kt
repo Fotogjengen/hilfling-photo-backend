@@ -9,7 +9,9 @@ import me.liuwj.ktorm.schema.varchar
 import no.fg.hilflingbackend.dto.PhotoDto
 import no.fg.hilflingbackend.dto.PhotoId
 import no.fg.hilflingbackend.dto.PhotoTagDto
+import no.fg.hilflingbackend.dto.SecurityLevelDto
 import no.fg.hilflingbackend.dto.toDto
+import no.fg.hilflingbackend.value_object.SecurityLevelType
 
 interface Photo : BaseModel<Photo> {
   companion object : Entity.Factory<Photo>()
@@ -23,7 +25,7 @@ interface Photo : BaseModel<Photo> {
   // Foreign keys
   var motive: Motive
   var place: Place
-  var securityLevel: SecurityLevel
+  var securityLevel: String
   var gang: Gang?
   var album: Album
   var category: Category
@@ -40,7 +42,7 @@ object Photos : BaseTable<Photo>("photo") {
   // Foreign keys
   val motiveId = uuid("motive_id").references(Motives) { it.motive }
   val placeId = uuid("place_id").references(Places) { it.place }
-  val securityLevelId = uuid("security_level_id").references(SecurityLevels) { it.securityLevel }
+  val securityLevel = varchar("security_level").bindTo { it.securityLevel }
   val gangId = uuid("gang_id").references(Gangs) { it.gang }
   val albumId = uuid("album_id").references(Albums) { it.album }
   val categoryId = uuid("category_id").references(Categories) { it.category }
@@ -58,7 +60,7 @@ fun Photo.toDto(photoTags: List<PhotoTagDto> = listOf()): PhotoDto =
     largeUrl = this.largeUrl,
     motive = this.motive.toDto(),
     placeDto = this.place.toDto(),
-    securityLevel = this.securityLevel.toDto(),
+    securityLevel = SecurityLevelDto(SecurityLevelType.valueOf(this.securityLevel)),
     photoGangBangerDto = this.photoGangBanger.toDto(),
     gang = this.gang?.toDto(),
     albumDto = this.album.toDto(),

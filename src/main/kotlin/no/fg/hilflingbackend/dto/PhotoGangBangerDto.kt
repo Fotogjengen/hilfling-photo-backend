@@ -9,11 +9,12 @@ data class PhotoGangBangerPatchRequestDto(
   val semesterStart: SemesterStart?,
   val isActive: Boolean?,
   val isPang: Boolean?,
-  val address: String?,
-  val zipCode: String?,
-  val city: String?,
-  val samfundetUser: SamfundetUserPatchRequestDto?,
-  val position: PositionDto?
+  val firstName: String?,
+  val lastName: String?,
+  val username: String?,
+  val email: String?,
+  val profilePicture: String?,
+  val phoneNumber: String?,
 )
 
 data class PhotoGangBangerDto(
@@ -22,13 +23,12 @@ data class PhotoGangBangerDto(
   val semesterStart: SemesterStart,
   val isActive: Boolean,
   var isPang: Boolean,
-  // TODO: Add value object
-  val address: String,
-  // TODO: Add value object
-  val zipCode: String,
-  val city: String,
-  val samfundetUser: SamfundetUserDto,
-  val position: PositionDto
+  val firstName: String,
+  val lastName: String,
+  val username: String,
+  val email: String,
+  val profilePicture: String,
+  val phoneNumber: String,
 )
 
 fun PhotoGangBangerDto.toEntity(): PhotoGangBanger {
@@ -39,11 +39,12 @@ fun PhotoGangBangerDto.toEntity(): PhotoGangBanger {
     semesterStart = dto.semesterStart.value
     isPang = dto.isPang
     isActive = dto.isActive
-    address = dto.address
-    zipCode = dto.zipCode
-    city = dto.city
-    position = dto.position.toEntity()
-    samfundetUser = dto.samfundetUser.toEntity()
+    firstName = dto.firstName
+    lastName = dto.lastName
+    username = dto.username
+    email = dto.email
+    profilePicture = dto.profilePicture
+    phoneNumber = dto.phoneNumber
   }
 }
 
@@ -63,9 +64,7 @@ enum class RelationshipStatus(val status: String) {
 // TODO: Move to value objects
 data class SemesterStart private constructor(val value: String) {
   companion object {
-    // Overrides default constructor and adds a validator to it
     operator fun invoke(value: String): SemesterStart {
-      // Validated
       return if (isValidSemesterStart(value)) {
         SemesterStart(value)
       } else {
@@ -77,11 +76,5 @@ data class SemesterStart private constructor(val value: String) {
       // TODO: Implement
       return true
     }
-    /*
-    return Pattern.compile(
-      "([HV])\d\w"
-    ).matcher(semesterStart).matches()
-  }
-     */
   }
 }

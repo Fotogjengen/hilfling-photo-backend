@@ -13,9 +13,9 @@ interface Gang : BaseModel<Gang> {
   var name: String
 }
 
-fun Gang.toDto() = GangDto(
+fun Gang.toDto(): GangDto = GangDto(
   gangId = GangId(this.id),
-  name = this.name
+  name = this.name,
 )
 
 object Gangs : BaseTable<Gang>("gang") {

@@ -29,10 +29,7 @@ import no.fg.hilflingbackend.dto.PlaceId
 import no.fg.hilflingbackend.dto.PositionDto
 import no.fg.hilflingbackend.dto.PositionId
 import no.fg.hilflingbackend.dto.RelationshipStatus
-import no.fg.hilflingbackend.dto.SamfundetUserDto
-import no.fg.hilflingbackend.dto.SamfundetUserId
 import no.fg.hilflingbackend.dto.SecurityLevelDto
-import no.fg.hilflingbackend.dto.SecurityLevelId
 import no.fg.hilflingbackend.dto.SemesterStart
 import no.fg.hilflingbackend.model.Photos
 import no.fg.hilflingbackend.repository.AlbumRepository
@@ -45,8 +42,7 @@ import no.fg.hilflingbackend.repository.PhotoRepository
 import no.fg.hilflingbackend.repository.PhotoTagRepository
 import no.fg.hilflingbackend.repository.PlaceRepository
 import no.fg.hilflingbackend.repository.PositionRepository
-import no.fg.hilflingbackend.repository.SamfundetUserRepository
-import no.fg.hilflingbackend.repository.SecurityLevelRepository
+
 import no.fg.hilflingbackend.value_object.Email
 import no.fg.hilflingbackend.value_object.PhoneNumber
 import no.fg.hilflingbackend.value_object.SecurityLevelType
@@ -74,8 +70,6 @@ class MockDataService {
 
   @Autowired lateinit var positionRepository: PositionRepository
 
-  @Autowired lateinit var samfundetUserRepository: SamfundetUserRepository
-
   @Autowired lateinit var photoTagRepository: PhotoTagRepository
 
   @Autowired lateinit var categoryRepository: CategoryRepository
@@ -86,33 +80,13 @@ class MockDataService {
 
   @Autowired lateinit var motiveRepository: MotiveRepository
 
-  @Autowired lateinit var securityLevelRepository: SecurityLevelRepository
-
   @Autowired lateinit var photoRepository: PhotoRepository
 
   fun generateSecurityLevelData(): List<SecurityLevelDto> =
     listOf(
-      SecurityLevelDto(
-        securityLevelId =
-          SecurityLevelId(
-            UUID.fromString("8214142f-7c08-48ad-9130-fd7ac6b23e51"),
-          ),
-        securityLevelType = SecurityLevelType.FG,
-      ),
-      SecurityLevelDto(
-        securityLevelId =
-          SecurityLevelId(
-            UUID.fromString("8214142f-7c08-48ad-9130-fd7ac6b23e52"),
-          ),
-        securityLevelType = SecurityLevelType.HUSFOLK,
-      ),
-      SecurityLevelDto(
-        securityLevelId =
-          SecurityLevelId(
-            UUID.fromString("8314142f-7c08-48ad-9130-fd7ac6b23e52"),
-          ),
-        securityLevelType = SecurityLevelType.ALLE,
-      ),
+      SecurityLevelDto(securityLevelType = SecurityLevelType.FG),
+      SecurityLevelDto(securityLevelType = SecurityLevelType.HUSFOLK),
+      SecurityLevelDto(securityLevelType = SecurityLevelType.ALLE),
     )
 
   fun generateGangData(): List<GangDto> =
@@ -149,13 +123,13 @@ class MockDataService {
         PhotoDto(
           photoId = PhotoId(uuid),
           largeUrl = url,
+          mediumUrl = url,
+          smallUrl = url,
           motive = motives.random(),
           placeDto = places.random(),
           securityLevel = securityLevels.random(),
           gang = gangs.random(),
           isGoodPicture = true,
-          smallUrl = url,
-          mediumUrl = url,
           photoGangBangerDto = photoGangBangers.random(),
           photoTags = photoTags,
           albumDto = albums.random(),
@@ -703,40 +677,6 @@ class MockDataService {
       ),
     )
 
-  fun generateSamfundetUserData(): List<SamfundetUserDto> =
-    listOf(
-      SamfundetUserDto(
-        samfundetUserId =
-          SamfundetUserId(
-            UUID.fromString("6a89444f-25f6-44d9-8a73-94587d72b822"),
-          ),
-        email = Email("emailtest@gmail.com"),
-        firstName = "Sindre",
-        lastName = "Sivertsen",
-        profilePicturePath =
-          "https://media1.tenor.com/images/79f8be09f39791c6462d30c5ce42e3be/tenor.gif?itemid=18386674",
-        sex = "Mann",
-        username = "sjsivert",
-        securityLevel = generateSecurityLevelData()[0],
-        phoneNumber = PhoneNumber("91382506"),
-      ),
-      SamfundetUserDto(
-        samfundetUserId =
-          SamfundetUserId(
-            UUID.fromString("7a89444f-25f6-44d9-8a73-94587d72b822"),
-          ),
-        email = Email("emailtest@gmail.com"),
-        firstName = "Caroline",
-        lastName = "Sandbråten",
-        profilePicturePath =
-          "https://media1.tenor.com/images/79f8be09f39791c6462d30c5ce42e3be/tenor.gif?itemid=18386674",
-        sex = "Kvinne",
-        username = "Carossa",
-        securityLevel = generateSecurityLevelData()[1],
-        phoneNumber = PhoneNumber("91382506"),
-      ),
-    )
-
   fun generatePhotoGangBangerData(): List<PhotoGangBangerDto> =
     listOf(
       PhotoGangBangerDto(
@@ -744,30 +684,32 @@ class MockDataService {
           PhotoGangBangerId(
             UUID.fromString("6a89444f-25f6-44d9-8a73-94587d72b839"),
           ),
-        address = "Odd Brochmanns Veg 52",
-        city = "Trondheim",
         isActive = true,
         isPang = true,
         relationShipStatus = RelationshipStatus.valueOf("single"),
-        zipCode = "7051",
         semesterStart = SemesterStart("H2018"),
-        samfundetUser = generateSamfundetUserData()[0],
-        position = generatePositionData()[0],
+        firstName = "Sindre",
+        lastName = "Sivertsen",
+        username = "sjsivert",
+        email = "emailtest@gmail.com",
+        profilePicture = "",
+        phoneNumber = "91382506",
       ),
       PhotoGangBangerDto(
         photoGangBangerId =
           PhotoGangBangerId(
             UUID.fromString("7a89444f-25f6-44d9-8a73-94587d72b839"),
           ),
-        address = "Odd Brochmanns Veg 52",
-        city = "Trondheim",
         isActive = true,
         isPang = true,
         relationShipStatus = RelationshipStatus.single,
-        zipCode = "7051",
         semesterStart = SemesterStart("H2018"),
-        samfundetUser = generateSamfundetUserData()[1],
-        position = generatePositionData()[1],
+        firstName = "Caroline",
+        lastName = "Sandbråten",
+        username = "Carossa",
+        email = "emailtest@gmail.com",
+        profilePicture = "",
+        phoneNumber = "91382506",
       ),
     )
 
@@ -820,10 +762,6 @@ class MockDataService {
       // hotoTagRepository.create(it)
     }
     println("PhotoTags Seeded")
-    generateSecurityLevelData().forEach { securityLevelRepository.create(it) }
-    generateSamfundetUserData().forEach { samfundetUserRepository.create(it) }
-    println("SamunfdetUsers seeded")
-    println(samfundetUserRepository.findAll().toString())
     generatePositionData().forEach { positionRepository.create(it) }
     generatePhotoTagData().forEach {
       // photoTagRepository.create(it)
@@ -848,7 +786,7 @@ class MockDataService {
           set(it.id, photoDto.photoId.id)
           set(it.largeUrl, photoDto.largeUrl)
           set(it.motiveId, photoDto.motive.motiveId.id)
-          set(it.securityLevelId, photoDto.securityLevel.securityLevelId.id)
+          set(it.securityLevel, photoDto.securityLevel.securityLevelType.type)
           set(it.gangId, photoDto.gang?.gangId?.id)
           set(it.placeId, photoDto.placeDto.placeId.id)
           set(it.smallUrl, photoDto.smallUrl)

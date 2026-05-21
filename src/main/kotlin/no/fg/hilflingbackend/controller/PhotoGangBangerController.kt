@@ -5,7 +5,6 @@ import no.fg.hilflingbackend.dto.Page
 import no.fg.hilflingbackend.dto.PhotoGangBangerDto
 import no.fg.hilflingbackend.dto.PhotoGangBangerPatchRequestDto
 import no.fg.hilflingbackend.repository.PhotoGangBangerRepository
-import no.fg.hilflingbackend.repository.SamfundetUserRepository
 import no.fg.hilflingbackend.utils.ResponseCreated
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.GetMapping
@@ -22,7 +21,6 @@ import java.util.UUID
 @RequestMapping("/photo_gang_bangers")
 class PhotoGangBangerController(
   val repository: PhotoGangBangerRepository,
-  val samfundetUserRepository: SamfundetUserRepository
 ) : RestExceptionHandler() {
 
   @GetMapping("/{id}")

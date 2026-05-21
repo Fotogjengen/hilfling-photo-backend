@@ -47,14 +47,6 @@ CREATE TABLE PURCHASE_ORDER
     date_deleted DATE DEFAULT NULL
 );
 
-CREATE TABLE SECURITY_LEVEL
-(
-    id           uuid PRIMARY KEY,
-    type         VARCHAR(10),
-    date_created DATE NOT NULL DEFAULT CURRENT_DATE,
-    date_deleted DATE DEFAULT NULL
-);
-
 CREATE TABLE PLACE
 (
     id           uuid PRIMARY KEY NOT NULL,
@@ -103,36 +95,31 @@ CREATE TABLE PHOTOGRAPHY_REQUEST
     date_deleted DATE DEFAULT NULL
 );
 
-CREATE TABLE SAMFUNDET_USER
-(
-    id                uuid PRIMARY KEY,
-    date_created      DATE NOT NULL DEFAULT CURRENT_DATE,
-    first_name        VARCHAR(20),
-    last_name         VARCHAR(20),
-    username          VARCHAR(20) UNIQUE,
-    email             VARCHAR(50),
-    profile_picture   VARCHAR(150),
-    phone_number      VARCHAR(20),
-    sex               VARCHAR(10),
-    security_level_id UUID REFERENCES SECURITY_LEVEL (id),
-    date_deleted DATE DEFAULT NULL
-);
-
-
 CREATE TABLE PHOTO_GANG_BANGER
 (
     id                  uuid PRIMARY KEY,
     date_created        DATE NOT NULL DEFAULT CURRENT_DATE,
     relationship_status VARCHAR(15),
     semester_start      VARCHAR(20),
-    is_active           BOOLEAN,
-    is_pang             BOOLEAN,
-    address             VARCHAR(40),
-    zip_code            VARCHAR(4),
-    city                VARCHAR(30),
-    samfundet_user_id   UUID REFERENCES SAMFUNDET_USER (id),
-    position_id UUID NOT NULL REFERENCES POSITION(id),
+    first_name          VARCHAR(20),
+    last_name           VARCHAR(20),
+    username            VARCHAR(20) UNIQUE,
+    email               VARCHAR(50),
+    is_active           BOOLEAN DEFAULT TRUE,
+    is_pang             BOOLEAN DEFAULT FALSE,
+    profile_picture     VARCHAR(150),
+    phone_number        VARCHAR(20),
     date_deleted DATE DEFAULT NULL
+);
+
+CREATE TABLE PHOTO_GANG_BANGER_TO_POSITION
+(
+    photo_gang_banger_id UUID REFERENCES PHOTO_GANG_BANGER (id),
+    position_id UUID REFERENCES POSITION (id),
+    date_deleted DATE DEFAULT NULL,
+    semester_start VARCHAR(20),
+    PRIMARY KEY (photo_gang_banger_id, semester_start),
+    UNIQUE (position_id, semester_start)
 );
 
 
@@ -142,7 +129,7 @@ CREATE TABLE ARTICLE
     date_created         DATE NOT NULL DEFAULT CURRENT_DATE,
     title                VARCHAR(50),
     plain_text           VARCHAR(1000),
-    security_level_id    UUID REFERENCES SECURITY_LEVEL (id),
+    security_level       VARCHAR(50) CHECK (security_level IN ('FG', 'HUSFOLK', 'ALLE')),
     photo_gang_banger_id UUID REFERENCES PHOTO_GANG_BANGER (id),
     date_deleted DATE DEFAULT NULL
 );
@@ -162,17 +149,18 @@ CREATE TABLE PHOTO
 (
     id                   uuid PRIMARY KEY,
     date_created         DATE NOT NULL DEFAULT CURRENT_DATE,
-    small_url            VARCHAR(255),
+    small_url            VARCHAR(255), 
     medium_url           VARCHAR(255),
     large_url            VARCHAR(255) NOT NULL,
     is_good_picture      BOOLEAN,
     motive_id            UUID REFERENCES MOTIVE (id),
     place_id             UUID REFERENCES PLACE (id),
-    security_level_id    UUID REFERENCES SECURITY_LEVEL (id),
+    security_level       VARCHAR(50) CHECK (security_level IN ('FG', 'HUSFOLK', 'ALLE')),
     gang_id              UUID REFERENCES GANG (id),
     album_id UUID REFERENCES ALBUM(id),
     category_id UUID REFERENCES CATEGORY(id),
     photo_gang_banger_id UUID REFERENCES PHOTO_GANG_BANGER (id),
+    other_meta_data      JSONB,
     date_deleted DATE DEFAULT NULL
 );
 

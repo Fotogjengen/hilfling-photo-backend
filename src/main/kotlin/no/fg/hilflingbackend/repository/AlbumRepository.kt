@@ -11,12 +11,14 @@ import no.fg.hilflingbackend.dto.toEntity
 import no.fg.hilflingbackend.model.Album
 import no.fg.hilflingbackend.model.Albums
 import no.fg.hilflingbackend.model.albums
+import no.fg.hilflingbackend.model.toDto
 import org.springframework.stereotype.Repository
 import jakarta.persistence.EntityNotFoundException
 import me.liuwj.ktorm.dsl.eq
 import me.liuwj.ktorm.dsl.select
 import me.liuwj.ktorm.dsl.where
 import me.liuwj.ktorm.entity.any
+import me.liuwj.ktorm.entity.find
 
 @Repository
 open class AlbumRepository(database: Database) : BaseRepository<Album, AlbumDto, AlbumPatchRequestDto>(table = Albums, database = database) {
@@ -32,6 +34,9 @@ open class AlbumRepository(database: Database) : BaseRepository<Album, AlbumDto,
     database.albums.add(dto.toEntity())
     return 1
   }
+
+  fun findByTitle(title: String): AlbumDto? =
+    database.albums.find { it.title eq title }?.toDto()
 
   override fun patch(dto: AlbumPatchRequestDto): AlbumDto {
     val fromDb = findById(dto.albumId.id)

@@ -13,13 +13,10 @@ import me.liuwj.ktorm.entity.update
 import no.fg.hilflingbackend.dto.Page
 import no.fg.hilflingbackend.dto.PhotoGangBangerDto
 import no.fg.hilflingbackend.dto.PhotoGangBangerPatchRequestDto
-import no.fg.hilflingbackend.dto.SamfundetUserDto
 import no.fg.hilflingbackend.dto.toEntity
-import no.fg.hilflingbackend.exceptions.EntityCreationException
 import no.fg.hilflingbackend.exceptions.EntityExistsException
 import no.fg.hilflingbackend.model.PhotoGangBangers
 import no.fg.hilflingbackend.model.photo_gang_bangers
-import no.fg.hilflingbackend.model.samfundet_users
 import no.fg.hilflingbackend.model.toDto
 import org.springframework.stereotype.Repository
 
@@ -33,7 +30,6 @@ interface IPhotoGangBangerRepository {
 
 @Repository
 class PhotoGangBangerRepository(val database: Database) : IPhotoGangBangerRepository {
-  // TODO: Join with PhotoGangBangerDtoPositions
 
   override fun findById(id: UUID): PhotoGangBangerDto? {
     return database.photo_gang_bangers.find { it.id eq id }?.toDto()
@@ -42,148 +38,76 @@ class PhotoGangBangerRepository(val database: Database) : IPhotoGangBangerReposi
   override fun findAll(page: Int, pageSize: Int): Page<PhotoGangBangerDto> {
     val photoGangBangers = database.photo_gang_bangers
     val photoGangBangerDtos = photoGangBangers.toList().map { it.toDto() }
-
-    return Page(
-            page = page,
-            pageSize = pageSize,
-            totalRecords = photoGangBangers.totalRecords,
-            currentList = photoGangBangerDtos
-    )
+    return Page(page = page, pageSize = pageSize, totalRecords = photoGangBangers.totalRecords, currentList = photoGangBangerDtos)
   }
 
   override fun findAllActives(page: Int, pageSize: Int): Page<PhotoGangBangerDto> {
-    val photoGangBangers =
-            database.photo_gang_bangers.filter {
-              it.isActive eq true
-              it.isPang eq false
-            }
-    val photoGangBangerDtos = photoGangBangers.toList().map { it.toDto() }
-
-    return Page(
-            page = page,
-            pageSize = pageSize,
-            totalRecords = photoGangBangers.totalRecords,
-            currentList = photoGangBangerDtos
-    )
+    val photoGangBangers = database.photo_gang_bangers.filter {
+      it.isActive eq true
+      it.isPang eq false
+    }
+    return Page(page = page, pageSize = pageSize, totalRecords = photoGangBangers.totalRecords, currentList = photoGangBangers.toList().map { it.toDto() })
   }
 
   override fun findAllActivePangs(page: Int, pageSize: Int): Page<PhotoGangBangerDto> {
-    val photoGangBangers =
-            database.photo_gang_bangers.filter {
-              it.isActive eq true
-              it.isPang eq true
-            }
-    val photoGangBangerDtos = photoGangBangers.toList().map { it.toDto() }
-
-    return Page(
-            page = page,
-            pageSize = pageSize,
-            totalRecords = photoGangBangers.totalRecords,
-            currentList = photoGangBangerDtos
-    )
+    val photoGangBangers = database.photo_gang_bangers.filter {
+      it.isActive eq true
+      it.isPang eq true
+    }
+    return Page(page = page, pageSize = pageSize, totalRecords = photoGangBangers.totalRecords, currentList = photoGangBangers.toList().map { it.toDto() })
   }
 
   override fun findAllInactivePangs(page: Int, pageSize: Int): Page<PhotoGangBangerDto> {
-    val photoGangBangers =
-            database.photo_gang_bangers.filter {
-              it.isActive eq false
-              it.isPang eq true
-            }
-    val photoGangBangerDtos = photoGangBangers.toList().map { it.toDto() }
-
-    return Page(
-            page = page,
-            pageSize = pageSize,
-            totalRecords = photoGangBangers.totalRecords,
-            currentList = photoGangBangerDtos
-    )
+    val photoGangBangers = database.photo_gang_bangers.filter {
+      it.isActive eq false
+      it.isPang eq true
+    }
+    return Page(page = page, pageSize = pageSize, totalRecords = photoGangBangers.totalRecords, currentList = photoGangBangers.toList().map { it.toDto() })
   }
 
   fun create(dto: PhotoGangBangerDto): Int {
-    val existingPhotoGangBanger =
-            database.photo_gang_bangers.find {
-              it.samfundetUserId eq dto.samfundetUser.samfundetUserId.id
-            }
-    if (existingPhotoGangBanger != null) {
-      throw EntityExistsException("PhotoGangBanger already exists")
+    val existing = database.photo_gang_bangers.find { it.username eq dto.username }
+    if (existing != null) throw EntityExistsException("PhotoGangBanger already exists")
+
+    return database.insert(PhotoGangBangers) {
+      set(it.id, dto.photoGangBangerId.id)
+      set(it.isActive, dto.isActive)
+      set(it.isPang, dto.isPang)
+      set(it.relationshipStatus, dto.relationShipStatus.status)
+      set(it.semesterStart, dto.semesterStart.value)
+      set(it.firstName, dto.firstName)
+      set(it.lastName, dto.lastName)
+      set(it.username, dto.username)
+      set(it.email, dto.email)
+      set(it.profilePicture, dto.profilePicture)
+      set(it.phoneNumber, dto.phoneNumber)
     }
-
-    val samfundetUser =
-            database.samfundet_users.find { it.id eq dto.samfundetUser.samfundetUserId.id }
-    if (samfundetUser == null) {
-      try {
-        database.samfundet_users.add(dto.samfundetUser.toEntity())
-      } catch (_: Error) {
-        throw EntityCreationException("Could not create new SamfundetUser")
-      }
-    }
-
-    val created =
-            database.insert(PhotoGangBangers) {
-              set(it.id, dto.photoGangBangerId.id)
-              set(it.isActive, dto.isActive)
-              set(it.isPang, dto.isPang)
-              set(it.address, dto.address)
-              set(it.city, dto.city)
-              set(it.positionId, dto.position.positionId.id)
-              set(it.relationshipStatus, dto.relationShipStatus.status)
-              set(it.samfundetUserId, dto.samfundetUser.samfundetUserId.id)
-              set(it.semesterStart, dto.semesterStart.value)
-              set(it.zipCode, dto.zipCode)
-            }
-
-    return created
   }
 
   fun patch(dto: PhotoGangBangerPatchRequestDto): PhotoGangBangerDto? {
-    val photoGangBangerDtoFromDb =
-            findById(dto.photoGangBangerId.id)
-                    ?: throw EntityNotFoundException("Could not find PhotoGangBanger")
+    val fromDb = findById(dto.photoGangBangerId.id)
+      ?: throw EntityNotFoundException("Could not find PhotoGangBanger")
 
-    var samfundetUserDto = photoGangBangerDtoFromDb.samfundetUser
-    if (dto.samfundetUser != null) {
-      samfundetUserDto =
-              SamfundetUserDto(
-                      samfundetUserId = photoGangBangerDtoFromDb.samfundetUser.samfundetUserId,
-                      firstName = dto.samfundetUser.firstName
-                                      ?: photoGangBangerDtoFromDb.samfundetUser.firstName,
-                      lastName = dto.samfundetUser.lastName
-                                      ?: photoGangBangerDtoFromDb.samfundetUser.lastName,
-                      username = dto.samfundetUser.username
-                                      ?: photoGangBangerDtoFromDb.samfundetUser.username,
-                      phoneNumber = dto.samfundetUser.phoneNumber
-                                      ?: photoGangBangerDtoFromDb.samfundetUser.phoneNumber,
-                      email = dto.samfundetUser.email
-                                      ?: photoGangBangerDtoFromDb.samfundetUser.email,
-                      profilePicturePath = dto.samfundetUser.profilePicturePath
-                                      ?: photoGangBangerDtoFromDb.samfundetUser.profilePicturePath,
-                      sex = dto.samfundetUser.sex ?: photoGangBangerDtoFromDb.samfundetUser.sex,
-                      securityLevel = dto.samfundetUser.securityLevel
-                                      ?: photoGangBangerDtoFromDb.samfundetUser.securityLevel
-              )
-      database.samfundet_users.update(samfundetUserDto.toEntity())
-    }
+    val updated = PhotoGangBangerDto(
+      photoGangBangerId = fromDb.photoGangBangerId,
+      relationShipStatus = dto.relationshipStatus ?: fromDb.relationShipStatus,
+      semesterStart = dto.semesterStart ?: fromDb.semesterStart,
+      isActive = dto.isActive ?: fromDb.isActive,
+      isPang = dto.isPang ?: fromDb.isPang,
+      firstName = dto.firstName ?: fromDb.firstName,
+      lastName = dto.lastName ?: fromDb.lastName,
+      username = dto.username ?: fromDb.username,
+      email = dto.email ?: fromDb.email,
+      profilePicture = dto.profilePicture ?: fromDb.profilePicture,
+      phoneNumber = dto.phoneNumber ?: fromDb.phoneNumber,
+    )
 
-    val photoGangBangerDto =
-            PhotoGangBangerDto(
-                    photoGangBangerId = photoGangBangerDtoFromDb.photoGangBangerId,
-                    samfundetUser = samfundetUserDto,
-                    city = dto.city ?: photoGangBangerDtoFromDb.city,
-                    zipCode = dto.zipCode ?: photoGangBangerDtoFromDb.zipCode,
-                    address = dto.address ?: photoGangBangerDtoFromDb.address,
-                    isPang = dto.isPang ?: photoGangBangerDtoFromDb.isPang,
-                    isActive = dto.isActive ?: photoGangBangerDtoFromDb.isActive,
-                    semesterStart = dto.semesterStart ?: photoGangBangerDtoFromDb.semesterStart,
-                    relationShipStatus = dto.relationshipStatus
-                                    ?: photoGangBangerDtoFromDb.relationShipStatus,
-                    position = dto.position ?: photoGangBangerDtoFromDb.position
-            )
-
-    database.photo_gang_bangers.update(photoGangBangerDto.toEntity())
+    database.photo_gang_bangers.update(updated.toEntity())
     return findById(dto.photoGangBangerId.id)
   }
 
-  fun findBySamfundetUserId(samfundetUserId: UUID): PhotoGangBangerDto? {
-    return database.photo_gang_bangers.find { it.samfundetUserId eq samfundetUserId }?.toDto()
+  fun findByUsername(username: String): PhotoGangBangerDto? {
+    return database.photo_gang_bangers.find { it.username eq username }?.toDto()
   }
+
 }

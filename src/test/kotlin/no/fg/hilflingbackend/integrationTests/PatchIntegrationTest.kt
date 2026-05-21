@@ -28,11 +28,7 @@ import no.fg.hilflingbackend.dto.PositionDto
 import no.fg.hilflingbackend.dto.PositionId
 import no.fg.hilflingbackend.dto.PositionPatchRequestDto
 import no.fg.hilflingbackend.dto.RelationshipStatus
-import no.fg.hilflingbackend.dto.SamfundetUserDto
-import no.fg.hilflingbackend.dto.SamfundetUserId
 import no.fg.hilflingbackend.dto.SecurityLevelDto
-import no.fg.hilflingbackend.dto.SecurityLevelId
-import no.fg.hilflingbackend.dto.SecurityLevelPatchRequestDto
 import no.fg.hilflingbackend.dto.SemesterStart
 import no.fg.hilflingbackend.repository.AlbumRepository
 import no.fg.hilflingbackend.repository.CategoryRepository
@@ -43,11 +39,8 @@ import no.fg.hilflingbackend.repository.PhotoGangBangerRepository
 import no.fg.hilflingbackend.repository.PhotoTagRepository
 import no.fg.hilflingbackend.repository.PlaceRepository
 import no.fg.hilflingbackend.repository.PositionRepository
-import no.fg.hilflingbackend.repository.SamfundetUserRepository
-import no.fg.hilflingbackend.repository.SecurityLevelRepository
 import no.fg.hilflingbackend.service.PhotoService
 import no.fg.hilflingbackend.value_object.Email
-import no.fg.hilflingbackend.value_object.PhoneNumber
 import no.fg.hilflingbackend.value_object.SecurityLevelType
 import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.Test
@@ -55,7 +48,6 @@ import org.junit.jupiter.api.TestInstance
 import org.junit.jupiter.api.assertAll
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
-import org.springframework.mock.web.MockMultipartFile
 import java.time.LocalDate
 import java.util.UUID
 import kotlin.test.assertEquals
@@ -84,9 +76,6 @@ class PatchIntegrationTest {
   lateinit var gangRepository: GangRepository
 
   @Autowired
-  lateinit var securityLevelRepository: SecurityLevelRepository
-
-  @Autowired
   lateinit var positionRepository: PositionRepository
 
   @Autowired
@@ -96,19 +85,13 @@ class PatchIntegrationTest {
   lateinit var photoTagRepository: PhotoTagRepository
 
   @Autowired
-  lateinit var samfundetUserRepository: SamfundetUserRepository
-
-  @Autowired
   lateinit var photoGangBangerRepository: PhotoGangBangerRepository
 
   @Autowired
   lateinit var motiveRepository: MotiveRepository
 
   lateinit var createdPhotoId: UUID
-  val mockMultiPartFile = MockMultipartFile("file", "test.png", "text/plain", "some xml".toByteArray())
 
-  final val securityLevelId1 = SecurityLevelId()
-  final val securityLevelId2 = SecurityLevelId()
   final val placeId1 = PlaceId()
   final val placeId2 = PlaceId()
   final val albumId1 = AlbumId()
@@ -119,8 +102,6 @@ class PatchIntegrationTest {
   final val categoryId2 = CategoryId()
   final val positionId1 = PositionId()
   final val positionId2 = PositionId()
-  final val samfundetUserId1 = SamfundetUserId()
-  final val samfundetUserId2 = SamfundetUserId()
   final val motiveId1 = MotiveId()
   final val motiveId2 = MotiveId()
   final val eventOwnerId1 = EventOwnerId()
@@ -172,16 +153,8 @@ class PatchIntegrationTest {
       placeId = placeId2,
       name = "place name 2",
     )
-  final val securityLevelDto1 =
-    SecurityLevelDto(
-      securityLevelId = securityLevelId1,
-      securityLevelType = SecurityLevelType.FG,
-    )
-  final val securityLevelDto2 =
-    SecurityLevelDto(
-      securityLevelId = securityLevelId2,
-      securityLevelType = SecurityLevelType.ALLE,
-    )
+  final val securityLevelDto1 = SecurityLevelDto(securityLevelType = SecurityLevelType.FG)
+  final val securityLevelDto2 = SecurityLevelDto(securityLevelType = SecurityLevelType.ALLE)
   final val albumDto1 =
     AlbumDto(
       albumId = albumId1,
@@ -212,30 +185,6 @@ class PatchIntegrationTest {
       eventOwnerId = eventOwnerId2,
       name = EventOwnerName.ISFIT,
     )
-  final val samfundetUserDto1 =
-    SamfundetUserDto(
-      samfundetUserId = samfundetUserId1,
-      firstName = "Caroline",
-      lastName = "Sandsbråten",
-      username = "carosa",
-      phoneNumber = PhoneNumber("22225555"),
-      email = Email("mymail@samfundet.no"),
-      profilePicturePath = "https://static.independent.co.uk/2021/12/07/10/PRI213893584.jpg?quality=75&width=982&height=726&auto=webp",
-      sex = "Ja",
-      securityLevel = securityLevelDto1,
-    )
-  final val samfundetUserDto2 =
-    SamfundetUserDto(
-      samfundetUserId = samfundetUserId2,
-      firstName = "Sindre",
-      lastName = "Sivertsen",
-      username = "sinsiv",
-      phoneNumber = PhoneNumber("12345678"),
-      email = Email("sindre@samfundet.no"),
-      profilePicturePath = "https://static.independent.co.uk/2021/12/07/10/PRI213893584.jpg?quality=75&width=982&height=726&auto=webp",
-      sex = "Ja",
-      securityLevel = securityLevelDto2,
-    )
   final val photoGangBangerDto1 =
     PhotoGangBangerDto(
       photoGangBangerId = photoGangBangerId1,
@@ -243,11 +192,12 @@ class PatchIntegrationTest {
       semesterStart = SemesterStart.invoke("H2019"),
       isActive = true,
       isPang = true,
-      address = "Gang banger address",
-      position = positionDto1,
-      zipCode = "1476",
-      city = "Trondheim",
-      samfundetUser = samfundetUserDto1,
+      firstName = "Caroline",
+      lastName = "Sandsbråten",
+      username = "carosa",
+      email = "mymail@samfundet.no",
+      profilePicture = "https://static.independent.co.uk/2021/12/07/10/PRI213893584.jpg",
+      phoneNumber = "22225555",
     )
   final val photoGangBangerDto2 =
     PhotoGangBangerDto(
@@ -256,11 +206,12 @@ class PatchIntegrationTest {
       semesterStart = SemesterStart.invoke("H2018"),
       isActive = true,
       isPang = true,
-      address = "Gang banger address 2",
-      position = positionDto2,
-      zipCode = "1473",
-      city = "Trondheim 2",
-      samfundetUser = samfundetUserDto2,
+      firstName = "Sindre",
+      lastName = "Sivertsen",
+      username = "sinsiv",
+      email = "sindre@samfundet.no",
+      profilePicture = "https://static.independent.co.uk/2021/12/07/10/PRI213893584.jpg",
+      phoneNumber = "12345678",
     )
   final val motiveDto1 =
     MotiveDto(
@@ -291,64 +242,37 @@ class PatchIntegrationTest {
     positionRepository.create(positionDto2)
     placeRepository.create(placeDto1)
     placeRepository.create(placeDto2)
-    securityLevelRepository.create(securityLevelDto1)
-    securityLevelRepository.create(securityLevelDto2)
     albumRepository.create(albumDto1)
     albumRepository.create(albumDto2)
     categoryRepository.create(categoryDto1)
     categoryRepository.create(categoryDto2)
     eventOwnerRepository.create(eventOwnerDto1)
     eventOwnerRepository.create(eventOwnerDto2)
-    samfundetUserRepository.create(samfundetUserDto1)
-    samfundetUserRepository.create(samfundetUserDto2)
     photoGangBangerRepository.create(photoGangBangerDto1)
     photoGangBangerRepository.create(photoGangBangerDto2)
     motiveRepository.create(motiveDto1)
     motiveRepository.create(motiveDto2)
 
     createdPhotoId =
-      UUID.fromString(
-        photoService
-          .createNewMotiveAndSaveDigitalPhotos(
-            motiveString = motiveDto1.title,
-            placeString = placeDto1.name,
-            eventOwnerString = eventOwnerDto1.name.eventOwnerName,
-            securityLevelId = securityLevelId1.id,
-            albumId = albumId1.id,
-            photoGangBangerId = photoGangBangerId1.id,
-            photoFileList = listOf(mockMultiPartFile),
-            tagList = listOf(photoTagDto1.name),
-            categoryName = categoryDto1.name,
-            isGoodPhotoList = listOf(true),
-            dateCreated = LocalDate.now(),
-            dateTaken = LocalDate.now(),
-          )[0]
-          .split("/")
-          .last()
-          .split(".")
-          .first(),
-      )
-  }
-
-  @Test
-  fun shouldPatchSecurityLevel() {
-    val change =
-      SecurityLevelPatchRequestDto(
-        securityLevelId = securityLevelId1,
-        securityLevelType = SecurityLevelType.FG,
-      )
-    securityLevelRepository.patch(change)
-
-    val changedFromDb =
-      securityLevelRepository.findById(
-        securityLevelId1.id,
-      )
-
-    assertAll(
-      "patch SecurityLevel",
-      { assertNotNull(changedFromDb) },
-      { assertEquals(changedFromDb?.securityLevelType, change.securityLevelType) },
-    )
+      photoService
+        .createNewMotiveAndSaveDigitalPhotos(
+          motiveString = motiveDto1.title,
+          placeString = placeDto1.name,
+          eventOwnerString = eventOwnerDto1.name.eventOwnerName,
+          securityLevel = securityLevelDto1.securityLevelType.type,
+          albumTitle = albumDto1.title,
+          photoGangBangerId = photoGangBangerId1.id,
+          smallUrl = "test-photo-small.jpg",
+          mediumUrl = "test-photo-medium.jpg",
+          largeUrl = "test-photo.jpg",
+          tagList = listOf(photoTagDto1.name),
+          categoryName = categoryDto1.name,
+          isGoodPhoto = true,
+          dateTaken = LocalDate.now(),
+        )
+        .first()
+        .photoId
+        .id
   }
 
   @Test
@@ -447,7 +371,7 @@ class PatchIntegrationTest {
       { assertFalse(changedFromDb.isGoodPicture) },
       { assertEquals(changedFromDb.motive.motiveId.id, motiveDto2.motiveId.id) },
       { assertEquals(changedFromDb.placeDto.placeId.id, placeDto2.placeId.id) },
-      { assertEquals(changedFromDb.securityLevel.securityLevelId.id, securityLevelDto2.securityLevelId.id) },
+      { assertEquals(changedFromDb.securityLevel.securityLevelType, securityLevelDto2.securityLevelType) },
       { assertEquals(changedFromDb.gang?.gangId?.id, gangDto2.gangId.id) },
       { assertEquals(changedFromDb.albumDto.albumId.id, albumDto2.albumId.id) },
       { assertEquals(changedFromDb.categoryDto.categoryId.id, categoryDto2.categoryId.id) },

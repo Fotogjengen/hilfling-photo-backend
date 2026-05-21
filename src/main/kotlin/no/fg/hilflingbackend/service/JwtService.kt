@@ -43,12 +43,14 @@ class JwtService {
             username: String,
             position: Position?,
             securityLevel: SecurityLevelType,
+            role: String,
     ): String {
         val claims =
                 mapOf(
                         "username" to username,
                         "position" to position,
-                        "securityLevel" to securityLevel
+                        "securityLevel" to securityLevel,
+                        "role" to role,
                 )
 
         return Jwts.builder()
@@ -97,6 +99,30 @@ class JwtService {
      */
     fun extractSecurityLevel(token: String): String {
         return extractClaim(token) { claims -> claims.get("securityLevel", String::class.java) }
+    }
+
+    fun extractRole(token: String): String {
+        return extractClaim(token) { claims -> claims.get("role", String::class.java) }
+    }
+
+    fun allowedSecurityLevels(bearerHeader: String?): List<String> {
+        if (bearerHeader == null) return listOf("ALLE")
+        val token = bearerHeader.removePrefix("Bearer ").trim()
+        return try {
+            when (extractRole(token)) {
+                "FG" -> listOf("FG", "HUSFOLK", "ALLE")
+                "HUSFOLK" -> listOf("HUSFOLK", "ALLE")
+                else -> listOf("ALLE")
+            }
+        } catch (e: Exception) {
+            listOf("ALLE")
+        }
+    }
+
+    fun isTokenValid(token: String): Boolean = try {
+        !isTokenExpired(token)
+    } catch (e: Exception) {
+        false
     }
 
     private fun <T> extractClaim(token: String, claimResolver: Function<Claims, T>): T {

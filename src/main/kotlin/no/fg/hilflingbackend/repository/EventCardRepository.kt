@@ -5,6 +5,7 @@ import me.liuwj.ktorm.dsl.and
 import me.liuwj.ktorm.dsl.desc
 import me.liuwj.ktorm.dsl.eq
 import me.liuwj.ktorm.dsl.from
+import me.liuwj.ktorm.dsl.inList
 import me.liuwj.ktorm.dsl.innerJoin
 import me.liuwj.ktorm.dsl.isNotNull
 import me.liuwj.ktorm.dsl.limit
@@ -29,6 +30,7 @@ open class EventCardRepository {
   fun getLatestEventCards(
     eventOwner: EventOwner,
     numberOfEventCards: Int,
+    allowedSecurityLevels: List<String> = listOf("ALLE"),
   ): List<EventCardDto> =
     database
       .from(Motives)
@@ -46,17 +48,28 @@ open class EventCardRepository {
           motiveId?.let { id ->
             database
               .from(Photos)
-              .select(Photos.smallUrl)
+              .select(Photos.smallUrl, Photos.largeUrl)
               .where {
-                (Photos.motiveId eq id).and(Photos.isGoodPicture eq true)
-              }.limit(0, 1) // Only fetch one record
-              .map { it[Photos.smallUrl] }
+                (Photos.motiveId eq id)
+                  .and(Photos.isGoodPicture eq true)
+                  .and(Photos.securityLevel.inList(allowedSecurityLevels))
+              }
+              .limit(0, 1)
+              .map { it[Photos.smallUrl] ?: it[Photos.largeUrl] }
               .firstOrNull()
+              ?: database
+                .from(Photos)
+                .select(Photos.smallUrl, Photos.largeUrl)
+                .where {
+                  (Photos.motiveId eq id)
+                    .and(Photos.securityLevel.inList(allowedSecurityLevels))
+                }
+                .limit(0, 1)
+                .map { it[Photos.smallUrl] ?: it[Photos.largeUrl] }
+                .firstOrNull()
           }
 
-        println(
-          "Motive ID: $motiveId → Selected Small URL: $selectedPhotoUrl",
-        ) // Debugging
+
         EventCardDto(
           motiveId = motiveId,
           motiveTitle = row[Motives.title],
@@ -71,6 +84,7 @@ open class EventCardRepository {
     searchTerm: String,
     page: Int = 0,
     pageSize: Int = 10,
+    allowedSecurityLevels: List<String> = listOf("ALLE"),
   ): Page<EventCardDto> {
     val eventCards =
       database
@@ -96,12 +110,24 @@ open class EventCardRepository {
             motiveId?.let { id ->
               database
                 .from(Photos)
-                .select(Photos.smallUrl)
+                .select(Photos.smallUrl, Photos.largeUrl)
                 .where {
-                  (Photos.motiveId eq id).and(Photos.isGoodPicture eq true)
+                  (Photos.motiveId eq id)
+                    .and(Photos.isGoodPicture eq true)
+                    .and(Photos.securityLevel.inList(allowedSecurityLevels))
                 }.limit(0, 1)
-                .map { it[Photos.smallUrl] }
+                .map { it[Photos.smallUrl] ?: it[Photos.largeUrl] }
                 .firstOrNull()
+                ?: database
+                  .from(Photos)
+                  .select(Photos.smallUrl, Photos.largeUrl)
+                  .where {
+                    (Photos.motiveId eq id)
+                      .and(Photos.securityLevel.inList(allowedSecurityLevels))
+                  }
+                  .limit(0, 1)
+                  .map { it[Photos.smallUrl] ?: it[Photos.largeUrl] }
+                  .firstOrNull()
             }
 
           EventCardDto(

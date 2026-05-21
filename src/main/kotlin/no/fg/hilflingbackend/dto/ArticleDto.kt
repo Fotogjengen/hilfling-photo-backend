@@ -1,13 +1,15 @@
 package no.fg.hilflingbackend.dto
 
-import no.fg.hilflingbackend.model.Article
 import java.util.UUID
+import no.fg.hilflingbackend.model.Article
+import no.fg.hilflingbackend.model.toDto
+import no.fg.hilflingbackend.value_object.SecurityLevelType
 
 data class ArticlePatchRequestDto(
   val articleId: ArticleId,
   val title: String?,
   val plainText: String?,
-  val securityLevel: SecurityLevelDto?
+  val securityLevel: SecurityLevelDto?,
 )
 
 data class ArticleDto(
@@ -15,14 +17,20 @@ data class ArticleDto(
   val title: String,
   val plainText: String,
   val securityLevel: SecurityLevelDto,
-  val photoGangBanger: PhotoGangBangerDto
+  val photoGangBanger: PhotoGangBangerDto,
 )
 
-data class ArticleId(
-  override val id: UUID = UUID.randomUUID()
-) : UuidId {
+data class ArticleId(override val id: UUID = UUID.randomUUID()) : UuidId {
   override fun toString(): String = id.toString()
 }
+
+fun Article.toDto(): ArticleDto = ArticleDto(
+  articleId = ArticleId(this.id),
+  title = this.title,
+  plainText = this.plainText,
+  securityLevel = SecurityLevelDto(SecurityLevelType.valueOf(this.securityLevel)),
+  photoGangBanger = this.photoGangBanger.toDto(),
+)
 
 fun ArticleDto.toEntity(): Article {
   val dto = this
@@ -30,7 +38,7 @@ fun ArticleDto.toEntity(): Article {
     id = dto.articleId.id
     title = dto.title
     plainText = dto.plainText
-    securityLevel = dto.securityLevel.toEntity()
+    securityLevel = dto.securityLevel.securityLevelType.type
     photoGangBanger = dto.photoGangBanger.toEntity()
   }
 }
