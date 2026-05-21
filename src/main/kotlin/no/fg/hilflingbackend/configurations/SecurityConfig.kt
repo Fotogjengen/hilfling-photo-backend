@@ -16,6 +16,7 @@ import org.springframework.security.core.userdetails.UserDetailsService
 import org.springframework.security.core.userdetails.UsernameNotFoundException
 import org.springframework.security.web.SecurityFilterChain
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher
 import org.springframework.web.cors.CorsConfiguration
 import org.springframework.web.cors.CorsConfigurationSource
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource
@@ -53,7 +54,16 @@ class SecurityConfig(
                 jwtAuthFilter: JwtAuthFilter,
         ): SecurityFilterChain {
                 http
-                        .csrf { it.disable() }
+                        .csrf { csrf ->
+                                // This is a stateless REST API authenticated via the
+                                // X-hilfling-token
+                                // custom header. CSRF attacks require browser cookie-based
+                                // sessions,
+                                // which this API doesn't use, so CSRF is not applicable.
+                                csrf.ignoringRequestMatchers(
+                                        AntPathRequestMatcher.antMatcher("/**")
+                                )
+                        }
                         .cors { it.configurationSource(corsConfigurationSource()) }
                         .headers { headers -> headers.frameOptions { it.sameOrigin() } }
                         .sessionManagement {
