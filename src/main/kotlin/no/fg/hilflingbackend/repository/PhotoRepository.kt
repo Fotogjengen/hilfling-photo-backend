@@ -376,11 +376,14 @@ open class PhotoRepository(
   fun findAllAnalogPhotos(
           page: Int,
           pageSize: Int,
+          allowedSecurityLevels: List<String> = listOf("ALLE"),
   ): Page<PhotoDto> {
     val analogAlbums = database.albums.filter { it.isAnalog eq true }
 
     val photos =
-            analogAlbums.toList().map { album -> database.photos.filter { it.albumId eq album.id } }
+            analogAlbums.toList().map { album ->
+              database.photos.filter { (it.albumId eq album.id) and it.securityLevel.inList(allowedSecurityLevels) }
+            }
 
     val totalRecords = photos.sumOf { it.totalRecords }
 

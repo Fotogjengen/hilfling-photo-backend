@@ -127,7 +127,8 @@ class PhotoService(
   fun getAllAnalogPhotos(
     page: Int,
     pageSize: Int,
-  ): Page<PhotoDto> = photoRepository.findAllAnalogPhotos(page, pageSize)
+    allowedSecurityLevels: List<String> = listOf("ALLE"),
+  ): Page<PhotoDto> = photoRepository.findAllAnalogPhotos(page, pageSize, allowedSecurityLevels)
 
   fun getAllDigitalPhotos(
     page: Int,

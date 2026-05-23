@@ -159,7 +159,12 @@ class PhotoController(
     @RequestParam("pageSize", required = false) pageSize: Int?,
   ): ResponseEntity<Page<PhotoDto>> =
     ResponseOk(
-      photoService.getByMotiveId(id, page ?: 0, pageSize ?: 100, allowedSecurityLevels(request)),
+      photoService.getByMotiveId(
+        id,
+        page ?: 0,
+        pageSize ?: 100,
+        allowedSecurityLevels(request),
+      ),
     )
 
   @GetMapping
@@ -186,8 +191,7 @@ class PhotoController(
         motive ?: UUID(0L, 0L),
         tag ?: listOf<String>(),
         LocalDate.parse(fromDate ?: "1970-01-01") ?: LocalDate.now(),
-        LocalDate.parse(toDate ?: LocalDate.now().toString())
-          ?: LocalDate.now(),
+        LocalDate.parse(toDate ?: LocalDate.now().toString()) ?: LocalDate.now(),
         category ?: "",
         place ?: UUID(0L, 0L),
         isGoodPic ?: false,
@@ -206,16 +210,25 @@ class PhotoController(
     @RequestParam("pageSize", required = false) pageSize: Int?,
   ): ResponseEntity<Page<PhotoDto>> =
     ResponseOk(
-      photoService.getGoodPhotos(page ?: 0, pageSize ?: 10, allowedSecurityLevels(request)),
+      photoService.getGoodPhotos(
+        page ?: 0,
+        pageSize ?: 10,
+        allowedSecurityLevels(request),
+      ),
     )
 
   @GetMapping("/analog")
   fun getAllAnalogPhotos(
+    request: HttpServletRequest,
     @RequestParam("page", required = false) page: Int?,
     @RequestParam("pageSize", required = false) pageSize: Int?,
   ): ResponseEntity<Page<PhotoDto>> =
     ResponseOk(
-      photoService.getAllAnalogPhotos(page ?: 0, pageSize ?: 100),
+      photoService.getAllAnalogPhotos(
+        page ?: 0,
+        pageSize ?: 100,
+        allowedSecurityLevels(request),
+      ),
     )
 
   @GetMapping("/digital")
