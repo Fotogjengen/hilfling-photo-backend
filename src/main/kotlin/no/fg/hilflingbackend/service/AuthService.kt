@@ -9,7 +9,7 @@ class AuthService(
   val jwtService: JwtService,
   val photoGangBangerRepository: PhotoGangBangerRepository,
 ) {
-  fun login(username: String): String? {
+  fun login(username: String): String {
     val fgUser = photoGangBangerRepository.findByUsername(username)
 
     if (fgUser != null) {
