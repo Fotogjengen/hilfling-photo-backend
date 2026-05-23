@@ -37,7 +37,7 @@ class JwtService(
     val claims =
       mapOf(
         "username" to username,
-        "position" to position,
+        "positionId" to position?.id?.toString(),
         "securityLevel" to securityLevel,
         "role" to role,
       )
