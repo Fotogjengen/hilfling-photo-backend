@@ -1,9 +1,14 @@
 package no.fg.hilflingbackend.configurations
 
+import io.jsonwebtoken.ExpiredJwtException
+import io.jsonwebtoken.MalformedJwtException
+import io.jsonwebtoken.UnsupportedJwtException
+import io.jsonwebtoken.security.SignatureException
 import jakarta.servlet.FilterChain
 import jakarta.servlet.http.HttpServletRequest
 import jakarta.servlet.http.HttpServletResponse
 import no.fg.hilflingbackend.service.JwtService
+import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
 import org.springframework.security.core.authority.SimpleGrantedAuthority
@@ -21,22 +26,22 @@ import org.springframework.web.filter.OncePerRequestFilter
 class JwtAuthFilter : OncePerRequestFilter() {
   @Autowired private lateinit var jwtService: JwtService
 
+  private val log = LoggerFactory.getLogger(JwtAuthFilter::class.java)
+
   override fun doFilterInternal(
     request: HttpServletRequest,
     response: HttpServletResponse,
     filterChain: FilterChain,
   ) {
-    val authHeader = request.getHeader("X-hilfling-token")
-    if (authHeader == null) {
+    val token = request.getHeader("X-hilfling-token")
+    if (token == null) {
       filterChain.doFilter(request, response)
       return
     }
 
-    val token = authHeader.substring(7)
     try {
       val username = jwtService.extractUserName(token)
-      if (username != null &&
-        SecurityContextHolder.getContext().authentication == null &&
+      if (SecurityContextHolder.getContext().authentication == null &&
         jwtService.isTokenValid(token)
       ) {
         val role = jwtService.extractRole(token)
@@ -45,8 +50,22 @@ class JwtAuthFilter : OncePerRequestFilter() {
         authToken.details = WebAuthenticationDetailsSource().buildDetails(request)
         SecurityContextHolder.getContext().authentication = authToken
       }
-    } catch (e: Exception) {
-      // Invalid or expired token — continue as unauthenticated
+    } catch (e: ExpiredJwtException) {
+      log.warn("JWT token expired: {}", e.message)
+      response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Token expired")
+      return
+    } catch (e: SignatureException) {
+      log.warn("JWT signature invalid: {}", e.message)
+      response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Invalid token signature")
+      return
+    } catch (e: MalformedJwtException) {
+      log.warn("JWT token malformed: {}", e.message)
+      response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Malformed token")
+      return
+    } catch (e: UnsupportedJwtException) {
+      log.warn("JWT token unsupported: {}", e.message)
+      response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Unsupported token")
+      return
     }
 
     filterChain.doFilter(request, response)
