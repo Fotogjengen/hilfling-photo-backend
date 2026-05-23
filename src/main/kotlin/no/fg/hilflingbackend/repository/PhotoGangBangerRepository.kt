@@ -66,7 +66,7 @@ class PhotoGangBangerRepository(
     database
       .from(PhotoGangBangerToPositions)
       .innerJoin(Positions, on = PhotoGangBangerToPositions.positionId eq Positions.id)
-      .select(Positions.id, Positions.title, Positions.email, PhotoGangBangerToPositions.semesterStart)
+      .select(Positions.id, Positions.title, Positions.email, PhotoGangBangerToPositions.semesterStart, PhotoGangBangerToPositions.isActive)
       .where {
         (PhotoGangBangerToPositions.photoGangBangerId eq memberId)
           .and(PhotoGangBangerToPositions.dateDeleted.isNull())
@@ -76,6 +76,7 @@ class PhotoGangBangerRepository(
           positionId = PositionId(row[Positions.id]!!),
           title = row[Positions.title]!!,
           email = Email(row[Positions.email]!!),
+          isActive = row[PhotoGangBangerToPositions.isActive] ?: false,
         )
       }
 

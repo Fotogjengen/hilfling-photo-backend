@@ -4,7 +4,7 @@ import io.jsonwebtoken.Claims
 import io.jsonwebtoken.Jwts
 import io.jsonwebtoken.io.Decoders
 import io.jsonwebtoken.security.Keys
-import no.fg.hilflingbackend.model.Position
+import no.fg.hilflingbackend.dto.JwtTokenPayload
 import no.fg.hilflingbackend.valueobject.SecurityLevelType
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.security.core.userdetails.UserDetails
@@ -19,34 +19,19 @@ class JwtService(
 ) {
   private val secretKey: SecretKey = Keys.hmacShaKeyFor(Decoders.BASE64.decode(jwtSecretB64))
 
-  /**
-   * Generates a JWT token with the specified username, positionId, email and securityLevel
-   *
-   * @param username the username to include in the token
-   * @param positionId the position id to determine internal access
-   * @param email the email of the user
-   * @param securityLevel the security level of the user
-   * @return the generated JWT token as a string
-   */
-  fun generateToken(
-    username: String,
-    position: Position?,
-    securityLevel: SecurityLevelType,
-    role: String,
-  ): String {
+  fun generateToken(payload: JwtTokenPayload): String {
     val claims =
       mapOf(
-        "username" to username,
-        "positionId" to position?.id?.toString(),
-        "securityLevel" to securityLevel,
-        "role" to role,
+        "username" to payload.username,
+        "positionId" to payload.positionId,
+        "securityLevel" to payload.securityLevel,
       )
 
     return Jwts
       .builder()
       .claims()
       .add(claims)
-      .subject(username)
+      .subject(payload.username)
       .issuedAt(Date(System.currentTimeMillis()))
       .expiration(Date(System.currentTimeMillis() + 1000 * 5 * 60 * 60))
       // TODO: this should be coordinated with ITK, so that our token expires at the
@@ -56,39 +41,22 @@ class JwtService(
       .compact()
   }
 
-  /**
-   * Extracts the username from the given JWT token.
-   *
-   * @param token the JWT token to extract the username from
-   * @return the username extracted from the token
-   */
-  fun extractUserName(token: String): String = extractClaim(token, Claims::getSubject)
-
-  /**
-   * Extracts the position ID from the given JWT token
-   *
-   * @param token the JWT token to extract the user ID from
-   * @return the position ID extracted from the token
-   */
-  fun extractPositionId(token: String): String = extractClaim(token) { claims -> claims.get("positionId", String::class.java) }
-
-  /**
-   * Extracts the security level of the JWT token
-   *
-   * @param token the JWT token to extract the isAdmin claim from
-   * @return the securityLevel value extracted from the token
-   */
-  fun extractSecurityLevel(token: String): String = extractClaim(token) { claims -> claims.get("securityLevel", String::class.java) }
-
-  fun extractRole(token: String): String = extractClaim(token) { claims -> claims.get("role", String::class.java) }
+  fun extractPayload(token: String): JwtTokenPayload {
+    val claims = extractAllClaims(token)
+    return JwtTokenPayload(
+      username = claims.subject,
+      positionId = claims.get("positionId", String::class.java),
+      securityLevel = SecurityLevelType.valueOf(claims.get("securityLevel", String::class.java)),
+    )
+  }
 
   fun allowedSecurityLevels(bearerHeader: String?): List<String> {
     if (bearerHeader == null) return listOf("ALLE")
     val token = bearerHeader.removePrefix("Bearer ").trim()
     return try {
-      when (extractRole(token)) {
-        "FG" -> listOf("FG", "HUSFOLK", "ALLE")
-        "HUSFOLK" -> listOf("HUSFOLK", "ALLE")
+      when (extractPayload(token).securityLevel) {
+        SecurityLevelType.FG -> listOf("FG", "HUSFOLK", "ALLE")
+        SecurityLevelType.HUSFOLK -> listOf("HUSFOLK", "ALLE")
         else -> listOf("ALLE")
       }
     } catch (e: Exception) {
@@ -103,12 +71,12 @@ class JwtService(
       false
     }
 
-  private fun <T> extractClaim(
+  fun validateToken(
     token: String,
-    claimResolver: Function<Claims, T>,
-  ): T {
-    val claims = extractAllClaims(token)
-    return claimResolver.apply(claims)
+    userDetails: UserDetails,
+  ): Boolean {
+    val payload = extractPayload(token)
+    return payload.username == userDetails.username && !isTokenExpired(token)
   }
 
   private fun extractAllClaims(token: String): Claims =
@@ -119,20 +87,10 @@ class JwtService(
       .parseSignedClaims(token)
       .payload
 
-  /**
-   * Validates the given JWT token against the provided user details.
-   *
-   * @param token the JWT token to validate
-   * @param userDetails the user details to validate against
-   * @return true if the token is valid, false otherwise
-   */
-  fun validateToken(
+  private fun <T> extractClaim(
     token: String,
-    userDetails: UserDetails,
-  ): Boolean {
-    val userName = extractUserName(token)
-    return userName == userDetails.username && !isTokenExpired(token)
-  }
+    claimResolver: Function<Claims, T>,
+  ): T = claimResolver.apply(extractAllClaims(token))
 
   private fun isTokenExpired(token: String): Boolean = extractExpiration(token).before(Date())
 

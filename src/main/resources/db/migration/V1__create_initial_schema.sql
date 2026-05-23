@@ -118,9 +118,15 @@ CREATE TABLE PHOTO_GANG_BANGER_TO_POSITION
     position_id UUID REFERENCES POSITION (id),
     date_deleted DATE DEFAULT NULL,
     semester_start VARCHAR(20),
+    is_active BOOLEAN NOT NULL DEFAULT FALSE,
     PRIMARY KEY (photo_gang_banger_id, semester_start),
     UNIQUE (position_id, semester_start)
 );
+
+/* Only one active position per member */
+CREATE UNIQUE INDEX one_active_position_per_member
+    ON PHOTO_GANG_BANGER_TO_POSITION (photo_gang_banger_id)
+    WHERE is_active = TRUE AND date_deleted IS NULL;
 
 
 CREATE TABLE ARTICLE

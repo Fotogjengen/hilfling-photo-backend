@@ -4,6 +4,7 @@ import me.liuwj.ktorm.database.Database
 import me.liuwj.ktorm.entity.Entity
 import me.liuwj.ktorm.entity.sequenceOf
 import me.liuwj.ktorm.schema.Table
+import me.liuwj.ktorm.schema.boolean
 import me.liuwj.ktorm.schema.date
 import me.liuwj.ktorm.schema.uuid
 import me.liuwj.ktorm.schema.varchar
@@ -38,4 +39,5 @@ object PhotoGangBangerToPositions : Table<Nothing>("photo_gang_banger_to_positio
   val positionId = uuid("position_id")
   val semesterStart = varchar("semester_start")
   val dateDeleted = date("date_deleted")
+  val isActive = boolean("is_active")
 }

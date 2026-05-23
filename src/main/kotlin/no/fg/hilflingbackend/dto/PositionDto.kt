@@ -14,6 +14,7 @@ data class PositionDto(
   val positionId: PositionId = PositionId(),
   val title: String,
   val email: Email,
+  val isActive: Boolean = false,
 )
 
 fun PositionDto.toEntity(): Position {

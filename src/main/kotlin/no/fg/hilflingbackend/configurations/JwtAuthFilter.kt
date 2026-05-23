@@ -40,13 +40,12 @@ class JwtAuthFilter : OncePerRequestFilter() {
     }
 
     try {
-      val username = jwtService.extractUserName(token)
+      val payload = jwtService.extractPayload(token)
       if (SecurityContextHolder.getContext().authentication == null &&
         jwtService.isTokenValid(token)
       ) {
-        val role = jwtService.extractRole(token)
-        val authorities = listOf(SimpleGrantedAuthority("ROLE_$role"))
-        val authToken = UsernamePasswordAuthenticationToken(username, null, authorities)
+        val authorities = listOf(SimpleGrantedAuthority("ROLE_${payload.securityLevel.type}"))
+        val authToken = UsernamePasswordAuthenticationToken(payload.username, null, authorities)
         authToken.details = WebAuthenticationDetailsSource().buildDetails(request)
         SecurityContextHolder.getContext().authentication = authToken
       }

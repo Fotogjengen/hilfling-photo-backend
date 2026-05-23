@@ -1,5 +1,6 @@
 package no.fg.hilflingbackend.service
 
+import no.fg.hilflingbackend.dto.JwtTokenPayload
 import no.fg.hilflingbackend.repository.PhotoGangBangerRepository
 import no.fg.hilflingbackend.valueobject.SecurityLevelType
 import org.springframework.stereotype.Service
@@ -13,9 +14,25 @@ class AuthService(
     val fgUser = photoGangBangerRepository.findByUsername(username)
 
     if (fgUser != null) {
-      return jwtService.generateToken(username, null, SecurityLevelType.ALLE, "FG")
+      return jwtService.generateToken(
+        JwtTokenPayload(
+          username = username,
+          positionId =
+            fgUser.positions
+              .firstOrNull { it.isActive }
+              ?.positionId
+              ?.toString(),
+          securityLevel = SecurityLevelType.FG,
+        ),
+      )
     }
 
-    return jwtService.generateToken(username, null, SecurityLevelType.ALLE, "HUSFOLK")
+    return jwtService.generateToken(
+      JwtTokenPayload(
+        username = username,
+        positionId = null,
+        securityLevel = SecurityLevelType.HUSFOLK,
+      ),
+    )
   }
 }
