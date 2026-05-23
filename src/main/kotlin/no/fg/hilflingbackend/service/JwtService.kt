@@ -6,27 +6,18 @@ import io.jsonwebtoken.io.Decoders
 import io.jsonwebtoken.security.Keys
 import no.fg.hilflingbackend.model.Position
 import no.fg.hilflingbackend.valueobject.SecurityLevelType
+import org.springframework.beans.factory.annotation.Value
 import org.springframework.security.core.userdetails.UserDetails
 import org.springframework.stereotype.Service
-import java.util.Base64
 import java.util.Date
 import java.util.function.Function
-import javax.crypto.KeyGenerator
 import javax.crypto.SecretKey
 
-/**
- * Service class for handling JWT (JSON Web Token) operations. This class provides methods to
- * generate, validate, and extract information from JWTs.
- */
 @Service
-class JwtService {
-  private var secretKey: String = ""
-
-  init {
-    val keyGen = KeyGenerator.getInstance("HmacSHA256")
-    val sk: SecretKey = keyGen.generateKey()
-    secretKey = Base64.getEncoder().encodeToString(sk.encoded)
-  }
+class JwtService(
+  @Value("\${jwt.secret}") jwtSecretB64: String,
+) {
+  private val secretKey: SecretKey = Keys.hmacShaKeyFor(Decoders.BASE64.decode(jwtSecretB64))
 
   /**
    * Generates a JWT token with the specified username, positionId, email and securityLevel
@@ -61,13 +52,8 @@ class JwtService {
       // TODO: this should be coordinated with ITK, so that our token expires at the
       // same time as theirs
       .and()
-      .signWith(getKey())
+      .signWith(secretKey)
       .compact()
-  }
-
-  private fun getKey(): SecretKey {
-    val keyBytes = Decoders.BASE64.decode(secretKey)
-    return Keys.hmacShaKeyFor(keyBytes)
   }
 
   /**
@@ -128,7 +114,7 @@ class JwtService {
   private fun extractAllClaims(token: String): Claims =
     Jwts
       .parser()
-      .verifyWith(getKey())
+      .verifyWith(secretKey)
       .build()
       .parseSignedClaims(token)
       .payload
