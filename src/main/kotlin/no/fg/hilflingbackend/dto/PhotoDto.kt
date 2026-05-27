@@ -2,53 +2,59 @@ package no.fg.hilflingbackend.dto
 
 import no.fg.hilflingbackend.model.Photo
 import no.fg.hilflingbackend.valueobject.ImageFileName
+import no.fg.hilflingbackend.valueobject.SecurityLevelType
 import java.time.LocalDate
 import java.util.UUID
 
+data class PhotoUploadRequestDto(
+  val goodPicture: Boolean = false,
+  val analog: Boolean = false,
+  val motive: MotiveDto,
+  val gang: GangDto?,
+  val photoGangBangerDto: PhotoGangBangerDto,
+  val dateTaken: LocalDate,
+)
+
 data class PhotoPatchRequestDto(
   val photoId: PhotoId,
-  val isGoodPicture: Boolean?,
+  val goodPicture: Boolean?,
+  val analog: Boolean?,
   val motive: MotiveDto?,
-  val placeDto: PlaceDto?,
-  val securityLevel: SecurityLevelDto?,
   val gang: GangDto?,
-  val albumDto: AlbumDto?,
-  val categoryDto: CategoryDto?,
   val photoGangBangerDto: PhotoGangBangerDto?,
   val photoTags: List<String>?,
 )
 
 data class PhotoDto(
   val photoId: PhotoId = PhotoId(),
-  val isGoodPicture: Boolean = false,
-  val smallUrl: String,
-  val mediumUrl: String,
-  val largeUrl: String,
+  val goodPicture: Boolean = false,
+  val analog: Boolean = false,
+  val imageNumber: Int,
+  val pageNumber: Int,
+  val imageProd: String?,
+  val imageWeb: String?,
+  val imageThumb: String,
   val motive: MotiveDto,
-  val placeDto: PlaceDto,
-  val securityLevel: SecurityLevelDto,
+  val securityLevel: SecurityLevelDto = motive.securityLevel,
   val gang: GangDto?,
-  val albumDto: AlbumDto,
-  val categoryDto: CategoryDto,
   val photoGangBangerDto: PhotoGangBangerDto,
-  val photoTags: List<PhotoTagDto>,
   val dateTaken: LocalDate,
 ) {
   fun toEntity(): Photo {
     val photo = this
     return Photo {
       this.id = photo.photoId.id
-      this.isGoodPicture = photo.isGoodPicture
-      this.smallUrl = photo.smallUrl
-      this.mediumUrl = photo.mediumUrl
-      this.largeUrl = photo.largeUrl
+      this.goodPicture = photo.goodPicture
+      this.analog = photo.analog
+      this.imageNumber = photo.imageNumber
+      this.pageNumber = photo.pageNumber
+      this.securityLevel = photo.securityLevel.securityLevelType.type
+      this.imageProd = photo.imageProd
+      this.imageWeb = photo.imageWeb
+      this.imageThumb = photo.imageThumb
       this.dateCreated = photo.dateTaken
       this.motive = photo.motive.toEntity()
-      this.place = photo.placeDto.toEntity()
-      this.securityLevel = photo.securityLevel.securityLevelType.type
       this.gang = photo.gang?.toEntity()
-      this.album = photo.albumDto.toEntity()
-      this.category = photo.categoryDto.toEntity()
       this.photoGangBanger = photo.photoGangBangerDto.toEntity()
     }
   }
@@ -56,36 +62,31 @@ data class PhotoDto(
   companion object {
     fun createWithFileName(
       fileName: ImageFileName,
-      isGoodPicture: Boolean,
+      goodPicture: Boolean,
+      analog: Boolean = false,
+      imageNumber: Int,
+      pageNumber: Int,
       motive: MotiveDto,
-      placeDto: PlaceDto,
-      securityLevel: SecurityLevelDto,
       gang: GangDto? = null,
-      albumDto: AlbumDto,
-      photoTags: List<PhotoTagDto>,
-      categoryDto: CategoryDto,
       photoGangBangerDto: PhotoGangBangerDto,
       dateTaken: LocalDate,
     ): Pair<PhotoDto, ImageFileName> {
-      // Generate unique ID
       val photoId = PhotoId()
       val newUniqueFileName = ImageFileName("${photoId}${fileName.getFileExtension()}")
 
       return Pair(
         PhotoDto(
           photoId = photoId,
-          isGoodPicture = isGoodPicture,
-          smallUrl = newUniqueFileName.filename,
-          mediumUrl = newUniqueFileName.filename,
-          largeUrl = newUniqueFileName.filename,
+          goodPicture = goodPicture,
+          analog = analog,
+          imageNumber = imageNumber,
+          pageNumber = pageNumber,
+          imageProd = null,
+          imageWeb = null,
+          imageThumb = newUniqueFileName.filename,
           motive = motive,
-          placeDto = placeDto,
           gang = gang,
-          albumDto = albumDto,
-          categoryDto = categoryDto,
-          securityLevel = securityLevel,
           photoGangBangerDto = photoGangBangerDto,
-          photoTags = photoTags,
           dateTaken = dateTaken,
         ),
         newUniqueFileName,

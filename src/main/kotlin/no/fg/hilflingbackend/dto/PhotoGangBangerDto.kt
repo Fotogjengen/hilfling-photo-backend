@@ -1,6 +1,7 @@
 package no.fg.hilflingbackend.dto
 
 import no.fg.hilflingbackend.model.PhotoGangBanger
+import no.fg.hilflingbackend.valueobject.SemesterStart
 import java.util.UUID
 
 data class PhotoGangBangerPatchRequestDto(
@@ -27,7 +28,7 @@ data class PhotoGangBangerDto(
   val email: String,
   val profilePicture: String,
   val phoneNumber: String,
-  val positions: List<PositionDto> = emptyList(),
+  val positions: List<MemberPositionDto> = emptyList(),
 )
 
 fun PhotoGangBangerDto.toEntity(): PhotoGangBanger =
@@ -48,23 +49,4 @@ data class PhotoGangBangerId(
   override val id: UUID = UUID.randomUUID(),
 ) : UuidId {
   override fun toString(): String = id.toString()
-}
-
-// TODO: Move to value objects
-data class SemesterStart private constructor(
-  val value: String,
-) {
-  companion object {
-    operator fun invoke(value: String): SemesterStart =
-      if (isValidSemesterStart(value)) {
-        SemesterStart(value)
-      } else {
-        throw IllegalArgumentException("Invalid semester start value: '$value'")
-      }
-
-    fun isValidSemesterStart(semesterStart: String): Boolean {
-      // TODO: Implement
-      return true
-    }
-  }
 }

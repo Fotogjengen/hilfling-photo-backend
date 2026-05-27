@@ -11,20 +11,24 @@ import no.fg.hilflingbackend.dto.AlbumId
 interface Album : BaseModel<Album> {
   companion object : Entity.Factory<Album>()
 
-  var title: String
-  var isAnalog: Boolean
+  var name: String
+  var description: String?
+  var analog: Boolean
 }
 
 fun Album.toDto(): AlbumDto =
   AlbumDto(
     albumId = AlbumId(this.id),
-    title = this.title,
-    isAnalog = this.isAnalog,
+    name = this.name,
+    description = this.description,
+    analog = this.analog,
   )
 
 object Albums : BaseTable<Album>("album") {
-  val title = varchar("title").bindTo { it.title }
-  val isAnalog = boolean("is_analog").bindTo { it.isAnalog }
+  val name = varchar("name").bindTo { it.name }
+  val description = varchar("description").bindTo { it.description }
+  val analog = boolean("analog").bindTo { it.analog }
 }
 
-val Database.albums get() = this.sequenceOf(Albums)
+val Database.albums
+  get() = this.sequenceOf(Albums)

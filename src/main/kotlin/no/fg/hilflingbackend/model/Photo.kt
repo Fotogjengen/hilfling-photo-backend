@@ -4,67 +4,67 @@ import me.liuwj.ktorm.database.Database
 import me.liuwj.ktorm.entity.Entity
 import me.liuwj.ktorm.entity.sequenceOf
 import me.liuwj.ktorm.schema.boolean
+import me.liuwj.ktorm.schema.int
 import me.liuwj.ktorm.schema.uuid
 import me.liuwj.ktorm.schema.varchar
 import no.fg.hilflingbackend.dto.PhotoDto
 import no.fg.hilflingbackend.dto.PhotoId
-import no.fg.hilflingbackend.dto.PhotoTagDto
 import no.fg.hilflingbackend.dto.SecurityLevelDto
-import no.fg.hilflingbackend.dto.toDto
 import no.fg.hilflingbackend.valueobject.SecurityLevelType
 
 interface Photo : BaseModel<Photo> {
   companion object : Entity.Factory<Photo>()
 
-  var isGoodPicture: Boolean
+  var goodPicture: Boolean
+  var analog: Boolean
+  var imageNumber: Int
+  var pageNumber: Int
 
-  var smallUrl: String
-  var mediumUrl: String
-  var largeUrl: String
+  var securityLevel: String
+  var imageProd: String?
+  var imageWeb: String?
+  var imageThumb: String
 
   // Foreign keys
   var motive: Motive
-  var place: Place
-  var securityLevel: String
   var gang: Gang?
-  var album: Album
-  var category: Category
   var photoGangBanger: PhotoGangBanger
 }
 
 object Photos : BaseTable<Photo>("photo") {
-  val isGoodPicture = boolean("is_good_picture").bindTo { it.isGoodPicture }
+  val goodPicture = boolean("good_picture").bindTo { it.goodPicture }
+  val analog = boolean("analog").bindTo { it.analog }
+  val imageNumber = int("image_number").bindTo { it.imageNumber }
+  val pageNumber = int("page_number").bindTo { it.pageNumber }
 
-  val smallUrl = varchar("small_url").bindTo { it.smallUrl }
-  val mediumUrl = varchar("medium_url").bindTo { it.mediumUrl }
-  val largeUrl = varchar("large_url").bindTo { it.largeUrl }
+  val securityLevel = varchar("security_level").bindTo { it.securityLevel }
+  val imageProd = varchar("image_prod").bindTo { it.imageProd }
+  val imageWeb = varchar("image_web").bindTo { it.imageWeb }
+  val imageThumb = varchar("image_thumb").bindTo { it.imageThumb }
 
   // Foreign keys
   val motiveId = uuid("motive_id").references(Motives) { it.motive }
-  val placeId = uuid("place_id").references(Places) { it.place }
-  val securityLevel = varchar("security_level").bindTo { it.securityLevel }
   val gangId = uuid("gang_id").references(Gangs) { it.gang }
-  val albumId = uuid("album_id").references(Albums) { it.album }
-  val categoryId = uuid("category_id").references(Categories) { it.category }
-  val photoGangBangerId = uuid("photo_gang_banger_id").references(PhotoGangBangers) { it.photoGangBanger }
+  val photoGangBangerId =
+    uuid("photo_gang_banger_id").references(PhotoGangBangers) { it.photoGangBanger }
 }
 
-val Database.photos get() = this.sequenceOf(Photos)
+val Database.photos
+  get() = this.sequenceOf(Photos)
 
-fun Photo.toDto(photoTags: List<PhotoTagDto> = listOf()): PhotoDto =
+fun Photo.toDto(): PhotoDto =
   PhotoDto(
     photoId = PhotoId(this.id),
-    isGoodPicture = this.isGoodPicture,
-    smallUrl = this.smallUrl,
-    mediumUrl = this.mediumUrl,
-    largeUrl = this.largeUrl,
-    motive = this.motive.toDto(),
-    placeDto = this.place.toDto(),
+    goodPicture = this.goodPicture,
+    analog = this.analog,
+    imageNumber = this.imageNumber,
+    pageNumber = this.pageNumber,
     securityLevel = SecurityLevelDto(SecurityLevelType.valueOf(this.securityLevel)),
+    imageProd = this.imageProd,
+    imageWeb = this.imageWeb,
+    imageThumb = this.imageThumb,
+    motive = this.motive.toDto(),
     photoGangBangerDto = this.photoGangBanger.toDto(),
     gang = this.gang?.toDto(),
-    albumDto = this.album.toDto(),
-    categoryDto = this.category.toDto(),
-    photoTags = photoTags,
     dateTaken = this.dateCreated,
   )

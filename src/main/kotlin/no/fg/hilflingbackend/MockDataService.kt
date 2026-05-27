@@ -14,22 +14,21 @@ import no.fg.hilflingbackend.dto.EventOwnerId
 import no.fg.hilflingbackend.dto.EventOwnerName
 import no.fg.hilflingbackend.dto.GangDto
 import no.fg.hilflingbackend.dto.GangId
+import no.fg.hilflingbackend.dto.MotiveCreateRequestDto
 import no.fg.hilflingbackend.dto.MotiveDto
 import no.fg.hilflingbackend.dto.MotiveId
 import no.fg.hilflingbackend.dto.PhotoDto
 import no.fg.hilflingbackend.dto.PhotoGangBangerDto
 import no.fg.hilflingbackend.dto.PhotoGangBangerId
 import no.fg.hilflingbackend.dto.PhotoGangBangerPositionDto
-import no.fg.hilflingbackend.dto.PhotoGangBangerPositionId
 import no.fg.hilflingbackend.dto.PhotoId
-import no.fg.hilflingbackend.dto.PhotoTagDto
-import no.fg.hilflingbackend.dto.PhotoTagId
 import no.fg.hilflingbackend.dto.PlaceDto
 import no.fg.hilflingbackend.dto.PlaceId
 import no.fg.hilflingbackend.dto.PositionDto
 import no.fg.hilflingbackend.dto.PositionId
 import no.fg.hilflingbackend.dto.SecurityLevelDto
-import no.fg.hilflingbackend.dto.SemesterStart
+import me.liuwj.ktorm.dsl.insert
+import no.fg.hilflingbackend.model.PhotoGangBangerToPositions
 import no.fg.hilflingbackend.model.Photos
 import no.fg.hilflingbackend.repository.AlbumRepository
 import no.fg.hilflingbackend.repository.CategoryRepository
@@ -38,12 +37,12 @@ import no.fg.hilflingbackend.repository.GangRepository
 import no.fg.hilflingbackend.repository.MotiveRepository
 import no.fg.hilflingbackend.repository.PhotoGangBangerRepository
 import no.fg.hilflingbackend.repository.PhotoRepository
-import no.fg.hilflingbackend.repository.PhotoTagRepository
 import no.fg.hilflingbackend.repository.PlaceRepository
 import no.fg.hilflingbackend.repository.PositionRepository
 import no.fg.hilflingbackend.valueobject.Email
 import no.fg.hilflingbackend.valueobject.PhoneNumber
 import no.fg.hilflingbackend.valueobject.SecurityLevelType
+import no.fg.hilflingbackend.valueobject.SemesterStart
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import java.net.URI
@@ -67,8 +66,6 @@ class MockDataService {
   @Autowired lateinit var photoGangBangerRepository: PhotoGangBangerRepository
 
   @Autowired lateinit var positionRepository: PositionRepository
-
-  @Autowired lateinit var photoTagRepository: PhotoTagRepository
 
   @Autowired lateinit var categoryRepository: CategoryRepository
 
@@ -106,32 +103,59 @@ class MockDataService {
 
   fun generatePhoto(): List<PhotoDto> {
     val list = mutableListOf<PhotoDto>()
-    val motives = generateMotiveData()
-    val places = generatePlaceData()
-    val securityLevels = generateSecurityLevelData()
+    val motives = generateMotiveData().map {
+      MotiveDto(
+        motiveId = MotiveId(),
+        title = it.title,
+        date = it.date,
+        categoryDto = it.categoryDto,
+        eventOwnerDto = it.eventOwnerDto,
+        placeDto = it.placeDto,
+        securityLevel = it.securityLevel,
+        albumDto = it.albumDto,
+        analogAlbumDto = it.analogAlbumDto,
+        dateCreated = LocalDate.now(),
+      )
+    }
+    val analogMotives = motives.filter { it.analogAlbumDto != null }
     val gangs = generateGangData()
     val photoGangBangers = generatePhotoGangBangerData()
-    val photoTags = generatePhotoTagData()
-    val albums = generateAlbumData()
-    val categories = generateCategoryData()
     for (i in 1..1000) {
       val uuid = UUID.randomUUID()
       val url = getPhotoFromApi()
       list.add(
         PhotoDto(
           photoId = PhotoId(uuid),
-          largeUrl = url,
-          mediumUrl = url,
-          smallUrl = url,
+          goodPicture = listOf(true, false).random(),
+          analog = false,
+          imageNumber = i,
+          pageNumber = 1,
+          imageProd = url,
+          imageWeb = url,
+          imageThumb = url,
           motive = motives.random(),
-          placeDto = places.random(),
-          securityLevel = securityLevels.random(),
           gang = gangs.random(),
-          isGoodPicture = true,
           photoGangBangerDto = photoGangBangers.random(),
-          photoTags = photoTags,
-          albumDto = albums.random(),
-          categoryDto = categories.random(),
+          dateTaken = LocalDate.now(),
+        ),
+      )
+    }
+    for (i in 1..200) {
+      val uuid = UUID.randomUUID()
+      val url = getPhotoFromApi()
+      list.add(
+        PhotoDto(
+          photoId = PhotoId(uuid),
+          goodPicture = listOf(true, false).random(),
+          analog = true,
+          imageNumber = i,
+          pageNumber = i / 36 + 1,
+          imageProd = url,
+          imageWeb = url,
+          imageThumb = url,
+          motive = analogMotives.random(),
+          gang = gangs.random(),
+          photoGangBangerDto = photoGangBangers.random(),
           dateTaken = LocalDate.now(),
         ),
       )
@@ -153,423 +177,527 @@ class MockDataService {
       ),
     )
 
-  fun generateMotiveData(): List<MotiveDto> =
+  fun generateMotiveData(): List<MotiveCreateRequestDto> =
     listOf(
-      MotiveDto(
-        motiveId = MotiveId(UUID.fromString("94540f3c-77b8-4bc5-acc7-4dd7d8cc4bcd")),
+      MotiveCreateRequestDto(
         title = "Amber Butts spiller på klubben",
         albumDto = generateAlbumData().random(),
+        analogAlbumDto = generateAnalogAlbumData().random(),
         eventOwnerDto = generateEventOwnerData().random(),
         categoryDto = generateCategoryData().random(),
-        dateCreated = LocalDate.of(2019, 3, 15),
+        placeDto = generatePlaceData().random(),
+        securityLevel = SecurityLevelDto(securityLevelType = SecurityLevelType.ALLE),
+        date = LocalDate.of(2019, 3, 15),
       ),
-      MotiveDto(
-        motiveId = MotiveId(UUID.fromString("94540f3c-77b8-4bc5-acc7-4dd7d8cc5bcd")),
+      MotiveCreateRequestDto(
         title = "High As a Kite 2020",
         albumDto = generateAlbumData().random(),
+        analogAlbumDto = generateAnalogAlbumData().random(),
         eventOwnerDto = generateEventOwnerData().random(),
         categoryDto = generateCategoryData().random(),
-        dateCreated = LocalDate.of(2020, 2, 8),
+        placeDto = generatePlaceData().random(),
+        securityLevel = SecurityLevelDto(securityLevelType = SecurityLevelType.ALLE),
+        date = LocalDate.of(2020, 2, 8),
       ),
-      MotiveDto(
-        motiveId = MotiveId(UUID.fromString("a1540f3c-77b8-4bc5-acc7-4dd7d8cc4bc1")),
+      MotiveCreateRequestDto(
         title = "UKErevyen 2019 Generalprøve",
         albumDto = generateAlbumData().random(),
+        analogAlbumDto = null,
         eventOwnerDto = generateEventOwnerData().random(),
         categoryDto = generateCategoryData().random(),
-        dateCreated = LocalDate.of(2019, 10, 12),
+        placeDto = generatePlaceData().random(),
+        securityLevel = SecurityLevelDto(securityLevelType = SecurityLevelType.ALLE),
+        date = LocalDate.of(2019, 10, 12),
       ),
-      MotiveDto(
-        motiveId = MotiveId(UUID.fromString("a2540f3c-77b8-4bc5-acc7-4dd7d8cc4bc2")),
+      MotiveCreateRequestDto(
         title = "Storsalen konsert med Karpe",
         albumDto = generateAlbumData().random(),
+        analogAlbumDto = null,
         eventOwnerDto = generateEventOwnerData().random(),
         categoryDto = generateCategoryData().random(),
-        dateCreated = LocalDate.of(2018, 11, 23),
+        placeDto = generatePlaceData().random(),
+        securityLevel = SecurityLevelDto(securityLevelType = SecurityLevelType.ALLE),
+        date = LocalDate.of(2018, 11, 23),
       ),
-      MotiveDto(
-        motiveId = MotiveId(UUID.fromString("a3540f3c-77b8-4bc5-acc7-4dd7d8cc4bc3")),
+      MotiveCreateRequestDto(
         title = "Fotogjengen gruppebilde Vår 2019",
         albumDto = generateAlbumData().random(),
+        analogAlbumDto = generateAnalogAlbumData().random(),
         eventOwnerDto = generateEventOwnerData().random(),
         categoryDto = generateCategoryData().random(),
-        dateCreated = LocalDate.of(2019, 4, 5),
+        placeDto = generatePlaceData().random(),
+        securityLevel = SecurityLevelDto(securityLevelType = SecurityLevelType.ALLE),
+        date = LocalDate.of(2019, 4, 5),
       ),
-      MotiveDto(
-        motiveId = MotiveId(UUID.fromString("a4540f3c-77b8-4bc5-acc7-4dd7d8cc4bc4")),
+      MotiveCreateRequestDto(
         title = "Lyche Kaffe Bar åpning",
         albumDto = generateAlbumData().random(),
+        analogAlbumDto = null,
         eventOwnerDto = generateEventOwnerData().random(),
         categoryDto = generateCategoryData().random(),
-        dateCreated = LocalDate.of(2017, 9, 1),
+        placeDto = generatePlaceData().random(),
+        securityLevel = SecurityLevelDto(securityLevelType = SecurityLevelType.ALLE),
+        date = LocalDate.of(2017, 9, 1),
       ),
-      MotiveDto(
-        motiveId = MotiveId(UUID.fromString("a5540f3c-77b8-4bc5-acc7-4dd7d8cc4bc5")),
+      MotiveCreateRequestDto(
         title = "ISFIT Workshop Teknologi",
         albumDto = generateAlbumData().random(),
+        analogAlbumDto = null,
         eventOwnerDto = generateEventOwnerData().random(),
         categoryDto = generateCategoryData().random(),
-        dateCreated = LocalDate.of(2019, 2, 14),
+        placeDto = generatePlaceData().random(),
+        securityLevel = SecurityLevelDto(securityLevelType = SecurityLevelType.ALLE),
+        date = LocalDate.of(2019, 2, 14),
       ),
-      MotiveDto(
-        motiveId = MotiveId(UUID.fromString("a6540f3c-77b8-4bc5-acc7-4dd7d8cc4bc6")),
+      MotiveCreateRequestDto(
         title = "Rundstyremøte November",
         albumDto = generateAlbumData().random(),
+        analogAlbumDto = generateAnalogAlbumData().random(),
         eventOwnerDto = generateEventOwnerData().random(),
         categoryDto = generateCategoryData().random(),
-        dateCreated = LocalDate.of(2018, 11, 7),
+        placeDto = generatePlaceData().random(),
+        securityLevel = SecurityLevelDto(securityLevelType = SecurityLevelType.ALLE),
+        date = LocalDate.of(2018, 11, 7),
       ),
-      MotiveDto(
-        motiveId = MotiveId(UUID.fromString("a7540f3c-77b8-4bc5-acc7-4dd7d8cc4bc7")),
+      MotiveCreateRequestDto(
         title = "Diversegjengen juleverksted",
         albumDto = generateAlbumData().random(),
+        analogAlbumDto = null,
         eventOwnerDto = generateEventOwnerData().random(),
         categoryDto = generateCategoryData().random(),
-        dateCreated = LocalDate.of(2018, 12, 10),
+        placeDto = generatePlaceData().random(),
+        securityLevel = SecurityLevelDto(securityLevelType = SecurityLevelType.ALLE),
+        date = LocalDate.of(2018, 12, 10),
       ),
-      MotiveDto(
-        motiveId = MotiveId(UUID.fromString("a8540f3c-77b8-4bc5-acc7-4dd7d8cc4bc8")),
+      MotiveCreateRequestDto(
         title = "Klubbstyret på Daglighallen",
         albumDto = generateAlbumData().random(),
+        analogAlbumDto = null,
         eventOwnerDto = generateEventOwnerData().random(),
         categoryDto = generateCategoryData().random(),
-        dateCreated = LocalDate.of(2019, 1, 20),
+        placeDto = generatePlaceData().random(),
+        securityLevel = SecurityLevelDto(securityLevelType = SecurityLevelType.ALLE),
+        date = LocalDate.of(2019, 1, 20),
       ),
-      MotiveDto(
-        motiveId = MotiveId(UUID.fromString("a9540f3c-77b8-4bc5-acc7-4dd7d8cc4bc9")),
+      MotiveCreateRequestDto(
         title = "Immatrikulering 2018",
         albumDto = generateAlbumData().random(),
+        analogAlbumDto = null,
         eventOwnerDto = generateEventOwnerData().random(),
         categoryDto = generateCategoryData().random(),
-        dateCreated = LocalDate.of(2018, 8, 25),
+        placeDto = generatePlaceData().random(),
+        securityLevel = SecurityLevelDto(securityLevelType = SecurityLevelType.ALLE),
+        date = LocalDate.of(2018, 8, 25),
       ),
-      MotiveDto(
-        motiveId = MotiveId(UUID.fromString("b0540f3c-77b8-4bc5-acc7-4dd7d8cc4bd0")),
+      MotiveCreateRequestDto(
         title = "Knaus live på Edgar",
         albumDto = generateAlbumData().random(),
+        analogAlbumDto = generateAnalogAlbumData().random(),
         eventOwnerDto = generateEventOwnerData().random(),
         categoryDto = generateCategoryData().random(),
-        dateCreated = LocalDate.of(2019, 5, 17),
+        placeDto = generatePlaceData().random(),
+        securityLevel = SecurityLevelDto(securityLevelType = SecurityLevelType.ALLE),
+        date = LocalDate.of(2019, 5, 17),
       ),
-      MotiveDto(
-        motiveId = MotiveId(UUID.fromString("b1540f3c-77b8-4bc5-acc7-4dd7d8cc4bd1")),
+      MotiveCreateRequestDto(
         title = "Kulturuka 2019 åpning",
         albumDto = generateAlbumData().random(),
+        analogAlbumDto = null,
         eventOwnerDto = generateEventOwnerData().random(),
         categoryDto = generateCategoryData().random(),
-        dateCreated = LocalDate.of(2019, 3, 4),
+        placeDto = generatePlaceData().random(),
+        securityLevel = SecurityLevelDto(securityLevelType = SecurityLevelType.ALLE),
+        date = LocalDate.of(2019, 3, 4),
       ),
-      MotiveDto(
-        motiveId = MotiveId(UUID.fromString("b2540f3c-77b8-4bc5-acc7-4dd7d8cc4bd2")),
+      MotiveCreateRequestDto(
         title = "Sangkoret konsert i Bodegaen",
         albumDto = generateAlbumData().random(),
+        analogAlbumDto = null,
         eventOwnerDto = generateEventOwnerData().random(),
         categoryDto = generateCategoryData().random(),
-        dateCreated = LocalDate.of(2018, 4, 21),
+        placeDto = generatePlaceData().random(),
+        securityLevel = SecurityLevelDto(securityLevelType = SecurityLevelType.ALLE),
+        date = LocalDate.of(2018, 4, 21),
       ),
-      MotiveDto(
-        motiveId = MotiveId(UUID.fromString("b3540f3c-77b8-4bc5-acc7-4dd7d8cc4bd3")),
+      MotiveCreateRequestDto(
         title = "Strossa fredagsfest",
         albumDto = generateAlbumData().random(),
+        analogAlbumDto = null,
         eventOwnerDto = generateEventOwnerData().random(),
         categoryDto = generateCategoryData().random(),
-        dateCreated = LocalDate.of(2019, 9, 13),
+        placeDto = generatePlaceData().random(),
+        securityLevel = SecurityLevelDto(securityLevelType = SecurityLevelType.ALLE),
+        date = LocalDate.of(2019, 9, 13),
       ),
-      MotiveDto(
-        motiveId = MotiveId(UUID.fromString("b4540f3c-77b8-4bc5-acc7-4dd7d8cc4bd4")),
+      MotiveCreateRequestDto(
         title = "Debatt om studentpolitikk",
         albumDto = generateAlbumData().random(),
+        analogAlbumDto = generateAnalogAlbumData().random(),
         eventOwnerDto = generateEventOwnerData().random(),
         categoryDto = generateCategoryData().random(),
-        dateCreated = LocalDate.of(2018, 10, 3),
+        placeDto = generatePlaceData().random(),
+        securityLevel = SecurityLevelDto(securityLevelType = SecurityLevelType.ALLE),
+        date = LocalDate.of(2018, 10, 3),
       ),
-      MotiveDto(
-        motiveId = MotiveId(UUID.fromString("b5540f3c-77b8-4bc5-acc7-4dd7d8cc4bd5")),
+      MotiveCreateRequestDto(
         title = "Symfonisk Orkester øvelse",
         albumDto = generateAlbumData().random(),
+        analogAlbumDto = null,
         eventOwnerDto = generateEventOwnerData().random(),
         categoryDto = generateCategoryData().random(),
-        dateCreated = LocalDate.of(2019, 1, 9),
+        placeDto = generatePlaceData().random(),
+        securityLevel = SecurityLevelDto(securityLevelType = SecurityLevelType.ALLE),
+        date = LocalDate.of(2019, 1, 9),
       ),
-      MotiveDto(
-        motiveId = MotiveId(UUID.fromString("b6540f3c-77b8-4bc5-acc7-4dd7d8cc4bd6")),
+      MotiveCreateRequestDto(
         title = "Lørdagspils i Storsalen",
         albumDto = generateAlbumData().random(),
+        analogAlbumDto = null,
         eventOwnerDto = generateEventOwnerData().random(),
         categoryDto = generateCategoryData().random(),
-        dateCreated = LocalDate.of(2018, 3, 10),
+        placeDto = generatePlaceData().random(),
+        securityLevel = SecurityLevelDto(securityLevelType = SecurityLevelType.ALLE),
+        date = LocalDate.of(2018, 3, 10),
       ),
-      MotiveDto(
-        motiveId = MotiveId(UUID.fromString("b7540f3c-77b8-4bc5-acc7-4dd7d8cc4bd7")),
+      MotiveCreateRequestDto(
         title = "Forestillingsgjengen øving",
         albumDto = generateAlbumData().random(),
+        analogAlbumDto = null,
         eventOwnerDto = generateEventOwnerData().random(),
         categoryDto = generateCategoryData().random(),
-        dateCreated = LocalDate.of(2019, 6, 18),
+        placeDto = generatePlaceData().random(),
+        securityLevel = SecurityLevelDto(securityLevelType = SecurityLevelType.ALLE),
+        date = LocalDate.of(2019, 6, 18),
       ),
-      MotiveDto(
-        motiveId = MotiveId(UUID.fromString("b8540f3c-77b8-4bc5-acc7-4dd7d8cc4bd8")),
+      MotiveCreateRequestDto(
         title = "Quiz night på Klubben",
         albumDto = generateAlbumData().random(),
+        analogAlbumDto = generateAnalogAlbumData().random(),
         eventOwnerDto = generateEventOwnerData().random(),
         categoryDto = generateCategoryData().random(),
-        dateCreated = LocalDate.of(2018, 5, 25),
+        placeDto = generatePlaceData().random(),
+        securityLevel = SecurityLevelDto(securityLevelType = SecurityLevelType.ALLE),
+        date = LocalDate.of(2018, 5, 25),
       ),
-      MotiveDto(
-        motiveId = MotiveId(UUID.fromString("b9540f3c-77b8-4bc5-acc7-4dd7d8cc4bd9")),
+      MotiveCreateRequestDto(
         title = "DJ Marcus konsert",
         albumDto = generateAlbumData().random(),
+        analogAlbumDto = null,
         eventOwnerDto = generateEventOwnerData().random(),
         categoryDto = generateCategoryData().random(),
-        dateCreated = LocalDate.of(2019, 8, 2),
+        placeDto = generatePlaceData().random(),
+        securityLevel = SecurityLevelDto(securityLevelType = SecurityLevelType.ALLE),
+        date = LocalDate.of(2019, 8, 2),
       ),
-      MotiveDto(
-        motiveId = MotiveId(UUID.fromString("c0540f3c-77b8-4bc5-acc7-4dd7d8cc4be0")),
+      MotiveCreateRequestDto(
         title = "Vors på Selskapssiden",
         albumDto = generateAlbumData().random(),
+        analogAlbumDto = null,
         eventOwnerDto = generateEventOwnerData().random(),
         categoryDto = generateCategoryData().random(),
-        dateCreated = LocalDate.of(2018, 9, 14),
+        placeDto = generatePlaceData().random(),
+        securityLevel = SecurityLevelDto(securityLevelType = SecurityLevelType.ALLE),
+        date = LocalDate.of(2018, 9, 14),
       ),
-      MotiveDto(
-        motiveId = MotiveId(UUID.fromString("c1540f3c-77b8-4bc5-acc7-4dd7d8cc4be1")),
+      MotiveCreateRequestDto(
         title = "Teaterverkstedet premiere",
         albumDto = generateAlbumData().random(),
+        analogAlbumDto = null,
         eventOwnerDto = generateEventOwnerData().random(),
         categoryDto = generateCategoryData().random(),
-        dateCreated = LocalDate.of(2019, 11, 6),
+        placeDto = generatePlaceData().random(),
+        securityLevel = SecurityLevelDto(securityLevelType = SecurityLevelType.ALLE),
+        date = LocalDate.of(2019, 11, 6),
       ),
-      MotiveDto(
-        motiveId = MotiveId(UUID.fromString("c2540f3c-77b8-4bc5-acc7-4dd7d8cc4be2")),
+      MotiveCreateRequestDto(
         title = "Fotballturné på Dragvoll",
         albumDto = generateAlbumData().random(),
+        analogAlbumDto = generateAnalogAlbumData().random(),
         eventOwnerDto = generateEventOwnerData().random(),
         categoryDto = generateCategoryData().random(),
-        dateCreated = LocalDate.of(2018, 6, 8),
+        placeDto = generatePlaceData().random(),
+        securityLevel = SecurityLevelDto(securityLevelType = SecurityLevelType.ALLE),
+        date = LocalDate.of(2018, 6, 8),
       ),
-      MotiveDto(
-        motiveId = MotiveId(UUID.fromString("c3540f3c-77b8-4bc5-acc7-4dd7d8cc4be3")),
+      MotiveCreateRequestDto(
         title = "Markedssjef presentasjon",
         albumDto = generateAlbumData().random(),
+        analogAlbumDto = null,
         eventOwnerDto = generateEventOwnerData().random(),
         categoryDto = generateCategoryData().random(),
-        dateCreated = LocalDate.of(2019, 2, 27),
+        placeDto = generatePlaceData().random(),
+        securityLevel = SecurityLevelDto(securityLevelType = SecurityLevelType.ALLE),
+        date = LocalDate.of(2019, 2, 27),
       ),
-      MotiveDto(
-        motiveId = MotiveId(UUID.fromString("c4540f3c-77b8-4bc5-acc7-4dd7d8cc4be4")),
+      MotiveCreateRequestDto(
         title = "Rått og Rådig release party",
         albumDto = generateAlbumData().random(),
+        analogAlbumDto = null,
         eventOwnerDto = generateEventOwnerData().random(),
         categoryDto = generateCategoryData().random(),
-        dateCreated = LocalDate.of(2018, 8, 17),
+        placeDto = generatePlaceData().random(),
+        securityLevel = SecurityLevelDto(securityLevelType = SecurityLevelType.ALLE),
+        date = LocalDate.of(2018, 8, 17),
       ),
-      MotiveDto(
-        motiveId = MotiveId(UUID.fromString("c5540f3c-77b8-4bc5-acc7-4dd7d8cc4be5")),
+      MotiveCreateRequestDto(
         title = "Samfundsmøte Oktober",
         albumDto = generateAlbumData().random(),
+        analogAlbumDto = null,
         eventOwnerDto = generateEventOwnerData().random(),
         categoryDto = generateCategoryData().random(),
-        dateCreated = LocalDate.of(2018, 10, 15),
+        placeDto = generatePlaceData().random(),
+        securityLevel = SecurityLevelDto(securityLevelType = SecurityLevelType.ALLE),
+        date = LocalDate.of(2018, 10, 15),
       ),
-      MotiveDto(
-        motiveId = MotiveId(UUID.fromString("c6540f3c-77b8-4bc5-acc7-4dd7d8cc4be6")),
+      MotiveCreateRequestDto(
         title = "KSG Uke på Kino",
         albumDto = generateAlbumData().random(),
+        analogAlbumDto = generateAnalogAlbumData().random(),
         eventOwnerDto = generateEventOwnerData().random(),
         categoryDto = generateCategoryData().random(),
-        dateCreated = LocalDate.of(2019, 4, 11),
+        placeDto = generatePlaceData().random(),
+        securityLevel = SecurityLevelDto(securityLevelType = SecurityLevelType.ALLE),
+        date = LocalDate.of(2019, 4, 11),
       ),
-      MotiveDto(
-        motiveId = MotiveId(UUID.fromString("c7540f3c-77b8-4bc5-acc7-4dd7d8cc4be7")),
+      MotiveCreateRequestDto(
         title = "Backstreet Boys tribute band",
         albumDto = generateAlbumData().random(),
+        analogAlbumDto = null,
         eventOwnerDto = generateEventOwnerData().random(),
         categoryDto = generateCategoryData().random(),
-        dateCreated = LocalDate.of(2018, 7, 20),
+        placeDto = generatePlaceData().random(),
+        securityLevel = SecurityLevelDto(securityLevelType = SecurityLevelType.ALLE),
+        date = LocalDate.of(2018, 7, 20),
       ),
-      MotiveDto(
-        motiveId = MotiveId(UUID.fromString("c8540f3c-77b8-4bc5-acc7-4dd7d8cc4be8")),
+      MotiveCreateRequestDto(
         title = "Eksamensfest Vår 2018",
         albumDto = generateAlbumData().random(),
+        analogAlbumDto = null,
         eventOwnerDto = generateEventOwnerData().random(),
         categoryDto = generateCategoryData().random(),
-        dateCreated = LocalDate.of(2018, 5, 30),
+        placeDto = generatePlaceData().random(),
+        securityLevel = SecurityLevelDto(securityLevelType = SecurityLevelType.ALLE),
+        date = LocalDate.of(2018, 5, 30),
       ),
-      MotiveDto(
-        motiveId = MotiveId(UUID.fromString("c9540f3c-77b8-4bc5-acc7-4dd7d8cc4be9")),
+      MotiveCreateRequestDto(
         title = "Lysgruppa rigging i Storsalen",
         albumDto = generateAlbumData().random(),
+        analogAlbumDto = null,
         eventOwnerDto = generateEventOwnerData().random(),
         categoryDto = generateCategoryData().random(),
-        dateCreated = LocalDate.of(2019, 1, 28),
+        placeDto = generatePlaceData().random(),
+        securityLevel = SecurityLevelDto(securityLevelType = SecurityLevelType.ALLE),
+        date = LocalDate.of(2019, 1, 28),
       ),
-      MotiveDto(
-        motiveId = MotiveId(UUID.fromString("d0540f3c-77b8-4bc5-acc7-4dd7d8cc4bf0")),
+      MotiveCreateRequestDto(
         title = "Filmklubb visning av Blade Runner",
         albumDto = generateAlbumData().random(),
+        analogAlbumDto = generateAnalogAlbumData().random(),
         eventOwnerDto = generateEventOwnerData().random(),
         categoryDto = generateCategoryData().random(),
-        dateCreated = LocalDate.of(2018, 11, 14),
+        placeDto = generatePlaceData().random(),
+        securityLevel = SecurityLevelDto(securityLevelType = SecurityLevelType.ALLE),
+        date = LocalDate.of(2018, 11, 14),
       ),
-      MotiveDto(
-        motiveId = MotiveId(UUID.fromString("3a6c1f82-9b74-4d3a-bd2b-8f21c4e99c54")),
+      MotiveCreateRequestDto(
         title = "Lysgruppa rigging i Storsalen",
         albumDto = generateAlbumData().random(),
+        analogAlbumDto = null,
         eventOwnerDto = generateEventOwnerData().random(),
         categoryDto = generateCategoryData().random(),
-        dateCreated = LocalDate.now(),
+        placeDto = generatePlaceData().random(),
+        securityLevel = SecurityLevelDto(securityLevelType = SecurityLevelType.ALLE),
+        date = LocalDate.now(),
       ),
-      MotiveDto(
-        motiveId = MotiveId(UUID.fromString("d1540f3c-77b8-4bc5-acc7-4dd7d8cc4bf1")),
+      MotiveCreateRequestDto(
         title = "Akademisk Kor julekonsert",
         albumDto = generateAlbumData().random(),
+        analogAlbumDto = null,
         eventOwnerDto = generateEventOwnerData().random(),
         categoryDto = generateCategoryData().random(),
-        dateCreated = LocalDate.of(2018, 12, 18),
+        placeDto = generatePlaceData().random(),
+        securityLevel = SecurityLevelDto(securityLevelType = SecurityLevelType.ALLE),
+        date = LocalDate.of(2018, 12, 18),
       ),
-      MotiveDto(
-        motiveId = MotiveId(UUID.fromString("d2540f3c-77b8-4bc5-acc7-4dd7d8cc4bf2")),
+      MotiveCreateRequestDto(
         title = "Stand-up kveld med lokale komikere",
         albumDto = generateAlbumData().random(),
+        analogAlbumDto = null,
         eventOwnerDto = generateEventOwnerData().random(),
         categoryDto = generateCategoryData().random(),
-        dateCreated = LocalDate.of(2019, 3, 22),
+        placeDto = generatePlaceData().random(),
+        securityLevel = SecurityLevelDto(securityLevelType = SecurityLevelType.ALLE),
+        date = LocalDate.of(2019, 3, 22),
       ),
-      MotiveDto(
-        motiveId = MotiveId(UUID.fromString("d3540f3c-77b8-4bc5-acc7-4dd7d8cc4bf3")),
+      MotiveCreateRequestDto(
         title = "Husfolk møte Mars",
         albumDto = generateAlbumData().random(),
+        analogAlbumDto = null,
         eventOwnerDto = generateEventOwnerData().random(),
         categoryDto = generateCategoryData().random(),
-        dateCreated = LocalDate.of(2019, 3, 5),
+        placeDto = generatePlaceData().random(),
+        securityLevel = SecurityLevelDto(securityLevelType = SecurityLevelType.ALLE),
+        date = LocalDate.of(2019, 3, 5),
       ),
-      MotiveDto(
-        motiveId = MotiveId(UUID.fromString("d4540f3c-77b8-4bc5-acc7-4dd7d8cc4bf4")),
+      MotiveCreateRequestDto(
         title = "Karaoke Night på Edgar",
         albumDto = generateAlbumData().random(),
+        analogAlbumDto = null,
         eventOwnerDto = generateEventOwnerData().random(),
         categoryDto = generateCategoryData().random(),
-        dateCreated = LocalDate.of(2018, 4, 13),
+        placeDto = generatePlaceData().random(),
+        securityLevel = SecurityLevelDto(securityLevelType = SecurityLevelType.ALLE),
+        date = LocalDate.of(2018, 4, 13),
       ),
-      MotiveDto(
-        motiveId = MotiveId(UUID.fromString("d5540f3c-77b8-4bc5-acc7-4dd7d8cc4bf5")),
+      MotiveCreateRequestDto(
         title = "Trønder-Rock Festival 2019",
         albumDto = generateAlbumData().random(),
+        analogAlbumDto = null,
         eventOwnerDto = generateEventOwnerData().random(),
         categoryDto = generateCategoryData().random(),
-        dateCreated = LocalDate.of(2019, 7, 12),
+        placeDto = generatePlaceData().random(),
+        securityLevel = SecurityLevelDto(securityLevelType = SecurityLevelType.ALLE),
+        date = LocalDate.of(2019, 7, 12),
       ),
-      MotiveDto(
-        motiveId = MotiveId(UUID.fromString("d6540f3c-77b8-4bc5-acc7-4dd7d8cc4bf6")),
+      MotiveCreateRequestDto(
         title = "Leder opplæring workshop",
         albumDto = generateAlbumData().random(),
+        analogAlbumDto = null,
         eventOwnerDto = generateEventOwnerData().random(),
         categoryDto = generateCategoryData().random(),
-        dateCreated = LocalDate.of(2018, 9, 8),
+        placeDto = generatePlaceData().random(),
+        securityLevel = SecurityLevelDto(securityLevelType = SecurityLevelType.ALLE),
+        date = LocalDate.of(2018, 9, 8),
       ),
-      MotiveDto(
-        motiveId = MotiveId(UUID.fromString("d7540f3c-77b8-4bc5-acc7-4dd7d8cc4bf7")),
+      MotiveCreateRequestDto(
         title = "Sommerfest på taket",
         albumDto = generateAlbumData().random(),
+        analogAlbumDto = null,
         eventOwnerDto = generateEventOwnerData().random(),
         categoryDto = generateCategoryData().random(),
-        dateCreated = LocalDate.of(2019, 6, 21),
+        placeDto = generatePlaceData().random(),
+        securityLevel = SecurityLevelDto(securityLevelType = SecurityLevelType.ALLE),
+        date = LocalDate.of(2019, 6, 21),
       ),
-      MotiveDto(
-        motiveId = MotiveId(UUID.fromString("d8540f3c-77b8-4bc5-acc7-4dd7d8cc4bf8")),
+      MotiveCreateRequestDto(
         title = "Vinkjelleren åpent hus",
         albumDto = generateAlbumData().random(),
+        analogAlbumDto = null,
         eventOwnerDto = generateEventOwnerData().random(),
         categoryDto = generateCategoryData().random(),
-        dateCreated = LocalDate.of(2018, 10, 26),
+        placeDto = generatePlaceData().random(),
+        securityLevel = SecurityLevelDto(securityLevelType = SecurityLevelType.ALLE),
+        date = LocalDate.of(2018, 10, 26),
       ),
-      MotiveDto(
-        motiveId = MotiveId(UUID.fromString("d9540f3c-77b8-4bc5-acc7-4dd7d8cc4bf9")),
+      MotiveCreateRequestDto(
         title = "Jazzfest i Klubben",
         albumDto = generateAlbumData().random(),
+        analogAlbumDto = null,
         eventOwnerDto = generateEventOwnerData().random(),
         categoryDto = generateCategoryData().random(),
-        dateCreated = LocalDate.of(2019, 5, 3),
+        placeDto = generatePlaceData().random(),
+        securityLevel = SecurityLevelDto(securityLevelType = SecurityLevelType.ALLE),
+        date = LocalDate.of(2019, 5, 3),
       ),
-      MotiveDto(
-        motiveId = MotiveId(UUID.fromString("e0540f3c-77b8-4bc5-acc7-4dd7d8cc4c00")),
+      MotiveCreateRequestDto(
         title = "Fotografering av nye gjengmedlemmer",
         albumDto = generateAlbumData().random(),
+        analogAlbumDto = null,
         eventOwnerDto = generateEventOwnerData().random(),
         categoryDto = generateCategoryData().random(),
-        dateCreated = LocalDate.of(2018, 8, 28),
+        placeDto = generatePlaceData().random(),
+        securityLevel = SecurityLevelDto(securityLevelType = SecurityLevelType.ALLE),
+        date = LocalDate.of(2018, 8, 28),
       ),
-      MotiveDto(
-        motiveId = MotiveId(UUID.fromString("e1540f3c-77b8-4bc5-acc7-4dd7d8cc4c01")),
+      MotiveCreateRequestDto(
         title = "Brettspillkveld på Daglighallen",
         albumDto = generateAlbumData().random(),
+        analogAlbumDto = null,
         eventOwnerDto = generateEventOwnerData().random(),
         categoryDto = generateCategoryData().random(),
-        dateCreated = LocalDate.of(2019, 10, 25),
+        placeDto = generatePlaceData().random(),
+        securityLevel = SecurityLevelDto(securityLevelType = SecurityLevelType.ALLE),
+        date = LocalDate.of(2019, 10, 25),
       ),
-      MotiveDto(
-        motiveId = MotiveId(UUID.fromString("e2540f3c-77b8-4bc5-acc7-4dd7d8cc4c02")),
+      MotiveCreateRequestDto(
         title = "Rockeverkstedet showcase",
         albumDto = generateAlbumData().random(),
+        analogAlbumDto = null,
         eventOwnerDto = generateEventOwnerData().random(),
         categoryDto = generateCategoryData().random(),
-        dateCreated = LocalDate.of(2018, 5, 11),
+        placeDto = generatePlaceData().random(),
+        securityLevel = SecurityLevelDto(securityLevelType = SecurityLevelType.ALLE),
+        date = LocalDate.of(2018, 5, 11),
       ),
-      MotiveDto(
-        motiveId = MotiveId(UUID.fromString("e3540f3c-77b8-4bc5-acc7-4dd7d8cc4c03")),
+      MotiveCreateRequestDto(
         title = "Valentinsdag arrangement",
         albumDto = generateAlbumData().random(),
+        analogAlbumDto = null,
         eventOwnerDto = generateEventOwnerData().random(),
         categoryDto = generateCategoryData().random(),
-        dateCreated = LocalDate.of(2019, 2, 14),
+        placeDto = generatePlaceData().random(),
+        securityLevel = SecurityLevelDto(securityLevelType = SecurityLevelType.ALLE),
+        date = LocalDate.of(2019, 2, 14),
       ),
-      MotiveDto(
-        motiveId = MotiveId(UUID.fromString("e4540f3c-77b8-4bc5-acc7-4dd7d8cc4c04")),
+      MotiveCreateRequestDto(
         title = "Cocktail-kurs på Knaus",
         albumDto = generateAlbumData().random(),
+        analogAlbumDto = null,
         eventOwnerDto = generateEventOwnerData().random(),
         categoryDto = generateCategoryData().random(),
-        dateCreated = LocalDate.of(2018, 11, 29),
+        placeDto = generatePlaceData().random(),
+        securityLevel = SecurityLevelDto(securityLevelType = SecurityLevelType.ALLE),
+        date = LocalDate.of(2018, 11, 29),
       ),
-      MotiveDto(
-        motiveId = MotiveId(UUID.fromString("e5540f3c-77b8-4bc5-acc7-4dd7d8cc4c05")),
+      MotiveCreateRequestDto(
         title = "Dugnadsdag rengjøring",
         albumDto = generateAlbumData().random(),
+        analogAlbumDto = null,
         eventOwnerDto = generateEventOwnerData().random(),
         categoryDto = generateCategoryData().random(),
-        dateCreated = LocalDate.of(2019, 8, 24),
+        placeDto = generatePlaceData().random(),
+        securityLevel = SecurityLevelDto(securityLevelType = SecurityLevelType.ALLE),
+        date = LocalDate.of(2019, 8, 24),
       ),
-      MotiveDto(
-        motiveId = MotiveId(UUID.fromString("e6540f3c-77b8-4bc5-acc7-4dd7d8cc4c06")),
+      MotiveCreateRequestDto(
         title = "Arkitektgjengen utstilling",
         albumDto = generateAlbumData().random(),
+        analogAlbumDto = null,
         eventOwnerDto = generateEventOwnerData().random(),
         categoryDto = generateCategoryData().random(),
-        dateCreated = LocalDate.of(2018, 4, 27),
+        placeDto = generatePlaceData().random(),
+        securityLevel = SecurityLevelDto(securityLevelType = SecurityLevelType.ALLE),
+        date = LocalDate.of(2018, 4, 27),
       ),
-      MotiveDto(
-        motiveId = MotiveId(UUID.fromString("e7540f3c-77b8-4bc5-acc7-4dd7d8cc4c07")),
+      MotiveCreateRequestDto(
         title = "Spinning Records DJ-kurs",
         albumDto = generateAlbumData().random(),
+        analogAlbumDto = null,
         eventOwnerDto = generateEventOwnerData().random(),
         categoryDto = generateCategoryData().random(),
-        dateCreated = LocalDate.of(2019, 9, 19),
+        placeDto = generatePlaceData().random(),
+        securityLevel = SecurityLevelDto(securityLevelType = SecurityLevelType.ALLE),
+        date = LocalDate.of(2019, 9, 19),
       ),
-      MotiveDto(
-        motiveId = MotiveId(UUID.fromString("e8540f3c-77b8-4bc5-acc7-4dd7d8cc4c08")),
+      MotiveCreateRequestDto(
         title = "Huskonsert i Bodegaen",
         albumDto = generateAlbumData().random(),
+        analogAlbumDto = null,
         eventOwnerDto = generateEventOwnerData().random(),
         categoryDto = generateCategoryData().random(),
-        dateCreated = LocalDate.of(2018, 3, 16),
+        placeDto = generatePlaceData().random(),
+        securityLevel = SecurityLevelDto(securityLevelType = SecurityLevelType.ALLE),
+        date = LocalDate.of(2018, 3, 16),
       ),
-      MotiveDto(
-        motiveId = MotiveId(UUID.fromString("e9540f3c-77b8-4bc5-acc7-4dd7d8cc4c09")),
+      MotiveCreateRequestDto(
         title = "Podcast opptak Studio 42",
         albumDto = generateAlbumData().random(),
+        analogAlbumDto = null,
         eventOwnerDto = generateEventOwnerData().random(),
         categoryDto = generateCategoryData().random(),
-        dateCreated = LocalDate.of(2019, 11, 30),
+        placeDto = generatePlaceData().random(),
+        securityLevel = SecurityLevelDto(securityLevelType = SecurityLevelType.ALLE),
+        date = LocalDate.of(2019, 11, 30),
       ),
     )
 
@@ -621,57 +749,72 @@ class MockDataService {
       AlbumDto(
         albumId =
           AlbumId(UUID.fromString("8a2bb663-1260-4c16-933c-a2af7420f5ff")),
-        title = "Vår 2017",
+        name = "DIGGA",
+        description = "Vår 2017",
       ),
       AlbumDto(
         albumId =
           AlbumId(UUID.fromString("91fcac35-4e68-400a-a43e-e8d3f81d10f1")),
-        title = "Høst 2017",
+        name = "DIGGB",
+        description = "Høst 2017",
       ),
       AlbumDto(
         albumId =
           AlbumId(UUID.fromString("91fcac35-4e68-400a-a43e-e8d3f81d10f2")),
-        title = "Vår 2018",
+        name = "DIGGC",
+        description = "Vår 2018",
       ),
       AlbumDto(
         albumId =
           AlbumId(UUID.fromString("91fcac35-4e68-400a-a43e-e8d3f81d10f3")),
-        title = "Høst 2018",
+        name = "DIGGD",
+        description = "Høst 2018",
       ),
       AlbumDto(
         albumId =
           AlbumId(UUID.fromString("91fcac35-4e68-400a-a43e-e8d3f81d10f4")),
-        title = "Vår 2019",
+        name = "DIGGE",
+        description = "Vår 2019",
       ),
       AlbumDto(
         albumId =
           AlbumId(UUID.fromString("91fcac35-4e68-400a-a43e-e8d3f81d10f5")),
-        title = "Høst 2019",
+        name = "DIGGF",
+        description = "Høst 2019",
       ),
     )
 
-  fun generatePhotoTagData(): List<PhotoTagDto> =
+  fun generateAnalogAlbumData(): List<AlbumDto> =
     listOf(
-      PhotoTagDto(
-        photoTagId =
-          PhotoTagId(
-            UUID.fromString(("d8771ab3-28a9-4b8c-991d-01f6123b8590")),
-          ),
-        name = "WowFactor100",
+      AlbumDto(
+        albumId = AlbumId(UUID.fromString("a1000000-0000-0000-0000-000000000001")),
+        name = "ROLL-001",
+        description = "Analog Vår 2017",
+        analog = true,
       ),
-      PhotoTagDto(
-        photoTagId =
-          PhotoTagId(
-            UUID.fromString(("d8771ab3-28a9-4b8c-991d-01f6123b8590")),
-          ),
-        name = "insane!",
+      AlbumDto(
+        albumId = AlbumId(UUID.fromString("a1000000-0000-0000-0000-000000000002")),
+        name = "ROLL-002",
+        description = "Analog Høst 2017",
+        analog = true,
       ),
-      PhotoTagDto(
-        photoTagId =
-          PhotoTagId(
-            UUID.fromString(("d8771ab3-28a9-4b8c-991d-01f6123b8590")),
-          ),
-        name = "Meh",
+      AlbumDto(
+        albumId = AlbumId(UUID.fromString("a1000000-0000-0000-0000-000000000003")),
+        name = "ROLL-003",
+        description = "Analog Vår 2018",
+        analog = true,
+      ),
+      AlbumDto(
+        albumId = AlbumId(UUID.fromString("a1000000-0000-0000-0000-000000000004")),
+        name = "ROLL-004",
+        description = "Analog Høst 2018",
+        analog = true,
+      ),
+      AlbumDto(
+        albumId = AlbumId(UUID.fromString("a1000000-0000-0000-0000-000000000005")),
+        name = "ROLL-005",
+        description = "Analog Vår 2019",
+        analog = true,
       ),
     )
 
@@ -709,27 +852,26 @@ class MockDataService {
       ),
     )
 
-  fun generatePhotoGangBangerPositionData(): List<PhotoGangBangerPositionDto> =
-    listOf(
+  fun generatePhotoGangBangerPositionData(): List<PhotoGangBangerPositionDto> {
+    val pgbs = generatePhotoGangBangerData()
+    val positions = generatePositionData()
+    return listOf(
       PhotoGangBangerPositionDto(
-        photoGangBangerPositionId =
-          PhotoGangBangerPositionId(
-            UUID.fromString("6a89444f-25f6-44d9-8a73-94587d72b831"),
-          ),
-        isCurrent = true,
-        photoGangBangerDto = generatePhotoGangBangerData().random(),
-        position = generatePositionData().random(),
+        photoGangBangerId = pgbs[0].photoGangBangerId,
+        semesterStart = SemesterStart("H2024"),
+        photoGangBangerDto = pgbs[0],
+        position = positions[0],
+        semesterEnd = null,
       ),
       PhotoGangBangerPositionDto(
-        photoGangBangerPositionId =
-          PhotoGangBangerPositionId(
-            UUID.fromString("6a89444f-25f6-44d9-8a73-94587d72b832"),
-          ),
-        isCurrent = false,
-        photoGangBangerDto = generatePhotoGangBangerData().random(),
-        position = generatePositionData().random(),
+        photoGangBangerId = pgbs[1].photoGangBangerId,
+        semesterStart = SemesterStart("H2024"),
+        photoGangBangerDto = pgbs[1],
+        position = positions[1],
+        semesterEnd = null,
       ),
     )
+  }
 
   fun generatePositionData(): List<PositionDto> =
     listOf(
@@ -754,42 +896,44 @@ class MockDataService {
   fun seedMockData() {
     println(">>> seedMockData called at " + java.time.Instant.now())
     generateAlbumData().forEach { albumRepository.create(it) }
-    generatePhotoTagData().forEach {
-      // hotoTagRepository.create(it)
-    }
-    println("PhotoTags Seeded")
+    generateAnalogAlbumData().forEach { albumRepository.create(it) }
     generatePositionData().forEach { positionRepository.create(it) }
-    generatePhotoTagData().forEach {
-      // photoTagRepository.create(it)
-    }
     println("Position seeded")
     println(positionRepository.findAll())
 
     generatePhotoGangBangerData().forEach { photoGangBangerRepository.create(it) }
+    generatePhotoGangBangerPositionData().forEach { pgbPosition ->
+      database.insert(PhotoGangBangerToPositions) {
+        set(it.photoGangBangerId, pgbPosition.photoGangBangerId.id)
+        set(it.positionId, pgbPosition.position.positionId.id)
+        set(it.semesterStart, pgbPosition.semesterStart.value)
+        set(it.semesterEnd, pgbPosition.semesterEnd?.value)
+      }
+    }
     println("PhotoGangBangers seeded")
     generateCategoryData().forEach { categoryRepository.create(it) }
     println("Category seeded")
 
     generateEventOwnerData().forEach { eventOwnerRepository.create(it) }
-
-    generateMotiveData().forEach { motiveRepository.create(it) }
     generatePlaceData().forEach { placeRepository.create(it) }
     generateGangData().forEach { gangRepository.create(it) }
+
+    generateMotiveData().forEach { motiveRepository.create(it) }
     database.batchInsert(Photos) {
       generatePhoto().map { photoDto ->
         item {
-          set(it.isGoodPicture, photoDto.isGoodPicture)
           set(it.id, photoDto.photoId.id)
-          set(it.largeUrl, photoDto.largeUrl)
-          set(it.motiveId, photoDto.motive.motiveId.id)
+          set(it.goodPicture, photoDto.goodPicture)
+          set(it.analog, photoDto.analog)
+          set(it.imageNumber, photoDto.imageNumber)
+          set(it.pageNumber, photoDto.pageNumber)
+          set(it.imageProd, photoDto.imageProd)
+          set(it.imageWeb, photoDto.imageWeb)
+          set(it.imageThumb, photoDto.imageThumb)
           set(it.securityLevel, photoDto.securityLevel.securityLevelType.type)
+          set(it.motiveId, photoDto.motive.motiveId.id)
           set(it.gangId, photoDto.gang?.gangId?.id)
-          set(it.placeId, photoDto.placeDto.placeId.id)
-          set(it.smallUrl, photoDto.smallUrl)
-          set(it.mediumUrl, photoDto.mediumUrl)
           set(it.photoGangBangerId, photoDto.photoGangBangerDto.photoGangBangerId.id)
-          set(it.albumId, photoDto.albumDto.albumId.id)
-          set(it.categoryId, photoDto.categoryDto.categoryId.id)
         }
       }
     }

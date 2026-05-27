@@ -8,7 +8,6 @@ import me.liuwj.ktorm.dsl.eq
 import me.liuwj.ktorm.dsl.from
 import me.liuwj.ktorm.dsl.innerJoin
 import me.liuwj.ktorm.dsl.insert
-import me.liuwj.ktorm.dsl.isNull
 import me.liuwj.ktorm.dsl.map
 import me.liuwj.ktorm.dsl.orderBy
 import me.liuwj.ktorm.dsl.select
@@ -18,10 +17,10 @@ import me.liuwj.ktorm.entity.filter
 import me.liuwj.ktorm.entity.find
 import me.liuwj.ktorm.entity.toList
 import me.liuwj.ktorm.entity.update
+import no.fg.hilflingbackend.dto.MemberPositionDto
 import no.fg.hilflingbackend.dto.Page
 import no.fg.hilflingbackend.dto.PhotoGangBangerDto
 import no.fg.hilflingbackend.dto.PhotoGangBangerPatchRequestDto
-import no.fg.hilflingbackend.dto.PositionDto
 import no.fg.hilflingbackend.dto.PositionId
 import no.fg.hilflingbackend.dto.toEntity
 import no.fg.hilflingbackend.exceptions.EntityExistsException
@@ -31,6 +30,7 @@ import no.fg.hilflingbackend.model.Positions
 import no.fg.hilflingbackend.model.photo_gang_bangers
 import no.fg.hilflingbackend.model.toDto
 import no.fg.hilflingbackend.valueobject.Email
+import no.fg.hilflingbackend.valueobject.SemesterStart
 import org.springframework.stereotype.Repository
 import java.util.UUID
 
@@ -62,21 +62,20 @@ interface IPhotoGangBangerRepository {
 class PhotoGangBangerRepository(
   val database: Database,
 ) : IPhotoGangBangerRepository {
-  private fun findPositionsForMember(memberId: UUID): List<PositionDto> =
+  private fun findPositionsForMember(memberId: UUID): List<MemberPositionDto> =
     database
       .from(PhotoGangBangerToPositions)
       .innerJoin(Positions, on = PhotoGangBangerToPositions.positionId eq Positions.id)
-      .select(Positions.id, Positions.title, Positions.email, PhotoGangBangerToPositions.semesterStart, PhotoGangBangerToPositions.isActive)
-      .where {
-        (PhotoGangBangerToPositions.photoGangBangerId eq memberId)
-          .and(PhotoGangBangerToPositions.dateDeleted.isNull())
-      }.orderBy(PhotoGangBangerToPositions.semesterStart.desc())
+      .select(Positions.id, Positions.title, Positions.email, PhotoGangBangerToPositions.semesterStart, PhotoGangBangerToPositions.semesterEnd)
+      .where { PhotoGangBangerToPositions.photoGangBangerId eq memberId }
+      .orderBy(PhotoGangBangerToPositions.semesterStart.desc())
       .map { row ->
-        PositionDto(
+        MemberPositionDto(
           positionId = PositionId(row[Positions.id]!!),
           title = row[Positions.title]!!,
           email = Email(row[Positions.email]!!),
-          isActive = row[PhotoGangBangerToPositions.isActive] ?: false,
+          semesterStart = SemesterStart(row[PhotoGangBangerToPositions.semesterStart]!!),
+          isActive = row[PhotoGangBangerToPositions.semesterEnd] == null,
         )
       }
 
@@ -103,8 +102,7 @@ class PhotoGangBangerRepository(
   ): Page<PhotoGangBangerDto> {
     val photoGangBangers =
       database.photo_gang_bangers.filter {
-        it.isActive eq true
-        it.isPang eq false
+        (it.isActive eq true).and(it.isPang eq false)
       }
     return Page(page = page, pageSize = pageSize, totalRecords = photoGangBangers.totalRecords, currentList = photoGangBangers.toList().map { withPositions(it.toDto()) })
   }
@@ -115,8 +113,7 @@ class PhotoGangBangerRepository(
   ): Page<PhotoGangBangerDto> {
     val photoGangBangers =
       database.photo_gang_bangers.filter {
-        it.isActive eq true
-        it.isPang eq true
+        (it.isActive eq true).and(it.isPang eq true)
       }
     return Page(page = page, pageSize = pageSize, totalRecords = photoGangBangers.totalRecords, currentList = photoGangBangers.toList().map { withPositions(it.toDto()) })
   }
@@ -127,8 +124,7 @@ class PhotoGangBangerRepository(
   ): Page<PhotoGangBangerDto> {
     val photoGangBangers =
       database.photo_gang_bangers.filter {
-        it.isActive eq false
-        it.isPang eq true
+        (it.isActive eq false).and(it.isPang eq true)
       }
     return Page(page = page, pageSize = pageSize, totalRecords = photoGangBangers.totalRecords, currentList = photoGangBangers.toList().map { withPositions(it.toDto()) })
   }

@@ -1,55 +1,131 @@
 package no.fg.hilflingbackend.service
 
 import jakarta.persistence.EntityNotFoundException
-import no.fg.hilflingbackend.dto.EventOwnerName
-import no.fg.hilflingbackend.dto.MotiveDto
-import no.fg.hilflingbackend.dto.Page
 import no.fg.hilflingbackend.dto.PhotoDto
-import no.fg.hilflingbackend.dto.PhotoPatchRequestDto
-import no.fg.hilflingbackend.dto.SecurityLevelDto
-import no.fg.hilflingbackend.model.toDto
+import no.fg.hilflingbackend.dto.PhotoReservationDto
+import no.fg.hilflingbackend.dto.PhotoUploadRequestDto
 import no.fg.hilflingbackend.repository.AlbumRepository
 import no.fg.hilflingbackend.repository.CategoryRepository
 import no.fg.hilflingbackend.repository.EventOwnerRepository
-import no.fg.hilflingbackend.repository.MotiveRepository
 import no.fg.hilflingbackend.repository.PhotoGangBangerRepository
 import no.fg.hilflingbackend.repository.PhotoRepository
-import no.fg.hilflingbackend.repository.PhotoTagRepository
 import no.fg.hilflingbackend.repository.PlaceRepository
 import no.fg.hilflingbackend.valueobject.SecurityLevelType
-import org.slf4j.LoggerFactory
+import org.springframework.security.access.AccessDeniedException
 import org.springframework.stereotype.Service
-import java.time.LocalDate
+import org.springframework.transaction.annotation.Transactional
 import java.util.UUID
 
 @Service
 class PhotoService(
   val photoRepository: PhotoRepository,
-  val photoTagRepository: PhotoTagRepository,
-  val motiveRepository: MotiveRepository,
   val eventOwnerRepository: EventOwnerRepository,
   val placeRepository: PlaceRepository,
   val categoryRepository: CategoryRepository,
   val albumRepository: AlbumRepository,
   val photoGangBangerRepository: PhotoGangBangerRepository,
+  val photoReservationService: PhotoReservationService,
 ) {
-  val logger = LoggerFactory.getLogger(this::class.java)
+  /**
+   * Retrieves a photo by ID if the user's security level grants access.
+   *
+   * @param photoId the ID of the photo to retrieve
+   * @param userSecurityLevel the security level of the requesting user
+   * @return the photo
+   * @throws EntityNotFoundException if the photo does not exist
+   * @throws AccessDeniedException if the user's security level is insufficient
+   */
+  fun findById(photoId: UUID, userSecurityLevel: SecurityLevelType): PhotoDto {
+    val photo = photoRepository.findById(photoId, userSecurityLevel)
+      ?: throw EntityNotFoundException("Photo $photoId not found")
+    if (photo.securityLevel.securityLevelType.ordinal < userSecurityLevel.ordinal) {
+      throw AccessDeniedException("Insufficient security level to access photo $photoId")
+    }
+    return photo
+  }
 
-  fun preValidatePhotoUpload(
-    motiveId: String,
-    placeId: String,
-    photoGangBangerId: UUID,
-    albumTitle: String,
-    categoryId: String,
-    eventOwnerId: String,
-  ): List<String> {
+  /**
+   * Commits a photo to the database and deletes the corresponding reservation.
+   *
+   * The reservation must exist for the given album, page, and image number.
+   * The photo creation and reservation deletion are performed atomically.
+   *
+   * Note: This method assumes that the incomming PhotoDto has not been modifies since the 
+   * reservation was made. For our system, this does not matter since the proxy does not mutate it. 
+   * HOWEVER, if we in the future (somehow) change this, we need to re-validate here
+   *
+   * @param photo the complete photo data including URLs and slot numbers
+   * @return the created photo
+   * @throws EntityNotFoundException if no reservation exists for the given slot
+   */
+  @Transactional
+  fun upload(photo: PhotoDto): PhotoDto {
+    val album =
+      (if (photo.analog) photo.motive.analogAlbumDto else photo.motive.albumDto)
+        ?: throw EntityNotFoundException("Motive ${photo.motive.motiveId} has no album")
+
+    photoReservationService.findReservation(album.albumId.id, photo.pageNumber, photo.imageNumber)
+      ?: throw EntityNotFoundException("No reservation found for slot (page=${photo.pageNumber}, image=${photo.imageNumber}) in album ${album.albumId}")
+
+    photoRepository.createPhoto(photo)
+    photoReservationService.deleteReservation(album.albumId.id, photo.pageNumber, photo.imageNumber)
+    return photo
+  }
+
+  /**
+   * Soft-deletes a photo.
+   *
+   * @param photoId the ID of the photo to delete
+   * @throws EntityNotFoundException if no photo exists with the given ID
+   */
+  fun findByMotiveId(motiveId: UUID, userSecurityLevel: SecurityLevelType): List<PhotoDto> =
+    photoRepository.findByMotiveId(motiveId, userSecurityLevel)
+      .filter { it.securityLevel.securityLevelType.ordinal >= userSecurityLevel.ordinal }
+
+  fun delete(photoId: UUID) {
+    photoRepository.findById(photoId, SecurityLevelType.FG) 
+      ?: throw EntityNotFoundException("Photo $photoId not found")
+    photoRepository.deletePhoto(photoId)
+  }
+
+  /**
+   * Validates the upload request and reserves the next available slot in the album.
+   *
+   * @param request the upload request containing photo metadata
+   * @return the reserved slot
+   * @throws IllegalArgumentException if validation fails or the motive has no album
+   */
+  fun reserve(request: PhotoUploadRequestDto): PhotoReservationDto {
+    val errors = validate(request)
+    if (errors.isNotEmpty()) throw IllegalArgumentException(errors.joinToString(", "))
+    return reserveSlot(request)
+  }
+
+  /**
+   * Reserves a imagenumber/pagenumber slot for a pgoto
+   */
+  private fun reserveSlot(request: PhotoUploadRequestDto): PhotoReservationDto {
+    val album =
+      if (request.analog) {
+        request.motive.analogAlbumDto
+          ?: throw IllegalArgumentException("Motive ${request.motive.motiveId} has no analog album")
+      } else {
+        request.motive.albumDto
+          ?: throw IllegalArgumentException("Motive ${request.motive.motiveId} has no digital album")
+      }
+    return photoReservationService.createReservation(album.albumId.id)
+  }
+
+  /**
+   * Validates a photo upload request
+   */
+  private fun validate(request: PhotoUploadRequestDto): List<String> {
+    val albumTitle = if (request.analog) request.motive.analogAlbumDto?.name else request.motive.albumDto?.name
+    val photoGangBangerId = request.photoGangBangerDto.photoGangBangerId.id
+    val placeId = request.motive.placeDto.name
+    val categoryId = request.motive.categoryDto.name
+    val eventOwnerId = request.motive.eventOwnerDto.name
     val errors = mutableListOf<String>()
-
-    if (motiveId.isBlank()) errors.add("MotiveId is required")
-    if (placeId.isBlank()) errors.add("PlaceId is required")
-    if (categoryId.isBlank()) errors.add("CategoryId is required")
-    if (eventOwnerId.isBlank()) errors.add("EventOwnerId is required")
-    if (albumTitle.isBlank()) errors.add("AlbumTitle is required")
 
     if (placeRepository.findByName(placeId) == null) {
       errors.add("Place with name $placeId does not exist")
@@ -57,252 +133,27 @@ class PhotoService(
     if (categoryRepository.findByName(categoryId) == null) {
       errors.add("Category with name $categoryId does not exist")
     }
-    if (eventOwnerRepository.findByEventOwnerName(
-        EventOwnerName.valueOf(eventOwnerId),
-      ) == null
-    ) {
+    if (eventOwnerRepository.findByEventOwnerName(eventOwnerId) == null) {
       errors.add("EventOwner with name $eventOwnerId does not exist")
     }
     if (photoGangBangerRepository.findById(photoGangBangerId) == null) {
       errors.add("PhotoGangBanger with id $photoGangBangerId does not exist")
     }
-    if (albumRepository.findByTitle(albumTitle) == null) {
-      errors.add("Album with title $albumTitle does not exist")
+
+    // Validate that the album exists and matches the photo type (analog/digital)
+    if (albumTitle == null) errors.add("Motive has no ${if (request.analog) "analog" else "digital"} album")
+
+    if (albumTitle != null) {
+      val album = albumRepository.findByName(albumTitle)
+      if (album == null) {
+        errors.add("Album with title $albumTitle does not exist")
+      } else if (album.analog != request.analog) {
+        val expected = if (request.analog) "analog" else "digital"
+        val actual = if (album.analog) "analog" else "digital"
+        errors.add("Cannot upload a ${expected} photo into a ${actual} album")
+      }
     }
 
     return errors.toList()
-  }
-
-  fun findById(
-    id: UUID,
-    allowedSecurityLevels: List<String> = listOf("ALLE"),
-  ): PhotoDto = photoRepository.findById(id, allowedSecurityLevels) ?: throw EntityNotFoundException("Photo $id not found")
-
-  fun getByMotiveId(
-    id: UUID,
-    page: Int,
-    pageSize: Int,
-    allowedSecurityLevels: List<String> = listOf("ALLE"),
-  ): Page<PhotoDto> = photoRepository.findByMotiveId(id, page, pageSize, allowedSecurityLevels)
-
-  fun getAll(
-    page: Int,
-    pageSize: Int,
-    motive: UUID,
-    tag: List<String>,
-    fromDate: LocalDate,
-    toDate: LocalDate,
-    category: String,
-    place: UUID,
-    isGoodPic: Boolean,
-    album: UUID,
-    sortBy: String,
-    desc: Boolean,
-    allowedSecurityLevels: List<String>,
-    isAnalog: Boolean,
-  ): Page<PhotoDto> =
-    photoRepository.findAll(
-      page = page,
-      pageSize = pageSize,
-      motive = motive,
-      tag = tag,
-      fromDate = fromDate,
-      toDate = toDate,
-      category = category,
-      place = place,
-      isGoodPic = isGoodPic,
-      album = album,
-      sortBy = sortBy,
-      desc = desc,
-      allowedSecurityLevels = allowedSecurityLevels,
-      isAnalog = isAnalog,
-    )
-
-  fun getGoodPhotos(
-    page: Int,
-    pageSize: Int,
-    allowedSecurityLevels: List<String> = listOf("ALLE"),
-  ): Page<PhotoDto> = photoRepository.findGoodPhotos(page, pageSize, allowedSecurityLevels)
-
-  fun getAllAnalogPhotos(
-    page: Int,
-    pageSize: Int,
-    allowedSecurityLevels: List<String> = listOf("ALLE"),
-  ): Page<PhotoDto> = photoRepository.findAllAnalogPhotos(page, pageSize, allowedSecurityLevels)
-
-  fun getAllDigitalPhotos(
-    page: Int,
-    pageSize: Int,
-    motive: UUID,
-    tag: List<String>,
-    fromDate: LocalDate,
-    toDate: LocalDate,
-    category: String,
-    place: UUID,
-    isGoodPic: Boolean,
-    album: UUID,
-    sortBy: String,
-    desc: Boolean,
-    allowedSecurityLevels: List<String> = listOf("ALLE"),
-    isAnalog: Boolean = false,
-  ): Page<PhotoDto> =
-    photoRepository.findAllDigitalPhotos(
-      page = page,
-      pageSize = pageSize,
-      motive = motive,
-      tag = tag,
-      fromDate = fromDate,
-      toDate = toDate,
-      category = category,
-      place = place,
-      isGoodPic = isGoodPic,
-      album = album,
-      sortBy = sortBy,
-      desc = desc,
-      allowedSecurityLevels = allowedSecurityLevels,
-    )
-
-  fun patch(dto: PhotoPatchRequestDto): PhotoDto {
-    val photoTags =
-      dto.photoTags?.mapNotNull { photoTagRepository.findByName(it) }
-        ?: emptyList()
-    return photoRepository.patch(dto, photoTags)
-  }
-
-  fun createNewMotiveAndSaveDigitalPhotos(
-    motiveString: String,
-    placeString: String,
-    eventOwnerString: String,
-    securityLevel: String,
-    albumTitle: String,
-    photoGangBangerId: UUID,
-    smallUrl: String,
-    mediumUrl: String,
-    largeUrl: String,
-    tagList: List<String>,
-    categoryName: String,
-    isGoodPhoto: Boolean,
-    dateTaken: LocalDate,
-  ): List<PhotoDto> {
-    val album =
-      albumRepository.findByTitle(albumTitle)
-        ?: throw EntityNotFoundException("Album '$albumTitle' not found")
-    val photoGangBanger =
-      photoGangBangerRepository.findById(photoGangBangerId)
-        ?: throw EntityNotFoundException(
-          "PhotoGangBanger $photoGangBangerId not found",
-        )
-    val place =
-      placeRepository.findByName(placeString)
-        ?: throw EntityNotFoundException("Place '$placeString' not found")
-    val eventOwner =
-      eventOwnerRepository.findByEventOwnerName(
-        EventOwnerName.valueOf(eventOwnerString),
-      )
-        ?: throw EntityNotFoundException(
-          "EventOwner '$eventOwnerString' not found",
-        )
-    val category =
-      categoryRepository.findByName(categoryName)
-        ?: throw EntityNotFoundException(
-          "Category '$categoryName' not found",
-        )
-    val motive =
-      motiveRepository.findByTitle(motiveString)?.toDto()
-        ?: motiveRepository.create(
-          MotiveDto(
-            title = motiveString,
-            categoryDto = category,
-            eventOwnerDto = eventOwner,
-            albumDto = album,
-            dateCreated = dateTaken,
-          ),
-        )
-    val photoTags = tagList.mapNotNull { photoTagRepository.findByName(it) }
-    val securityLevelDto = SecurityLevelDto(SecurityLevelType.valueOf(securityLevel))
-
-    val photoDto =
-      PhotoDto(
-        isGoodPicture = isGoodPhoto,
-        smallUrl = smallUrl,
-        mediumUrl = mediumUrl,
-        largeUrl = largeUrl,
-        motive = motive,
-        placeDto = place,
-        gang = null,
-        securityLevel = securityLevelDto,
-        albumDto = album,
-        photoTags = photoTags,
-        categoryDto = category,
-        photoGangBangerDto = photoGangBanger,
-        dateTaken = dateTaken,
-      )
-    photoRepository.createPhoto(photoDto)
-    return listOf(photoDto)
-  }
-
-  fun saveDigitalPhotos(
-    isGoodPictureList: List<Boolean>,
-    motiveIdList: List<UUID>,
-    placeIdList: List<UUID>,
-    securityLevelList: List<String>,
-    gangIdList: List<UUID>,
-    photoGangBangerIdList: List<UUID>,
-    albumIdList: List<UUID>,
-    categoryIdList: List<UUID>,
-    fileNameList: List<String>,
-    dateTaken: LocalDate,
-  ): List<PhotoDto> =
-    fileNameList.indices.map { i ->
-      val motive =
-        motiveRepository.findById(motiveIdList[i])
-          ?: throw EntityNotFoundException(
-            "Motive ${motiveIdList[i]} not found",
-          )
-      val place =
-        placeRepository.findById(placeIdList[i])
-          ?: throw EntityNotFoundException(
-            "Place ${placeIdList[i]} not found",
-          )
-      val album =
-        albumRepository.findById(albumIdList[i])
-          ?: throw EntityNotFoundException(
-            "Album ${albumIdList[i]} not found",
-          )
-      val category =
-        categoryRepository.findById(categoryIdList[i])
-          ?: throw EntityNotFoundException(
-            "Category ${categoryIdList[i]} not found",
-          )
-      val photoGangBanger =
-        photoGangBangerRepository.findById(photoGangBangerIdList[i])
-          ?: throw EntityNotFoundException(
-            "PhotoGangBanger ${photoGangBangerIdList[i]} not found",
-          )
-      val securityLevelDto =
-        SecurityLevelDto(SecurityLevelType.valueOf(securityLevelList[i]))
-
-      val photoDto =
-        PhotoDto(
-          isGoodPicture = isGoodPictureList[i],
-          smallUrl = fileNameList[i],
-          mediumUrl = fileNameList[i],
-          largeUrl = fileNameList[i],
-          motive = motive,
-          placeDto = place,
-          gang = null,
-          securityLevel = securityLevelDto,
-          albumDto = album,
-          photoTags = emptyList(),
-          categoryDto = category,
-          photoGangBangerDto = photoGangBanger,
-          dateTaken = dateTaken,
-        )
-      photoRepository.createPhoto(photoDto)
-      photoDto
-    }
-
-  fun deletePhoto(photoId: UUID) {
-    TODO("Not yet implemented")
   }
 }
