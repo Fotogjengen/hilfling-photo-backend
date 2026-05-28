@@ -5,10 +5,10 @@ import no.fg.hilflingbackend.dto.PhotoReservationDto
 import no.fg.hilflingbackend.repository.PhotoRepository
 import no.fg.hilflingbackend.repository.PhotoReservationRepository
 import org.springframework.stereotype.Service
-import org.springframework.transaction.annotation.Isolation
-import org.springframework.transaction.annotation.Transactional
 import java.time.LocalDateTime
 import java.util.UUID
+import java.util.concurrent.ConcurrentHashMap
+import java.util.concurrent.locks.ReentrantLock
 
 /**
  * Service for handling photo reservations.
@@ -22,6 +22,8 @@ class PhotoReservationService(
   val photoRepository: PhotoRepository,
   val photoReservationRepository: PhotoReservationRepository,
 ) {
+  private val albumLocks = ConcurrentHashMap<UUID, ReentrantLock>()
+
   /**
    * Creates the next available reservation in the given album.
    *
@@ -34,42 +36,47 @@ class PhotoReservationService(
    * @return the newly created reservation
    * @throws IllegalStateException if the album is full
    */
-  @Transactional(isolation = Isolation.SERIALIZABLE)
   fun createReservation(albumId: UUID): PhotoReservationDto {
-    val lastReservation =
-      photoReservationRepository
-        .findLastReservation(albumId)
-        ?.let { it.pageNumber to it.imageNumber }
-    val lastPhoto = photoRepository.findLastByAlbum(albumId)
+    val lock = albumLocks.computeIfAbsent(albumId) { ReentrantLock() }
+    lock.lock()
+    try {
+      val lastReservation =
+        photoReservationRepository
+          .findLastReservation(albumId)
+          ?.let { it.pageNumber to it.imageNumber }
+      val lastPhoto = photoRepository.findLastByAlbum(albumId)
 
-    val last =
-      listOfNotNull(lastReservation, lastPhoto)
-        .maxByOrNull { (page, image) -> page * 100 + image }
+      val last =
+        listOfNotNull(lastReservation, lastPhoto)
+          .maxByOrNull { (page, image) -> page * 100 + image }
 
-    val (nextPage, nextImage) =
-      when {
-        last == null -> {
-          1 to 1
+      val (nextPage, nextImage) =
+        when {
+          last == null -> {
+            1 to 1
+          }
+
+          last.second >= 99 -> {
+            if (last.first >= 99) error("Album $albumId is full")
+            last.first + 1 to 1
+          }
+
+          else -> {
+            last.first to last.second + 1
+          }
         }
 
-        last.second >= 99 -> {
-          if (last.first >= 99) error("Album $albumId is full")
-          last.first + 1 to 1
-        }
-
-        else -> {
-          last.first to last.second + 1
-        }
-      }
-
-    val reservation =
-      PhotoReservationDto(
-        albumId = AlbumId(albumId),
-        pageNumber = nextPage,
-        imageNumber = nextImage,
-        reservedAt = LocalDateTime.now(),
-      )
-    return photoReservationRepository.createReservation(reservation)
+      val reservation =
+        PhotoReservationDto(
+          albumId = AlbumId(albumId),
+          pageNumber = nextPage,
+          imageNumber = nextImage,
+          reservedAt = LocalDateTime.now(),
+        )
+      return photoReservationRepository.createReservation(reservation)
+    } finally {
+      lock.unlock()
+    }
   }
 
   fun findReservation(

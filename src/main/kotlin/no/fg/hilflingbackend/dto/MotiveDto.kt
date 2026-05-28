@@ -2,6 +2,7 @@ package no.fg.hilflingbackend.dto
 
 import no.fg.hilflingbackend.model.Motive
 import java.time.LocalDate
+import java.time.LocalDateTime
 import java.util.UUID
 
 data class MotiveCreateRequestDto(
@@ -37,7 +38,7 @@ data class MotiveDto(
   val securityLevel: SecurityLevelDto,
   val albumDto: AlbumDto?,
   val analogAlbumDto: AlbumDto?,
-  val dateCreated: LocalDate?,
+  val dateCreated: LocalDateTime?,
 )
 
 data class MotiveDefaultsDto(
@@ -45,7 +46,7 @@ data class MotiveDefaultsDto(
   val securityLevel: SecurityLevelDto,
   val albumDto: AlbumDto?,
   val analogAlbumDto: AlbumDto?,
-  val dateCreated: LocalDate,
+  val dateCreated: LocalDateTime,
   val date: LocalDate,
 )
 

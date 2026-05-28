@@ -1,10 +1,12 @@
 package no.fg.hilflingbackend.repository
 
 import me.liuwj.ktorm.database.Database
+import me.liuwj.ktorm.dsl.and
 import me.liuwj.ktorm.dsl.delete
 import me.liuwj.ktorm.dsl.eq
 import me.liuwj.ktorm.dsl.from
 import me.liuwj.ktorm.dsl.innerJoin
+import me.liuwj.ktorm.dsl.isNull
 import me.liuwj.ktorm.dsl.map
 import me.liuwj.ktorm.dsl.or
 import me.liuwj.ktorm.dsl.select
@@ -13,6 +15,7 @@ import me.liuwj.ktorm.dsl.where
 import me.liuwj.ktorm.entity.add
 import me.liuwj.ktorm.entity.filter
 import me.liuwj.ktorm.entity.find
+import me.liuwj.ktorm.entity.sortedByDescending
 import me.liuwj.ktorm.entity.toList
 import no.fg.hilflingbackend.dto.PhotoDto
 import no.fg.hilflingbackend.model.Motives
@@ -33,8 +36,11 @@ open class PhotoRepository(
     return photo
   }
 
-  fun findById(id: UUID, userSecurityLevel: SecurityLevelType): PhotoDto? {
-    val photo = database.photos.find { it.id eq id }?.toDto() ?: return null
+  fun findById(
+    id: UUID,
+    userSecurityLevel: SecurityLevelType,
+  ): PhotoDto? {
+    val photo = database.photos.find { (it.id eq id) and it.dateDeleted.isNull() }?.toDto() ?: return null
     val canAccessProd = userSecurityLevel.ordinal <= SecurityLevelType.HUSFOLK.ordinal
     return if (canAccessProd) photo else photo.copy(imageProd = null)
   }
@@ -50,16 +56,26 @@ open class PhotoRepository(
     database.delete(Photos) { it.id eq id }
   }
 
-  fun findByMotiveId(motiveId: UUID, userSecurityLevel: SecurityLevelType): List<PhotoDto> {
+  fun findByMotiveId(
+    motiveId: UUID,
+    userSecurityLevel: SecurityLevelType,
+  ): List<PhotoDto> {
     val canAccessProd = userSecurityLevel.ordinal <= SecurityLevelType.HUSFOLK.ordinal
     return database.photos
-      .filter { it.motiveId eq motiveId }
+      .filter { (it.motiveId eq motiveId) and it.dateDeleted.isNull() }
+      .sortedByDescending { it.dateCreated }
       .toList()
       .map { photo ->
         val dto = photo.toDto()
         if (canAccessProd) dto else dto.copy(imageProd = null)
       }
   }
+
+  fun hasNonDeletedPhotos(motiveId: UUID): Boolean =
+    database.photos
+      .filter { (it.motiveId eq motiveId) and it.dateDeleted.isNull() }
+      .toList()
+      .isNotEmpty()
 
   fun findLastByAlbum(albumId: UUID): Pair<Int, Int>? =
     database
@@ -69,4 +85,14 @@ open class PhotoRepository(
       .where { (Motives.albumId eq albumId) or (Motives.analogAlbumId eq albumId) }
       .map { row -> row[Photos.pageNumber]!! to row[Photos.imageNumber]!! }
       .maxByOrNull { (page, image) -> page * 100 + image }
+
+  fun updateGoodPicture(
+    id: UUID,
+    goodPicture: Boolean,
+  ) {
+    database.update(Photos) {
+      set(it.goodPicture, goodPicture)
+      where { it.id eq id }
+    }
+  }
 }

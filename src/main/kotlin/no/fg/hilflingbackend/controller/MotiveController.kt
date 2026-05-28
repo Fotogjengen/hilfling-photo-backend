@@ -59,9 +59,8 @@ class MotiveController {
   @DeleteMapping("/{id}")
   fun delete(
     @PathVariable("id") id: UUID,
-  ): Int = repository.delete(id)
+  ): Int = motiveService.deleteMotive(id)
 
   @GetMapping("/defaults")
   fun getDefaults(): MotiveDefaultsDto = motiveService.getMotiveDefaults()
-
 }

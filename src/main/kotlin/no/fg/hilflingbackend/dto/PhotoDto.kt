@@ -1,17 +1,34 @@
 package no.fg.hilflingbackend.dto
 
 import no.fg.hilflingbackend.model.Photo
-import no.fg.hilflingbackend.valueobject.ImageFileName
 import no.fg.hilflingbackend.valueobject.SecurityLevelType
 import java.time.LocalDate
+import java.time.LocalDateTime
 import java.util.UUID
 
 data class PhotoUploadRequestDto(
   val goodPicture: Boolean = false,
   val analog: Boolean = false,
-  val motive: MotiveDto,
-  val gang: GangDto?,
-  val photoGangBangerDto: PhotoGangBangerDto,
+  val motiveId: UUID,
+  val gangId: UUID?,
+  val dateTaken: LocalDate,
+)
+
+data class PhotoGoodPictureToggleRequestDto(
+  val photoId: UUID,
+  val goodPicture: Boolean,
+)
+
+data class PhotoFinalizeRequestDto(
+  val goodPicture: Boolean = false,
+  val analog: Boolean = false,
+  val pageNumber: Int,
+  val imageNumber: Int,
+  val imageProd: String?,
+  val imageWeb: String?,
+  val imageThumb: String,
+  val motiveId: UUID,
+  val gangId: UUID?,
   val dateTaken: LocalDate,
 )
 
@@ -52,45 +69,10 @@ data class PhotoDto(
       this.imageProd = photo.imageProd
       this.imageWeb = photo.imageWeb
       this.imageThumb = photo.imageThumb
-      this.dateCreated = photo.dateTaken
+      this.dateCreated = LocalDateTime.now()
       this.motive = photo.motive.toEntity()
       this.gang = photo.gang?.toEntity()
       this.photoGangBanger = photo.photoGangBangerDto.toEntity()
-    }
-  }
-
-  companion object {
-    fun createWithFileName(
-      fileName: ImageFileName,
-      goodPicture: Boolean,
-      analog: Boolean = false,
-      imageNumber: Int,
-      pageNumber: Int,
-      motive: MotiveDto,
-      gang: GangDto? = null,
-      photoGangBangerDto: PhotoGangBangerDto,
-      dateTaken: LocalDate,
-    ): Pair<PhotoDto, ImageFileName> {
-      val photoId = PhotoId()
-      val newUniqueFileName = ImageFileName("${photoId}${fileName.getFileExtension()}")
-
-      return Pair(
-        PhotoDto(
-          photoId = photoId,
-          goodPicture = goodPicture,
-          analog = analog,
-          imageNumber = imageNumber,
-          pageNumber = pageNumber,
-          imageProd = null,
-          imageWeb = null,
-          imageThumb = newUniqueFileName.filename,
-          motive = motive,
-          gang = gang,
-          photoGangBangerDto = photoGangBangerDto,
-          dateTaken = dateTaken,
-        ),
-        newUniqueFileName,
-      )
     }
   }
 }

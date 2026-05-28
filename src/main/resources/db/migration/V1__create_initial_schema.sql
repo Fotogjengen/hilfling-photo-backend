@@ -117,7 +117,7 @@ CREATE TABLE MOTIVE
     id              uuid PRIMARY KEY,
     title           VARCHAR(100),
     date            DATE NOT NULL DEFAULT CURRENT_DATE,
-    date_created    DATE NOT NULL DEFAULT CURRENT_DATE,
+    date_created    TIMESTAMPTZ NOT NULL DEFAULT NOW(),
     category_id     UUID REFERENCES CATEGORY (id),
     event_owner_id  UUID REFERENCES EVENT_OWNER (id),
     album_id        UUID REFERENCES ALBUM (id),
@@ -150,7 +150,7 @@ $$ LANGUAGE plpgsql;
 CREATE TABLE PHOTO
 (
     id                   uuid PRIMARY KEY,
-    date_created         DATE NOT NULL DEFAULT CURRENT_DATE,
+    date_created         TIMESTAMPTZ NOT NULL DEFAULT NOW(),
     image_number         INTEGER NOT NULL,
     page_number          INTEGER NOT NULL,
     security_level       VARCHAR(50) CHECK (security_level IN ('FG', 'HUSFOLK', 'ALLE')),

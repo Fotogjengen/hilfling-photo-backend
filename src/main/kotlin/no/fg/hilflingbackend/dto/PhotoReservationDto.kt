@@ -9,6 +9,7 @@ data class PhotoReservationDto(
   val pageNumber: Int,
   val imageNumber: Int,
   val reservedAt: LocalDateTime,
+  val album: AlbumDto? = null,
 )
 
 fun PhotoReservationDto.toEntity(): PhotoReservation {

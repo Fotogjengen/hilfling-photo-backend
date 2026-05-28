@@ -3,6 +3,7 @@ package no.fg.hilflingbackend
 import com.azure.storage.blob.models.PublicAccessType
 import me.liuwj.ktorm.database.Database
 import me.liuwj.ktorm.dsl.batchInsert
+import me.liuwj.ktorm.dsl.insert
 import no.fg.hilflingbackend.blobStorage.AzureBlobStorage
 import no.fg.hilflingbackend.controller.PhotoController
 import no.fg.hilflingbackend.dto.AlbumDto
@@ -27,7 +28,6 @@ import no.fg.hilflingbackend.dto.PlaceId
 import no.fg.hilflingbackend.dto.PositionDto
 import no.fg.hilflingbackend.dto.PositionId
 import no.fg.hilflingbackend.dto.SecurityLevelDto
-import me.liuwj.ktorm.dsl.insert
 import no.fg.hilflingbackend.model.PhotoGangBangerToPositions
 import no.fg.hilflingbackend.model.Photos
 import no.fg.hilflingbackend.repository.AlbumRepository
@@ -51,6 +51,7 @@ import java.net.http.HttpRequest
 import java.net.http.HttpResponse
 import java.security.SecureRandom
 import java.time.LocalDate
+import java.time.LocalDateTime
 import java.util.UUID
 
 @Service
@@ -101,22 +102,9 @@ class MockDataService {
     return "https://picsum.photos/seed/$seed/1200/800"
   }
 
-  fun generatePhoto(): List<PhotoDto> {
+  fun generatePhoto(savedMotives: List<MotiveDto>): List<PhotoDto> {
     val list = mutableListOf<PhotoDto>()
-    val motives = generateMotiveData().map {
-      MotiveDto(
-        motiveId = MotiveId(),
-        title = it.title,
-        date = it.date,
-        categoryDto = it.categoryDto,
-        eventOwnerDto = it.eventOwnerDto,
-        placeDto = it.placeDto,
-        securityLevel = it.securityLevel,
-        albumDto = it.albumDto,
-        analogAlbumDto = it.analogAlbumDto,
-        dateCreated = LocalDate.now(),
-      )
-    }
+    val motives = savedMotives
     val analogMotives = motives.filter { it.analogAlbumDto != null }
     val gangs = generateGangData()
     val photoGangBangers = generatePhotoGangBangerData()
@@ -128,8 +116,8 @@ class MockDataService {
           photoId = PhotoId(uuid),
           goodPicture = listOf(true, false).random(),
           analog = false,
-          imageNumber = i,
-          pageNumber = 1,
+          imageNumber = (i - 1) % 99 + 1,
+          pageNumber = (i - 1) / 99 + 1,
           imageProd = url,
           imageWeb = url,
           imageThumb = url,
@@ -148,8 +136,8 @@ class MockDataService {
           photoId = PhotoId(uuid),
           goodPicture = listOf(true, false).random(),
           analog = true,
-          imageNumber = i,
-          pageNumber = i / 36 + 1,
+          imageNumber = (i - 1) % 99 + 1,
+          pageNumber = (i - 1) / 99 + 1,
           imageProd = url,
           imageWeb = url,
           imageThumb = url,
@@ -918,9 +906,9 @@ class MockDataService {
     generatePlaceData().forEach { placeRepository.create(it) }
     generateGangData().forEach { gangRepository.create(it) }
 
-    generateMotiveData().forEach { motiveRepository.create(it) }
+    val savedMotives = generateMotiveData().map { motiveRepository.create(it) }
     database.batchInsert(Photos) {
-      generatePhoto().map { photoDto ->
+      generatePhoto(savedMotives).map { photoDto ->
         item {
           set(it.id, photoDto.photoId.id)
           set(it.goodPicture, photoDto.goodPicture)

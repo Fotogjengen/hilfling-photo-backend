@@ -49,7 +49,10 @@ open class AlbumRepository(
 
   fun findByName(name: String): AlbumDto? = database.albums.find { it.name eq name }?.toDto()
 
-  fun findAllAnalog(page: Int, pageSize: Int): Page<AlbumDto> {
+  fun findAllAnalog(
+    page: Int,
+    pageSize: Int,
+  ): Page<AlbumDto> {
     val offset = page * pageSize
     val resultSet =
       database
@@ -66,7 +69,10 @@ open class AlbumRepository(
     )
   }
 
-  fun findAllDigital(page: Int, pageSize: Int): Page<AlbumDto> {
+  fun findAllDigital(
+    page: Int,
+    pageSize: Int,
+  ): Page<AlbumDto> {
     val offset = page * pageSize
     val resultSet =
       database

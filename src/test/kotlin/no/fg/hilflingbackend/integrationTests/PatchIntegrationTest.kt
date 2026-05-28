@@ -24,7 +24,6 @@ import no.fg.hilflingbackend.dto.PositionDto
 import no.fg.hilflingbackend.dto.PositionId
 import no.fg.hilflingbackend.dto.PositionPatchRequestDto
 import no.fg.hilflingbackend.dto.SecurityLevelDto
-import no.fg.hilflingbackend.valueobject.SemesterStart
 import no.fg.hilflingbackend.repository.AlbumRepository
 import no.fg.hilflingbackend.repository.CategoryRepository
 import no.fg.hilflingbackend.repository.EventOwnerRepository
@@ -35,6 +34,7 @@ import no.fg.hilflingbackend.repository.PlaceRepository
 import no.fg.hilflingbackend.repository.PositionRepository
 import no.fg.hilflingbackend.valueobject.Email
 import no.fg.hilflingbackend.valueobject.SecurityLevelType
+import no.fg.hilflingbackend.valueobject.SemesterStart
 import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInstance

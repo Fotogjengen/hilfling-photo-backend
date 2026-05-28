@@ -17,7 +17,11 @@ class AuthService(
       return jwtService.generateToken(
         JwtTokenPayload(
           username = username,
-          positionId = fgUser.positions.firstOrNull { it.isActive }?.positionId?.toString(),
+          positionId =
+            fgUser.positions
+              .firstOrNull { it.isActive }
+              ?.positionId
+              ?.toString(),
           securityLevel = SecurityLevelType.FG,
         ),
       )

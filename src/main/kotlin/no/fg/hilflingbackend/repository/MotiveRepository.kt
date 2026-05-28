@@ -24,10 +24,12 @@ import no.fg.hilflingbackend.dto.toEntity
 import no.fg.hilflingbackend.model.Motive
 import no.fg.hilflingbackend.model.Motives
 import no.fg.hilflingbackend.model.motives
+import no.fg.hilflingbackend.model.photos
 import no.fg.hilflingbackend.model.toDto
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Repository
 import java.time.LocalDate
+import java.time.LocalDateTime
 import java.util.UUID
 
 @Repository
@@ -43,8 +45,7 @@ open class MotiveRepository {
         (it.title eq title) and it.dateDeleted.isNull()
       }
 
-  fun findById(id: UUID): MotiveDto? =
-    database.motives.find { (it.id eq id) and it.dateDeleted.isNull() }?.toDto()
+  fun findById(id: UUID): MotiveDto? = database.motives.find { (it.id eq id) and it.dateDeleted.isNull() }?.toDto()
 
   fun findAll(
     page: Int,
@@ -92,18 +93,19 @@ open class MotiveRepository {
   fun create(
     motive: MotiveCreateRequestDto,
   ): MotiveDto {
-    val dto = MotiveDto(
-      motiveId = MotiveId(),
-      title = motive.title,
-      date = motive.date,
-      categoryDto = motive.categoryDto,
-      eventOwnerDto = motive.eventOwnerDto,
-      placeDto = motive.placeDto,
-      securityLevel = motive.securityLevel,
-      albumDto = motive.albumDto,
-      analogAlbumDto = motive.analogAlbumDto,
-      dateCreated = LocalDate.now(),
-    )
+    val dto =
+      MotiveDto(
+        motiveId = MotiveId(),
+        title = motive.title,
+        date = motive.date,
+        categoryDto = motive.categoryDto,
+        eventOwnerDto = motive.eventOwnerDto,
+        placeDto = motive.placeDto,
+        securityLevel = motive.securityLevel,
+        albumDto = motive.albumDto,
+        analogAlbumDto = motive.analogAlbumDto,
+        dateCreated = LocalDateTime.now(),
+      )
     database.motives.add(dto.toEntity())
     return dto
   }

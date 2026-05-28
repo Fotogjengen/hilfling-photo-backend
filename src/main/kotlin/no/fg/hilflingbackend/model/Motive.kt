@@ -6,11 +6,11 @@ import me.liuwj.ktorm.entity.sequenceOf
 import me.liuwj.ktorm.schema.date
 import me.liuwj.ktorm.schema.uuid
 import me.liuwj.ktorm.schema.varchar
-import java.time.LocalDate
 import no.fg.hilflingbackend.dto.MotiveDto
 import no.fg.hilflingbackend.dto.MotiveId
 import no.fg.hilflingbackend.dto.SecurityLevelDto
 import no.fg.hilflingbackend.valueobject.SecurityLevelType
+import java.time.LocalDate
 
 interface Motive : BaseModel<Motive> {
   companion object : Entity.Factory<Motive>()
