@@ -1,6 +1,7 @@
 package no.fg.hilflingbackend.controller
 
 import jakarta.servlet.http.HttpServletRequest
+import no.fg.hilflingbackend.dto.Page
 import no.fg.hilflingbackend.dto.PhotoDto
 import no.fg.hilflingbackend.dto.PhotoFinalizeRequestDto
 import no.fg.hilflingbackend.dto.PhotoGoodPictureToggleRequestDto
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.PutMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
+import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
 import java.util.UUID
 
@@ -40,6 +42,25 @@ class PhotoController(
   ): List<PhotoDto> {
     val securityLevel = jwtService.extractSecurityLevel(request.getHeader("X-hilfling-token"))
     return photoService.findByMotiveId(motiveId, securityLevel)
+  }
+
+  @GetMapping("/good-pictures")
+  fun getGoodPicturesPage(
+    @RequestParam("page", required = false) page: Int?,
+    @RequestParam("pageSize", required = false) pageSize: Int?,
+    request: HttpServletRequest,
+  ): Page<PhotoDto> {
+    val securityLevel = jwtService.extractSecurityLevel(request.getHeader("X-hilfling-token"))
+    return photoService.findGoodPicturesPage(page ?: 0, pageSize ?: 10, securityLevel)
+  }
+
+  @GetMapping("/motive/{motiveId}/good-pictures")
+  fun getGoodPicturesByMotiveId(
+    @PathVariable motiveId: UUID,
+    request: HttpServletRequest,
+  ): List<PhotoDto> {
+    val securityLevel = jwtService.extractSecurityLevel(request.getHeader("X-hilfling-token"))
+    return photoService.findGoodPicturesByMotiveId(motiveId, securityLevel)
   }
 
   @PostMapping("/upload/reserve")

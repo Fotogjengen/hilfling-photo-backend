@@ -25,7 +25,7 @@ data class PhotoFinalizeRequestDto(
   val pageNumber: Int,
   val imageNumber: Int,
   val imageProd: String?,
-  val imageWeb: String?,
+  val imageWeb: String,
   val imageThumb: String,
   val motiveId: UUID,
   val gangId: UUID?,
