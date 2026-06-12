@@ -188,3 +188,13 @@ CREATE TABLE PHOTOS_IN_PURCHASE_ORDER
     img_size          VARCHAR(10),
     date_deleted DATE DEFAULT NULL
 );
+
+/* Trigram indexes for cross-entity filter search autocomplete */
+CREATE EXTENSION IF NOT EXISTS pg_trgm;
+
+CREATE INDEX IF NOT EXISTS idx_place_name_trgm ON place USING GIN (name gin_trgm_ops);
+CREATE INDEX IF NOT EXISTS idx_event_owner_name_trgm ON event_owner USING GIN (name gin_trgm_ops);
+CREATE INDEX IF NOT EXISTS idx_category_name_trgm ON category USING GIN (name gin_trgm_ops);
+CREATE INDEX IF NOT EXISTS idx_album_name_trgm ON album USING GIN (name gin_trgm_ops);
+CREATE INDEX IF NOT EXISTS idx_album_description_trgm ON album USING GIN (description gin_trgm_ops);
+CREATE INDEX IF NOT EXISTS idx_motive_title_trgm ON motive USING GIN (title gin_trgm_ops);
