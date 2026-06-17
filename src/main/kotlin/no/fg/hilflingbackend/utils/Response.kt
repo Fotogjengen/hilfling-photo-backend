@@ -8,7 +8,7 @@ class ResponseOk<T : Any> : ResponseEntity<T> {
   constructor(
     t: T,
     headers: HttpHeaders = HttpHeaders(),
-    status: HttpStatus = HttpStatus.ACCEPTED,
+    status: HttpStatus = HttpStatus.OK,
   ) : super(t, headers, status)
 }
 
