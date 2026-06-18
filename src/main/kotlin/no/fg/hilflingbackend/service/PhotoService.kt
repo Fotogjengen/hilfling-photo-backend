@@ -5,6 +5,7 @@ import no.fg.hilflingbackend.dto.Page
 import no.fg.hilflingbackend.dto.PhotoDto
 import no.fg.hilflingbackend.dto.PhotoFinalizeRequestDto
 import no.fg.hilflingbackend.dto.PhotoId
+import no.fg.hilflingbackend.dto.PhotoPositionDto
 import no.fg.hilflingbackend.dto.PhotoReservationDto
 import no.fg.hilflingbackend.dto.PhotoUploadRequestDto
 import no.fg.hilflingbackend.repository.GangRepository
@@ -140,6 +141,14 @@ class PhotoService(
     pageSize: Int,
     userSecurityLevel: SecurityLevelType,
   ): Page<PhotoDto> = photoRepository.findGoodPicturesPage(page, pageSize, userSecurityLevel)
+
+  fun findGoodPicturePosition(
+    photoId: UUID,
+    pageSize: Int,
+    userSecurityLevel: SecurityLevelType,
+  ): PhotoPositionDto =
+    photoRepository.findGoodPicturePosition(photoId, pageSize, userSecurityLevel)
+      ?: throw EntityNotFoundException("Photo $photoId is not in the good pictures listing")
 
   fun findGoodPicturesByMotiveId(
     motiveId: UUID,

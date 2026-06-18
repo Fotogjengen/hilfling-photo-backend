@@ -7,9 +7,11 @@ import me.liuwj.ktorm.dsl.delete
 import me.liuwj.ktorm.dsl.desc
 import me.liuwj.ktorm.dsl.eq
 import me.liuwj.ktorm.dsl.from
+import me.liuwj.ktorm.dsl.greater
 import me.liuwj.ktorm.dsl.inList
 import me.liuwj.ktorm.dsl.innerJoin
 import me.liuwj.ktorm.dsl.isNull
+import me.liuwj.ktorm.dsl.less
 import me.liuwj.ktorm.dsl.map
 import me.liuwj.ktorm.dsl.or
 import me.liuwj.ktorm.dsl.select
@@ -25,6 +27,7 @@ import me.liuwj.ktorm.entity.take
 import me.liuwj.ktorm.entity.toList
 import no.fg.hilflingbackend.dto.Page
 import no.fg.hilflingbackend.dto.PhotoDto
+import no.fg.hilflingbackend.dto.PhotoPositionDto
 import no.fg.hilflingbackend.model.Motives
 import no.fg.hilflingbackend.model.Photos
 import no.fg.hilflingbackend.model.photos
@@ -141,6 +144,51 @@ open class PhotoRepository(
       pageSize = pageSize,
       totalRecords = sequence.totalRecords,
       currentList = photos,
+    )
+  }
+
+  /**
+   * Computes where a good picture lands in the good pictures query
+   */
+  fun findGoodPicturePosition(
+    photoId: UUID,
+    pageSize: Int,
+    userSecurityLevel: SecurityLevelType,
+  ): PhotoPositionDto? {
+    val allowedSecurityLevels =
+      SecurityLevelType
+        .values()
+        .filter { it.ordinal >= userSecurityLevel.ordinal }
+        .map { it.name }
+
+    val target = database.photos.find { it.id eq photoId } ?: return null
+
+    val qualifies =
+      database.photos
+        .filter {
+          (it.id eq photoId) and
+            (it.goodPicture eq true) and
+            it.dateDeleted.isNull() and
+            (it.securityLevel inList allowedSecurityLevels)
+        }.totalRecords > 0
+    if (!qualifies) return null
+
+    val index =
+      database.photos
+        .filter {
+          (it.goodPicture eq true) and
+            it.dateDeleted.isNull() and
+            (it.securityLevel inList allowedSecurityLevels) and
+            (
+              (it.dateCreated greater target.dateCreated) or
+                ((it.dateCreated eq target.dateCreated) and (it.id less photoId))
+            )
+        }.totalRecords
+
+    return PhotoPositionDto(
+      page = index / pageSize,
+      positionInPage = index % pageSize,
+      pageSize = pageSize,
     )
   }
 

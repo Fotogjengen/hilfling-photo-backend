@@ -5,6 +5,7 @@ import no.fg.hilflingbackend.dto.Page
 import no.fg.hilflingbackend.dto.PhotoDto
 import no.fg.hilflingbackend.dto.PhotoFinalizeRequestDto
 import no.fg.hilflingbackend.dto.PhotoGoodPictureToggleRequestDto
+import no.fg.hilflingbackend.dto.PhotoPositionDto
 import no.fg.hilflingbackend.dto.PhotoReservationDto
 import no.fg.hilflingbackend.dto.PhotoUploadRequestDto
 import no.fg.hilflingbackend.service.JwtService
@@ -52,6 +53,16 @@ class PhotoController(
   ): Page<PhotoDto> {
     val securityLevel = jwtService.extractSecurityLevel(request.getHeader("X-hilfling-token"))
     return photoService.findGoodPicturesPage(page ?: 0, pageSize ?: 10, securityLevel)
+  }
+
+  @GetMapping("/good-pictures/{id}/position")
+  fun getGoodPicturePosition(
+    @PathVariable id: UUID,
+    @RequestParam("pageSize", required = false) pageSize: Int?,
+    request: HttpServletRequest,
+  ): PhotoPositionDto {
+    val securityLevel = jwtService.extractSecurityLevel(request.getHeader("X-hilfling-token"))
+    return photoService.findGoodPicturePosition(id, pageSize ?: 10, securityLevel)
   }
 
   @GetMapping("/motive/{motiveId}/good-pictures")
