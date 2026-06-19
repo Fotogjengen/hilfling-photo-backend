@@ -92,18 +92,27 @@ class PhotoService(
   }
 
   /**
-   * Soft-deletes a photo.
+   * Retrieves the photos belonging to a motive that the user is allowed to see.
    *
-   * @param photoId the ID of the photo to delete
-   * @throws EntityNotFoundException if no photo exists with the given ID
+   * @param motiveId the ID of the motive whose photos to retrieve
+   * @param userSecurityLevel the security level of the requesting user
+   * @return the photos of the motive
+   * @throws EntityNotFoundException if the motive does not exist or is not visible at the user's security level
    */
   fun findByMotiveId(
     motiveId: UUID,
     userSecurityLevel: SecurityLevelType,
-  ): List<PhotoDto> =
-    photoRepository
+  ): List<PhotoDto> {
+    val motive =
+      motiveRepository.findById(motiveId)
+        ?: throw EntityNotFoundException("Motive $motiveId not found")
+    if (motive.securityLevel.securityLevelType.ordinal < userSecurityLevel.ordinal) {
+      throw EntityNotFoundException("Motive $motiveId not found")
+    }
+    return photoRepository
       .findByMotiveId(motiveId, userSecurityLevel)
       .filter { it.securityLevel.securityLevelType.ordinal >= userSecurityLevel.ordinal }
+  }
 
   fun delete(
     photoId: UUID,
@@ -153,10 +162,17 @@ class PhotoService(
   fun findGoodPicturesByMotiveId(
     motiveId: UUID,
     userSecurityLevel: SecurityLevelType,
-  ): List<PhotoDto> =
-    photoRepository
+  ): List<PhotoDto> {
+    val motive =
+      motiveRepository.findById(motiveId)
+        ?: throw EntityNotFoundException("Motive $motiveId not found")
+    if (motive.securityLevel.securityLevelType.ordinal < userSecurityLevel.ordinal) {
+      throw EntityNotFoundException("Motive $motiveId not found")
+    }
+    return photoRepository
       .findGoodPicturesByMotiveId(motiveId, userSecurityLevel)
       .filter { it.securityLevel.securityLevelType.ordinal >= userSecurityLevel.ordinal }
+  }
 
   fun markAsGoodPicture(
     photoId: UUID,
