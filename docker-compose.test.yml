@@ -16,7 +16,6 @@ services:
       - ./:/hilfling
     depends_on:
       - postgres
-      - fg-blob-storage
     expose:
       - 8080
     networks:
