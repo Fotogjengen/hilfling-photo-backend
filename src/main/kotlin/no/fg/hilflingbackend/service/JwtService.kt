@@ -158,8 +158,7 @@ class JwtService(
         .getInstance("RSA")
         .generatePublic(X509EncodedKeySpec(decodePem(pem))) as RSAPublicKey
 
-    private fun base64Url(bytes: ByteArray): String =
-      Base64.getUrlEncoder().withoutPadding().encodeToString(bytes)
+    private fun base64Url(bytes: ByteArray): String = Base64.getUrlEncoder().withoutPadding().encodeToString(bytes)
 
     // BigInteger.toByteArray() may prepend a sign byte; JWK expects the
     // minimal unsigned big-endian representation.

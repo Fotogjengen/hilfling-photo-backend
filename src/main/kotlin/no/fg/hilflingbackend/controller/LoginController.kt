@@ -16,7 +16,6 @@ class LoginController(
     val token: String,
   )
 
-
   // login from the ITK proxy
   // IMPORTANT: this endpoint should be protected to never ever be called from outside the ITK proxy
   @PostMapping("/login")
