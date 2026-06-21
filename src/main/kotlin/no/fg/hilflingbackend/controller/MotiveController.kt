@@ -1,6 +1,7 @@
 package no.fg.hilflingbackend.controller
 
 import jakarta.servlet.http.HttpServletRequest
+import no.fg.hilflingbackend.configurations.hilflingToken
 import no.fg.hilflingbackend.dto.MotiveCreateRequestDto
 import no.fg.hilflingbackend.dto.MotiveDefaultsDto
 import no.fg.hilflingbackend.dto.MotiveDto
@@ -30,7 +31,7 @@ class MotiveController(
     @PathVariable("id") id: UUID,
     request: HttpServletRequest,
   ): MotiveDto {
-    val securityLevel = jwtService.extractSecurityLevel(request.getHeader("X-hilfling-token"))
+    val securityLevel = jwtService.extractSecurityLevel(request.hilflingToken())
     return motiveService.findById(id, securityLevel)
   }
 
@@ -40,7 +41,7 @@ class MotiveController(
     @RequestParam("pageSize", required = false) pageSize: Int?,
     request: HttpServletRequest,
   ): Page<MotiveDto> {
-    val securityLevel = jwtService.extractSecurityLevel(request.getHeader("X-hilfling-token"))
+    val securityLevel = jwtService.extractSecurityLevel(request.hilflingToken())
     return motiveService.findAll(page ?: 0, pageSize ?: 10, securityLevel)
   }
 
@@ -51,7 +52,7 @@ class MotiveController(
     @RequestParam("pageSize", required = false) pageSize: Int?,
     request: HttpServletRequest,
   ): Page<MotiveDto> {
-    val securityLevel = jwtService.extractSecurityLevel(request.getHeader("X-hilfling-token"))
+    val securityLevel = jwtService.extractSecurityLevel(request.hilflingToken())
     return motiveService.search(searchTerm, page ?: 0, pageSize ?: 10, securityLevel)
   }
 
@@ -60,7 +61,7 @@ class MotiveController(
     @RequestBody dto: MotiveCreateRequestDto,
     request: HttpServletRequest,
   ): MotiveDto {
-    val securityLevel = jwtService.extractSecurityLevel(request.getHeader("X-hilfling-token"))
+    val securityLevel = jwtService.extractSecurityLevel(request.hilflingToken())
     return motiveService.create(dto, securityLevel)
   }
 
@@ -69,7 +70,7 @@ class MotiveController(
     @RequestBody dto: MotivePatchRequestDto,
     request: HttpServletRequest,
   ): MotiveDto {
-    val securityLevel = jwtService.extractSecurityLevel(request.getHeader("X-hilfling-token"))
+    val securityLevel = jwtService.extractSecurityLevel(request.hilflingToken())
     return motiveService.patch(dto, securityLevel)
   }
 
@@ -78,7 +79,7 @@ class MotiveController(
     @PathVariable("id") id: UUID,
     request: HttpServletRequest,
   ): Int {
-    val securityLevel = jwtService.extractSecurityLevel(request.getHeader("X-hilfling-token"))
+    val securityLevel = jwtService.extractSecurityLevel(request.hilflingToken())
     return motiveService.deleteMotive(id, securityLevel)
   }
 

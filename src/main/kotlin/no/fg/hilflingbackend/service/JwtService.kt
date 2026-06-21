@@ -2,22 +2,32 @@ package no.fg.hilflingbackend.service
 
 import io.jsonwebtoken.Claims
 import io.jsonwebtoken.Jwts
-import io.jsonwebtoken.io.Decoders
-import io.jsonwebtoken.security.Keys
 import no.fg.hilflingbackend.dto.JwtTokenPayload
 import no.fg.hilflingbackend.valueobject.SecurityLevelType
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.security.core.userdetails.UserDetails
 import org.springframework.stereotype.Service
+import java.math.BigInteger
+import java.security.KeyFactory
+import java.security.MessageDigest
+import java.security.PrivateKey
+import java.security.interfaces.RSAPublicKey
+import java.security.spec.PKCS8EncodedKeySpec
+import java.security.spec.X509EncodedKeySpec
+import java.util.Base64
 import java.util.Date
 import java.util.function.Function
-import javax.crypto.SecretKey
 
 @Service
 class JwtService(
-  @Value("\${jwt.secret}") jwtSecretB64: String,
+  @Value("\${jwt.private-key}") jwtPrivateKeyPem: String,
+  @Value("\${jwt.public-key}") jwtPublicKeyPem: String,
 ) {
-  private val secretKey: SecretKey = Keys.hmacShaKeyFor(Decoders.BASE64.decode(jwtSecretB64))
+  private val privateKey: PrivateKey = parsePrivateKey(jwtPrivateKeyPem)
+  private val publicKey: RSAPublicKey = parsePublicKey(jwtPublicKeyPem)
+
+  // stable key id derived from the public key
+  private val keyId: String = thumbprint(publicKey)
 
   fun generateToken(payload: JwtTokenPayload): String {
     val claims =
@@ -29,6 +39,9 @@ class JwtService(
 
     return Jwts
       .builder()
+      .header()
+      .keyId(keyId)
+      .and()
       .claims()
       .add(claims)
       .subject(payload.username)
@@ -37,9 +50,27 @@ class JwtService(
       // TODO: this should be coordinated with ITK, so that our token expires at the
       // same time as theirs
       .and()
-      .signWith(secretKey)
+      .signWith(privateKey, Jwts.SIG.RS256)
       .compact()
   }
+
+  /**
+   * returns the JWKS document containing our public key, so that verifiers can validate our tokens
+   */
+  fun jwks(): Map<String, Any> =
+    mapOf(
+      "keys" to
+        listOf(
+          mapOf(
+            "kty" to "RSA",
+            "use" to "sig",
+            "alg" to "RS256",
+            "kid" to keyId,
+            "n" to base64Url(toUnsignedBytes(publicKey.modulus)),
+            "e" to base64Url(toUnsignedBytes(publicKey.publicExponent)),
+          ),
+        ),
+    )
 
   fun extractSecurityLevel(token: String?): SecurityLevelType {
     if (token == null) return SecurityLevelType.ALLE
@@ -91,7 +122,7 @@ class JwtService(
   private fun extractAllClaims(token: String): Claims =
     Jwts
       .parser()
-      .verifyWith(secretKey)
+      .verifyWith(publicKey)
       .build()
       .parseSignedClaims(token)
       .payload
@@ -104,4 +135,42 @@ class JwtService(
   private fun isTokenExpired(token: String): Boolean = extractExpiration(token).before(Date())
 
   private fun extractExpiration(token: String): Date = extractClaim(token, Claims::getExpiration)
+
+  companion object {
+    private fun decodePem(pem: String): ByteArray {
+      val body =
+        pem
+          .replace("-----BEGIN PRIVATE KEY-----", "")
+          .replace("-----END PRIVATE KEY-----", "")
+          .replace("-----BEGIN PUBLIC KEY-----", "")
+          .replace("-----END PUBLIC KEY-----", "")
+          .replace(Regex("\\s"), "")
+      return Base64.getDecoder().decode(body)
+    }
+
+    private fun parsePrivateKey(pem: String): PrivateKey =
+      KeyFactory
+        .getInstance("RSA")
+        .generatePrivate(PKCS8EncodedKeySpec(decodePem(pem)))
+
+    private fun parsePublicKey(pem: String): RSAPublicKey =
+      KeyFactory
+        .getInstance("RSA")
+        .generatePublic(X509EncodedKeySpec(decodePem(pem))) as RSAPublicKey
+
+    private fun base64Url(bytes: ByteArray): String =
+      Base64.getUrlEncoder().withoutPadding().encodeToString(bytes)
+
+    // BigInteger.toByteArray() may prepend a sign byte; JWK expects the
+    // minimal unsigned big-endian representation.
+    private fun toUnsignedBytes(value: BigInteger): ByteArray {
+      val bytes = value.toByteArray()
+      return if (bytes.size > 1 && bytes[0].toInt() == 0) bytes.copyOfRange(1, bytes.size) else bytes
+    }
+
+    private fun thumbprint(key: RSAPublicKey): String {
+      val digest = MessageDigest.getInstance("SHA-256").digest(key.encoded)
+      return base64Url(digest)
+    }
+  }
 }
