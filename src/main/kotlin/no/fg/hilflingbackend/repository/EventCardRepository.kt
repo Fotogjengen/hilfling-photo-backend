@@ -6,7 +6,8 @@ import me.liuwj.ktorm.dsl.desc
 import me.liuwj.ktorm.dsl.eq
 import me.liuwj.ktorm.dsl.from
 import me.liuwj.ktorm.dsl.innerJoin
-import me.liuwj.ktorm.dsl.isNotNull
+// import me.liuwj.ktorm.dsl.isNotNull
+import me.liuwj.ktorm.dsl.isNull
 import me.liuwj.ktorm.dsl.limit
 import me.liuwj.ktorm.dsl.map
 import me.liuwj.ktorm.dsl.orderBy
@@ -38,7 +39,9 @@ open class EventCardRepository {
         Motives.title,
         Motives.dateCreated,
         EventOwners.name,
-      ).where { EventOwners.name eq eventOwner.name }
+        Motives.dateDeleted
+      ).where { (EventOwners.name eq eventOwner.name) .and(Motives.dateDeleted.isNull()) }
+        
       .limit(0, numberOfEventCards)
       .map { row ->
         val motiveId = row[Motives.id]
@@ -49,6 +52,7 @@ open class EventCardRepository {
               .select(Photos.smallUrl)
               .where {
                 (Photos.motiveId eq id).and(Photos.isGoodPicture eq true)
+                
               }.limit(0, 1) // Only fetch one record
               .map { it[Photos.smallUrl] }
               .firstOrNull()
@@ -61,6 +65,7 @@ open class EventCardRepository {
           motiveId = motiveId,
           motiveTitle = row[Motives.title],
           date_created = row[Motives.dateCreated],
+          dateDeleted = row[Motives.dateDeleted],
           eventOwnerName = row[EventOwners.name],
           frontPageSmallPhotoUrl = selectedPhotoUrl,
         )
@@ -81,12 +86,14 @@ open class EventCardRepository {
           Motives.title,
           Motives.dateCreated,
           EventOwners.name,
+          Motives.dateDeleted
         ).where {
           if (searchTerm.isBlank()) {
-            // Return all results, ordered by latest first
-            Motives.id.isNotNull()
+            // Return all results, ordered by latest first . edit: only return motives that has not been deleted
+            Motives.dateDeleted.isNull()
           } else {
-            Motives.title ilike "%$searchTerm%"
+            (Motives.title ilike "%$searchTerm%")
+            .and(Motives.dateDeleted.isNull())
           }
         }.orderBy(Motives.dateCreated.desc())
         .limit(page * pageSize, pageSize)
@@ -108,6 +115,7 @@ open class EventCardRepository {
             motiveId = motiveId,
             motiveTitle = row[Motives.title],
             date_created = row[Motives.dateCreated],
+            dateDeleted = row[Motives.dateDeleted],
             eventOwnerName = row[EventOwners.name],
             frontPageSmallPhotoUrl = selectedPhotoUrl,
           )
