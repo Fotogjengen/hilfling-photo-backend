@@ -9,4 +9,6 @@ import org.springframework.web.bind.annotation.RestController
 
 @RestController()
 @RequestMapping("/phototags")
-open class PhotoTagController(override val repository: PhotoTagRepository) : BaseController<PhotoTag, PhotoTagDto, PhotoTagPatchRequestDto>(repository)
+open class PhotoTagController(
+  override val repository: PhotoTagRepository,
+) : BaseController<PhotoTag, PhotoTagDto, PhotoTagPatchRequestDto>(repository)

@@ -4,8 +4,8 @@ import no.fg.hilflingbackend.repository.SearchSuggestionsRepository
 import org.springframework.stereotype.Service
 
 @Service
-class SearchSuggestionsService(val repository: SearchSuggestionsRepository) {
-  fun findSuggestions(term: String): List<String> {
-    return repository.findBySearchTerm(term)
-  }
+class SearchSuggestionsService(
+  val repository: SearchSuggestionsRepository,
+) {
+  fun findSuggestions(term: String): List<String> = repository.findBySearchTerm(term)
 }

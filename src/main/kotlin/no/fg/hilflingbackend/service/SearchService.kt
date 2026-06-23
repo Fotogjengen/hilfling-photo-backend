@@ -5,8 +5,8 @@ import no.fg.hilflingbackend.repository.SearchRepository
 import org.springframework.stereotype.Service
 
 @Service
-class SearchService(val repository: SearchRepository) {
-  fun findMotives(searchTerm: String): List<MotiveDto> {
-    return repository.findBySearchTerm(searchTerm)
-  }
+class SearchService(
+  val repository: SearchRepository,
+) {
+  fun findMotives(searchTerm: String): List<MotiveDto> = repository.findBySearchTerm(searchTerm)
 }

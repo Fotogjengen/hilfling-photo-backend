@@ -47,6 +47,8 @@ services:
       SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/hilflingdb
       SPRING_DATASOURCE_USERNAME: ${DATABASE_USERNAME:-hilfling}
       SPRING_DATASOURCE_PASSWORD: ${DATABASE_PASSWORD:-password}
+      CORS_ALLOWED_ORIGINS: ${CORS_ALLOWED_ORIGINS:-http://localhost:3000,http://localhost:5173,http://localhost:8888}
+      AUTH_CORS_ALLOWED_ORIGINS: ${AUTH_CORS_ALLOWED_ORIGINS:-http://localhost:8888}
     ports:
       - "8000:8000" # map port 8000 of the host to port 8080 of the container
     # command: ["--debug"]

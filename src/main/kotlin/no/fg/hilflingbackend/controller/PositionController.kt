@@ -9,4 +9,6 @@ import org.springframework.web.bind.annotation.RestController
 
 @RestController
 @RequestMapping("/positions")
-open class PositionController(override val repository: PositionRepository) : BaseController<Position, PositionDto, PositionPatchRequestDto>(repository)
+open class PositionController(
+  override val repository: PositionRepository,
+) : BaseController<Position, PositionDto, PositionPatchRequestDto>(repository)

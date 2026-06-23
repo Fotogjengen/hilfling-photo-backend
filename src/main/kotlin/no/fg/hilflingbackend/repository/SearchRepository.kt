@@ -12,7 +12,6 @@ import org.springframework.stereotype.Repository
 
 @Repository
 open class SearchRepository {
-
   @Autowired
   open lateinit var database: Database
 

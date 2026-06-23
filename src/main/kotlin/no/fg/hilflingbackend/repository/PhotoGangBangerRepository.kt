@@ -1,8 +1,18 @@
 package no.fg.hilflingbackend.repository
 
+import jakarta.persistence.EntityNotFoundException
 import me.liuwj.ktorm.database.Database
+import me.liuwj.ktorm.dsl.and
+import me.liuwj.ktorm.dsl.desc
 import me.liuwj.ktorm.dsl.eq
+import me.liuwj.ktorm.dsl.from
+import me.liuwj.ktorm.dsl.innerJoin
 import me.liuwj.ktorm.dsl.insert
+import me.liuwj.ktorm.dsl.isNull
+import me.liuwj.ktorm.dsl.map
+import me.liuwj.ktorm.dsl.orderBy
+import me.liuwj.ktorm.dsl.select
+import me.liuwj.ktorm.dsl.where
 import me.liuwj.ktorm.entity.add
 import me.liuwj.ktorm.entity.filter
 import me.liuwj.ktorm.entity.find
@@ -11,174 +21,162 @@ import me.liuwj.ktorm.entity.update
 import no.fg.hilflingbackend.dto.Page
 import no.fg.hilflingbackend.dto.PhotoGangBangerDto
 import no.fg.hilflingbackend.dto.PhotoGangBangerPatchRequestDto
-import no.fg.hilflingbackend.dto.SamfundetUserDto
+import no.fg.hilflingbackend.dto.PositionDto
+import no.fg.hilflingbackend.dto.PositionId
 import no.fg.hilflingbackend.dto.toEntity
-import no.fg.hilflingbackend.exceptions.EntityCreationException
 import no.fg.hilflingbackend.exceptions.EntityExistsException
+import no.fg.hilflingbackend.model.PhotoGangBangerToPositions
 import no.fg.hilflingbackend.model.PhotoGangBangers
+import no.fg.hilflingbackend.model.Positions
 import no.fg.hilflingbackend.model.photo_gang_bangers
-import no.fg.hilflingbackend.model.samfundet_users
 import no.fg.hilflingbackend.model.toDto
+import no.fg.hilflingbackend.valueobject.Email
 import org.springframework.stereotype.Repository
 import java.util.UUID
-import jakarta.persistence.EntityNotFoundException
 
 interface IPhotoGangBangerRepository {
   fun findById(id: UUID): PhotoGangBangerDto?
-  fun findAll(page: Int = 0, pageSize: Int = 100): Page<PhotoGangBangerDto>
-  fun findAllActives(page: Int = 0, pageSize: Int = 100): Page<PhotoGangBangerDto>
-  fun findAllActivePangs(page: Int = 0, pageSize: Int = 100): Page<PhotoGangBangerDto>
-  fun findAllInactivePangs(page: Int = 0, pageSize: Int = 100): Page<PhotoGangBangerDto>
+
+  fun findAll(
+    page: Int = 0,
+    pageSize: Int = 100,
+  ): Page<PhotoGangBangerDto>
+
+  fun findAllActives(
+    page: Int = 0,
+    pageSize: Int = 100,
+  ): Page<PhotoGangBangerDto>
+
+  fun findAllActivePangs(
+    page: Int = 0,
+    pageSize: Int = 100,
+  ): Page<PhotoGangBangerDto>
+
+  fun findAllInactivePangs(
+    page: Int = 0,
+    pageSize: Int = 100,
+  ): Page<PhotoGangBangerDto>
 }
 
 @Repository
 class PhotoGangBangerRepository(
-  val database: Database
+  val database: Database,
 ) : IPhotoGangBangerRepository {
-  // TODO: Join with PhotoGangBangerDtoPositions
+  private fun findPositionsForMember(memberId: UUID): List<PositionDto> =
+    database
+      .from(PhotoGangBangerToPositions)
+      .innerJoin(Positions, on = PhotoGangBangerToPositions.positionId eq Positions.id)
+      .select(Positions.id, Positions.title, Positions.email, PhotoGangBangerToPositions.semesterStart, PhotoGangBangerToPositions.isActive)
+      .where {
+        (PhotoGangBangerToPositions.photoGangBangerId eq memberId)
+          .and(PhotoGangBangerToPositions.dateDeleted.isNull())
+      }.orderBy(PhotoGangBangerToPositions.semesterStart.desc())
+      .map { row ->
+        PositionDto(
+          positionId = PositionId(row[Positions.id]!!),
+          title = row[Positions.title]!!,
+          email = Email(row[Positions.email]!!),
+          isActive = row[PhotoGangBangerToPositions.isActive] ?: false,
+        )
+      }
 
-  override fun findById(id: UUID): PhotoGangBangerDto? {
-    return database.photo_gang_bangers.find { it.id eq id }?.toDto()
-  }
+  private fun withPositions(dto: PhotoGangBangerDto): PhotoGangBangerDto = dto.copy(positions = findPositionsForMember(dto.photoGangBangerId.id))
 
-  override fun findAll(page: Int, pageSize: Int): Page<PhotoGangBangerDto> {
+  override fun findById(id: UUID): PhotoGangBangerDto? =
+    database.photo_gang_bangers
+      .find { it.id eq id }
+      ?.toDto()
+      ?.let { withPositions(it) }
+
+  override fun findAll(
+    page: Int,
+    pageSize: Int,
+  ): Page<PhotoGangBangerDto> {
     val photoGangBangers = database.photo_gang_bangers
-    val photoGangBangerDtos = photoGangBangers.toList()
-      .map { it.toDto() }
-
-    return Page(
-      page = page,
-      pageSize = pageSize,
-      totalRecords = photoGangBangers.totalRecords,
-      currentList = photoGangBangerDtos
-    )
+    val dtos = photoGangBangers.toList().map { withPositions(it.toDto()) }
+    return Page(page = page, pageSize = pageSize, totalRecords = photoGangBangers.totalRecords, currentList = dtos)
   }
 
-  override fun findAllActives(page: Int, pageSize: Int): Page<PhotoGangBangerDto> {
-    val photoGangBangers = database.photo_gang_bangers.filter {
-      it.isActive eq true
-      it.isPang eq false
-    }
-    val photoGangBangerDtos = photoGangBangers.toList()
-      .map { it.toDto() }
-
-    return Page(
-      page = page,
-      pageSize = pageSize,
-      totalRecords = photoGangBangers.totalRecords,
-      currentList = photoGangBangerDtos
-    )
-  }
-
-  override fun findAllActivePangs(page: Int, pageSize: Int): Page<PhotoGangBangerDto> {
-    val photoGangBangers = database.photo_gang_bangers.filter {
-      it.isActive eq true
-      it.isPang eq true
-    }
-    val photoGangBangerDtos = photoGangBangers.toList()
-      .map { it.toDto() }
-
-    return Page(
-      page = page,
-      pageSize = pageSize,
-      totalRecords = photoGangBangers.totalRecords,
-      currentList = photoGangBangerDtos
-    )
-  }
-
-  override fun findAllInactivePangs(page: Int, pageSize: Int): Page<PhotoGangBangerDto> {
-    val photoGangBangers = database.photo_gang_bangers.filter {
-      it.isActive eq false
-      it.isPang eq true
-    }
-    val photoGangBangerDtos = photoGangBangers.toList()
-      .map { it.toDto() }
-
-    return Page(
-      page = page,
-      pageSize = pageSize,
-      totalRecords = photoGangBangers.totalRecords,
-      currentList = photoGangBangerDtos
-    )
-  }
-
-  fun create(
-    dto: PhotoGangBangerDto
-  ): Int {
-    val existingPhotoGangBanger = database.photo_gang_bangers
-      .find {
-        it.samfundetUserId eq dto.samfundetUser.samfundetUserId.id
+  override fun findAllActives(
+    page: Int,
+    pageSize: Int,
+  ): Page<PhotoGangBangerDto> {
+    val photoGangBangers =
+      database.photo_gang_bangers.filter {
+        it.isActive eq true
+        it.isPang eq false
       }
-    if (existingPhotoGangBanger != null) {
-      throw EntityExistsException("PhotoGangBanger already exists")
-    }
+    return Page(page = page, pageSize = pageSize, totalRecords = photoGangBangers.totalRecords, currentList = photoGangBangers.toList().map { withPositions(it.toDto()) })
+  }
 
-    val samfundetUser = database.samfundet_users.find {
-      it.id eq dto.samfundetUser.samfundetUserId.id
-    }
-    if (samfundetUser == null) {
-      try {
-        database.samfundet_users.add(dto.samfundetUser.toEntity())
-      } catch (_: Error) {
-        throw EntityCreationException("Could not create new SamfundetUser")
+  override fun findAllActivePangs(
+    page: Int,
+    pageSize: Int,
+  ): Page<PhotoGangBangerDto> {
+    val photoGangBangers =
+      database.photo_gang_bangers.filter {
+        it.isActive eq true
+        it.isPang eq true
       }
-    }
+    return Page(page = page, pageSize = pageSize, totalRecords = photoGangBangers.totalRecords, currentList = photoGangBangers.toList().map { withPositions(it.toDto()) })
+  }
 
-    val created = database.insert(PhotoGangBangers) {
+  override fun findAllInactivePangs(
+    page: Int,
+    pageSize: Int,
+  ): Page<PhotoGangBangerDto> {
+    val photoGangBangers =
+      database.photo_gang_bangers.filter {
+        it.isActive eq false
+        it.isPang eq true
+      }
+    return Page(page = page, pageSize = pageSize, totalRecords = photoGangBangers.totalRecords, currentList = photoGangBangers.toList().map { withPositions(it.toDto()) })
+  }
+
+  fun create(dto: PhotoGangBangerDto): Int {
+    val existing = database.photo_gang_bangers.find { it.username eq dto.username }
+    if (existing != null) throw EntityExistsException("PhotoGangBanger already exists")
+
+    return database.insert(PhotoGangBangers) {
       set(it.id, dto.photoGangBangerId.id)
       set(it.isActive, dto.isActive)
       set(it.isPang, dto.isPang)
-      set(it.address, dto.address)
-      set(it.city, dto.city)
-      set(it.positionId, dto.position.positionId.id)
-      set(it.relationshipStatus, dto.relationShipStatus.status)
-      set(it.samfundetUserId, dto.samfundetUser.samfundetUserId.id)
       set(it.semesterStart, dto.semesterStart.value)
-      set(it.zipCode, dto.zipCode)
+      set(it.firstName, dto.firstName)
+      set(it.lastName, dto.lastName)
+      set(it.username, dto.username)
+      set(it.email, dto.email)
+      set(it.profilePicture, dto.profilePicture)
+      set(it.phoneNumber, dto.phoneNumber)
     }
-
-    return created
   }
 
-  fun patch(
-    dto: PhotoGangBangerPatchRequestDto
-  ): PhotoGangBangerDto? {
-    val photoGangBangerDtoFromDb = findById(dto.photoGangBangerId.id)
-      ?: throw EntityNotFoundException("Could not find PhotoGangBanger")
+  fun patch(dto: PhotoGangBangerPatchRequestDto): PhotoGangBangerDto? {
+    val fromDb =
+      findById(dto.photoGangBangerId.id)
+        ?: throw EntityNotFoundException("Could not find PhotoGangBanger")
 
-    var samfundetUserDto = photoGangBangerDtoFromDb.samfundetUser
-    if (dto.samfundetUser != null) {
-      samfundetUserDto = SamfundetUserDto(
-        samfundetUserId = photoGangBangerDtoFromDb.samfundetUser.samfundetUserId,
-        firstName = dto.samfundetUser.firstName ?: photoGangBangerDtoFromDb.samfundetUser.firstName,
-        lastName = dto.samfundetUser.lastName ?: photoGangBangerDtoFromDb.samfundetUser.lastName,
-        username = dto.samfundetUser.username ?: photoGangBangerDtoFromDb.samfundetUser.username,
-        phoneNumber = dto.samfundetUser.phoneNumber ?: photoGangBangerDtoFromDb.samfundetUser.phoneNumber,
-        email = dto.samfundetUser.email ?: photoGangBangerDtoFromDb.samfundetUser.email,
-        profilePicturePath = dto.samfundetUser.profilePicturePath ?: photoGangBangerDtoFromDb.samfundetUser.profilePicturePath,
-        sex = dto.samfundetUser.sex ?: photoGangBangerDtoFromDb.samfundetUser.sex,
-        securityLevel = dto.samfundetUser.securityLevel ?: photoGangBangerDtoFromDb.samfundetUser.securityLevel
-
+    val updated =
+      PhotoGangBangerDto(
+        photoGangBangerId = fromDb.photoGangBangerId,
+        semesterStart = dto.semesterStart ?: fromDb.semesterStart,
+        isActive = dto.isActive ?: fromDb.isActive,
+        isPang = dto.isPang ?: fromDb.isPang,
+        firstName = dto.firstName ?: fromDb.firstName,
+        lastName = dto.lastName ?: fromDb.lastName,
+        username = dto.username ?: fromDb.username,
+        email = dto.email ?: fromDb.email,
+        profilePicture = dto.profilePicture ?: fromDb.profilePicture,
+        phoneNumber = dto.phoneNumber ?: fromDb.phoneNumber,
       )
-      database.samfundet_users.update(samfundetUserDto.toEntity())
-    }
 
-    val photoGangBangerDto = PhotoGangBangerDto(
-      photoGangBangerId = photoGangBangerDtoFromDb.photoGangBangerId,
-      samfundetUser = samfundetUserDto,
-      city = dto.city ?: photoGangBangerDtoFromDb.city,
-      zipCode = dto.zipCode ?: photoGangBangerDtoFromDb.zipCode,
-      address = dto.address ?: photoGangBangerDtoFromDb.address,
-      isPang = dto.isPang ?: photoGangBangerDtoFromDb.isPang,
-      isActive = dto.isActive ?: photoGangBangerDtoFromDb.isActive,
-      semesterStart = dto.semesterStart ?: photoGangBangerDtoFromDb.semesterStart,
-      relationShipStatus = dto.relationshipStatus ?: photoGangBangerDtoFromDb.relationShipStatus,
-      position = dto.position ?: photoGangBangerDtoFromDb.position
-    )
-
-    database.photo_gang_bangers.update(
-      photoGangBangerDto.toEntity()
-    )
+    database.photo_gang_bangers.update(updated.toEntity())
     return findById(dto.photoGangBangerId.id)
   }
+
+  fun findByUsername(username: String): PhotoGangBangerDto? =
+    database.photo_gang_bangers
+      .find { it.username eq username }
+      ?.toDto()
+      ?.let { withPositions(it) }
 }

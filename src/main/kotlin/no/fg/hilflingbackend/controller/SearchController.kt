@@ -11,9 +11,11 @@ import org.springframework.web.bind.annotation.RestController
 
 @RestController
 @RequestMapping("/search")
-class SearchController(val service: SearchService) {
-
+class SearchController(
+  val service: SearchService,
+) {
   @GetMapping("/{searchTerm}")
-  fun getBySearchTerm(@PathVariable("searchTerm") searchTerm: String): ResponseEntity<List<MotiveDto>> =
-    ResponseOk(service.findMotives(searchTerm))
+  fun getBySearchTerm(
+    @PathVariable("searchTerm") searchTerm: String,
+  ): ResponseEntity<List<MotiveDto>> = ResponseOk(service.findMotives(searchTerm))
 }

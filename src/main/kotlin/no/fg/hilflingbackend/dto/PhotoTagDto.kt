@@ -5,20 +5,18 @@ import java.util.UUID
 
 data class PhotoTagPatchRequestDto(
   val photoTagId: PhotoTagId,
-  val name: String?
+  val name: String?,
 )
 
 data class PhotoTagDto(
   val photoTagId: PhotoTagId = PhotoTagId(),
-  val name: String
+  val name: String,
 ) {
-  override fun equals(other: Any?): Boolean {
-    return other is PhotoTagDto && this.photoTagId.id == other.photoTagId.id
-  }
+  override fun equals(other: Any?): Boolean = other is PhotoTagDto && this.photoTagId.id == other.photoTagId.id
 }
 
 data class PhotoTagId(
-  override val id: UUID = UUID.randomUUID()
+  override val id: UUID = UUID.randomUUID(),
 ) : UuidId {
   override fun toString(): String = id.toString()
 }

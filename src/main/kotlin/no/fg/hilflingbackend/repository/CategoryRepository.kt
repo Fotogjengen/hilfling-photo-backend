@@ -1,5 +1,6 @@
 package no.fg.hilflingbackend.repository
 
+import jakarta.persistence.EntityNotFoundException
 import me.liuwj.ktorm.database.Database
 import me.liuwj.ktorm.dsl.QueryRowSet
 import me.liuwj.ktorm.dsl.eq
@@ -15,35 +16,37 @@ import no.fg.hilflingbackend.model.Category
 import no.fg.hilflingbackend.model.categories
 import no.fg.hilflingbackend.model.toDto
 import org.springframework.stereotype.Repository
-import jakarta.persistence.EntityNotFoundException
 
 @Repository
-open class CategoryRepository(database: Database) : BaseRepository<Category, CategoryDto, CategoryPatchRequestDto>(table = Categories, database = database) {
-  override fun convertToClass(qrs: QueryRowSet): CategoryDto = CategoryDto(
-    categoryId = CategoryId(qrs[Categories.id]!!),
-    name = qrs[Categories.name]!!
-  )
+open class CategoryRepository(
+  database: Database,
+) : BaseRepository<Category, CategoryDto, CategoryPatchRequestDto>(table = Categories, database = database) {
+  override fun convertToClass(qrs: QueryRowSet): CategoryDto =
+    CategoryDto(
+      categoryId = CategoryId(qrs[Categories.id]!!),
+      name = qrs[Categories.name]!!,
+    )
 
-  override fun create(dto: CategoryDto): Int {
-    return database.categories.add(dto.toEntity())
-  }
+  override fun create(dto: CategoryDto): Int = database.categories.add(dto.toEntity())
 
   override fun patch(dto: CategoryPatchRequestDto): CategoryDto {
-    val fromDb = findById(dto.categoryId.id)
-      ?: throw EntityNotFoundException("Could not find Category")
-    val newDto = CategoryDto(
-      categoryId = fromDb.categoryId,
-      name = dto.name ?: fromDb.name
-    )
+    val fromDb =
+      findById(dto.categoryId.id)
+        ?: throw EntityNotFoundException("Could not find Category")
+    val newDto =
+      CategoryDto(
+        categoryId = fromDb.categoryId,
+        name = dto.name ?: fromDb.name,
+      )
     val updated = database.categories.update(newDto.toEntity())
 
     return if (updated == 1) newDto else fromDb
   }
 
-  fun findByName(categoryName: String) = database
-    .categories
-    .find {
-      it.name eq categoryName
-    }
-    ?.toDto()
+  fun findByName(categoryName: String) =
+    database
+      .categories
+      .find {
+        it.name eq categoryName
+      }?.toDto()
 }

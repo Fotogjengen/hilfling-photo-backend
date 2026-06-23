@@ -5,16 +5,16 @@ import java.util.UUID
 
 data class ArticleTagPatchRequestDto(
   val articleTagId: ArticleTagId,
-  val name: String?
+  val name: String?,
 )
 
 data class ArticleTagDto(
   val articleTagId: ArticleTagId = ArticleTagId(),
-  val name: String
+  val name: String,
 )
 
 data class ArticleTagId(
-  override val id: UUID = UUID.randomUUID()
+  override val id: UUID = UUID.randomUUID(),
 ) : UuidId {
   override fun toString(): String = id.toString()
 }

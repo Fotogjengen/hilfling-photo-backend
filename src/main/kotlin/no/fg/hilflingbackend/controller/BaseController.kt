@@ -12,43 +12,32 @@ import org.springframework.web.bind.annotation.RequestMethod
 import org.springframework.web.bind.annotation.RequestParam
 import java.util.UUID
 
-open class BaseController<E, D, R>(open val repository: IRepository<E, D, R>) {
-
+open class BaseController<E, D, R>(
+  open val repository: IRepository<E, D, R>,
+) {
   @GetMapping("/{id}")
   fun getById(
-    @PathVariable("id") id: UUID
-  ): D? {
-    return repository.findById(id)
-  }
+    @PathVariable("id") id: UUID,
+  ): D? = repository.findById(id)
 
   @GetMapping
   fun getAll(
     @RequestParam("page", required = false) page: Int?,
-    @RequestParam("pageSize", required = false) pageSize: Int?
-  ): Page<D> {
-    return repository.findAll(page ?: 0, pageSize ?: 100)
-  }
+    @RequestParam("pageSize", required = false) pageSize: Int?,
+  ): Page<D> = repository.findAll(page ?: 0, pageSize ?: 100)
 
-  @PostMapping
+  @PostMapping()
   open fun create(
-    @RequestBody dto: D
-  ): Int {
-    return repository.create(
-      dto
-    )
-  }
+    @RequestBody dto: D,
+  ): Int = repository.create(dto)
 
   @RequestMapping("/{id}", method = [RequestMethod.DELETE])
   fun delete(
-    @PathVariable("id") id: UUID
-  ): Int {
-    return repository.delete(id)
-  }
+    @PathVariable("id") id: UUID,
+  ): Int = repository.delete(id)
 
   @PatchMapping
   fun patch(
-    @RequestBody dto: R
-  ): D {
-    return repository.patch(dto)
-  }
+    @RequestBody dto: R,
+  ): D = repository.patch(dto)
 }

@@ -7,14 +7,14 @@ data class PhotoGangBangerPositionPatchRequestDto(
   val photoGangBangerPositionId: PhotoGangBangerPositionId,
   val photoGangBangerDto: PhotoGangBangerDto?,
   val position: PositionDto?,
-  val isCurrent: Boolean?
+  val isCurrent: Boolean?,
 )
 
 data class PhotoGangBangerPositionDto(
   val photoGangBangerPositionId: PhotoGangBangerPositionId = PhotoGangBangerPositionId(),
   val photoGangBangerDto: PhotoGangBangerDto,
   val position: PositionDto,
-  val isCurrent: Boolean
+  val isCurrent: Boolean,
 )
 
 fun PhotoGangBangerPositionDto.toEntity(): PhotoGangBangerPosition {
@@ -27,7 +27,7 @@ fun PhotoGangBangerPositionDto.toEntity(): PhotoGangBangerPosition {
 }
 
 data class PhotoGangBangerPositionId(
-  override val id: UUID = UUID.randomUUID()
+  override val id: UUID = UUID.randomUUID(),
 ) : UuidId {
   override fun toString(): String = id.toString()
 }

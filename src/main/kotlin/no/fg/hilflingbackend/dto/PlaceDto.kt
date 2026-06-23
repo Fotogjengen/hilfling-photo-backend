@@ -5,16 +5,16 @@ import java.util.UUID
 
 data class PlacePatchRequestDto(
   val placeId: PlaceId,
-  val name: String?
+  val name: String?,
 )
 
 data class PlaceDto(
   val placeId: PlaceId = PlaceId(),
-  val name: String
+  val name: String,
 )
 
 data class PlaceId(
-  override val id: UUID = UUID.randomUUID()
+  override val id: UUID = UUID.randomUUID(),
 ) : UuidId {
   override fun toString(): String = id.toString()
 }

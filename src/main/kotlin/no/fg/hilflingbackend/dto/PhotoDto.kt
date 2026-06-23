@@ -1,7 +1,7 @@
 package no.fg.hilflingbackend.dto
 
 import no.fg.hilflingbackend.model.Photo
-import no.fg.hilflingbackend.value_object.ImageFileName
+import no.fg.hilflingbackend.valueobject.ImageFileName
 import java.time.LocalDate
 import java.util.UUID
 
@@ -45,7 +45,7 @@ data class PhotoDto(
       this.dateCreated = photo.dateTaken
       this.motive = photo.motive.toEntity()
       this.place = photo.placeDto.toEntity()
-      this.securityLevel = photo.securityLevel.toEntity()
+      this.securityLevel = photo.securityLevel.securityLevelType.type
       this.gang = photo.gang?.toEntity()
       this.album = photo.albumDto.toEntity()
       this.category = photo.categoryDto.toEntity()

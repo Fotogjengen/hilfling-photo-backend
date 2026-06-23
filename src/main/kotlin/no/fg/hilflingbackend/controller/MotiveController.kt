@@ -22,31 +22,26 @@ class MotiveController {
   lateinit var repository: MotiveRepository
 
   @GetMapping("/{id}")
-  fun getById(@PathVariable("id") id: UUID): MotiveDto? {
-    return repository.findById(id)
-  }
+  fun getById(
+    @PathVariable("id") id: UUID,
+  ): MotiveDto? = repository.findById(id)
 
   @GetMapping
   fun getAll(
     @RequestParam("page", required = false) page: Int?,
-    @RequestParam("pageSize", required = false) pageSize: Int?
-  ): Page<MotiveDto> {
-    return repository.findAll(page ?: 0, pageSize ?: 100)
-  }
+    @RequestParam("pageSize", required = false) pageSize: Int?,
+  ): Page<MotiveDto> = repository.findAll(page ?: 0, pageSize ?: 100)
 
   @PostMapping
   fun create(
-    @RequestBody dto: MotiveDto
-  ): MotiveDto {
-    return repository.create(
-      dto
+    @RequestBody dto: MotiveDto,
+  ): MotiveDto =
+    repository.create(
+      dto,
     )
-  }
 
   @PatchMapping
   fun patch(
-    @RequestBody dto: MotivePatchRequestDto
-  ): MotiveDto {
-    return repository.patch(dto)
-  }
+    @RequestBody dto: MotivePatchRequestDto,
+  ): MotiveDto = repository.patch(dto)
 }

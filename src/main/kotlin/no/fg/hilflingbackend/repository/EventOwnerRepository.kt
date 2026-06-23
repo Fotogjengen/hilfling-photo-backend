@@ -16,19 +16,18 @@ import no.fg.hilflingbackend.model.event_owners
 import org.springframework.stereotype.Repository
 
 @Repository
-open class EventOwnerRepository(database: Database) : BaseRepository<EventOwner, EventOwnerDto, NotImplementedError>(table = EventOwners, database = database) {
-  override fun convertToClass(qrs: QueryRowSet): EventOwnerDto = EventOwnerDto(
-    eventOwnerId = EventOwnerId(qrs[EventOwners.id]!!),
-    name = EventOwnerName.valueOf(qrs[EventOwners.name]!!)
-  )
+open class EventOwnerRepository(
+  database: Database,
+) : BaseRepository<EventOwner, EventOwnerDto, NotImplementedError>(table = EventOwners, database = database) {
+  override fun convertToClass(qrs: QueryRowSet): EventOwnerDto =
+    EventOwnerDto(
+      eventOwnerId = EventOwnerId(qrs[EventOwners.id]!!),
+      name = EventOwnerName.valueOf(qrs[EventOwners.name]!!),
+    )
 
-  override fun create(dto: EventOwnerDto): Int {
-    return database.event_owners.add(dto.toEntity())
-  }
+  override fun create(dto: EventOwnerDto): Int = database.event_owners.add(dto.toEntity())
 
-  fun patch(dto: EventOwnerDto): Int {
-    return database.event_owners.update(dto.toEntity())
-  }
+  fun patch(dto: EventOwnerDto): Int = database.event_owners.update(dto.toEntity())
 
   @Deprecated("Will be removed when MockDataService is updated. Use findByEventOwnerName instead.")
   fun findByType(eventOwnerName: EventOwnerName): EventOwnerDto? =

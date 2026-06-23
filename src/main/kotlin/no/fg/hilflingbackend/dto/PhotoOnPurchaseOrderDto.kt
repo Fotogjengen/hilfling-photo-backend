@@ -5,13 +5,13 @@ import java.util.UUID
 data class PhotoOnPurchaseOrderDto(
   val photoOnPurchaseOrderId: PhotoOnPurchaseOrderId = PhotoOnPurchaseOrderId(),
   val size: String,
-  val amount: Int
+  val amount: Int,
   // val purchaseOrder: PurchaseOrderDto,
   // val photo: PhotoDto,
 )
 
 data class PhotoOnPurchaseOrderId(
-  override val id: UUID = UUID.randomUUID()
+  override val id: UUID = UUID.randomUUID(),
 ) : UuidId {
   override fun toString(): String = id.toString()
 }

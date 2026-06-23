@@ -6,5 +6,5 @@ import org.springframework.context.annotation.Configuration
 @Configuration
 data class AzureStorageConfiguration(
   @Value("\${spring.azure.storage.blob-storage.connection-string}")
-  val azureStorageConnectionString: String
+  val azureStorageConnectionString: String,
 )

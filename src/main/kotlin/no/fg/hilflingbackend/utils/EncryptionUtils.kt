@@ -63,4 +63,3 @@ object EncryptionUtils {
     return String(decryptedBytes, Charsets.UTF_8)
   }
 }
-

@@ -17,10 +17,10 @@ object PhotoTags : BaseTable<PhotoTag>("photo_tag") {
   val name = varchar("name").bindTo { it.name }
 }
 
-fun PhotoTag.toDto() = PhotoTagDto(
-  photoTagId = PhotoTagId(id),
-  name = name
-
-)
+fun PhotoTag.toDto() =
+  PhotoTagDto(
+    photoTagId = PhotoTagId(id),
+    name = name,
+  )
 
 val Database.photo_tags get() = this.sequenceOf(PhotoTags)

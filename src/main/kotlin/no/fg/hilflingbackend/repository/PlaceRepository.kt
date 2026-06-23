@@ -1,5 +1,6 @@
 package no.fg.hilflingbackend.repository
 
+import jakarta.persistence.EntityNotFoundException
 import me.liuwj.ktorm.database.Database
 import me.liuwj.ktorm.dsl.QueryRowSet
 import me.liuwj.ktorm.dsl.eq
@@ -15,34 +16,35 @@ import no.fg.hilflingbackend.model.Places
 import no.fg.hilflingbackend.model.places
 import no.fg.hilflingbackend.model.toDto
 import org.springframework.stereotype.Repository
-import jakarta.persistence.EntityNotFoundException
 
 @Repository
-open class PlaceRepository(database: Database) : BaseRepository<Place, PlaceDto, PlacePatchRequestDto>(table = Places, database = database) {
-  override fun convertToClass(qrs: QueryRowSet): PlaceDto = PlaceDto(
-    placeId = PlaceId(qrs[Places.id]!!),
-    name = qrs[Places.name]!!
+open class PlaceRepository(
+  database: Database,
+) : BaseRepository<Place, PlaceDto, PlacePatchRequestDto>(table = Places, database = database) {
+  override fun convertToClass(qrs: QueryRowSet): PlaceDto =
+    PlaceDto(
+      placeId = PlaceId(qrs[Places.id]!!),
+      name = qrs[Places.name]!!,
+    )
 
-  )
+  override fun create(dto: PlaceDto): Int = database.places.add(dto.toEntity())
 
-  override fun create(dto: PlaceDto): Int {
-    return database.places.add(dto.toEntity())
-  }
-
-  fun findByName(name: String): PlaceDto? = database
-    .places
-    .find {
-      it.name eq name
-    }
-    ?.toDto()
+  fun findByName(name: String): PlaceDto? =
+    database
+      .places
+      .find {
+        it.name eq name
+      }?.toDto()
 
   override fun patch(dto: PlacePatchRequestDto): PlaceDto {
-    val fromDb = findById(dto.placeId.id)
-      ?: throw EntityNotFoundException("Could not find Place")
-    val newDto = PlaceDto(
-      placeId = fromDb.placeId,
-      name = dto.name ?: fromDb.name
-    )
+    val fromDb =
+      findById(dto.placeId.id)
+        ?: throw EntityNotFoundException("Could not find Place")
+    val newDto =
+      PlaceDto(
+        placeId = fromDb.placeId,
+        name = dto.name ?: fromDb.name,
+      )
     val updated = database.places.update(newDto.toEntity())
 
     return if (updated == 1) newDto else fromDb

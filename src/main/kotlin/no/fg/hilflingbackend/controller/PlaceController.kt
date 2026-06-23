@@ -9,4 +9,6 @@ import org.springframework.web.bind.annotation.RestController
 
 @RestController
 @RequestMapping("/places")
-open class PlaceController(override val repository: PlaceRepository) : BaseController<Place, PlaceDto, PlacePatchRequestDto>(repository)
+open class PlaceController(
+  override val repository: PlaceRepository,
+) : BaseController<Place, PlaceDto, PlacePatchRequestDto>(repository)

@@ -1,5 +1,6 @@
 package no.fg.hilflingbackend.exceptions
 
+import jakarta.persistence.EntityNotFoundException
 import no.fg.hilflingbackend.exceptions.ErrorResponseEntity.Companion.badReqeust
 import no.fg.hilflingbackend.exceptions.ErrorResponseEntity.Companion.notFound
 import org.apache.tomcat.util.http.fileupload.impl.InvalidContentTypeException
@@ -14,18 +15,16 @@ import org.springframework.web.bind.annotation.ControllerAdvice
 import org.springframework.web.bind.annotation.ExceptionHandler
 import org.springframework.web.context.request.WebRequest
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler
-import jakarta.persistence.EntityNotFoundException
 import java.lang.IllegalArgumentException
 
 @Order(Ordered.HIGHEST_PRECEDENCE)
 @ControllerAdvice
 open class GlobalExceptionHandler : ResponseEntityExceptionHandler() {
-
   val log = LoggerFactory.getLogger(this::class.java)
 
   @ExceptionHandler(value = [(EntityNotFoundException::class)])
   fun globalExceptionHandler(
-    ex: EntityNotFoundException
+    ex: EntityNotFoundException,
   ): ResponseEntity<Any> {
     log.error(ex.localizedMessage)
     return notFound(ex?.message ?: "Something went wrong")
@@ -43,7 +42,7 @@ open class GlobalExceptionHandler : ResponseEntityExceptionHandler() {
     ex: MissingServletRequestParameterException,
     headers: HttpHeaders,
     status: HttpStatus,
-    request: WebRequest
+    request: WebRequest,
   ): ResponseEntity<Any> {
     log.error(ex.localizedMessage)
     return badReqeust(ex.localizedMessage)

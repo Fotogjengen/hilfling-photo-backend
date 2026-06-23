@@ -14,10 +14,11 @@ interface EventOwner : BaseModel<EventOwner> {
   var name: String
 }
 
-fun EventOwner.toDto() = EventOwnerDto(
-  eventOwnerId = EventOwnerId(this.id),
-  name = EventOwnerName.valueOf(this.name)
-)
+fun EventOwner.toDto() =
+  EventOwnerDto(
+    eventOwnerId = EventOwnerId(this.id),
+    name = EventOwnerName.valueOf(this.name),
+  )
 
 object EventOwners : BaseTable<EventOwner>("event_owner") {
   val name = varchar("name").bindTo { it.name }

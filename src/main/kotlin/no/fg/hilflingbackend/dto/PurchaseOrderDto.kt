@@ -1,8 +1,8 @@
 package no.fg.hilflingbackend.dto
 
 import no.fg.hilflingbackend.model.PurchaseOrder
-import no.fg.hilflingbackend.value_object.Email
-import no.fg.hilflingbackend.value_object.ZipCode
+import no.fg.hilflingbackend.valueobject.Email
+import no.fg.hilflingbackend.valueobject.ZipCode
 import java.util.UUID
 
 data class PurchaseOrderDto(
@@ -14,7 +14,7 @@ data class PurchaseOrderDto(
   val city: String,
   val sendByPost: Boolean,
   val comment: String,
-  val isCompleted: Boolean
+  val isCompleted: Boolean,
 )
 
 fun PurchaseOrderDto.toEntity(): PurchaseOrder {
@@ -33,7 +33,7 @@ fun PurchaseOrderDto.toEntity(): PurchaseOrder {
 }
 
 data class PurchaseOrderId(
-  override val id: UUID = UUID.randomUUID()
+  override val id: UUID = UUID.randomUUID(),
 ) : UuidId {
   override fun toString(): String = id.toString()
 }

@@ -13,10 +13,11 @@ interface Gang : BaseModel<Gang> {
   var name: String
 }
 
-fun Gang.toDto() = GangDto(
-  gangId = GangId(this.id),
-  name = this.name
-)
+fun Gang.toDto(): GangDto =
+  GangDto(
+    gangId = GangId(this.id),
+    name = this.name,
+  )
 
 object Gangs : BaseTable<Gang>("gang") {
   val name = varchar("name").bindTo { it.name }
