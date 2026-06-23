@@ -1,9 +1,10 @@
 CREATE TABLE ALBUM
 (
     id           uuid PRIMARY KEY,
-    title        VARCHAR(40),
+    name         VARCHAR(8) NOT NULL UNIQUE,
+    description  VARCHAR(80),
+    analog       BOOLEAN NOT NULL DEFAULT FALSE,
     date_created DATE NOT NULL DEFAULT CURRENT_DATE,
-    is_analog    BOOLEAN,
     date_deleted DATE DEFAULT NULL
 );
 
@@ -13,7 +14,7 @@ CREATE TABLE POSITION
     title        VARCHAR(40),
     email        VARCHAR(40),
     date_created DATE NOT NULL DEFAULT CURRENT_DATE,
-    date_deleted      DATE DEFAULT NULL
+    date_deleted DATE DEFAULT NULL
 );
 
 CREATE TABLE GANG
@@ -22,14 +23,6 @@ CREATE TABLE GANG
     name         VARCHAR(30),
     date_created DATE NOT NULL DEFAULT CURRENT_DATE,
     date_deleted DATE DEFAULT NULL
-);
-
-CREATE TABLE PHOTO_TAG
-(
-    id           uuid PRIMARY KEY,
-    name         VARCHAR(20),
-    date_created DATE NOT NULL DEFAULT CURRENT_DATE,
-    date_deleted      DATE DEFAULT NULL
 );
 
 CREATE TABLE PURCHASE_ORDER
@@ -64,14 +57,6 @@ CREATE TABLE EVENT_OWNER
 );
 
 CREATE TABLE CATEGORY
-(
-    id           uuid PRIMARY KEY,
-    date_created DATE NOT NULL DEFAULT CURRENT_DATE,
-    name         VARCHAR(20),
-    date_deleted DATE DEFAULT NULL
-);
-
-CREATE TABLE ARTICLE_TAG
 (
     id           uuid PRIMARY KEY,
     date_created DATE NOT NULL DEFAULT CURRENT_DATE,
@@ -116,9 +101,8 @@ CREATE TABLE PHOTO_GANG_BANGER_TO_POSITION
 (
     photo_gang_banger_id UUID REFERENCES PHOTO_GANG_BANGER (id),
     position_id UUID REFERENCES POSITION (id),
-    date_deleted DATE DEFAULT NULL,
     semester_start VARCHAR(20),
-    is_active BOOLEAN NOT NULL DEFAULT FALSE,
+    semester_end VARCHAR(20) DEFAULT NULL,
     PRIMARY KEY (photo_gang_banger_id, semester_start),
     UNIQUE (position_id, semester_start)
 );
@@ -126,66 +110,76 @@ CREATE TABLE PHOTO_GANG_BANGER_TO_POSITION
 /* Only one active position per member */
 CREATE UNIQUE INDEX one_active_position_per_member
     ON PHOTO_GANG_BANGER_TO_POSITION (photo_gang_banger_id)
-    WHERE is_active = TRUE AND date_deleted IS NULL;
-
-
-CREATE TABLE ARTICLE
-(
-    id                   uuid PRIMARY KEY,
-    date_created         DATE NOT NULL DEFAULT CURRENT_DATE,
-    title                VARCHAR(50),
-    plain_text           VARCHAR(1000),
-    security_level       VARCHAR(50) CHECK (security_level IN ('FG', 'HUSFOLK', 'ALLE')),
-    photo_gang_banger_id UUID REFERENCES PHOTO_GANG_BANGER (id),
-    date_deleted DATE DEFAULT NULL
-);
+    WHERE semester_end IS NULL;
 
 CREATE TABLE MOTIVE
 (
-    id             uuid PRIMARY KEY,
-    title          VARCHAR(100),
-    date_created   DATE NOT NULL DEFAULT CURRENT_DATE,
-    category_id    UUID REFERENCES CATEGORY (id),
-    event_owner_id UUID REFERENCES EVENT_OWNER (id),
-    album_id       UUID REFERENCES ALBUM (id),
-    date_deleted DATE DEFAULT NULL
+    id              uuid PRIMARY KEY,
+    title           VARCHAR(100),
+    date            DATE NOT NULL DEFAULT CURRENT_DATE,
+    date_created    TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    category_id     UUID REFERENCES CATEGORY (id),
+    event_owner_id  UUID REFERENCES EVENT_OWNER (id),
+    album_id        UUID REFERENCES ALBUM (id),
+    analog_album_id UUID REFERENCES ALBUM (id),
+    place_id        UUID REFERENCES PLACE (id),
+    security_level  VARCHAR(50) CHECK (security_level IN ('FG', 'HUSFOLK', 'ALLE')),
+    date_deleted    DATE DEFAULT NULL
 );
+
+/* Ensures that a motive has the correct album types */
+CREATE OR REPLACE FUNCTION check_motive_albums()
+RETURNS TRIGGER AS $$
+BEGIN
+    IF NEW.album_id IS NOT NULL AND EXISTS (
+        SELECT 1 FROM ALBUM WHERE id = NEW.album_id AND analog = TRUE
+    ) THEN
+        RAISE EXCEPTION 'album_id must reference a digital album';
+    END IF;
+
+    IF NEW.analog_album_id IS NOT NULL AND NOT EXISTS (
+        SELECT 1 FROM ALBUM WHERE id = NEW.analog_album_id AND analog = TRUE
+    ) THEN
+        RAISE EXCEPTION 'analog_album_id must reference an analog album';
+    END IF;
+
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
 
 CREATE TABLE PHOTO
 (
     id                   uuid PRIMARY KEY,
-    date_created         DATE NOT NULL DEFAULT CURRENT_DATE,
-    small_url            VARCHAR(255), 
-    medium_url           VARCHAR(255),
-    large_url            VARCHAR(255) NOT NULL,
-    is_good_picture      BOOLEAN,
-    motive_id            UUID REFERENCES MOTIVE (id),
-    place_id             UUID REFERENCES PLACE (id),
+    date_created         TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    image_number         INTEGER NOT NULL,
+    page_number          INTEGER NOT NULL,
     security_level       VARCHAR(50) CHECK (security_level IN ('FG', 'HUSFOLK', 'ALLE')),
-    gang_id              UUID REFERENCES GANG (id),
-    album_id UUID REFERENCES ALBUM(id),
-    category_id UUID REFERENCES CATEGORY(id),
+    image_prod           VARCHAR(255), 
+    image_web            VARCHAR(255),
+    image_thumb          VARCHAR(255) NOT NULL,
+    good_picture         BOOLEAN,
+    analog               BOOLEAN NOT NULL DEFAULT FALSE,
+    motive_id            UUID REFERENCES MOTIVE (id),
     photo_gang_banger_id UUID REFERENCES PHOTO_GANG_BANGER (id),
     other_meta_data      JSONB,
-    date_deleted DATE DEFAULT NULL
+    date_deleted         DATE DEFAULT NULL,
+    gang_id              UUID REFERENCES GANG (id)
 );
 
-CREATE TABLE ANALOG_PHOTO
+/* Reserved image/page number. After an upload finishes, this should be empty*/
+CREATE TABLE PHOTO_RESERVATION
 (
-    image_number INTEGER,
-    date_created DATE NOT NULL DEFAULT CURRENT_DATE,
-    page_number  INTEGER,
-    photo_id     UUID REFERENCES PHOTO (id),
-    date_deleted DATE DEFAULT NULL
+    album_id     UUID NOT NULL REFERENCES ALBUM (id),
+    page_number  INTEGER NOT NULL,
+    image_number INTEGER NOT NULL,
+    reserved_at  TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (album_id, page_number, image_number)
 );
 
 
-CREATE TABLE ARTICLE_TAG_IN_ARTICLE
-(
-    article_tag_id UUID REFERENCES ARTICLE_TAG (id),
-    article_id     UUID REFERENCES ARTICLE (id),
-    date_deleted DATE DEFAULT NULL
-);
+CREATE TRIGGER enforce_motive_albums
+    BEFORE INSERT OR UPDATE ON MOTIVE
+    FOR EACH ROW EXECUTE FUNCTION check_motive_albums();
 
 CREATE TABLE PHOTOS_IN_PURCHASE_ORDER
 (
@@ -193,14 +187,4 @@ CREATE TABLE PHOTOS_IN_PURCHASE_ORDER
     photo_id          UUID REFERENCES PHOTO (id),
     img_size          VARCHAR(10),
     date_deleted DATE DEFAULT NULL
-);
-
-CREATE TABLE PHOTO_TAG_IN_PHOTO
-(
-    id           UUID PRIMARY KEY,
-    photo_tag_id UUID REFERENCES PHOTO_TAG (id),
-    photo_id     UUID REFERENCES PHOTO (id),
-    date_created DATE NOT NULL DEFAULT CURRENT_DATE,
-    date_deleted DATE DEFAULT NULL,
-    unique (photo_tag_id, photo_id)
 );

@@ -1,33 +1,18 @@
 package no.fg.hilflingbackend.dto
 
-import no.fg.hilflingbackend.model.PhotoGangBangerPosition
-import java.util.UUID
+import no.fg.hilflingbackend.valueobject.SemesterStart
 
 data class PhotoGangBangerPositionPatchRequestDto(
-  val photoGangBangerPositionId: PhotoGangBangerPositionId,
-  val photoGangBangerDto: PhotoGangBangerDto?,
+  val photoGangBangerId: PhotoGangBangerId,
+  val semesterStart: SemesterStart,
   val position: PositionDto?,
-  val isCurrent: Boolean?,
+  val semesterEnd: SemesterStart?,
 )
 
 data class PhotoGangBangerPositionDto(
-  val photoGangBangerPositionId: PhotoGangBangerPositionId = PhotoGangBangerPositionId(),
+  val photoGangBangerId: PhotoGangBangerId,
+  val semesterStart: SemesterStart,
   val photoGangBangerDto: PhotoGangBangerDto,
   val position: PositionDto,
-  val isCurrent: Boolean,
+  val semesterEnd: SemesterStart?,
 )
-
-fun PhotoGangBangerPositionDto.toEntity(): PhotoGangBangerPosition {
-  val dto = this
-  return PhotoGangBangerPosition {
-    id = dto.photoGangBangerPositionId.id
-    position = dto.position.toEntity()
-    isCurrent = dto.isCurrent
-  }
-}
-
-data class PhotoGangBangerPositionId(
-  override val id: UUID = UUID.randomUUID(),
-) : UuidId {
-  override fun toString(): String = id.toString()
-}

@@ -41,6 +41,15 @@ class JwtService(
       .compact()
   }
 
+  fun extractSecurityLevel(token: String?): SecurityLevelType {
+    if (token == null) return SecurityLevelType.ALLE
+    return try {
+      extractPayload(token).securityLevel
+    } catch (e: Exception) {
+      SecurityLevelType.ALLE
+    }
+  }
+
   fun extractPayload(token: String): JwtTokenPayload {
     val claims = extractAllClaims(token)
     return JwtTokenPayload(

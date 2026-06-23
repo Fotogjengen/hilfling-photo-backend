@@ -1,10 +1,14 @@
 package no.fg.hilflingbackend.controller
 
+import no.fg.hilflingbackend.dto.MotiveCreateRequestDto
+import no.fg.hilflingbackend.dto.MotiveDefaultsDto
 import no.fg.hilflingbackend.dto.MotiveDto
 import no.fg.hilflingbackend.dto.MotivePatchRequestDto
 import no.fg.hilflingbackend.dto.Page
 import no.fg.hilflingbackend.repository.MotiveRepository
+import no.fg.hilflingbackend.service.MotiveService
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PatchMapping
 import org.springframework.web.bind.annotation.PathVariable
@@ -21,6 +25,9 @@ class MotiveController {
   @Autowired
   lateinit var repository: MotiveRepository
 
+  @Autowired
+  lateinit var motiveService: MotiveService
+
   @GetMapping("/{id}")
   fun getById(
     @PathVariable("id") id: UUID,
@@ -30,18 +37,30 @@ class MotiveController {
   fun getAll(
     @RequestParam("page", required = false) page: Int?,
     @RequestParam("pageSize", required = false) pageSize: Int?,
-  ): Page<MotiveDto> = repository.findAll(page ?: 0, pageSize ?: 100)
+  ): Page<MotiveDto> = repository.findAll(page ?: 0, pageSize ?: 10)
+
+  @GetMapping("/search/{searchTerm}")
+  fun search(
+    @PathVariable("searchTerm") searchTerm: String,
+    @RequestParam("page", required = false) page: Int?,
+    @RequestParam("pageSize", required = false) pageSize: Int?,
+  ): Page<MotiveDto> = repository.search(searchTerm, page ?: 0, pageSize ?: 10)
 
   @PostMapping
   fun create(
-    @RequestBody dto: MotiveDto,
-  ): MotiveDto =
-    repository.create(
-      dto,
-    )
+    @RequestBody dto: MotiveCreateRequestDto,
+  ): MotiveDto = repository.create(dto)
 
   @PatchMapping
   fun patch(
     @RequestBody dto: MotivePatchRequestDto,
   ): MotiveDto = repository.patch(dto)
+
+  @DeleteMapping("/{id}")
+  fun delete(
+    @PathVariable("id") id: UUID,
+  ): Int = motiveService.deleteMotive(id)
+
+  @GetMapping("/defaults")
+  fun getDefaults(): MotiveDefaultsDto = motiveService.getMotiveDefaults()
 }

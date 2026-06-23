@@ -7,7 +7,7 @@ import me.liuwj.ktorm.schema.boolean
 import me.liuwj.ktorm.schema.varchar
 import no.fg.hilflingbackend.dto.PhotoGangBangerDto
 import no.fg.hilflingbackend.dto.PhotoGangBangerId
-import no.fg.hilflingbackend.dto.SemesterStart
+import no.fg.hilflingbackend.valueobject.SemesterStart
 
 interface PhotoGangBanger : BaseModel<PhotoGangBanger> {
   companion object : Entity.Factory<PhotoGangBanger>()
@@ -51,4 +51,5 @@ object PhotoGangBangers : BaseTable<PhotoGangBanger>("photo_gang_banger") {
   val phoneNumber = varchar("phone_number").bindTo { it.phoneNumber }
 }
 
-val Database.photo_gang_bangers get() = this.sequenceOf(PhotoGangBangers)
+val Database.photo_gang_bangers
+  get() = this.sequenceOf(PhotoGangBangers)

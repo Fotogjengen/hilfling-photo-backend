@@ -4,8 +4,6 @@ import me.liuwj.ktorm.database.Database
 import me.liuwj.ktorm.entity.Entity
 import me.liuwj.ktorm.entity.sequenceOf
 import me.liuwj.ktorm.schema.Table
-import me.liuwj.ktorm.schema.boolean
-import me.liuwj.ktorm.schema.date
 import me.liuwj.ktorm.schema.uuid
 import me.liuwj.ktorm.schema.varchar
 import no.fg.hilflingbackend.dto.PositionDto
@@ -38,6 +36,5 @@ object PhotoGangBangerToPositions : Table<Nothing>("photo_gang_banger_to_positio
   val photoGangBangerId = uuid("photo_gang_banger_id")
   val positionId = uuid("position_id")
   val semesterStart = varchar("semester_start")
-  val dateDeleted = date("date_deleted")
-  val isActive = boolean("is_active")
+  val semesterEnd = varchar("semester_end")
 }

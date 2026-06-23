@@ -3,7 +3,9 @@ package no.fg.hilflingbackend.repository
 import jakarta.persistence.EntityNotFoundException
 import me.liuwj.ktorm.database.Database
 import me.liuwj.ktorm.dsl.QueryRowSet
+import me.liuwj.ktorm.dsl.eq
 import me.liuwj.ktorm.entity.add
+import me.liuwj.ktorm.entity.any
 import me.liuwj.ktorm.entity.update
 import no.fg.hilflingbackend.dto.PositionDto
 import no.fg.hilflingbackend.dto.PositionId
@@ -29,7 +31,10 @@ open class PositionRepository(
       email = Email(qrs[Positions.email]!!),
     )
 
-  override fun create(dto: PositionDto): Int = database.positions.add(dto.toEntity())
+  override fun create(dto: PositionDto): Int {
+    if (database.positions.any { it.id eq dto.positionId.id }) return 0
+    return database.positions.add(dto.toEntity())
+  }
 
   override fun patch(dto: PositionPatchRequestDto): PositionDto {
     val fromDb =

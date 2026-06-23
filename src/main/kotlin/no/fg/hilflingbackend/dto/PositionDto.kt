@@ -2,6 +2,7 @@ package no.fg.hilflingbackend.dto
 
 import no.fg.hilflingbackend.model.Position
 import no.fg.hilflingbackend.valueobject.Email
+import no.fg.hilflingbackend.valueobject.SemesterStart
 import java.util.UUID
 
 data class PositionPatchRequestDto(
@@ -14,7 +15,14 @@ data class PositionDto(
   val positionId: PositionId = PositionId(),
   val title: String,
   val email: Email,
-  val isActive: Boolean = false,
+)
+
+data class MemberPositionDto(
+  val positionId: PositionId,
+  val title: String,
+  val email: Email,
+  val semesterStart: SemesterStart,
+  val isActive: Boolean,
 )
 
 fun PositionDto.toEntity(): Position {

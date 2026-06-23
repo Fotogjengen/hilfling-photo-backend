@@ -2,23 +2,52 @@ package no.fg.hilflingbackend.dto
 
 import no.fg.hilflingbackend.model.Motive
 import java.time.LocalDate
+import java.time.LocalDateTime
 import java.util.UUID
+
+data class MotiveCreateRequestDto(
+  val title: String,
+  val date: LocalDate,
+  val categoryDto: CategoryDto,
+  val eventOwnerDto: EventOwnerDto,
+  val placeDto: PlaceDto,
+  val securityLevel: SecurityLevelDto,
+  val albumDto: AlbumDto?,
+  val analogAlbumDto: AlbumDto?,
+)
 
 data class MotivePatchRequestDto(
   val motiveId: MotiveId,
   val title: String?,
+  val date: LocalDate?,
   val categoryDto: CategoryDto?,
   val eventOwnerDto: EventOwnerDto?,
+  val placeDto: PlaceDto?,
+  val securityLevel: SecurityLevelDto?,
   val albumDto: AlbumDto?,
+  val analogAlbumDto: AlbumDto?,
 )
 
 data class MotiveDto(
   val motiveId: MotiveId = MotiveId(),
   val title: String,
+  val date: LocalDate,
   val categoryDto: CategoryDto,
   val eventOwnerDto: EventOwnerDto,
-  val albumDto: AlbumDto,
-  val dateCreated: LocalDate?,
+  val placeDto: PlaceDto,
+  val securityLevel: SecurityLevelDto,
+  val albumDto: AlbumDto?,
+  val analogAlbumDto: AlbumDto?,
+  val dateCreated: LocalDateTime?,
+)
+
+data class MotiveDefaultsDto(
+  val eventOwnerDto: EventOwnerDto,
+  val securityLevel: SecurityLevelDto,
+  val albumDto: AlbumDto?,
+  val analogAlbumDto: AlbumDto?,
+  val dateCreated: LocalDateTime,
+  val date: LocalDate,
 )
 
 data class MotiveId(
@@ -32,9 +61,13 @@ fun MotiveDto.toEntity(): Motive {
   return Motive {
     id = dto.motiveId.id
     title = dto.title
+    date = dto.date
     category = dto.categoryDto.toEntity()
     eventOwner = dto.eventOwnerDto.toEntity()
-    album = dto.albumDto.toEntity()
+    place = dto.placeDto.toEntity()
+    securityLevel = dto.securityLevel.securityLevelType.type
+    album = dto.albumDto?.toEntity()
+    analogAlbum = dto.analogAlbumDto?.toEntity()
     dateCreated = dto.dateCreated!!
   }
 }

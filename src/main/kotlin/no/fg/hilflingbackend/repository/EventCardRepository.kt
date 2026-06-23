@@ -48,22 +48,22 @@ open class EventCardRepository {
           motiveId?.let { id ->
             database
               .from(Photos)
-              .select(Photos.smallUrl, Photos.largeUrl)
+              .select(Photos.imageThumb, Photos.imageWeb)
               .where {
                 (Photos.motiveId eq id)
-                  .and(Photos.isGoodPicture eq true)
+                  .and(Photos.goodPicture eq true)
                   .and(Photos.securityLevel.inList(allowedSecurityLevels))
               }.limit(0, 1)
-              .map { it[Photos.smallUrl] ?: it[Photos.largeUrl] }
+              .map { it[Photos.imageThumb] ?: it[Photos.imageWeb] }
               .firstOrNull()
               ?: database
                 .from(Photos)
-                .select(Photos.smallUrl, Photos.largeUrl)
+                .select(Photos.imageThumb, Photos.imageWeb)
                 .where {
                   (Photos.motiveId eq id)
                     .and(Photos.securityLevel.inList(allowedSecurityLevels))
                 }.limit(0, 1)
-                .map { it[Photos.smallUrl] ?: it[Photos.largeUrl] }
+                .map { it[Photos.imageThumb] ?: it[Photos.imageWeb] }
                 .firstOrNull()
           }
 
@@ -107,22 +107,22 @@ open class EventCardRepository {
             motiveId?.let { id ->
               database
                 .from(Photos)
-                .select(Photos.smallUrl, Photos.largeUrl)
+                .select(Photos.imageThumb, Photos.imageWeb)
                 .where {
                   (Photos.motiveId eq id)
-                    .and(Photos.isGoodPicture eq true)
+                    .and(Photos.goodPicture eq true)
                     .and(Photos.securityLevel.inList(allowedSecurityLevels))
                 }.limit(0, 1)
-                .map { it[Photos.smallUrl] ?: it[Photos.largeUrl] }
+                .map { it[Photos.imageThumb] ?: it[Photos.imageWeb] }
                 .firstOrNull()
                 ?: database
                   .from(Photos)
-                  .select(Photos.smallUrl, Photos.largeUrl)
+                  .select(Photos.imageThumb, Photos.imageWeb)
                   .where {
                     (Photos.motiveId eq id)
                       .and(Photos.securityLevel.inList(allowedSecurityLevels))
                   }.limit(0, 1)
-                  .map { it[Photos.smallUrl] ?: it[Photos.largeUrl] }
+                  .map { it[Photos.imageThumb] ?: it[Photos.imageWeb] }
                   .firstOrNull()
             }
 

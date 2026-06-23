@@ -11,16 +11,12 @@ import no.fg.hilflingbackend.dto.EventOwnerId
 import no.fg.hilflingbackend.dto.EventOwnerName
 import no.fg.hilflingbackend.dto.GangDto
 import no.fg.hilflingbackend.dto.GangId
+import no.fg.hilflingbackend.dto.MotiveCreateRequestDto
 import no.fg.hilflingbackend.dto.MotiveDto
 import no.fg.hilflingbackend.dto.MotiveId
 import no.fg.hilflingbackend.dto.MotivePatchRequestDto
 import no.fg.hilflingbackend.dto.PhotoGangBangerDto
 import no.fg.hilflingbackend.dto.PhotoGangBangerId
-import no.fg.hilflingbackend.dto.PhotoId
-import no.fg.hilflingbackend.dto.PhotoPatchRequestDto
-import no.fg.hilflingbackend.dto.PhotoTagDto
-import no.fg.hilflingbackend.dto.PhotoTagId
-import no.fg.hilflingbackend.dto.PhotoTagPatchRequestDto
 import no.fg.hilflingbackend.dto.PlaceDto
 import no.fg.hilflingbackend.dto.PlaceId
 import no.fg.hilflingbackend.dto.PlacePatchRequestDto
@@ -28,19 +24,17 @@ import no.fg.hilflingbackend.dto.PositionDto
 import no.fg.hilflingbackend.dto.PositionId
 import no.fg.hilflingbackend.dto.PositionPatchRequestDto
 import no.fg.hilflingbackend.dto.SecurityLevelDto
-import no.fg.hilflingbackend.dto.SemesterStart
 import no.fg.hilflingbackend.repository.AlbumRepository
 import no.fg.hilflingbackend.repository.CategoryRepository
 import no.fg.hilflingbackend.repository.EventOwnerRepository
 import no.fg.hilflingbackend.repository.GangRepository
 import no.fg.hilflingbackend.repository.MotiveRepository
 import no.fg.hilflingbackend.repository.PhotoGangBangerRepository
-import no.fg.hilflingbackend.repository.PhotoTagRepository
 import no.fg.hilflingbackend.repository.PlaceRepository
 import no.fg.hilflingbackend.repository.PositionRepository
-import no.fg.hilflingbackend.service.PhotoService
 import no.fg.hilflingbackend.valueobject.Email
 import no.fg.hilflingbackend.valueobject.SecurityLevelType
+import no.fg.hilflingbackend.valueobject.SemesterStart
 import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInstance
@@ -48,9 +42,7 @@ import org.junit.jupiter.api.assertAll
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import java.time.LocalDate
-import java.util.UUID
 import kotlin.test.assertEquals
-import kotlin.test.assertFalse
 import kotlin.test.assertNotNull
 // import org.junit.runner.RunWith
 // import org.springframework.test.context.junit4.SpringRunner
@@ -59,9 +51,6 @@ import kotlin.test.assertNotNull
 @SpringBootTest()
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class PatchIntegrationTest {
-  @Autowired
-  lateinit var photoService: PhotoService
-
   @Autowired
   lateinit var albumRepository: AlbumRepository
 
@@ -81,15 +70,10 @@ class PatchIntegrationTest {
   lateinit var placeRepository: PlaceRepository
 
   @Autowired
-  lateinit var photoTagRepository: PhotoTagRepository
-
-  @Autowired
   lateinit var photoGangBangerRepository: PhotoGangBangerRepository
 
   @Autowired
   lateinit var motiveRepository: MotiveRepository
-
-  lateinit var createdPhotoId: UUID
 
   final val placeId1 = PlaceId()
   final val placeId2 = PlaceId()
@@ -101,25 +85,11 @@ class PatchIntegrationTest {
   final val categoryId2 = CategoryId()
   final val positionId1 = PositionId()
   final val positionId2 = PositionId()
-  final val motiveId1 = MotiveId()
-  final val motiveId2 = MotiveId()
+  lateinit var createdMotiveId1: MotiveId
   final val eventOwnerId1 = EventOwnerId()
   final val eventOwnerId2 = EventOwnerId()
   final val gangId1 = GangId()
   final val gangId2 = GangId()
-  final val photoTagId1 = PhotoTagId()
-  final val photoTagId2 = PhotoTagId()
-
-  final val photoTagDto1 =
-    PhotoTagDto(
-      photoTagId = photoTagId1,
-      name = "photo tag 1",
-    )
-  final val photoTagDto2 =
-    PhotoTagDto(
-      photoTagId = photoTagId2,
-      name = "photo tag 2",
-    )
   final val gangDto1 =
     GangDto(
       gangId = gangId1,
@@ -157,12 +127,14 @@ class PatchIntegrationTest {
   final val albumDto1 =
     AlbumDto(
       albumId = albumId1,
-      title = "album title 1",
+      name = "DIGGA",
+      description = "album title 1",
     )
   final val albumDto2 =
     AlbumDto(
       albumId = albumId2,
-      title = "album title 2",
+      name = "DIGGB",
+      description = "album title 2",
     )
   final val categoryDto1 =
     CategoryDto(
@@ -211,28 +183,30 @@ class PatchIntegrationTest {
       phoneNumber = "12345678",
     )
   final val motiveDto1 =
-    MotiveDto(
-      motiveId = motiveId1,
+    MotiveCreateRequestDto(
       title = "motive title 1",
+      date = LocalDate.now(),
       categoryDto = categoryDto1,
       eventOwnerDto = eventOwnerDto1,
+      placeDto = placeDto1,
+      securityLevel = securityLevelDto1,
       albumDto = albumDto1,
-      dateCreated = LocalDate.now(),
+      analogAlbumDto = null,
     )
   final val motiveDto2 =
-    MotiveDto(
-      motiveId = motiveId2,
+    MotiveCreateRequestDto(
       title = "motive title 2",
+      date = LocalDate.now(),
       categoryDto = categoryDto2,
       eventOwnerDto = eventOwnerDto2,
+      placeDto = placeDto2,
+      securityLevel = securityLevelDto2,
       albumDto = albumDto2,
-      dateCreated = LocalDate.now(),
+      analogAlbumDto = null,
     )
 
   @BeforeAll
   fun fillDb() {
-    photoTagRepository.create(photoTagDto1)
-    photoTagRepository.create(photoTagDto2)
     gangRepository.create(gangDto1)
     gangRepository.create(gangDto2)
     positionRepository.create(positionDto1)
@@ -247,28 +221,8 @@ class PatchIntegrationTest {
     eventOwnerRepository.create(eventOwnerDto2)
     photoGangBangerRepository.create(photoGangBangerDto1)
     photoGangBangerRepository.create(photoGangBangerDto2)
-    motiveRepository.create(motiveDto1)
+    createdMotiveId1 = motiveRepository.create(motiveDto1).motiveId
     motiveRepository.create(motiveDto2)
-
-    createdPhotoId =
-      photoService
-        .createNewMotiveAndSaveDigitalPhotos(
-          motiveString = motiveDto1.title,
-          placeString = placeDto1.name,
-          eventOwnerString = eventOwnerDto1.name.eventOwnerName,
-          securityLevel = securityLevelDto1.securityLevelType.type,
-          albumTitle = albumDto1.title,
-          photoGangBangerId = photoGangBangerId1.id,
-          smallUrl = "test-photo-small.jpg",
-          mediumUrl = "test-photo-medium.jpg",
-          largeUrl = "test-photo.jpg",
-          tagList = listOf(photoTagDto1.name),
-          categoryName = categoryDto1.name,
-          isGoodPhoto = true,
-          dateTaken = LocalDate.now(),
-        ).first()
-        .photoId
-        .id
   }
 
   @Test
@@ -316,80 +270,21 @@ class PatchIntegrationTest {
   }
 
   @Test
-  fun shouldPatchPhotoTag() {
-    val change =
-      PhotoTagPatchRequestDto(
-        photoTagId = photoTagId1,
-        name = "changed",
-      )
-    photoTagRepository.patch(change)
-
-    val changedFromDb =
-      photoTagRepository.findById(
-        photoTagId1.id,
-      )
-
-    assertAll(
-      "patch PhotoTag",
-      { assertNotNull(changedFromDb) },
-      { assertEquals(changedFromDb?.name, change.name) },
-    )
-  }
-
-  @Test
-  fun shouldPatchPhoto() {
-    val photoTags =
-      listOf(
-        photoTagRepository.findById(photoTagId1.id)?.name ?: "got no1",
-        photoTagRepository.findById(photoTagId2.id)?.name ?: "got no2",
-      )
-    val change =
-      PhotoPatchRequestDto(
-        photoId = PhotoId(createdPhotoId),
-        isGoodPicture = false,
-        motive = motiveDto2,
-        placeDto = placeDto2,
-        securityLevel = securityLevelDto2,
-        gang = gangDto2,
-        albumDto = albumDto2,
-        categoryDto = categoryDto2,
-        photoGangBangerDto = photoGangBangerDto2,
-        photoTags = photoTags,
-      )
-
-    photoService.patch(change)
-
-    val changedFromDb = photoService.findById(createdPhotoId)
-
-    assertAll(
-      "photo patch",
-      { assertNotNull(changedFromDb) },
-      { assertFalse(changedFromDb.isGoodPicture) },
-      { assertEquals(changedFromDb.motive.motiveId.id, motiveDto2.motiveId.id) },
-      { assertEquals(changedFromDb.placeDto.placeId.id, placeDto2.placeId.id) },
-      { assertEquals(changedFromDb.securityLevel.securityLevelType, securityLevelDto2.securityLevelType) },
-      { assertEquals(changedFromDb.gang?.gangId?.id, gangDto2.gangId.id) },
-      { assertEquals(changedFromDb.albumDto.albumId.id, albumDto2.albumId.id) },
-      { assertEquals(changedFromDb.categoryDto.categoryId.id, categoryDto2.categoryId.id) },
-      { assertEquals(changedFromDb.photoGangBangerDto.photoGangBangerId.id, photoGangBangerDto2.photoGangBangerId.id) },
-      { assertEquals(changedFromDb.photoTags.size, 2) },
-      { assertEquals(changedFromDb.photoTags[0].photoTagId.id, photoTagDto1.photoTagId.id) },
-      { assertEquals(changedFromDb.photoTags[1].photoTagId.id, photoTagDto2.photoTagId.id) },
-    )
-  }
-
-  @Test
   fun shouldPatchMotive() {
     val change =
       MotivePatchRequestDto(
-        motiveId = motiveId1,
+        motiveId = createdMotiveId1,
         title = "new title hehe",
+        date = null,
         categoryDto = categoryDto2,
         eventOwnerDto = eventOwnerDto2,
+        placeDto = null,
+        securityLevel = null,
         albumDto = albumDto2,
+        analogAlbumDto = null,
       )
     motiveRepository.patch(change)
-    val changedFromDb = motiveRepository.findById(motiveId1.id)
+    val changedFromDb = motiveRepository.findById(createdMotiveId1.id)
 
     assertAll(
       "motive patch",
@@ -420,8 +315,9 @@ class PatchIntegrationTest {
     val change =
       AlbumPatchRequestDto(
         albumId = albumId1,
-        title = "CAROLINE",
-        isAnalog = true,
+        name = "DIGGZ",
+        description = "CAROLINE",
+        analog = true,
       )
     albumRepository.patch(change)
     val changedFromDb = albumRepository.findById(change.albumId.id)
@@ -429,8 +325,8 @@ class PatchIntegrationTest {
     assertAll(
       "album patch",
       { assertNotNull(changedFromDb) },
-      { assertEquals(change.title, changedFromDb?.title) },
-      { assertEquals(change.isAnalog, changedFromDb?.isAnalog) },
+      { assertEquals(change.name, changedFromDb?.name) },
+      { assertEquals(change.analog, changedFromDb?.analog) },
     )
   }
 }
