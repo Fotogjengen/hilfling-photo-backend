@@ -1,6 +1,7 @@
 package no.fg.hilflingbackend.service
 
 import jakarta.persistence.EntityNotFoundException
+import no.fg.hilflingbackend.dto.Page
 import no.fg.hilflingbackend.dto.PhotoDto
 import no.fg.hilflingbackend.dto.PhotoFinalizeRequestDto
 import no.fg.hilflingbackend.dto.PhotoId
@@ -133,6 +134,20 @@ class PhotoService(
     if (errors.isNotEmpty()) throw IllegalArgumentException(errors.joinToString(", "))
     return reserveSlot(request)
   }
+
+  fun findGoodPicturesPage(
+    page: Int,
+    pageSize: Int,
+    userSecurityLevel: SecurityLevelType,
+  ): Page<PhotoDto> = photoRepository.findGoodPicturesPage(page, pageSize, userSecurityLevel)
+
+  fun findGoodPicturesByMotiveId(
+    motiveId: UUID,
+    userSecurityLevel: SecurityLevelType,
+  ): List<PhotoDto> =
+    photoRepository
+      .findGoodPicturesByMotiveId(motiveId, userSecurityLevel)
+      .filter { it.securityLevel.securityLevelType.ordinal >= userSecurityLevel.ordinal }
 
   fun markAsGoodPicture(
     photoId: UUID,
