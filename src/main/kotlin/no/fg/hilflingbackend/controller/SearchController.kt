@@ -33,7 +33,7 @@ class SearchController(
     @RequestParam(required = false) securityLevels: List<String>?,
     @RequestParam(required = false) from: LocalDate?,
     @RequestParam(required = false) to: LocalDate?,
-    @RequestParam(required = false, defaultValue = "DATE_TAKEN") sortField: SearchSortField,
+    @RequestParam(required = false) sortField: SearchSortField?,
     @RequestParam(required = false, defaultValue = "DESC") sortDirection: SortDirection,
     @RequestParam(required = false, defaultValue = "0") page: Int,
     @RequestParam(required = false, defaultValue = "10") pageSize: Int,
@@ -43,7 +43,7 @@ class SearchController(
         term = q,
         userLevel = resolveUserLevel(),
         filters = buildFilters(placeIds, categoryIds, eventOwnerIds, albumIds, securityLevels, from, to),
-        sortField = sortField,
+        sortField = resolveSortField(sortField, q),
         sortDirection = sortDirection,
         page = page,
         pageSize = pageSize,
@@ -60,7 +60,7 @@ class SearchController(
     @RequestParam(required = false) securityLevels: List<String>?,
     @RequestParam(required = false) from: LocalDate?,
     @RequestParam(required = false) to: LocalDate?,
-    @RequestParam(required = false, defaultValue = "DATE_TAKEN") sortField: SearchSortField,
+    @RequestParam(required = false) sortField: SearchSortField?,
     @RequestParam(required = false, defaultValue = "DESC") sortDirection: SortDirection,
     @RequestParam(required = false, defaultValue = "0") page: Int,
     @RequestParam(required = false, defaultValue = "10") pageSize: Int,
@@ -70,7 +70,7 @@ class SearchController(
         term = q,
         userLevel = resolveUserLevel(),
         filters = buildFilters(placeIds, categoryIds, eventOwnerIds, albumIds, securityLevels, from, to),
-        sortField = sortField,
+        sortField = resolveSortField(sortField, q),
         sortDirection = sortDirection,
         page = page,
         pageSize = pageSize,
@@ -95,6 +95,12 @@ class SearchController(
       dateFrom = from,
       dateTo = to,
     )
+
+  // Default to relevance ranking while searching; fall back to newest-first when browsing without a term.
+  private fun resolveSortField(
+    sortField: SearchSortField?,
+    term: String,
+  ): SearchSortField = sortField ?: if (term.isNotBlank()) SearchSortField.RELEVANCE else SearchSortField.DATE_TAKEN
 
   private fun resolveUserLevel(): SecurityLevelType {
     val authorities = SecurityContextHolder.getContext().authentication?.authorities
