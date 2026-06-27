@@ -43,7 +43,7 @@ class SearchController(
         term = q,
         userLevel = resolveUserLevel(),
         filters = buildFilters(placeIds, categoryIds, eventOwnerIds, albumIds, securityLevels, from, to),
-        sortField = resolveSortField(sortField, q),
+        sortField = sortField,
         sortDirection = sortDirection,
         page = page,
         pageSize = pageSize,
@@ -70,7 +70,7 @@ class SearchController(
         term = q,
         userLevel = resolveUserLevel(),
         filters = buildFilters(placeIds, categoryIds, eventOwnerIds, albumIds, securityLevels, from, to),
-        sortField = resolveSortField(sortField, q),
+        sortField = sortField,
         sortDirection = sortDirection,
         page = page,
         pageSize = pageSize,
@@ -95,12 +95,6 @@ class SearchController(
       dateFrom = from,
       dateTo = to,
     )
-
-  // Default to relevance ranking while searching; fall back to newest-first when browsing without a term.
-  private fun resolveSortField(
-    sortField: SearchSortField?,
-    term: String,
-  ): SearchSortField = sortField ?: if (term.isNotBlank()) SearchSortField.RELEVANCE else SearchSortField.DATE_TAKEN
 
   private fun resolveUserLevel(): SecurityLevelType {
     val authorities = SecurityContextHolder.getContext().authentication?.authorities

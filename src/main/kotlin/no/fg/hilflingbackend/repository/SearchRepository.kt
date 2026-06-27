@@ -15,7 +15,6 @@ import me.liuwj.ktorm.dsl.leftJoin
 import me.liuwj.ktorm.dsl.lessEq
 import me.liuwj.ktorm.dsl.limit
 import me.liuwj.ktorm.dsl.map
-import me.liuwj.ktorm.dsl.or
 import me.liuwj.ktorm.dsl.orderBy
 import me.liuwj.ktorm.dsl.select
 import me.liuwj.ktorm.dsl.whereWithConditions
@@ -31,7 +30,6 @@ import me.liuwj.ktorm.expression.OrderByExpression
 import me.liuwj.ktorm.schema.ColumnDeclaring
 import me.liuwj.ktorm.schema.DoubleSqlType
 import me.liuwj.ktorm.schema.VarcharSqlType
-import me.liuwj.ktorm.support.postgresql.ilike
 import no.fg.hilflingbackend.dto.ActiveFilters
 import no.fg.hilflingbackend.dto.MotiveDto
 import no.fg.hilflingbackend.dto.Page
@@ -50,8 +48,13 @@ import no.fg.hilflingbackend.valueobject.SortDirection
 import org.springframework.stereotype.Repository
 import java.util.UUID
 
-// Trigram similarity below this is treated as no match (mirrors the suggestions search).
-private const val SIMILARITY_THRESHOLD = 0.05
+/**
+ * Minimum pg_trgm word-similarity for a row to count as a fuzzy match.
+ * pg_trgm's own default (word_similarity_threshold) is 0.6; we loosen it so
+ * partial words and small typos still match. Ordering by score keeps the best
+ * matches on top, so a permissive threshold only adds weak matches at the tail.
+ */
+const val SEARCH_SIMILARITY_THRESHOLD: Double = 0.3
 
 @Repository
 class SearchRepository(
@@ -68,50 +71,80 @@ class SearchRepository(
     sortDirection: SortDirection,
   ): OrderByExpression = if (sortDirection == SortDirection.ASC) column.asc() else column.desc()
 
-  // Postgres pg_trgm similarity(column, term) as a comparable expression.
-  private fun similarity(
-    column: ColumnDeclaring<String>,
-    term: String,
+  /**
+   * PostgreSQL `word_similarity(query, target)`: how well [query] matches the
+   * best-matching continuous substring of [target] (0.0–1.0). Preferred over
+   * plain `similarity()` for search, where the query is usually much shorter
+   * than the title. Backed by the pg_trgm extension + GIN index on the title
+   * (both created in V1).
+   */
+  private fun wordSimilarity(
+    query: String,
+    target: ColumnDeclaring<String>,
   ): FunctionExpression<Double> =
     FunctionExpression(
-      functionName = "similarity",
-      arguments = listOf(column.asExpression(), ArgumentExpression(term, VarcharSqlType)),
+      functionName = "word_similarity",
+      arguments = listOf(ArgumentExpression(query, VarcharSqlType), target.asExpression()),
       sqlType = DoubleSqlType,
     )
 
-  // Fuzzy title match: trigram similarity over the threshold, or a case-insensitive substring hit.
+  /** Fuzzy title match: keep rows whose word-similarity to [term] clears the threshold. */
   private fun titleMatches(term: String): ColumnDeclaring<Boolean> =
-    (similarity(Motives.title, term) greater SIMILARITY_THRESHOLD) or (Motives.title ilike "%$term%")
+    wordSimilarity(term, Motives.title) greater SEARCH_SIMILARITY_THRESHOLD
 
-  // Relevance ranking: exact substring hits first, then by descending trigram similarity.
-  private fun relevanceOrder(
-    idColumn: ColumnDeclaring<*>,
+  /**
+   * Relevance is only meaningful when there is a term to score against, so an
+   * absent sort field (or an explicit RELEVANCE with a blank term) falls back to
+   * DATE_TAKEN; otherwise a term search defaults to RELEVANCE.
+   */
+  private fun resolveSort(
+    sortField: SearchSortField?,
     term: String,
+  ): SearchSortField =
+    when {
+      sortField != null && sortField != SearchSortField.RELEVANCE -> sortField
+      term.isBlank() -> SearchSortField.DATE_TAKEN
+      else -> SearchSortField.RELEVANCE
+    }
+
+  /**
+   * Order clause for a resolved (non-null) sort field, always tie-broken by
+   * [idColumn] for stable paging. [dateUploaded] differs between motives and
+   * photos, so it is passed in.
+   */
+  private fun orderExpressions(
+    sort: SearchSortField,
+    sortDirection: SortDirection,
+    term: String,
+    dateUploaded: ColumnDeclaring<*>,
+    idColumn: ColumnDeclaring<*>,
   ): List<OrderByExpression> =
-    listOf(
-      (Motives.title ilike "%$term%").desc(),
-      similarity(Motives.title, term).desc(),
-      idColumn.asc(),
-    )
+    if (sort == SearchSortField.RELEVANCE) {
+      listOf(wordSimilarity(term, Motives.title).desc(), idColumn.asc())
+    } else {
+      val column =
+        when (sort) {
+          SearchSortField.DATE_TAKEN -> Motives.date
+          SearchSortField.DATE_UPLOADED -> dateUploaded
+          SearchSortField.MOTIVE_TITLE -> Motives.title
+          SearchSortField.CATEGORY -> Categories.name
+          SearchSortField.PLACE -> Places.name
+          SearchSortField.RELEVANCE -> Motives.title // unreachable: handled above
+        }
+      listOf(direction(column, sortDirection), idColumn.asc())
+    }
 
   fun searchMotives(
     term: String,
     userLevel: SecurityLevelType,
     filters: ActiveFilters,
-    sortField: SearchSortField,
+    sortField: SearchSortField?,
     sortDirection: SortDirection,
     page: Int,
     pageSize: Int,
   ): Page<MotiveDto> {
-    val orderExpressions: List<OrderByExpression> =
-      when (sortField) {
-        SearchSortField.RELEVANCE -> relevanceOrder(Motives.id, term)
-        SearchSortField.DATE_TAKEN -> listOf(direction(Motives.date, sortDirection), Motives.id.asc())
-        SearchSortField.DATE_UPLOADED -> listOf(direction(Motives.dateCreated, sortDirection), Motives.id.asc())
-        SearchSortField.MOTIVE_TITLE -> listOf(direction(Motives.title, sortDirection), Motives.id.asc())
-        SearchSortField.CATEGORY -> listOf(direction(Categories.name, sortDirection), Motives.id.asc())
-        SearchSortField.PLACE -> listOf(direction(Places.name, sortDirection), Motives.id.asc())
-      }
+    val effectiveSort = resolveSort(sortField, term)
+    val orders = orderExpressions(effectiveSort, sortDirection, term, Motives.dateCreated, Motives.id)
 
     val conditions = motiveConditions(term, userLevel, filters)
 
@@ -128,7 +161,7 @@ class SearchRepository(
       source
         .select(Motives.id)
         .whereWithConditions { it += conditions }
-        .orderBy(*orderExpressions.toTypedArray())
+        .orderBy(*orders.toTypedArray())
         .limit(page * pageSize, pageSize)
         .map { it[Motives.id]!! }
 
@@ -162,7 +195,7 @@ class SearchRepository(
     term: String,
     userLevel: SecurityLevelType,
     filters: ActiveFilters,
-    sortField: SearchSortField,
+    sortField: SearchSortField?,
     sortDirection: SortDirection,
     page: Int,
     pageSize: Int,
@@ -174,19 +207,12 @@ class SearchRepository(
       }
     sequence = applyPictureFilters(sequence, term, filters)
 
-    val orderExpressions: List<OrderByExpression> =
-      when (sortField) {
-        SearchSortField.RELEVANCE -> relevanceOrder(Photos.id, term)
-        SearchSortField.DATE_TAKEN -> listOf(direction(Motives.date, sortDirection), Photos.id.asc())
-        SearchSortField.DATE_UPLOADED -> listOf(direction(Photos.dateCreated, sortDirection), Photos.id.asc())
-        SearchSortField.MOTIVE_TITLE -> listOf(direction(Motives.title, sortDirection), Photos.id.asc())
-        SearchSortField.CATEGORY -> listOf(direction(Categories.name, sortDirection), Photos.id.asc())
-        SearchSortField.PLACE -> listOf(direction(Places.name, sortDirection), Photos.id.asc())
-      }
+    val effectiveSort = resolveSort(sortField, term)
+    val orders = orderExpressions(effectiveSort, sortDirection, term, Photos.dateCreated, Photos.id)
 
     val photoDtos =
       sequence
-        .sorted { orderExpressions }
+        .sorted { orders }
         .drop(page * pageSize)
         .take(pageSize)
         .toList()
