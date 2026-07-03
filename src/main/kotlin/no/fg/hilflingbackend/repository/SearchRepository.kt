@@ -89,8 +89,7 @@ class SearchRepository(
     )
 
   /** Fuzzy title match: keep rows whose word-similarity to [term] clears the threshold. */
-  private fun titleMatches(term: String): ColumnDeclaring<Boolean> =
-    wordSimilarity(term, Motives.title) greater SEARCH_SIMILARITY_THRESHOLD
+  private fun titleMatches(term: String): ColumnDeclaring<Boolean> = wordSimilarity(term, Motives.title) greater SEARCH_SIMILARITY_THRESHOLD
 
   /**
    * Relevance is only meaningful when there is a term to score against, so an
