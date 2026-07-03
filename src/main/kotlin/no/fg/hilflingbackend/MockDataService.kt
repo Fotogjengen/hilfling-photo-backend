@@ -123,7 +123,7 @@ class MockDataService {
           motive = motives.random(),
           gang = gangs.random(),
           photoGangBangerDto = photoGangBangers.random(),
-          dateTaken = LocalDate.now(),
+          dateUploaded = LocalDate.now(),
         ),
       )
     }
@@ -143,7 +143,7 @@ class MockDataService {
           motive = analogMotives.random(),
           gang = gangs.random(),
           photoGangBangerDto = photoGangBangers.random(),
-          dateTaken = LocalDate.now(),
+          dateUploaded = LocalDate.now(),
         ),
       )
     }

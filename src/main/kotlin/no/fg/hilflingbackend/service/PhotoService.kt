@@ -84,7 +84,7 @@ class PhotoService(
         motive = motive,
         gang = gang,
         photoGangBangerDto = photoGangBanger,
-        dateTaken = request.dateTaken,
+        dateUploaded = request.dateTaken,
       )
     photoRepository.createPhoto(photo)
     photoReservationService.deleteReservation(album.albumId.id, request.pageNumber, request.imageNumber)
