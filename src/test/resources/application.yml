@@ -22,13 +22,6 @@ spring:
     validate-on-migrate: true
     locations: classpath:/db/migration
 
-  servlet:
-    multipart:
-      enabled: true # Enable multipart uploads (files)
-      file-size-threshold: 2KB
-      max-file-size: 50MB
-      max-request-size: 60MB
-
   azure:
     tenant-id:
     client:
@@ -41,12 +34,9 @@ spring:
       blob-storage:
         connection-string: ${AZURE_STORAGE_CONNECTION_STRING:DefaultEndpointsProtocol=http;AccountName=devstoreaccount1;AccountKey=Eby8vdM02xNOcqFlqUwJPLlmEtlCDXJ1OUzFT50uSRZ6IFsuFq2UVErCz4I6tq/K1SZFPTOtr/KBHBeksoGMGw==;BlobEndpoint=http://127.0.0.1:10000/devstoreaccount1;QueueEndpoint=http://127.0.0.1:10001/devstoreaccount1;TableEndpoint=http://127.0.0.1:10002/devstoreaccount1;}
 jwt:
-  secret: ${JWT_SECRET:dGVzdFNlY3JldEtleUZvclRlc3RpbmdQdXJwb3Nlc09ubHkxMjM0NTY3OA==}
+  private-key: ${JWT_PRIVATE_KEY:MIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQCsd7bH8PccNogGWSFEH6hT8ha0Nqv9qJsGTG6Q4VOBse0Wxa7yl64hkBenWDz9EpaHZH+mnEWoKk5O8iCDWkeOv+Fskn4yh6H++v/BvcInAsgAsaHN4eEMPFGa8pf1dDnsAf8m/F8RzwYw7HNnsbPPSuAAI95tDcerINc6CSSgZBxhxGTaNcpB9jNEJ4OJB/C3ELd8pajWjJwDExgUfAxpJlsGJeYbDUOQcdAnQ67a2cDIeY8G+sK4ve33iDioAqxtbW3/eRI24aA9a84cZ6xp+q/avgf/VTzajzillH8wzzpe//oHOBJrCSaiSVIx/MyziflBDsIGH/VOTVEL+NY5AgMBAAECggEAIzL1n33q+RuaDG2hb/VkFenpP1OPK6B/LzxnLnOGZwhowoaLC6DwXZI6eaF1JRNnnG9i7B6lysoDnHInN5ez1gsMV2vYjLiI0/DnROPVHcAgEKAwTUQl+ajP4OdVIzfa4HOR3yOPxaMyeMaxUP8AGzUFXZH0gd5Xm3IC6ynVi1Q86/W2yV0ukHo2FthN7WQGlf7RhHo3eQRPmqCEbKweFrk9ISEMk0UNul7OHblwekp6YCqwFsdnwGRvsS9mGyRZ/0uHcCUzlWoaVbgTHX7aMfVK0lmSMdyZeQ4haa/WAf3SrQ3eL4kneGc3373/L/g7Jz0nUniP3CwItwUHwwmlBwKBgQDr8hv211uj5lNszYZhVJjpSF1l3PhnAS3CUkyLImIKdZlH2N4j8yd8k35G2aXTk6VA8j1QzCdMf9MtBpM6pNiMIktdPNPo6lzS7Gdm8ipTsMSBeOKCAr2OWqmeM4cOYtUOB01/hsw2rJ4vPv1+i46E0JqLwT5IJODwWK+dQ4VDFwKBgQC7IGYWbWvcKSZ0Guy4QSmQEZa5ZuA8cPWcEnry3BmXVBMhbcH9HlNLG/w+vDj6ZP8bS2CTEO4JUCOf//hdYjFeJkKn0LXCq7vrPpP7HJzqdvED7Z2xRZqc9wJoqF2VXUIxHFNhJMjbYQrVQ1ENnVnFQCXvjyW1F8k/LkEtOzHDLwKBgDC4rPea3uyIWj/EbPRaQL0jWU34hD7Y6ncPAYlVj0Mzp3RDnxNzWXsLBe9hcDGxclVn8CtoDNFqL9RDYFGiyqidSEy3i9az1nkjofKLHRxtCxblPHi2Uig8JnxpjYD1/aLI9ULZNgAwQvXknvnrnYFlhhRH0jGZk+1tks35rGH/AoGBAImSujtG2wOTpVe668pS7fGjXMKV5cnJ6miCFa4zLwVYpG/xN6uV/fq8amjdDK7aTcuNUUUOL1LdfjOFht1w8YacbmjeQqMKiy/aZAU79glSxML0kPjhiVhZKYY0Mgk79QwSHSLQXnMbF1HPGen+gx9HmBxVi41mHWi74uMUH/O1AoGAcuPIGOiua3VhKtCIrnoysEsoW8erlBPec0cCAhCRVsboK49EqXiN4vZZjT86dPd1MwoO1gPvXzQyrsfAY8v8AKXSBI2a78Iut5/jC1xGR0Jih6Jog5b0jUqZqJmB9PP7lQJQLw2quVjiIHxnmHOEQOZVfu4P3EKYtvc5+PfKyr0=}
+  public-key: ${JWT_PUBLIC_KEY:MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEArHe2x/D3HDaIBlkhRB+oU/IWtDar/aibBkxukOFTgbHtFsWu8peuIZAXp1g8/RKWh2R/ppxFqCpOTvIgg1pHjr/hbJJ+Moeh/vr/wb3CJwLIALGhzeHhDDxRmvKX9XQ57AH/JvxfEc8GMOxzZ7Gzz0rgACPebQ3HqyDXOgkkoGQcYcRk2jXKQfYzRCeDiQfwtxC3fKWo1oycAxMYFHwMaSZbBiXmGw1DkHHQJ0Ou2tnAyHmPBvrCuL3t94g4qAKsbW1t/3kSNuGgPWvOHGesafqv2r4H/1U82o84pZR/MM86Xv/6BzgSawkmoklSMfzMs4n5QQ7CBh/1Tk1RC/jWOQIDAQAB}
 
-file:
-  large-upload-dir: photos/large/
-  medium-upload-dir: photos/medium/
-  small-upload-dir: photos/small/
 #okta: # SECURITY OKTA
 #  oauth2:
 #    issuer: https://dev-812828.okta.com/oauth2/default

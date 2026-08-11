@@ -66,5 +66,5 @@ fun Photo.toDto(): PhotoDto =
     motive = this.motive.toDto(),
     photoGangBangerDto = this.photoGangBanger.toDto(),
     gang = this.gang?.toDto(),
-    dateTaken = this.dateCreated.toLocalDate(),
+    dateUploaded = this.dateCreated.toLocalDate(),
   )

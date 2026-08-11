@@ -33,7 +33,7 @@ class JwtAuthFilter : OncePerRequestFilter() {
     response: HttpServletResponse,
     filterChain: FilterChain,
   ) {
-    val token = request.getHeader("X-hilfling-token")
+    val token = request.hilflingToken()
     if (token == null) {
       filterChain.doFilter(request, response)
       return

@@ -55,7 +55,7 @@ data class PhotoDto(
   val securityLevel: SecurityLevelDto = motive.securityLevel,
   val gang: GangDto?,
   val photoGangBangerDto: PhotoGangBangerDto,
-  val dateTaken: LocalDate,
+  val dateUploaded: LocalDate,
 ) {
   fun toEntity(): Photo {
     val photo = this

@@ -1,7 +1,6 @@
 package no.fg.hilflingbackend.configurations
 
 import no.fg.hilflingbackend.repository.PhotoGangBangerRepository
-import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.http.HttpMethod
@@ -16,27 +15,12 @@ import org.springframework.security.core.userdetails.UserDetailsService
 import org.springframework.security.core.userdetails.UsernameNotFoundException
 import org.springframework.security.web.SecurityFilterChain
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter
-import org.springframework.web.cors.CorsConfiguration
-import org.springframework.web.cors.CorsConfigurationSource
-import org.springframework.web.cors.UrlBasedCorsConfigurationSource
 
 @Configuration
 @EnableWebSecurity
 class SecurityConfig(
   private val photoGangBangerRepository: PhotoGangBangerRepository,
 ) {
-  // CORS
-  @Value(
-    "\${cors.allowed-origins:http://localhost:3000,http://localhost:5173,http://localhost:8888}",
-  )
-  private lateinit var allowedOrigins: String
-
-  // Auth CORS.
-  // Auth endpoints should only EVER be called from the proxy, so we must have a stricter
-  // policy
-  @Value("\${auth.cors.allowed-origins:http://localhost:8888}")
-  private lateinit var authAllowedOrigins: String
-
   private val swaggerWhitelist =
     arrayOf(
       "/",
@@ -44,6 +28,7 @@ class SecurityConfig(
       "/swagger-ui.html",
       "/v3/api-docs/**",
       "/error",
+      "/.well-known/jwks.json",
     )
 
   @Bean
@@ -53,13 +38,9 @@ class SecurityConfig(
   ): SecurityFilterChain {
     http
       .csrf { csrf ->
-        // Stateless REST API using a custom header (X-hilfling-token) for
-        // auth.
-        // CSRF attacks require cookie-based sessions, which this API
-        // doesn't use.
+        // CSRF protection is disabled (stateless api). Maybe we need it idk
         csrf.ignoringRequestMatchers("/**")
-      }.cors { it.configurationSource(corsConfigurationSource()) }
-      .headers { headers -> headers.frameOptions { it.sameOrigin() } }
+      }.headers { headers -> headers.frameOptions { it.sameOrigin() } }
       .sessionManagement {
         it.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
       }.authorizeHttpRequests { auth ->
@@ -70,7 +51,7 @@ class SecurityConfig(
           .permitAll()
           .requestMatchers(HttpMethod.OPTIONS, "/**")
           .permitAll()
-          // Read endpoints that are intentionally public
+          // read endpoints that are intentionally public
           .requestMatchers(HttpMethod.GET, "/photos/**")
           .permitAll()
           .requestMatchers(HttpMethod.GET, "/eventcards/**")
@@ -138,7 +119,7 @@ class SecurityConfig(
           SimpleGrantedAuthority("ROLE_ALLE"),
         )
 
-      // Password is not used for JWT-authenticated requests.
+      // password is not used for JWT-authenticated requests.
       User
         .withUsername(user.username)
         .password("{noop}jwt-auth-only")
@@ -150,26 +131,4 @@ class SecurityConfig(
   fun authenticationManager(
     configuration: AuthenticationConfiguration,
   ): AuthenticationManager = configuration.authenticationManager
-
-  @Bean
-  fun corsConfigurationSource(): CorsConfigurationSource {
-    val source = UrlBasedCorsConfigurationSource()
-
-    // Auth endpoints should only EVER be called from the proxy, so we must have a
-    // stricter policy
-    source.registerCorsConfiguration("/auth/**", createCorsConfig(authAllowedOrigins))
-    source.registerCorsConfiguration("/**", createCorsConfig(allowedOrigins))
-    return source
-  }
-
-  private fun createCorsConfig(origins: String): CorsConfiguration {
-    val config = CorsConfiguration()
-    config.allowCredentials = true
-    config.allowedOrigins =
-      origins.split(",").map { it.trim() }.filter { it.isNotEmpty() }
-    config.allowedMethods = listOf("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS")
-    config.allowedHeaders = listOf("Authorization", "Content-Type", "X-hilfling-token")
-    config.exposedHeaders = listOf("X-hilfling-token")
-    return config
-  }
 }

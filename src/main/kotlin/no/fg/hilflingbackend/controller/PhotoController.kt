@@ -1,10 +1,12 @@
 package no.fg.hilflingbackend.controller
 
 import jakarta.servlet.http.HttpServletRequest
+import no.fg.hilflingbackend.configurations.hilflingToken
 import no.fg.hilflingbackend.dto.Page
 import no.fg.hilflingbackend.dto.PhotoDto
 import no.fg.hilflingbackend.dto.PhotoFinalizeRequestDto
 import no.fg.hilflingbackend.dto.PhotoGoodPictureToggleRequestDto
+import no.fg.hilflingbackend.dto.PhotoPositionDto
 import no.fg.hilflingbackend.dto.PhotoReservationDto
 import no.fg.hilflingbackend.dto.PhotoUploadRequestDto
 import no.fg.hilflingbackend.service.JwtService
@@ -31,7 +33,7 @@ class PhotoController(
     @PathVariable id: UUID,
     request: HttpServletRequest,
   ): PhotoDto {
-    val securityLevel = jwtService.extractSecurityLevel(request.getHeader("X-hilfling-token"))
+    val securityLevel = jwtService.extractSecurityLevel(request.hilflingToken())
     return photoService.findById(id, securityLevel)
   }
 
@@ -40,7 +42,7 @@ class PhotoController(
     @PathVariable motiveId: UUID,
     request: HttpServletRequest,
   ): List<PhotoDto> {
-    val securityLevel = jwtService.extractSecurityLevel(request.getHeader("X-hilfling-token"))
+    val securityLevel = jwtService.extractSecurityLevel(request.hilflingToken())
     return photoService.findByMotiveId(motiveId, securityLevel)
   }
 
@@ -50,8 +52,18 @@ class PhotoController(
     @RequestParam("pageSize", required = false) pageSize: Int?,
     request: HttpServletRequest,
   ): Page<PhotoDto> {
-    val securityLevel = jwtService.extractSecurityLevel(request.getHeader("X-hilfling-token"))
+    val securityLevel = jwtService.extractSecurityLevel(request.hilflingToken())
     return photoService.findGoodPicturesPage(page ?: 0, pageSize ?: 10, securityLevel)
+  }
+
+  @GetMapping("/good-pictures/{id}/position")
+  fun getGoodPicturePosition(
+    @PathVariable id: UUID,
+    @RequestParam("pageSize", required = false) pageSize: Int?,
+    request: HttpServletRequest,
+  ): PhotoPositionDto {
+    val securityLevel = jwtService.extractSecurityLevel(request.hilflingToken())
+    return photoService.findGoodPicturePosition(id, pageSize ?: 10, securityLevel)
   }
 
   @GetMapping("/motive/{motiveId}/good-pictures")
@@ -59,7 +71,7 @@ class PhotoController(
     @PathVariable motiveId: UUID,
     request: HttpServletRequest,
   ): List<PhotoDto> {
-    val securityLevel = jwtService.extractSecurityLevel(request.getHeader("X-hilfling-token"))
+    val securityLevel = jwtService.extractSecurityLevel(request.hilflingToken())
     return photoService.findGoodPicturesByMotiveId(motiveId, securityLevel)
   }
 
@@ -68,7 +80,7 @@ class PhotoController(
     @RequestBody dto: PhotoUploadRequestDto,
     request: HttpServletRequest,
   ): PhotoReservationDto {
-    val username = jwtService.extractPayload(request.getHeader("X-hilfling-token")).username
+    val username = jwtService.extractPayload(request.hilflingToken()!!).username
     return photoService.reserve(dto, username)
   }
 
@@ -77,7 +89,7 @@ class PhotoController(
     @RequestBody dto: PhotoFinalizeRequestDto,
     request: HttpServletRequest,
   ): PhotoDto {
-    val username = jwtService.extractPayload(request.getHeader("X-hilfling-token")).username
+    val username = jwtService.extractPayload(request.hilflingToken()!!).username
     return photoService.upload(dto, username)
   }
 
@@ -86,7 +98,7 @@ class PhotoController(
     @PathVariable id: UUID,
     request: HttpServletRequest,
   ): PhotoDto {
-    val securityLevel = jwtService.extractSecurityLevel(request.getHeader("X-hilfling-token"))
+    val securityLevel = jwtService.extractSecurityLevel(request.hilflingToken())
     return photoService.delete(id, securityLevel)
   }
 
@@ -96,7 +108,7 @@ class PhotoController(
     @RequestBody dto: PhotoGoodPictureToggleRequestDto,
     request: HttpServletRequest,
   ) {
-    val payload = jwtService.extractPayload(request.getHeader("X-hilfling-token"))
+    val payload = jwtService.extractPayload(request.hilflingToken()!!)
     return photoService.markAsGoodPicture(id, dto.goodPicture, payload.securityLevel)
   }
 }
