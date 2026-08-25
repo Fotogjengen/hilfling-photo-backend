@@ -3,7 +3,14 @@ package no.fg.hilflingbackend.repository
 import jakarta.persistence.EntityNotFoundException
 import me.liuwj.ktorm.database.Database
 import me.liuwj.ktorm.dsl.QueryRowSet
+import me.liuwj.ktorm.dsl.and
 import me.liuwj.ktorm.dsl.eq
+import me.liuwj.ktorm.dsl.from
+import me.liuwj.ktorm.dsl.map
+import me.liuwj.ktorm.dsl.select
+import me.liuwj.ktorm.dsl.where
+import me.liuwj.ktorm.dsl.insert
+import me.liuwj.ktorm.dsl.delete
 import me.liuwj.ktorm.entity.add
 import me.liuwj.ktorm.entity.any
 import me.liuwj.ktorm.entity.update
@@ -16,6 +23,8 @@ import no.fg.hilflingbackend.model.Positions
 import no.fg.hilflingbackend.model.positions
 import no.fg.hilflingbackend.valueobject.Email
 import org.springframework.stereotype.Repository
+import no.fg.hilflingbackend.model.PositionToPermissions
+import no.fg.hilflingbackend.valueobject.Permission
 
 @Repository
 open class PositionRepository(
@@ -48,5 +57,29 @@ open class PositionRepository(
     val updated = database.positions.update(newDto.toEntity())
 
     return if (updated == 1) newDto else fromDb
+  }
+
+  fun findPermissionsByPositionId(positionId: PositionId): List<Permission>{
+    return database
+    .from(PositionToPermissions)
+    .select(PositionToPermissions.permission)
+    .where { PositionToPermissions.positionId eq positionId.id }
+    .map { row ->
+      runCatching { Permission.valueOf(row[PositionToPermissions.permission]!!) }.getOrNull()
+    }
+    .filterNotNull()
+  }
+
+  fun addPermissionToPosition(positionId: PositionId, permission: Permission): Int {
+    return database.insert(PositionToPermissions) {
+      set(it.positionId, positionId.id)
+      set(it.permission, permission.name)
+    }
+  }
+
+  fun removePermissionFromPosition(positionId: PositionId, permission: Permission): Int {
+    return database.delete(PositionToPermissions) {
+      (it.positionId eq positionId.id) and (it.permission eq permission.name)
+    }
   }
 }
