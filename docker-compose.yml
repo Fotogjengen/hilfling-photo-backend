@@ -7,44 +7,48 @@ networks:
     driver: bridge
 
 volumes:
-  db-data: # Data volume for the database
+  db-data: # Data volume for the database (dev only)
+  traefik-certs: # Let's Encrypt cert storage — must persist across restarts
 
 services:
   traefik:
-    image: "traefik:v2.10"
+    image: "traefik:v3.7.12"
     container_name: "traefik"
     restart: unless-stopped
     command:
-      #- "--log.level=DEBUG"
-      - "--api.insecure=true"
       - "--providers.docker=true"
       - "--providers.docker.exposedbydefault=false"
-      - "--entrypoints.web.address=:8000"
+      - "--entrypoints.web.address=:80"
       - "--entrypoints.websecure.address=:443"
+      - "--certificatesresolvers.myresolver.acme.tlschallenge=true"
+      - "--certificatesresolvers.myresolver.acme.email=fg-web@samfundet.no"
+      - "--certificatesresolvers.myresolver.acme.storage=/letsencrypt/acme.json"
     ports:
-      - "8080:8080"
+      - "80:80"
       - "443:443"
     volumes:
       - "/var/run/docker.sock:/var/run/docker.sock:ro"
+      - "traefik-certs:/letsencrypt"
+    networks:
+      - hilfling-network
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.traefik.rule=Host(`127.0.0.1`)"
-      - "traefik.http.routers.traefik.entrypoints=web"
-      - "traefik.http.routers.traefik.service=api@internal"
-      - "traefik.http.routers.traefik.middlewares=traefik-auth"
-      - "traefik.http.middlewares.traefik-auth.basicauth.users=user:$$2y$$05$$6m8MvyzgJ4Kl7/3rL4X6VurX1huMas8a7oPB3xRfBjFbGCR8MUi7W"
+      # Dashboard is gone. To re-add later:
+      # --api=true (NOT --api.insecure=true), a router protected by
+      # basic auth, routed through :443 like the backend router below.
 
   backend:
     container_name: backend
     restart: unless-stopped
     build:
       context: .
-      dockerfile: ./Dockerfile # specify the Dockerfile
+      dockerfile: ./Dockerfile
     networks:
       - hilfling-network
     depends_on:
-      - postgres
       - traefik
+    expose:
+      - "8000"
     environment:
       SPRING_DATASOURCE_URL: ${SPRING_DATASOURCE_URL:-jdbc:postgresql://postgres:5432/hilflingdb}
       SPRING_DATASOURCE_USERNAME: ${DATABASE_USERNAME:-hilfling}
@@ -53,13 +57,12 @@ services:
       AUTH_CORS_ALLOWED_ORIGINS: ${AUTH_CORS_ALLOWED_ORIGINS:-http://localhost:8888}
       JWT_PRIVATE_KEY: ${JWT_PRIVATE_KEY}
       JWT_PUBLIC_KEY: ${JWT_PUBLIC_KEY}
-    ports:
-      - "8000:8000" # map port 8000 of the host to port 8080 of the container
-    # command: ["--debug"]
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.backend.rule=Host(`backend.localhost`)"
-      - "traefik.http.routers.backend.entrypoints=web"
+      - "traefik.http.routers.backend.rule=Host(`fg-beta.samfundet.no/`)"
+      - "traefik.http.routers.backend.entrypoints=websecure"
+      - "traefik.http.routers.backend.tls.certresolver=myresolver"
+      - "traefik.http.services.backend.loadbalancer.server.port=8000"
 
   postgres:
     container_name: hilflingdb
@@ -68,34 +71,26 @@ services:
     build:
       context: .
       dockerfile: postgres/Dockerfile
-    restart: always
-    depends_on:
-      - traefik
+    restart: unless-stopped
     networks:
       - hilfling-network
-    ports:
-      - "5432:5432"
     volumes:
       - "db-data:/var/lib/postgresql/data" # Database volume
         #- "./postgres/sql:/base-sql" # Think this was init sql schema?
     expose:
-      - 5432
+      - "5432"
     environment:
       # Use env variable if exists, fallback to hilfling
       POSTGRES_USER: ${DATABASE_USERNAME:-hilfling}
       POSTGRES_PASSWORD: ${DATABASE_PASSWORD:-password}
       LISTENING_PORT: ${LISTENING_PORT-8000}
-    labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.postgres.rule=Host(`hilfling-db.localhost`)"
+
   pgadmin:
     container_name: pgadmin
     restart: unless-stopped
     profiles:
       - dev
     image: dpage/pgadmin4
-    depends_on:
-      - traefik
     environment:
       PGADMIN_DEFAULT_EMAIL: ${PGADMIN_DEFAULT_EMAIL:-admin@admin.com}
       PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_DEFAULT_PASSWORD:-password}
@@ -103,7 +98,3 @@ services:
       - ${PGADMIN_PORT:-5050}:80
     networks:
       - hilfling-network
-    labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.pgadmin.rule=Host(`pgadmin.localhost`)"
-      - "traefik.http.routers.pgadmin.entrypoints=web"
