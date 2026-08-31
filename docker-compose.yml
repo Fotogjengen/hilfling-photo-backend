@@ -13,6 +13,7 @@ services:
   traefik:
     image: "traefik:v2.10"
     container_name: "traefik"
+    restart: unless-stopped
     command:
       #- "--log.level=DEBUG"
       - "--api.insecure=true"
@@ -35,6 +36,7 @@ services:
 
   backend:
     container_name: backend
+    restart: unless-stopped
     build:
       context: .
       dockerfile: ./Dockerfile # specify the Dockerfile
@@ -44,7 +46,7 @@ services:
       - postgres
       - traefik
     environment:
-      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/hilflingdb
+      SPRING_DATASOURCE_URL: ${SPRING_DATASOURCE_URL:-jdbc:postgresql://postgres:5432/hilflingdb}
       SPRING_DATASOURCE_USERNAME: ${DATABASE_USERNAME:-hilfling}
       SPRING_DATASOURCE_PASSWORD: ${DATABASE_PASSWORD:-password}
       CORS_ALLOWED_ORIGINS: ${CORS_ALLOWED_ORIGINS:-http://localhost:3000,http://localhost:5173,http://localhost:8888}
@@ -61,6 +63,8 @@ services:
 
   postgres:
     container_name: hilflingdb
+    profiles:
+      - dev
     build:
       context: .
       dockerfile: postgres/Dockerfile
@@ -69,13 +73,13 @@ services:
       - traefik
     networks:
       - hilfling-network
+    ports:
+      - "5432:5432"
     volumes:
       - "db-data:/var/lib/postgresql/data" # Database volume
         #- "./postgres/sql:/base-sql" # Think this was init sql schema?
     expose:
       - 5432
-    ports:
-      - "5432:5432"
     environment:
       # Use env variable if exists, fallback to hilfling
       POSTGRES_USER: ${DATABASE_USERNAME:-hilfling}
@@ -86,8 +90,10 @@ services:
       - "traefik.http.routers.postgres.rule=Host(`hilfling-db.localhost`)"
   pgadmin:
     container_name: pgadmin
+    restart: unless-stopped
+    profiles:
+      - dev
     image: dpage/pgadmin4
-    restart: always
     depends_on:
       - traefik
     environment:

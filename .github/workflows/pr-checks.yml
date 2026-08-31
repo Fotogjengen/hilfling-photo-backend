@@ -1,0 +1,43 @@
+# Continous Integration.
+# Runs on PRs to Master
+
+name: CI
+
+# Controls when the action will run.
+on:
+  # Triggers the workflow on push or pull request events but only for the master branch
+  pull_request:
+    branches: [master]
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Build and test
+        run: |
+          docker network create traefik
+          docker compose \
+            -f docker-compose.yml \
+            -f docker-compose.test.yml \
+            build
+          docker compose \
+            -f docker-compose.yml \
+            -f docker-compose.test.yml \
+            up --exit-code-from run-tests run-tests
+
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Run ktlint
+        uses: ScaCap/action-ktlint@v1.9.0
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          level: error
+          reporter: github-pr-check
+          fail_on_error: true
+          relative: true
