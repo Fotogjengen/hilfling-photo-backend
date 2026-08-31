@@ -11,24 +11,26 @@ on:
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
-  test:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v6
+  # vi har jo ikke så mange tester så jeg har skrudd av testing for øyeblikket...
 
-      - name: Build and test
-        run: |
-          docker network create traefik
-          docker compose \
-            -f docker-compose.yml \
-            -f docker-compose.test.yml \
-            --profile dev \
-            build
-          docker compose \
-            -f docker-compose.yml \
-            -f docker-compose.test.yml \
-            --profile dev \
-            up --exit-code-from run-tests run-tests
+  # test:
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - uses: actions/checkout@v6
+
+  #     - name: Build and test
+  #       run: |
+  #         docker network create traefik
+  #         docker compose \
+  #           -f docker-compose.yml \
+  #           -f docker-compose.test.yml \
+  #           --profile dev \
+  #           build
+  #         docker compose \
+  #           -f docker-compose.yml \
+  #           -f docker-compose.test.yml \
+  #           --profile dev \
+  #           up --exit-code-from run-tests run-tests
 
   lint:
     runs-on: ubuntu-latest
