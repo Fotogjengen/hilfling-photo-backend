@@ -22,10 +22,12 @@ jobs:
           docker compose \
             -f docker-compose.yml \
             -f docker-compose.test.yml \
+            --profile dev \
             build
           docker compose \
             -f docker-compose.yml \
             -f docker-compose.test.yml \
+            --profile dev \
             up --exit-code-from run-tests run-tests
 
   lint:
