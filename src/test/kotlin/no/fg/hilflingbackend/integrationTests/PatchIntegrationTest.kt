@@ -11,6 +11,7 @@ import no.fg.hilflingbackend.dto.EventOwnerId
 import no.fg.hilflingbackend.dto.EventOwnerName
 import no.fg.hilflingbackend.dto.GangDto
 import no.fg.hilflingbackend.dto.GangId
+import no.fg.hilflingbackend.dto.MemberPositionDto
 import no.fg.hilflingbackend.dto.MotiveCreateRequestDto
 import no.fg.hilflingbackend.dto.MotiveDto
 import no.fg.hilflingbackend.dto.MotiveId
@@ -42,7 +43,10 @@ import org.junit.jupiter.api.assertAll
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import java.time.LocalDate
+import java.util.UUID
 import kotlin.test.assertEquals
+import kotlin.test.assertFails
+import kotlin.test.assertFailsWith
 import kotlin.test.assertNotNull
 // import org.junit.runner.RunWith
 // import org.springframework.test.context.junit4.SpringRunner
@@ -329,4 +333,142 @@ class PatchIntegrationTest {
       { assertEquals(change.analog, changedFromDb?.analog) },
     )
   }
+
+  @Test
+  fun shouldCreatePhotoGangBangerWithoutPositions() {
+    val dto = createPhotoGangBangerDto()
+
+    val created = photoGangBangerRepository.create(dto)
+    val fromDb = photoGangBangerRepository.findById(dto.photoGangBangerId.id)
+
+    assertAll(
+      "create photo gang banger without positions",
+      { assertEquals(1, created) },
+      { assertNotNull(fromDb) },
+      { assertEquals(emptyList(), fromDb?.positions) },
+    )
+  }
+
+  @Test
+  fun shouldCreatePhotoGangBangerWithOnePosition() {
+    val position = createMemberPosition(positionDto1, "H2030")
+    val dto = createPhotoGangBangerDto(positions = listOf(position))
+
+    val created = photoGangBangerRepository.create(dto)
+    val fromDb = photoGangBangerRepository.findById(dto.photoGangBangerId.id)
+
+    assertAll(
+      "create photo gang banger with one position",
+      { assertEquals(1, created) },
+      { assertNotNull(fromDb) },
+      { assertEquals(listOf(position), fromDb?.positions) },
+    )
+  }
+
+  @Test
+  fun shouldCreatePhotoGangBangerWithMultiplePositions() {
+    val positions =
+      listOf(
+        createMemberPosition(positionDto1, "H2031"),
+        createMemberPosition(positionDto2, "V2032"),
+      )
+    val dto = createPhotoGangBangerDto(positions = positions)
+
+    val created = photoGangBangerRepository.create(dto)
+    val fromDb = photoGangBangerRepository.findById(dto.photoGangBangerId.id)
+
+    assertAll(
+      "create photo gang banger with multiple positions",
+      { assertEquals(1, created) },
+      { assertNotNull(fromDb) },
+      { assertEquals(positions.toSet(), fromDb?.positions?.toSet()) },
+    )
+  }
+
+  @Test
+  fun shouldRejectUnknownPositionIdWhenCreatingPhotoGangBanger() {
+    val dto =
+      createPhotoGangBangerDto(
+        positions =
+          listOf(
+            MemberPositionDto(
+              positionId = PositionId(),
+              title = "missing position",
+              email = Email("missing-position@email.com"),
+              semesterStart = SemesterStart("H2033"),
+              isActive = true,
+            ),
+          ),
+      )
+
+    assertFailsWith<IllegalArgumentException> {
+      photoGangBangerRepository.create(dto)
+    }
+
+    assertEquals(null, photoGangBangerRepository.findById(dto.photoGangBangerId.id))
+  }
+
+  @Test
+  fun shouldRejectDuplicatePositionsWhenCreatingPhotoGangBanger() {
+    val position = createMemberPosition(positionDto1, "H2034")
+    val dto = createPhotoGangBangerDto(positions = listOf(position, position))
+
+    assertFailsWith<IllegalArgumentException> {
+      photoGangBangerRepository.create(dto)
+    }
+
+    assertEquals(null, photoGangBangerRepository.findById(dto.photoGangBangerId.id))
+  }
+
+  @Test
+  fun shouldRollbackPhotoGangBangerWhenPositionInsertFails() {
+    val semesterStart = "H2035"
+    val existingPositionHolder =
+      createPhotoGangBangerDto(
+        positions = listOf(createMemberPosition(positionDto1, semesterStart)),
+      )
+    val dto =
+      createPhotoGangBangerDto(
+        positions = listOf(createMemberPosition(positionDto1, semesterStart)),
+      )
+
+    photoGangBangerRepository.create(existingPositionHolder)
+
+    assertFails {
+      photoGangBangerRepository.create(dto)
+    }
+
+    assertEquals(null, photoGangBangerRepository.findById(dto.photoGangBangerId.id))
+  }
+
+  private fun createPhotoGangBangerDto(
+    positions: List<MemberPositionDto> = emptyList(),
+  ): PhotoGangBangerDto {
+    val suffix = UUID.randomUUID().toString().take(8)
+    return PhotoGangBangerDto(
+      photoGangBangerId = PhotoGangBangerId(),
+      semesterStart = SemesterStart("H2029"),
+      isActive = true,
+      isPang = true,
+      firstName = "Test",
+      lastName = "Photo",
+      username = "pgb$suffix",
+      email = "pgb-$suffix@samfundet.no",
+      profilePicture = "",
+      phoneNumber = "12345678",
+      positions = positions,
+    )
+  }
+
+  private fun createMemberPosition(
+    position: PositionDto,
+    semesterStart: String,
+  ): MemberPositionDto =
+    MemberPositionDto(
+      positionId = position.positionId,
+      title = position.title,
+      email = position.email,
+      semesterStart = SemesterStart(semesterStart),
+      isActive = true,
+    )
 }
