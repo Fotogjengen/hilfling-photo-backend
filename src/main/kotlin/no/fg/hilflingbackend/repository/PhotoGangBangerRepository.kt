@@ -139,7 +139,7 @@ class PhotoGangBangerRepository(
 
     validatePositionAssignments(dto.positions)
 
-    val created = 
+    val created =
       database.insert(PhotoGangBangers) {
         set(it.id, dto.photoGangBangerId.id)
         set(it.isActive, dto.isActive)
@@ -151,7 +151,7 @@ class PhotoGangBangerRepository(
         set(it.email, dto.email)
         set(it.profilePicture, dto.profilePicture)
         set(it.phoneNumber, dto.phoneNumber)
-    }
+      }
 
     dto.positions.forEach { position ->
       database.insert(PhotoGangBangerToPositions) {

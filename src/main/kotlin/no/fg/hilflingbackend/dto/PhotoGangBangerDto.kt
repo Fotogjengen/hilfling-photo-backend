@@ -1,5 +1,7 @@
 package no.fg.hilflingbackend.dto
 
+import com.fasterxml.jackson.annotation.JsonCreator
+import com.fasterxml.jackson.annotation.JsonProperty
 import no.fg.hilflingbackend.model.PhotoGangBanger
 import no.fg.hilflingbackend.valueobject.SemesterStart
 import java.util.UUID
@@ -45,8 +47,21 @@ fun PhotoGangBangerDto.toEntity(): PhotoGangBanger =
     phoneNumber = this@toEntity.phoneNumber
   }
 
-data class PhotoGangBangerId(
-  override val id: UUID = UUID.randomUUID(),
+class PhotoGangBangerId @JsonCreator constructor(
+  @JsonProperty("id") id: String? = null,
 ) : UuidId {
+  override val id: UUID =
+    id
+      ?.takeIf { it.isNotBlank() }
+      ?.let(UUID::fromString)
+      ?: UUID.randomUUID()
+
+  constructor(id: UUID) : this(id.toString())
+
+  override fun equals(other: Any?): Boolean =
+    this === other || (other is PhotoGangBangerId && id == other.id)
+
+  override fun hashCode(): Int = id.hashCode()
+
   override fun toString(): String = id.toString()
 }
