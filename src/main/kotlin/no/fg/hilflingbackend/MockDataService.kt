@@ -29,6 +29,7 @@ import no.fg.hilflingbackend.dto.PositionId
 import no.fg.hilflingbackend.dto.SecurityLevelDto
 import no.fg.hilflingbackend.model.PhotoGangBangerToPositions
 import no.fg.hilflingbackend.model.Photos
+import no.fg.hilflingbackend.model.PositionToPermissions
 import no.fg.hilflingbackend.repository.AlbumRepository
 import no.fg.hilflingbackend.repository.CategoryRepository
 import no.fg.hilflingbackend.repository.EventOwnerRepository
@@ -39,6 +40,7 @@ import no.fg.hilflingbackend.repository.PhotoRepository
 import no.fg.hilflingbackend.repository.PlaceRepository
 import no.fg.hilflingbackend.repository.PositionRepository
 import no.fg.hilflingbackend.valueobject.Email
+import no.fg.hilflingbackend.valueobject.Permission
 import no.fg.hilflingbackend.valueobject.PhoneNumber
 import no.fg.hilflingbackend.valueobject.SecurityLevelType
 import no.fg.hilflingbackend.valueobject.SemesterStart
@@ -813,14 +815,14 @@ class MockDataService {
             UUID.fromString("6a89444f-25f6-44d9-8a73-94587d72b839"),
           ),
         isActive = true,
-        isPang = true,
-        semesterStart = SemesterStart("H2018"),
-        firstName = "Sindre",
-        lastName = "Sivertsen",
-        username = "sjsivert",
-        email = "emailtest@gmail.com",
+        isPang = false,
+        semesterStart = SemesterStart("H2024"),
+        firstName = "Gjengsjef",
+        lastName = "Testbruker",
+        username = "gjengsjef",
+        email = "gjengsjef@samfundet.no",
         profilePicture = "",
-        phoneNumber = "91382506",
+        phoneNumber = "00000000",
       ),
       PhotoGangBangerDto(
         photoGangBangerId =
@@ -828,14 +830,60 @@ class MockDataService {
             UUID.fromString("7a89444f-25f6-44d9-8a73-94587d72b839"),
           ),
         isActive = true,
-        isPang = true,
-        semesterStart = SemesterStart("H2018"),
-        firstName = "Caroline",
-        lastName = "Sandbråten",
-        username = "Carossa",
-        email = "emailtest@gmail.com",
+        isPang = false,
+        semesterStart = SemesterStart("H2024"),
+        firstName = "Web",
+        lastName = "Testbruker",
+        username = "web",
+        email = "web@samfundet.no",
         profilePicture = "",
-        phoneNumber = "91382506",
+        phoneNumber = "00000000",
+      ),
+      PhotoGangBangerDto(
+        photoGangBangerId =
+          PhotoGangBangerId(
+            UUID.fromString("8a89444f-25f6-44d9-8a73-94587d72b839"),
+          ),
+        isActive = true,
+        isPang = false,
+        semesterStart = SemesterStart("H2024"),
+        firstName = "DeNye",
+        lastName = "Testbruker",
+        username = "denye",
+        email = "denye@samfundet.no",
+        profilePicture = "",
+        phoneNumber = "00000000",
+      ),
+      // Pang users — former position holders, position ended (semesterEnd != null)
+      PhotoGangBangerDto(
+        photoGangBangerId =
+          PhotoGangBangerId(
+            UUID.fromString("9a89444f-25f6-44d9-8a73-94587d72b839"),
+          ),
+        isActive = true,
+        isPang = true,
+        semesterStart = SemesterStart("V2022"),
+        firstName = "Pang",
+        lastName = "Gjengsjef",
+        username = "pang_gjengsjef",
+        email = "pang@samfundet.no",
+        profilePicture = "",
+        phoneNumber = "00000000",
+      ),
+      PhotoGangBangerDto(
+        photoGangBangerId =
+          PhotoGangBangerId(
+            UUID.fromString("aa89444f-25f6-44d9-8a73-94587d72b839"),
+          ),
+        isActive = true,
+        isPang = true,
+        semesterStart = SemesterStart("V2022"),
+        firstName = "Pang",
+        lastName = "Web",
+        username = "pang_web",
+        email = "pang@samfundet.no",
+        profilePicture = "",
+        phoneNumber = "00000000",
       ),
     )
 
@@ -843,6 +891,7 @@ class MockDataService {
     val pgbs = generatePhotoGangBangerData()
     val positions = generatePositionData()
     return listOf(
+      // Active position holders (semesterEnd = null)
       PhotoGangBangerPositionDto(
         photoGangBangerId = pgbs[0].photoGangBangerId,
         semesterStart = SemesterStart("H2024"),
@@ -856,6 +905,28 @@ class MockDataService {
         photoGangBangerDto = pgbs[1],
         position = positions[1],
         semesterEnd = null,
+      ),
+      PhotoGangBangerPositionDto(
+        photoGangBangerId = pgbs[2].photoGangBangerId,
+        semesterStart = SemesterStart("H2024"),
+        photoGangBangerDto = pgbs[2],
+        position = positions[2],
+        semesterEnd = null,
+      ),
+      // Pang users — former position holders (semesterEnd != null)
+      PhotoGangBangerPositionDto(
+        photoGangBangerId = pgbs[3].photoGangBangerId,
+        semesterStart = SemesterStart("V2022"),
+        photoGangBangerDto = pgbs[3],
+        position = positions[0],
+        semesterEnd = SemesterStart("H2023"),
+      ),
+      PhotoGangBangerPositionDto(
+        photoGangBangerId = pgbs[4].photoGangBangerId,
+        semesterStart = SemesterStart("V2022"),
+        photoGangBangerDto = pgbs[4],
+        position = positions[1],
+        semesterEnd = SemesterStart("H2023"),
       ),
     )
   }
@@ -878,7 +949,24 @@ class MockDataService {
         title = "Web",
         email = Email("fg-web@samfundet.no"),
       ),
+      PositionDto(
+        positionId =
+          PositionId(
+            (UUID.fromString("bdd0cf5a-c952-41b8-8b83-c071da51f944")),
+          ),
+        title = "DeNye",
+        email = Email("denye@samfundet.no"),
+      ),
     )
+
+  fun generatePositionPermissionData(): List<Pair<UUID, Permission>> {
+    val positions = generatePositionData()
+    val gjengsjef = positions[0].positionId.id
+    val web = positions[1].positionId.id
+    // DeNye (positions[2]) intentionally gets no permissions
+    val all = Permission.entries
+    return all.map { gjengsjef to it } + all.map { web to it }
+  }
 
   fun seedMockData() {
     println(">>> seedMockData called at " + java.time.Instant.now())
@@ -887,6 +975,14 @@ class MockDataService {
     generatePositionData().forEach { positionRepository.create(it) }
     println("Position seeded")
     println(positionRepository.findAll())
+
+    generatePositionPermissionData().forEach { (positionId, permission) ->
+      database.insert(PositionToPermissions) {
+        set(it.positionId, positionId)
+        set(it.permission, permission.name)
+      }
+    }
+    println("Position permissions seeded")
 
     generatePhotoGangBangerData().forEach { photoGangBangerRepository.create(it) }
     generatePhotoGangBangerPositionData().forEach { pgbPosition ->

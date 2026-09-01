@@ -2,6 +2,7 @@ package no.fg.hilflingbackend.service
 
 import no.fg.hilflingbackend.dto.JwtTokenPayload
 import no.fg.hilflingbackend.repository.PhotoGangBangerRepository
+import no.fg.hilflingbackend.valueobject.Permission
 import no.fg.hilflingbackend.valueobject.SecurityLevelType
 import org.springframework.stereotype.Service
 
@@ -9,20 +10,21 @@ import org.springframework.stereotype.Service
 class AuthService(
   val jwtService: JwtService,
   val photoGangBangerRepository: PhotoGangBangerRepository,
+  val positionService: PositionService,
 ) {
   fun login(username: String): String {
     val fgUser = photoGangBangerRepository.findByUsername(username)
 
     if (fgUser != null) {
+      val activePosition = fgUser.positions.firstOrNull { it.isActive }
+      val permissions: List<Permission> =
+        activePosition?.let { positionService.findPermissionsByPositionId(it.positionId) } ?: emptyList()
       return jwtService.generateToken(
         JwtTokenPayload(
           username = username,
-          positionId =
-            fgUser.positions
-              .firstOrNull { it.isActive }
-              ?.positionId
-              ?.toString(),
+          positionId = activePosition?.positionId?.toString(),
           securityLevel = SecurityLevelType.FG,
+          permissions = permissions,
         ),
       )
     }
