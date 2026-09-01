@@ -1,7 +1,12 @@
 package no.fg.hilflingbackend.dto
 
-import com.fasterxml.jackson.annotation.JsonCreator
-import com.fasterxml.jackson.annotation.JsonProperty
+import com.fasterxml.jackson.core.JsonParser
+import com.fasterxml.jackson.core.JsonToken
+import com.fasterxml.jackson.databind.DeserializationContext
+import com.fasterxml.jackson.databind.JsonDeserializer
+import com.fasterxml.jackson.databind.JsonMappingException
+import com.fasterxml.jackson.databind.JsonNode
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize
 import no.fg.hilflingbackend.model.PhotoGangBanger
 import no.fg.hilflingbackend.valueobject.SemesterStart
 import java.util.UUID
@@ -47,21 +52,32 @@ fun PhotoGangBangerDto.toEntity(): PhotoGangBanger =
     phoneNumber = this@toEntity.phoneNumber
   }
 
-class PhotoGangBangerId @JsonCreator constructor(
-  @JsonProperty("id") id: String? = null,
+@JsonDeserialize(using = PhotoGangBangerIdDeserializer::class)
+data class PhotoGangBangerId(
+  override val id: UUID = UUID.randomUUID(),
 ) : UuidId {
-  override val id: UUID =
-    id
-      ?.takeIf { it.isNotBlank() }
-      ?.let(UUID::fromString)
-      ?: UUID.randomUUID()
-
-  constructor(id: UUID) : this(id.toString())
-
-  override fun equals(other: Any?): Boolean =
-    this === other || (other is PhotoGangBangerId && id == other.id)
-
-  override fun hashCode(): Int = id.hashCode()
-
   override fun toString(): String = id.toString()
+}
+
+class PhotoGangBangerIdDeserializer : JsonDeserializer<PhotoGangBangerId>() {
+  override fun deserialize(
+    parser: JsonParser,
+    context: DeserializationContext,
+  ): PhotoGangBangerId =
+    when (parser.currentToken()) {
+      JsonToken.START_OBJECT -> {
+        val node = parser.codec.readTree<JsonNode>(parser)
+        node.get("id")?.takeUnless { it.isNull }?.asText().toPhotoGangBangerId()
+      }
+      JsonToken.VALUE_STRING -> parser.valueAsString.toPhotoGangBangerId()
+      JsonToken.VALUE_NULL -> PhotoGangBangerId()
+      else -> throw JsonMappingException.from(parser, "Expected PhotoGangBangerId object, string, or null")
+    }
+
+  private fun String?.toPhotoGangBangerId(): PhotoGangBangerId =
+    if (isNullOrBlank()) {
+      PhotoGangBangerId()
+    } else {
+      PhotoGangBangerId(UUID.fromString(this))
+    }
 }

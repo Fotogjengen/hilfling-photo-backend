@@ -1,3 +1,4 @@
+import com.fasterxml.jackson.databind.ObjectMapper
 import no.fg.hilflingbackend.dto.PhotoGangBangerId
 import org.spekframework.spek2.Spek
 import org.spekframework.spek2.style.specification.describe
@@ -10,8 +11,9 @@ class PhotoGangBangerDtoSpec :
       // TODO: Test PhotoGangBangerDto
 
       it("generates a PhotoGangBangerId when input id is empty") {
-        val first = PhotoGangBangerId("")
-        val second = PhotoGangBangerId("")
+        val mapper = ObjectMapper()
+        val first = mapper.readValue("""{"id": ""}""", PhotoGangBangerId::class.java)
+        val second = mapper.readValue("""{"id": ""}""", PhotoGangBangerId::class.java)
 
         assertNotEquals(first.id, second.id)
       }
