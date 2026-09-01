@@ -11,6 +11,7 @@ import me.liuwj.ktorm.dsl.insert
 import me.liuwj.ktorm.dsl.map
 import me.liuwj.ktorm.dsl.orderBy
 import me.liuwj.ktorm.dsl.select
+import me.liuwj.ktorm.dsl.update
 import me.liuwj.ktorm.dsl.where
 import me.liuwj.ktorm.entity.add
 import me.liuwj.ktorm.entity.filter
@@ -21,6 +22,7 @@ import no.fg.hilflingbackend.dto.MemberPositionDto
 import no.fg.hilflingbackend.dto.Page
 import no.fg.hilflingbackend.dto.PhotoGangBangerDto
 import no.fg.hilflingbackend.dto.PhotoGangBangerPatchRequestDto
+import no.fg.hilflingbackend.dto.PhotoGangBangerPositionPatchRequestDto
 import no.fg.hilflingbackend.dto.PositionId
 import no.fg.hilflingbackend.dto.toEntity
 import no.fg.hilflingbackend.exceptions.EntityExistsException
@@ -167,6 +169,23 @@ class PhotoGangBangerRepository(
       )
 
     database.photo_gang_bangers.update(updated.toEntity())
+    return findById(dto.photoGangBangerId.id)
+  }
+
+  fun patchPosition(dto: PhotoGangBangerPositionPatchRequestDto): PhotoGangBangerDto? {
+    findById(dto.photoGangBangerId.id)
+      ?: throw EntityNotFoundException("Could not find PhotoGangBanger")
+
+    database.update(PhotoGangBangerToPositions) {
+      if (dto.position != null) {
+        set(it.positionId, dto.position.positionId.id)
+      }
+      set(it.semesterEnd, dto.semesterEnd?.value)
+      where {
+        (it.photoGangBangerId eq dto.photoGangBangerId.id) and
+          (it.semesterStart eq dto.semesterStart.value)
+      }
+    }
     return findById(dto.photoGangBangerId.id)
   }
 

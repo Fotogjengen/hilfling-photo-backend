@@ -1,7 +1,7 @@
 package no.fg.hilflingbackend.dto
 
-import no.fg.hilflingbackend.valueobject.SecurityLevelType
 import no.fg.hilflingbackend.valueobject.Permission
+import no.fg.hilflingbackend.valueobject.SecurityLevelType
 
 data class JwtTokenPayload(
   val username: String,

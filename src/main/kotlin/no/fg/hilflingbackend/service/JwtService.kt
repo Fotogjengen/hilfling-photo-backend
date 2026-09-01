@@ -89,9 +89,11 @@ class JwtService(
       username = claims.subject,
       positionId = claims.get("positionId", String::class.java),
       securityLevel = SecurityLevelType.valueOf(claims.get("securityLevel", String::class.java)),
-      permissions = claims.get("permissions", List::class.java)
-        ?.mapNotNull { runCatching { Permission.valueOf(it.toString()) }.getOrNull() }
-        ?: emptyList(),
+      permissions =
+        claims
+          .get("permissions", List::class.java)
+          ?.mapNotNull { runCatching { Permission.valueOf(it.toString()) }.getOrNull() }
+          ?: emptyList(),
     )
   }
 
