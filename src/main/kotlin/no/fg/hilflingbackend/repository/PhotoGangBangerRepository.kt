@@ -139,17 +139,18 @@ class PhotoGangBangerRepository(
 
     validatePositionAssignments(dto.positions)
 
-    val created = database.insert(PhotoGangBangers) {
-      set(it.id, dto.photoGangBangerId.id)
-      set(it.isActive, dto.isActive)
-      set(it.isPang, dto.isPang)
-      set(it.semesterStart, dto.semesterStart.value)
-      set(it.firstName, dto.firstName)
-      set(it.lastName, dto.lastName)
-      set(it.username, dto.username)
-      set(it.email, dto.email)
-      set(it.profilePicture, dto.profilePicture)
-      set(it.phoneNumber, dto.phoneNumber)
+    val created = 
+      database.insert(PhotoGangBangers) {
+        set(it.id, dto.photoGangBangerId.id)
+        set(it.isActive, dto.isActive)
+        set(it.isPang, dto.isPang)
+        set(it.semesterStart, dto.semesterStart.value)
+        set(it.firstName, dto.firstName)
+        set(it.lastName, dto.lastName)
+        set(it.username, dto.username)
+        set(it.email, dto.email)
+        set(it.profilePicture, dto.profilePicture)
+        set(it.phoneNumber, dto.phoneNumber)
     }
 
     dto.positions.forEach { position ->
