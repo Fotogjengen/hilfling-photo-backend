@@ -67,11 +67,22 @@ class PhotoGangBangerIdDeserializer : JsonDeserializer<PhotoGangBangerId>() {
     when (parser.currentToken()) {
       JsonToken.START_OBJECT -> {
         val node = parser.codec.readTree<JsonNode>(parser)
-        node.get("id")?.takeUnless { it.isNull }?.asText().toPhotoGangBangerId()
+        val idNode = node.get("id")
+        val id = if (idNode == null || idNode.isNull) null else idNode.asText()
+        id.toPhotoGangBangerId()
       }
-      JsonToken.VALUE_STRING -> parser.valueAsString.toPhotoGangBangerId()
-      JsonToken.VALUE_NULL -> PhotoGangBangerId()
-      else -> throw JsonMappingException.from(parser, "Expected PhotoGangBangerId object, string, or null")
+
+      JsonToken.VALUE_STRING -> {
+        parser.valueAsString.toPhotoGangBangerId()
+      }
+
+      JsonToken.VALUE_NULL -> {
+        PhotoGangBangerId()
+      }
+
+      else -> {
+        throw JsonMappingException.from(parser, "Expected PhotoGangBangerId object, string, or null")
+      }
     }
 
   private fun String?.toPhotoGangBangerId(): PhotoGangBangerId =
