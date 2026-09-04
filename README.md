@@ -29,22 +29,15 @@ Then run:
 
 # Start the project
 
-## For front-end developers
+## For dev-version
 
 Run the command. This will run all the necessary services for the backend, including the hilfling service itself.
-`docker-compose up -d`
+`docker compose up`
 
-## For back-end developers
+## For prod-version
 
-Run the command mentioned below. This will run all necessary services for the backend, except the hilfling service itself.
-`docker-compose -f docker-compose.dev up -d`
-
-This means in order to start the hilfing service you must run the following command:
-
-`mvn spring-boot:run`
-
-To use prod database
-`mvn spring-boot:run -Drun.profiles=prod`
+Run this command. Runs everything BUT pgadmin and postgres, as azure will run these in prod
+`docker compose --profile prod up`
 
 # Linting
 

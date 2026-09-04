@@ -15,6 +15,9 @@ services:
     image: "traefik:v3.7.12"
     container_name: "traefik"
     restart: unless-stopped
+    profiles:
+      - dev
+      - prod
     command:
       - "--providers.docker=true"
       - "--providers.docker.exposedbydefault=false"
@@ -40,6 +43,9 @@ services:
   backend:
     container_name: backend
     restart: unless-stopped
+    profiles:
+      - dev
+      - prod
     build:
       context: .
       dockerfile: ./Dockerfile
