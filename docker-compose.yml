@@ -55,6 +55,8 @@ services:
       - traefik
     expose:
       - "8000"
+    ports:
+      - "127.0.0.1:8000:8000"
     environment:
       # Prefer the external Azure/Postgres host configured in the deployment env file.
       # Fall back to the local docker-compose postgres service only for local development.
