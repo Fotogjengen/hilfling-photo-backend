@@ -3,6 +3,7 @@ package no.fg.hilflingbackend.service
 import io.jsonwebtoken.Claims
 import io.jsonwebtoken.Jwts
 import no.fg.hilflingbackend.dto.JwtTokenPayload
+import no.fg.hilflingbackend.valueobject.Permission
 import no.fg.hilflingbackend.valueobject.SecurityLevelType
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.security.core.userdetails.UserDetails
@@ -35,6 +36,7 @@ class JwtService(
         "username" to payload.username,
         "positionId" to payload.positionId,
         "securityLevel" to payload.securityLevel,
+        "permissions" to payload.permissions.map { it.name },
       )
 
     return Jwts
@@ -87,6 +89,11 @@ class JwtService(
       username = claims.subject,
       positionId = claims.get("positionId", String::class.java),
       securityLevel = SecurityLevelType.valueOf(claims.get("securityLevel", String::class.java)),
+      permissions =
+        claims
+          .get("permissions", List::class.java)
+          ?.mapNotNull { runCatching { Permission.valueOf(it.toString()) }.getOrNull() }
+          ?: emptyList(),
     )
   }
 

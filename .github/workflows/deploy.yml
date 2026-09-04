@@ -1,0 +1,14 @@
+name: Deploy
+on:
+  push:
+    branches: [master]
+jobs:
+  deploy:
+    runs-on: self-hosted
+    #this runs directly on our backend-vm.
+    #Lowkey dangerous, but fine as long as this is the only workflow that uses it
+    steps:
+      - uses: actions/checkout@v4
+      - run: |
+          docker compose --env-file /home/azureuser/hilfling-secrets/.env up -d --build
+          docker image prune -f

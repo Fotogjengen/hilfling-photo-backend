@@ -1,6 +1,7 @@
 package no.fg.hilflingbackend.controller
 
 import jakarta.servlet.http.HttpServletRequest
+import no.fg.hilflingbackend.configurations.RequirePermission
 import no.fg.hilflingbackend.configurations.hilflingToken
 import no.fg.hilflingbackend.dto.Page
 import no.fg.hilflingbackend.dto.PhotoDto
@@ -11,6 +12,7 @@ import no.fg.hilflingbackend.dto.PhotoReservationDto
 import no.fg.hilflingbackend.dto.PhotoUploadRequestDto
 import no.fg.hilflingbackend.service.JwtService
 import no.fg.hilflingbackend.service.PhotoService
+import no.fg.hilflingbackend.valueobject.Permission
 import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
@@ -98,8 +100,8 @@ class PhotoController(
     @PathVariable id: UUID,
     request: HttpServletRequest,
   ): PhotoDto {
-    val securityLevel = jwtService.extractSecurityLevel(request.hilflingToken())
-    return photoService.delete(id, securityLevel)
+    val payload = jwtService.extractPayload(request.hilflingToken()!!)
+    return photoService.delete(id, payload.securityLevel, payload.permissions)
   }
 
   @PutMapping("/{id}/good-picture")

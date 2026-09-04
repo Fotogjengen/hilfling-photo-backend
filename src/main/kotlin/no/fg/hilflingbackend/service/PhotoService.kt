@@ -12,10 +12,12 @@ import no.fg.hilflingbackend.repository.GangRepository
 import no.fg.hilflingbackend.repository.MotiveRepository
 import no.fg.hilflingbackend.repository.PhotoGangBangerRepository
 import no.fg.hilflingbackend.repository.PhotoRepository
+import no.fg.hilflingbackend.valueobject.Permission
 import no.fg.hilflingbackend.valueobject.SecurityLevelType
 import org.springframework.security.access.AccessDeniedException
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
+import java.time.LocalDate
 import java.util.UUID
 
 @Service
@@ -117,6 +119,7 @@ class PhotoService(
   fun delete(
     photoId: UUID,
     userSecurityLevel: SecurityLevelType,
+    userPermissions: List<Permission>,
   ): PhotoDto {
     if (userSecurityLevel != SecurityLevelType.FG) {
       throw AccessDeniedException("Only users with FG security level can delete photos")
@@ -125,6 +128,12 @@ class PhotoService(
     val photo =
       photoRepository.findById(photoId, userSecurityLevel)
         ?: throw EntityNotFoundException("Photo $photoId not found")
+
+    val olderThanThirtyDays = photo.dateUploaded.isBefore(LocalDate.now().minusDays(30))
+    if (olderThanThirtyDays && Permission.PHOTO_DELETE_OLD !in userPermissions) {
+      throw AccessDeniedException("Deleting photos older than 30 days requires the PHOTO_DELETE_OLD permission")
+    }
+
     photoRepository.deletePhoto(photoId)
     return photo
   }

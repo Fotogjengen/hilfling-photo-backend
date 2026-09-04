@@ -17,6 +17,13 @@ CREATE TABLE POSITION
     date_deleted DATE DEFAULT NULL
 );
 
+CREATE TABLE POSITION_TO_PERMISSION
+(
+    position_id UUID NOT NULL REFERENCES POSITION (id) ON DELETE CASCADE,
+    permission  VARCHAR(40) NOT NULL,
+    PRIMARY KEY (position_id, permission)
+);
+
 CREATE TABLE GANG
 (
     id           uuid PRIMARY KEY,
@@ -106,11 +113,6 @@ CREATE TABLE PHOTO_GANG_BANGER_TO_POSITION
     PRIMARY KEY (photo_gang_banger_id, semester_start),
     UNIQUE (position_id, semester_start)
 );
-
-/* Only one active position per member */
-CREATE UNIQUE INDEX one_active_position_per_member
-    ON PHOTO_GANG_BANGER_TO_POSITION (photo_gang_banger_id)
-    WHERE semester_end IS NULL;
 
 CREATE TABLE MOTIVE
 (
