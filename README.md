@@ -4,6 +4,14 @@ Photo backend.
 
 Resource server for hilfling app>
 
+# Test-users
+
+- gjengsjef
+- web
+- denye
+- pang_gjengsjef
+- pang_web
+
 # Installation
 
 First install required developer SDKs

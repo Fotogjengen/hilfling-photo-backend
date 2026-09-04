@@ -1,11 +1,14 @@
 package no.fg.hilflingbackend.controller
 
 import hilfling.backend.hilfling.exceptions.RestExceptionHandler
+import no.fg.hilflingbackend.configurations.RequirePermission
 import no.fg.hilflingbackend.dto.Page
 import no.fg.hilflingbackend.dto.PhotoGangBangerDto
 import no.fg.hilflingbackend.dto.PhotoGangBangerPatchRequestDto
+import no.fg.hilflingbackend.dto.PhotoGangBangerPositionPatchRequestDto
 import no.fg.hilflingbackend.repository.PhotoGangBangerRepository
 import no.fg.hilflingbackend.utils.ResponseCreated
+import no.fg.hilflingbackend.valueobject.Permission
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PatchMapping
@@ -52,6 +55,7 @@ class PhotoGangBangerController(
   ): Page<PhotoGangBangerDto> = repository.findAllInactivePangs(page = 0, pageSize = 100)
 
   @PostMapping
+  @RequirePermission(Permission.USER_MANAGE)
   fun create(
     @RequestBody dto: PhotoGangBangerDto,
   ): ResponseEntity<Int> {
@@ -60,7 +64,14 @@ class PhotoGangBangerController(
   }
 
   @PatchMapping()
+  @RequirePermission(Permission.USER_MANAGE)
   fun patch(
     @RequestBody dto: PhotoGangBangerPatchRequestDto,
   ): PhotoGangBangerDto? = repository.patch(dto)
+
+  @PatchMapping("/positions")
+  @RequirePermission(Permission.USER_MANAGE)
+  fun patchPosition(
+    @RequestBody dto: PhotoGangBangerPositionPatchRequestDto,
+  ): PhotoGangBangerDto? = repository.patchPosition(dto)
 }

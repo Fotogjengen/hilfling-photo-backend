@@ -38,3 +38,8 @@ object PhotoGangBangerToPositions : Table<Nothing>("photo_gang_banger_to_positio
   val semesterStart = varchar("semester_start")
   val semesterEnd = varchar("semester_end")
 }
+
+object PositionToPermissions : Table<Nothing>("position_to_permission") {
+  val positionId = uuid("position_id")
+  val permission = varchar("permission")
+}
