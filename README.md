@@ -14,18 +14,9 @@ Resource server for hilfling app>
 
 # Installation
 
-First install required developer SDKs
-
-## Prerequisits
-
-First install required packages:
-
-- Kotlin
-- Maven
-- KTLint
-
-Then run:
-`mvn clean install`
+Install Docker with Compose (JDK 21 is only needed for local Java builds).
+Copy `.env.example` to `.env`, keep `COMPOSE_PROFILES=dev`, and fill in the JWT keys as described there.
+For Docker, set `DATABASE_URL=jdbc:postgresql://postgres:5432/hilflingdb`, then run `docker compose up --build`.
 
 # Start the project
 
@@ -53,37 +44,15 @@ To check linting run:
 To automaticly fix formatting run:
 `ktlint --format .`
 
-## Git pre-commit hook
-
-To install git pre-commit hook and avoid commits that do not follow formatting guidelines run:
-`ktlint --install-git-pre-commit-hook`
-
-# Build
-
-`mvn package`
-
-run the built package
-`java --jar target/hilfling-0.0.1.SNAPSHOT.jar`
-
-## Configuration
-
 ### Database
 
-To specify a different database connection
+Set the database connection in `.env`. For Docker development:
 
-Set these environment variables:
-
-```
-export LISTENING_IP=localhost
-export LISTENING_PORT=8080
-
-export DATABASE_USERNAME=<username>
-export DATABASE_PASSWORD=<password>
-export DATABASE_URL=jdbc:postgresql://<ip:port>/<database name>
-export DATABASE_DRIVER=org.postgresql.Driver
+```dotenv
+DATABASE_URL=jdbc:postgresql://postgres:5432/hilflingdb
 ```
 
-[https://www.baeldung.com/spring-properties-file-outside-jar](https://www.baeldung.com/spring-properties-file-outside-jar)
+Use `localhost` instead of `postgres` when running the backend outside Docker, and set these variables in your shell or IDE. Production uses the external database credentials from the server's env file.
 
 ### Security
 
@@ -92,10 +61,6 @@ To set update CORS origins, set the `CORS_ALLOWED_ORIGINS` env variable. The aut
 ## Build docker image
 
 `mvn spring-boot:build-image`
-
-# Testing
-
-https://www.baeldung.com/kotlin-speek
 
 ## PGAdmin
 
