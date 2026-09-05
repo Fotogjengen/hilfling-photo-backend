@@ -14,6 +14,7 @@ import me.liuwj.ktorm.dsl.select
 import me.liuwj.ktorm.dsl.update
 import me.liuwj.ktorm.dsl.where
 import me.liuwj.ktorm.entity.add
+import me.liuwj.ktorm.entity.any
 import me.liuwj.ktorm.entity.filter
 import me.liuwj.ktorm.entity.find
 import me.liuwj.ktorm.entity.toList
@@ -30,10 +31,12 @@ import no.fg.hilflingbackend.model.PhotoGangBangerToPositions
 import no.fg.hilflingbackend.model.PhotoGangBangers
 import no.fg.hilflingbackend.model.Positions
 import no.fg.hilflingbackend.model.photo_gang_bangers
+import no.fg.hilflingbackend.model.positions
 import no.fg.hilflingbackend.model.toDto
 import no.fg.hilflingbackend.valueobject.Email
 import no.fg.hilflingbackend.valueobject.SemesterStart
 import org.springframework.stereotype.Repository
+import org.springframework.transaction.annotation.Transactional
 import java.util.UUID
 
 interface IPhotoGangBangerRepository {
@@ -131,21 +134,61 @@ class PhotoGangBangerRepository(
     return Page(page = page, pageSize = pageSize, totalRecords = photoGangBangers.totalRecords, currentList = photoGangBangers.toList().map { withPositions(it.toDto()) })
   }
 
+  @Transactional
   fun create(dto: PhotoGangBangerDto): Int {
     val existing = database.photo_gang_bangers.find { it.username eq dto.username }
     if (existing != null) throw EntityExistsException("PhotoGangBanger already exists")
 
-    return database.insert(PhotoGangBangers) {
-      set(it.id, dto.photoGangBangerId.id)
-      set(it.isActive, dto.isActive)
-      set(it.isPang, dto.isPang)
-      set(it.semesterStart, dto.semesterStart.value)
-      set(it.firstName, dto.firstName)
-      set(it.lastName, dto.lastName)
-      set(it.username, dto.username)
-      set(it.email, dto.email)
-      set(it.profilePicture, dto.profilePicture)
-      set(it.phoneNumber, dto.phoneNumber)
+    validatePositionAssignments(dto.positions)
+
+    val created =
+      database.insert(PhotoGangBangers) {
+        set(it.id, dto.photoGangBangerId.id)
+        set(it.isActive, dto.isActive)
+        set(it.isPang, dto.isPang)
+        set(it.semesterStart, dto.semesterStart.value)
+        set(it.firstName, dto.firstName)
+        set(it.lastName, dto.lastName)
+        set(it.username, dto.username)
+        set(it.email, dto.email)
+        set(it.profilePicture, dto.profilePicture)
+        set(it.phoneNumber, dto.phoneNumber)
+      }
+
+    dto.positions.forEach { position ->
+      database.insert(PhotoGangBangerToPositions) {
+        set(it.photoGangBangerId, dto.photoGangBangerId.id)
+        set(it.positionId, position.positionId.id)
+        set(it.semesterStart, position.semesterStart.value)
+      }
+    }
+
+    return created
+  }
+
+  private fun validatePositionAssignments(positions: List<MemberPositionDto>) {
+    val duplicates =
+      positions
+        .groupingBy { it.positionId.id to it.semesterStart.value }
+        .eachCount()
+        .filterValues { it > 1 }
+
+    if (duplicates.isNotEmpty()) {
+      val duplicateDescriptions =
+        duplicates.keys.joinToString(", ") { (positionId, semesterStart) ->
+          "$positionId/$semesterStart"
+        }
+      throw IllegalArgumentException("Duplicate position assignments in request: $duplicateDescriptions")
+    }
+
+    val missingPositionIds =
+      positions
+        .map { it.positionId.id }
+        .distinct()
+        .filterNot { positionId -> database.positions.any { it.id eq positionId } }
+
+    if (missingPositionIds.isNotEmpty()) {
+      throw IllegalArgumentException("Unknown positionId(s): ${missingPositionIds.joinToString(", ")}")
     }
   }
 

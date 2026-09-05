@@ -9,6 +9,7 @@ jobs:
     #Lowkey dangerous, but fine as long as this is the only workflow that uses it
     steps:
       - uses: actions/checkout@v4
-      - run: |
-          docker compose --env-file /home/azureuser/hilfling-secrets/.env up -d --build
+      - name: Deploy production
+        run: |
+          docker compose --env-file /home/azureuser/hilfling-secrets/.env --profile prod up -d --build
           docker image prune -f
