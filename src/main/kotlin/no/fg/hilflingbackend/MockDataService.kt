@@ -822,7 +822,7 @@ class MockDataService {
         username = "gjengsjef",
         email = "gjengsjef@samfundet.no",
         profilePicture = "",
-        phoneNumber = "00000000",
+        phoneNumber = "40000000",
       ),
       PhotoGangBangerDto(
         photoGangBangerId =
@@ -837,7 +837,7 @@ class MockDataService {
         username = "web",
         email = "web@samfundet.no",
         profilePicture = "",
-        phoneNumber = "00000000",
+        phoneNumber = "40000000",
       ),
       PhotoGangBangerDto(
         photoGangBangerId =
@@ -852,7 +852,7 @@ class MockDataService {
         username = "denye",
         email = "denye@samfundet.no",
         profilePicture = "",
-        phoneNumber = "00000000",
+        phoneNumber = "40000000",
       ),
       // Pang users — former position holders, position ended (semesterEnd != null)
       PhotoGangBangerDto(
@@ -868,7 +868,7 @@ class MockDataService {
         username = "pang_gjengsjef",
         email = "pang@samfundet.no",
         profilePicture = "",
-        phoneNumber = "00000000",
+        phoneNumber = "40000000",
       ),
       PhotoGangBangerDto(
         photoGangBangerId =
@@ -883,7 +883,7 @@ class MockDataService {
         username = "pang_web",
         email = "pang@samfundet.no",
         profilePicture = "",
-        phoneNumber = "00000000",
+        phoneNumber = "40000000",
       ),
     )
 
