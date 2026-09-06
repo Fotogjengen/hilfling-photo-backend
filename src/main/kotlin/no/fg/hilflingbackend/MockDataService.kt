@@ -885,6 +885,21 @@ class MockDataService {
         profilePicture = "",
         phoneNumber = "40000000",
       ),
+      PhotoGangBangerDto(
+        photoGangBangerId =
+          PhotoGangBangerId(
+            UUID.fromString("ba89444f-25f6-44d9-8a73-94587d72b839"),
+          ),
+        isActive = false,
+        isPang = true,
+        semesterStart = SemesterStart("V2020"),
+        firstName = "Gammel",
+        lastName = "Pang",
+        username = "pangpang",
+        email = "pang@samfundet.no",
+        profilePicture = "",
+        phoneNumber = "90000009",
+      ),
     )
 
   fun generatePhotoGangBangerPositionData(): List<PhotoGangBangerPositionDto> {
