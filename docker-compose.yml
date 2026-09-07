@@ -23,7 +23,6 @@ services:
       - "--providers.docker.exposedbydefault=false"
       - "--entrypoints.web.address=:80"
       - "--entrypoints.websecure.address=:443"
-      # HTTP-01 resolver — needed because arim-fg sits behind another reverse proxy
       - "--certificatesresolvers.myresolver.acme.httpchallenge=true"
       - "--certificatesresolvers.myresolver.acme.httpchallenge.entrypoint=web"
       - "--certificatesresolvers.myresolver.acme.email=fg-web@samfundet.no"
@@ -74,9 +73,10 @@ services:
       JWT_PUBLIC_KEY: ${JWT_PUBLIC_KEY}
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.backend.rule=Host(`arim-fg.samfundet.no`)"
+      - "traefik.http.routers.backend.rule=Host(`arim-fg.samfundet.no`) || Host(`${AZURE_PUBLIC_HOSTNAME}`)"
       - "traefik.http.routers.backend.entrypoints=websecure"
       - "traefik.http.routers.backend.tls.certresolver=myresolver"
+      - "traefik.http.routers.backend.tls.domains[0].main=${AZURE_PUBLIC_HOSTNAME}"
       - "traefik.http.services.backend.loadbalancer.server.port=8000"
 
   postgres:
