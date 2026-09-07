@@ -42,6 +42,44 @@ data class PhotoPatchRequestDto(
   val photoTags: List<String>?,
 )
 
+data class PhotoMoveRequestDto(
+  val targetMotiveId: UUID,
+)
+
+/**
+ * Response of POST /photos/{id}/move/reserve.
+ *
+ * The photo-provider uses this to decide whether the on-disk files must be
+ * relocated and, if so, where to move them. When [fileMoveRequired] is false
+ * the target motive lives in the same album with the same security level as
+ * the photo's current motive, so only the `motive_id` column changes and the
+ * files stay put. In that case the proxy finalises with the unchanged URLs and
+ * slot echoed back here.
+ *
+ * When [fileMoveRequired] is true, [albumName]/[pageNumber]/[imageNumber]/
+ * [securityLevel] describe the destination path the proxy must build, and the
+ * `currentImage*` fields point at the existing files to move.
+ */
+data class PhotoMoveReserveResponseDto(
+  val fileMoveRequired: Boolean,
+  val albumName: String,
+  val pageNumber: Int,
+  val imageNumber: Int,
+  val securityLevel: String,
+  val currentImageProd: String?,
+  val currentImageWeb: String?,
+  val currentImageThumb: String,
+)
+
+data class PhotoMoveFinalizeRequestDto(
+  val targetMotiveId: UUID,
+  val pageNumber: Int,
+  val imageNumber: Int,
+  val imageProd: String?,
+  val imageWeb: String,
+  val imageThumb: String,
+)
+
 data class PhotoDto(
   val photoId: PhotoId = PhotoId(),
   val goodPicture: Boolean = false,

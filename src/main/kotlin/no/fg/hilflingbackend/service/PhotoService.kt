@@ -5,6 +5,9 @@ import no.fg.hilflingbackend.dto.Page
 import no.fg.hilflingbackend.dto.PhotoDto
 import no.fg.hilflingbackend.dto.PhotoFinalizeRequestDto
 import no.fg.hilflingbackend.dto.PhotoId
+import no.fg.hilflingbackend.dto.PhotoMoveFinalizeRequestDto
+import no.fg.hilflingbackend.dto.PhotoMoveRequestDto
+import no.fg.hilflingbackend.dto.PhotoMoveReserveResponseDto
 import no.fg.hilflingbackend.dto.PhotoPositionDto
 import no.fg.hilflingbackend.dto.PhotoReservationDto
 import no.fg.hilflingbackend.dto.PhotoUploadRequestDto
@@ -195,6 +198,145 @@ class PhotoService(
       throw AccessDeniedException("Insufficient security level to modify photo $photoId")
     }
     photoRepository.updateGoodPicture(photoId, goodPicture)
+  }
+
+  /**
+   * First phase of moving a photo to a different motive.
+   *
+   * Resolves the photo's current album (via its motive) and the target motive's
+   * album. When the target motive is in the same album with the same security
+   * level, no files need to move and no slot is reserved; the response signals
+   * `fileMoveRequired = false` and echoes the unchanged slot/URLs so the proxy
+   * can finalise immediately. Otherwise a new slot is reserved in the target
+   * album (only when the album actually changes) and the response carries the
+   * destination album/slot/security level plus the current URLs so the
+   * photo-provider can relocate the on-disk files.
+   *
+   * Only FG users may move photos, matching the delete permission.
+   */
+  fun moveReserve(
+    photoId: UUID,
+    request: PhotoMoveRequestDto,
+    userSecurityLevel: SecurityLevelType,
+  ): PhotoMoveReserveResponseDto {
+    if (userSecurityLevel != SecurityLevelType.FG) {
+      throw AccessDeniedException("Only users with FG security level can move photos")
+    }
+
+    val photo =
+      photoRepository.findById(photoId, SecurityLevelType.FG)
+        ?: throw EntityNotFoundException("Photo $photoId not found")
+    val currentMotive = photo.motive
+    val currentAlbum =
+      (if (photo.analog) currentMotive.analogAlbumDto else currentMotive.albumDto)
+        ?: throw EntityNotFoundException("Photo $photoId has no ${if (photo.analog) "analog" else "digital"} album")
+
+    val targetMotive =
+      motiveRepository.findById(request.targetMotiveId)
+        ?: throw EntityNotFoundException("Motive ${request.targetMotiveId} not found")
+    val targetAlbum =
+      (if (photo.analog) targetMotive.analogAlbumDto else targetMotive.albumDto)
+        ?: throw EntityNotFoundException("Target motive ${request.targetMotiveId} has no ${if (photo.analog) "analog" else "digital"} album")
+
+    val targetSecurityLevel = targetMotive.securityLevel.securityLevelType.type
+    val sameAlbum = currentAlbum.albumId.id == targetAlbum.albumId.id
+    val sameSecurity =
+      currentMotive.securityLevel.securityLevelType == targetMotive.securityLevel.securityLevelType
+    val fileMoveRequired = !sameAlbum || !sameSecurity
+
+    if (!fileMoveRequired) {
+      return PhotoMoveReserveResponseDto(
+        fileMoveRequired = false,
+        albumName = currentAlbum.name,
+        pageNumber = photo.pageNumber,
+        imageNumber = photo.imageNumber,
+        securityLevel = targetSecurityLevel,
+        currentImageProd = photo.imageProd,
+        currentImageWeb = photo.imageWeb,
+        currentImageThumb = photo.imageThumb,
+      )
+    }
+
+    // A new slot is only needed when the album changes; a security-level-only
+    // change keeps the existing slot in the same album.
+    val reservation =
+      if (sameAlbum) {
+        null
+      } else {
+        photoReservationService.createReservation(targetAlbum.albumId.id).copy(album = targetAlbum)
+      }
+    val pageNumber = reservation?.pageNumber ?: photo.pageNumber
+    val imageNumber = reservation?.imageNumber ?: photo.imageNumber
+
+    return PhotoMoveReserveResponseDto(
+      fileMoveRequired = true,
+      albumName = targetAlbum.name,
+      pageNumber = pageNumber,
+      imageNumber = imageNumber,
+      securityLevel = targetSecurityLevel,
+      currentImageProd = photo.imageProd,
+      currentImageWeb = photo.imageWeb,
+      currentImageThumb = photo.imageThumb,
+    )
+  }
+
+  /**
+   * Second phase of moving a photo: commits the reassignment after the
+   * photo-provider has relocated the files. The security level is taken from
+   * the target motive (the source of truth), not from the request, so the DB
+   * always agrees with the motive. When the album changed, the reservation
+   * created by [moveReserve] is validated and deleted here, mirroring the
+   * upload finalise flow.
+   */
+  @Transactional
+  fun moveFinalize(
+    photoId: UUID,
+    request: PhotoMoveFinalizeRequestDto,
+    userSecurityLevel: SecurityLevelType,
+  ): PhotoDto {
+    if (userSecurityLevel != SecurityLevelType.FG) {
+      throw AccessDeniedException("Only users with FG security level can move photos")
+    }
+
+    val photo =
+      photoRepository.findById(photoId, SecurityLevelType.FG)
+        ?: throw EntityNotFoundException("Photo $photoId not found")
+    val currentMotive = photo.motive
+    val currentAlbum =
+      (if (photo.analog) currentMotive.analogAlbumDto else currentMotive.albumDto)
+        ?: throw EntityNotFoundException("Photo $photoId has no ${if (photo.analog) "analog" else "digital"} album")
+
+    val targetMotive =
+      motiveRepository.findById(request.targetMotiveId)
+        ?: throw EntityNotFoundException("Motive ${request.targetMotiveId} not found")
+    val targetAlbum =
+      (if (photo.analog) targetMotive.analogAlbumDto else targetMotive.albumDto)
+        ?: throw EntityNotFoundException("Target motive ${request.targetMotiveId} has no ${if (photo.analog) "analog" else "digital"} album")
+
+    val albumChanged = currentAlbum.albumId.id != targetAlbum.albumId.id
+    if (albumChanged) {
+      photoReservationService
+        .findReservation(targetAlbum.albumId.id, request.pageNumber, request.imageNumber)
+        ?: throw EntityNotFoundException("No reservation found for slot (page=${request.pageNumber}, image=${request.imageNumber}) in album ${targetAlbum.albumId}")
+    }
+
+    photoRepository.move(
+      photoId = photoId,
+      motiveId = request.targetMotiveId,
+      pageNumber = request.pageNumber,
+      imageNumber = request.imageNumber,
+      imageProd = request.imageProd,
+      imageWeb = request.imageWeb,
+      imageThumb = request.imageThumb,
+      securityLevel = targetMotive.securityLevel.securityLevelType.type,
+    )
+
+    if (albumChanged) {
+      photoReservationService.deleteReservation(targetAlbum.albumId.id, request.pageNumber, request.imageNumber)
+    }
+
+    return photoRepository.findById(photoId, SecurityLevelType.FG)
+      ?: throw EntityNotFoundException("Photo $photoId not found after move")
   }
 
   private fun reserveSlot(request: PhotoUploadRequestDto): PhotoReservationDto {
