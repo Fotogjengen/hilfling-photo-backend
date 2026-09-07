@@ -11,6 +11,7 @@ volumes:
   traefik-certs: # Let's Encrypt cert storage — must persist across restarts
 
 services:
+  services:
   traefik:
     image: "traefik:v3.7.12"
     container_name: "traefik"
@@ -23,7 +24,6 @@ services:
       - "--providers.docker.exposedbydefault=false"
       - "--entrypoints.web.address=:80"
       - "--entrypoints.websecure.address=:443"
-      # HTTP-01 resolver — needed because arim-fg sits behind another reverse proxy
       - "--certificatesresolvers.myresolver.acme.httpchallenge=true"
       - "--certificatesresolvers.myresolver.acme.httpchallenge.entrypoint=web"
       - "--certificatesresolvers.myresolver.acme.email=fg-web@samfundet.no"
