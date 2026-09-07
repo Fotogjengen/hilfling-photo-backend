@@ -23,9 +23,15 @@ services:
       - "--providers.docker.exposedbydefault=false"
       - "--entrypoints.web.address=:80"
       - "--entrypoints.websecure.address=:443"
+      # existing resolver — TLS-ALPN-01, for domains hitting Traefik directly
       - "--certificatesresolvers.myresolver.acme.tlschallenge=true"
       - "--certificatesresolvers.myresolver.acme.email=fg-web@samfundet.no"
       - "--certificatesresolvers.myresolver.acme.storage=/letsencrypt/acme.json"
+      # new resolver — HTTP-01, for domains behind another reverse proxy
+      - "--certificatesresolvers.httpresolver.acme.httpchallenge=true"
+      - "--certificatesresolvers.httpresolver.acme.httpchallenge.entrypoint=web"
+      - "--certificatesresolvers.httpresolver.acme.email=fg-web@samfundet.no"
+      - "--certificatesresolvers.httpresolver.acme.storage=/letsencrypt/acme-http.json"
     ports:
       - "80:80"
       - "443:443"
