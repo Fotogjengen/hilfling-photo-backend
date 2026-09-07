@@ -11,7 +11,6 @@ volumes:
   traefik-certs: # Let's Encrypt cert storage — must persist across restarts
 
 services:
-  services:
   traefik:
     image: "traefik:v3.7.12"
     container_name: "traefik"
@@ -74,9 +73,10 @@ services:
       JWT_PUBLIC_KEY: ${JWT_PUBLIC_KEY}
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.backend.rule=Host(`arim-fg.samfundet.no`)"
+      - "traefik.http.routers.backend.rule=Host(`arim-fg.samfundet.no`) || Host(`${AZURE_PUBLIC_HOSTNAME}`)"
       - "traefik.http.routers.backend.entrypoints=websecure"
       - "traefik.http.routers.backend.tls.certresolver=myresolver"
+      - "traefik.http.routers.backend.tls.domains[0].main=${AZURE_PUBLIC_HOSTNAME}"
       - "traefik.http.services.backend.loadbalancer.server.port=8000"
 
   postgres:
