@@ -7,6 +7,9 @@ import no.fg.hilflingbackend.dto.Page
 import no.fg.hilflingbackend.dto.PhotoDto
 import no.fg.hilflingbackend.dto.PhotoFinalizeRequestDto
 import no.fg.hilflingbackend.dto.PhotoGoodPictureToggleRequestDto
+import no.fg.hilflingbackend.dto.PhotoMoveFinalizeRequestDto
+import no.fg.hilflingbackend.dto.PhotoMoveRequestDto
+import no.fg.hilflingbackend.dto.PhotoMoveReserveResponseDto
 import no.fg.hilflingbackend.dto.PhotoPositionDto
 import no.fg.hilflingbackend.dto.PhotoReservationDto
 import no.fg.hilflingbackend.dto.PhotoUploadRequestDto
@@ -112,5 +115,25 @@ class PhotoController(
   ) {
     val payload = jwtService.extractPayload(request.hilflingToken()!!)
     return photoService.markAsGoodPicture(id, dto.goodPicture, payload.securityLevel)
+  }
+
+  @PostMapping("/{id}/move/reserve")
+  fun moveReserve(
+    @PathVariable id: UUID,
+    @RequestBody dto: PhotoMoveRequestDto,
+    request: HttpServletRequest,
+  ): PhotoMoveReserveResponseDto {
+    val payload = jwtService.extractPayload(request.hilflingToken()!!)
+    return photoService.moveReserve(id, dto, payload.securityLevel)
+  }
+
+  @PostMapping("/{id}/move/finalize")
+  fun moveFinalize(
+    @PathVariable id: UUID,
+    @RequestBody dto: PhotoMoveFinalizeRequestDto,
+    request: HttpServletRequest,
+  ): PhotoDto {
+    val payload = jwtService.extractPayload(request.hilflingToken()!!)
+    return photoService.moveFinalize(id, dto, payload.securityLevel)
   }
 }

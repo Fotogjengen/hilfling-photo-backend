@@ -42,6 +42,37 @@ data class PhotoPatchRequestDto(
   val photoTags: List<String>?,
 )
 
+data class PhotoMoveRequestDto(
+  val targetMotiveId: UUID,
+)
+
+/**
+ * Response of POST /photos/{id}/move/reserve.
+ *
+ * When [fileMoveRequired] is true, [albumName]/[pageNumber]/[imageNumber]/
+ * [securityLevel] describe the destination path the photo provider must build, and the
+ * `currentImage*` fields point at the existing files to move.
+ */
+data class PhotoMoveReserveResponseDto(
+  val fileMoveRequired: Boolean,
+  val albumName: String,
+  val pageNumber: Int,
+  val imageNumber: Int,
+  val securityLevel: String,
+  val currentImageProd: String?,
+  val currentImageWeb: String?,
+  val currentImageThumb: String,
+)
+
+data class PhotoMoveFinalizeRequestDto(
+  val targetMotiveId: UUID,
+  val pageNumber: Int,
+  val imageNumber: Int,
+  val imageProd: String?,
+  val imageWeb: String,
+  val imageThumb: String,
+)
+
 data class PhotoDto(
   val photoId: PhotoId = PhotoId(),
   val goodPicture: Boolean = false,
