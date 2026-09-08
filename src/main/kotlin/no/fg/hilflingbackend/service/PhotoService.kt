@@ -206,13 +206,12 @@ class PhotoService(
    * Resolves the photo's current album (via its motive) and the target motive's
    * album. When the target motive is in the same album with the same security
    * level, no files need to move and no slot is reserved; the response signals
-   * `fileMoveRequired = false` and echoes the unchanged slot/URLs so the proxy
+   * `fileMoveRequired = false` and echoes the unchanged slot/URLs so the photo-provider
    * can finalise immediately. Otherwise a new slot is reserved in the target
    * album (only when the album actually changes) and the response carries the
    * destination album/slot/security level plus the current URLs so the
    * photo-provider can relocate the on-disk files.
    *
-   * Only FG users may move photos, matching the delete permission.
    */
   fun moveReserve(
     photoId: UUID,

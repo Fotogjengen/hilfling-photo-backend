@@ -49,15 +49,8 @@ data class PhotoMoveRequestDto(
 /**
  * Response of POST /photos/{id}/move/reserve.
  *
- * The photo-provider uses this to decide whether the on-disk files must be
- * relocated and, if so, where to move them. When [fileMoveRequired] is false
- * the target motive lives in the same album with the same security level as
- * the photo's current motive, so only the `motive_id` column changes and the
- * files stay put. In that case the proxy finalises with the unchanged URLs and
- * slot echoed back here.
- *
  * When [fileMoveRequired] is true, [albumName]/[pageNumber]/[imageNumber]/
- * [securityLevel] describe the destination path the proxy must build, and the
+ * [securityLevel] describe the destination path the photo provider must build, and the
  * `currentImage*` fields point at the existing files to move.
  */
 data class PhotoMoveReserveResponseDto(
