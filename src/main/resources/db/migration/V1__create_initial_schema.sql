@@ -87,6 +87,20 @@ CREATE TABLE PHOTOGRAPHY_REQUEST
     date_deleted DATE DEFAULT NULL
 );
 
+CREATE TABLE EXTERNAL_USER
+(
+    id           uuid PRIMARY KEY,
+    date_created DATE NOT NULL DEFAULT CURRENT_DATE,
+    username     VARCHAR(20) UNIQUE,
+    password     VARCHAR(255),
+    email        VARCHAR(50),
+    full_name    VARCHAR(50),
+    security_level VARCHAR(50) CHECK (security_level IN ('HUSFOLK', 'ALLE')), 
+    description  TEXT,
+    is_active    BOOLEAN DEFAULT TRUE,
+    date_deleted DATE DEFAULT NULL
+);
+
 CREATE TABLE PHOTO_GANG_BANGER
 (
     id                  uuid PRIMARY KEY,

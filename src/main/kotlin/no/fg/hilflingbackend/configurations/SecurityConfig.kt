@@ -13,6 +13,8 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority
 import org.springframework.security.core.userdetails.User
 import org.springframework.security.core.userdetails.UserDetailsService
 import org.springframework.security.core.userdetails.UsernameNotFoundException
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
+import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.security.web.SecurityFilterChain
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter
 
@@ -48,6 +50,8 @@ class SecurityConfig(
           .requestMatchers(*swaggerWhitelist)
           .permitAll()
           .requestMatchers(HttpMethod.POST, "/auth/login")
+          .permitAll()
+        .requestMatchers(HttpMethod.POST, "/auth/external-login")
           .permitAll()
           .requestMatchers(HttpMethod.OPTIONS, "/**")
           .permitAll()
@@ -131,4 +135,7 @@ class SecurityConfig(
   fun authenticationManager(
     configuration: AuthenticationConfiguration,
   ): AuthenticationManager = configuration.authenticationManager
+
+  @Bean
+  fun passwordEncoder(): PasswordEncoder = BCryptPasswordEncoder()
 }

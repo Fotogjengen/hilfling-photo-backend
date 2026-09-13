@@ -37,6 +37,7 @@ class JwtService(
         "positionId" to payload.positionId,
         "securityLevel" to payload.securityLevel,
         "permissions" to payload.permissions.map { it.name },
+        "isExternalUser" to payload.isExternalUser,
       )
 
     return Jwts
@@ -94,6 +95,7 @@ class JwtService(
           .get("permissions", List::class.java)
           ?.mapNotNull { runCatching { Permission.valueOf(it.toString()) }.getOrNull() }
           ?: emptyList(),
+      isExternalUser = claims.get("isExternalUser", Boolean::class.java) ?: false,
     )
   }
 
