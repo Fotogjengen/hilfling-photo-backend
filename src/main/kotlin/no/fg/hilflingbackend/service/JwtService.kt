@@ -95,7 +95,7 @@ class JwtService(
           .get("permissions", List::class.java)
           ?.mapNotNull { runCatching { Permission.valueOf(it.toString()) }.getOrNull() }
           ?: emptyList(),
-      isExternalUser = claims.get("isExternalUser", Boolean::class.java) ?: false,
+      isExternalUser = claims["isExternalUser"] as? Boolean ?: false,
     )
   }
 
