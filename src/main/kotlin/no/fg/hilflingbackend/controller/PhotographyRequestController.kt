@@ -1,7 +1,9 @@
 package no.fg.hilflingbackend.controller
 
+import no.fg.hilflingbackend.configurations.RequireSecurityLevel
 import no.fg.hilflingbackend.model.PhotographyRequest
 import no.fg.hilflingbackend.repository.PhotographyRequestRepository
+import no.fg.hilflingbackend.valueobject.SecurityLevelType
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
@@ -18,14 +20,17 @@ class PhotographyRequestController {
   lateinit var repository: PhotographyRequestRepository
 
   @GetMapping("/{id}")
+  @RequireSecurityLevel(SecurityLevelType.FG)
   fun getById(
     @PathVariable("id") id: UUID,
   ): PhotographyRequest? = repository.findById(id)
 
   @GetMapping
+  @RequireSecurityLevel(SecurityLevelType.FG)
   fun getAll(): List<PhotographyRequest> = repository.findAll()
 
   @PostMapping
+  @RequireSecurityLevel(SecurityLevelType.FG)
   fun create(
     @RequestBody photographyRequest: PhotographyRequest,
   ): PhotographyRequest = repository.create(photographyRequest)

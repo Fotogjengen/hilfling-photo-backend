@@ -42,7 +42,10 @@ class AuthService(
     )
   }
 
-  fun loginExternalUser(username: String, password: String): String {
+  fun loginExternalUser(
+    username: String,
+    password: String,
+  ): String {
     val externalUser =
       externalUserRepository.findByUsername(username)
         ?: throw IllegalArgumentException("Invalid username or password")

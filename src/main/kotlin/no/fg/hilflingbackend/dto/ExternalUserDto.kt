@@ -3,7 +3,6 @@ package no.fg.hilflingbackend.dto
 import no.fg.hilflingbackend.model.ExternalUser
 import java.util.UUID
 
-
 data class ExternalUserPatchRequestDto(
   val externalUserId: ExternalUserId,
   val username: String?,
@@ -40,7 +39,7 @@ fun ExternalUserDto.toEntity(): ExternalUser {
     password = dto.password
     email = dto.email
     fullName = dto.fullName
-    securityLevel = dto.securityLevel?.securityLevelType?.type // This makes it possible to add external users with level FG, which is disallowed by the database. I cant be bothered to fix it. 
+    securityLevel = dto.securityLevel?.securityLevelType?.type // This makes it possible to add external users with level FG, which is disallowed by the database. I cant be bothered to fix it.
     description = dto.description
     isActive = dto.isActive
   }

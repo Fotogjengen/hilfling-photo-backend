@@ -46,7 +46,8 @@ class JwtAuthFilter : OncePerRequestFilter() {
       ) {
         val authorities =
           listOf(SimpleGrantedAuthority("ROLE_${payload.securityLevel.type}")) +
-            payload.permissions.map { SimpleGrantedAuthority(it.name) }
+            payload.permissions.map { SimpleGrantedAuthority(it.name) } +
+            if (payload.isExternalUser) listOf(SimpleGrantedAuthority("ROLE_EXTERNAL_USER")) else emptyList()
         val authToken = UsernamePasswordAuthenticationToken(payload.username, null, authorities)
         authToken.details = WebAuthenticationDetailsSource().buildDetails(request)
         SecurityContextHolder.getContext().authentication = authToken

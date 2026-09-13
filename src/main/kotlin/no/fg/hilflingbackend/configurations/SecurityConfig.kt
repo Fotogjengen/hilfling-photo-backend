@@ -51,7 +51,7 @@ class SecurityConfig(
           .permitAll()
           .requestMatchers(HttpMethod.POST, "/auth/login")
           .permitAll()
-        .requestMatchers(HttpMethod.POST, "/auth/external-login")
+          .requestMatchers(HttpMethod.POST, "/auth/external-login")
           .permitAll()
           .requestMatchers(HttpMethod.OPTIONS, "/**")
           .permitAll()

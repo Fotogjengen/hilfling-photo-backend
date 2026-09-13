@@ -14,15 +14,15 @@ class ExternalUserService(
 ) {
   private fun ExternalUserDto.stripPassword(): ExternalUserDto = copy(password = null)
 
-  fun findById(id: UUID): ExternalUserDto =
-    (repository.findById(id) ?: throw EntityNotFoundException("ExternalUser $id not found")).stripPassword()
+  fun findById(id: UUID): ExternalUserDto = (repository.findById(id) ?: throw EntityNotFoundException("ExternalUser $id not found")).stripPassword()
 
   fun findAll(
     page: Int,
     pageSize: Int,
-  ): Page<ExternalUserDto> = repository.findAll(page, pageSize).let { page ->
-    page.copy(currentList = page.currentList.map { it.stripPassword() })
-  }
+  ): Page<ExternalUserDto> =
+    repository.findAll(page, pageSize).let { page ->
+      page.copy(currentList = page.currentList.map { it.stripPassword() })
+    }
 
   fun create(dto: ExternalUserDto): Int = repository.create(dto)
 

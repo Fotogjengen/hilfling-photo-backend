@@ -1,8 +1,10 @@
 package no.fg.hilflingbackend.controller
 
+import no.fg.hilflingbackend.configurations.RequireSecurityLevel
 import no.fg.hilflingbackend.dto.Page
 import no.fg.hilflingbackend.dto.PurchaseOrderDto
 import no.fg.hilflingbackend.service.PurchaseOrderService
+import no.fg.hilflingbackend.valueobject.SecurityLevelType
 import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
@@ -19,22 +21,26 @@ class PurchaseOrderController(
   val purchaseOrderService: PurchaseOrderService,
 ) {
   @GetMapping("/{id}")
+  @RequireSecurityLevel(SecurityLevelType.FG)
   fun getById(
     @PathVariable("id") id: UUID,
   ): PurchaseOrderDto = purchaseOrderService.findById(id)
 
   @GetMapping
+  @RequireSecurityLevel(SecurityLevelType.FG)
   fun getAll(
     @RequestParam("page", required = false) page: Int?,
     @RequestParam("pageSize", required = false) pageSize: Int?,
   ): Page<PurchaseOrderDto> = purchaseOrderService.findAll(page ?: 0, pageSize ?: 100)
 
   @PostMapping
+  @RequireSecurityLevel(SecurityLevelType.FG)
   fun create(
     @RequestBody dto: PurchaseOrderDto,
   ): Int = purchaseOrderService.create(dto)
 
   @DeleteMapping("/{id}")
+  @RequireSecurityLevel(SecurityLevelType.FG)
   fun delete(
     @PathVariable("id") id: UUID,
   ): Int = purchaseOrderService.delete(id)
