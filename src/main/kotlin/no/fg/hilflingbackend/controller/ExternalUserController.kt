@@ -2,12 +2,12 @@ package no.fg.hilflingbackend.controller
 
 import no.fg.hilflingbackend.configurations.RequirePermission
 import no.fg.hilflingbackend.configurations.RequireSecurityLevel
-import no.fg.hilflingbackend.valueobject.SecurityLevelType
 import no.fg.hilflingbackend.dto.ExternalUserDto
 import no.fg.hilflingbackend.dto.ExternalUserPatchRequestDto
 import no.fg.hilflingbackend.dto.Page
 import no.fg.hilflingbackend.service.ExternalUserService
 import no.fg.hilflingbackend.valueobject.Permission
+import no.fg.hilflingbackend.valueobject.SecurityLevelType
 import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PatchMapping
