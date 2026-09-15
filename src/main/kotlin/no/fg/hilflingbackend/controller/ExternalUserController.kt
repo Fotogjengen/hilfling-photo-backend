@@ -1,6 +1,8 @@
 package no.fg.hilflingbackend.controller
 
 import no.fg.hilflingbackend.configurations.RequirePermission
+import no.fg.hilflingbackend.configurations.RequireSecurityLevel
+import no.fg.hilflingbackend.valueobject.SecurityLevelType
 import no.fg.hilflingbackend.dto.ExternalUserDto
 import no.fg.hilflingbackend.dto.ExternalUserPatchRequestDto
 import no.fg.hilflingbackend.dto.Page
@@ -23,11 +25,13 @@ class ExternalUserController(
   val externalUserService: ExternalUserService,
 ) {
   @GetMapping("/{id}")
+  @RequireSecurityLevel(SecurityLevelType.FG)
   fun getById(
     @PathVariable("id") id: UUID,
   ): ExternalUserDto = externalUserService.findById(id)
 
   @GetMapping
+  @RequireSecurityLevel(SecurityLevelType.FG)
   fun getAll(
     @RequestParam("page", required = false) page: Int?,
     @RequestParam("pageSize", required = false) pageSize: Int?,

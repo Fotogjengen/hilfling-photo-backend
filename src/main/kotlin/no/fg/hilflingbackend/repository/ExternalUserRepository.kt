@@ -3,7 +3,9 @@ package no.fg.hilflingbackend.repository
 import jakarta.persistence.EntityNotFoundException
 import me.liuwj.ktorm.database.Database
 import me.liuwj.ktorm.dsl.QueryRowSet
+import me.liuwj.ktorm.dsl.and
 import me.liuwj.ktorm.dsl.eq
+import me.liuwj.ktorm.dsl.isNull
 import me.liuwj.ktorm.entity.add
 import me.liuwj.ktorm.entity.find
 import me.liuwj.ktorm.entity.update
@@ -49,7 +51,7 @@ open class ExternalUserRepository(
     database
       .external_users
       .find {
-        it.username eq username
+        (it.username eq username) and it.dateDeleted.isNull()
       }?.toDto()
 
   override fun patch(dto: ExternalUserPatchRequestDto): ExternalUserDto {
