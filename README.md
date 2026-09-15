@@ -6,11 +6,19 @@ Resource server for hilfling app>
 
 # Test-users
 
+## Internal users
+
 - gjengsjef
 - web
 - denye
 - pang_gjengsjef
 - pang_web
+
+## External users
+
+- fg, password
+- husfolk, password
+- alle, password
 
 # Installation
 

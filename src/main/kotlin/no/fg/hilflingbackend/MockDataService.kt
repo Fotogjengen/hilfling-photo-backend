@@ -12,6 +12,8 @@ import no.fg.hilflingbackend.dto.CategoryId
 import no.fg.hilflingbackend.dto.EventOwnerDto
 import no.fg.hilflingbackend.dto.EventOwnerId
 import no.fg.hilflingbackend.dto.EventOwnerName
+import no.fg.hilflingbackend.dto.ExternalUserDto
+import no.fg.hilflingbackend.dto.ExternalUserId
 import no.fg.hilflingbackend.dto.GangDto
 import no.fg.hilflingbackend.dto.GangId
 import no.fg.hilflingbackend.dto.MotiveCreateRequestDto
@@ -33,6 +35,7 @@ import no.fg.hilflingbackend.model.PositionToPermissions
 import no.fg.hilflingbackend.repository.AlbumRepository
 import no.fg.hilflingbackend.repository.CategoryRepository
 import no.fg.hilflingbackend.repository.EventOwnerRepository
+import no.fg.hilflingbackend.repository.ExternalUserRepository
 import no.fg.hilflingbackend.repository.GangRepository
 import no.fg.hilflingbackend.repository.MotiveRepository
 import no.fg.hilflingbackend.repository.PhotoGangBangerRepository
@@ -73,6 +76,8 @@ class MockDataService {
 
   @Autowired lateinit var eventOwnerRepository: EventOwnerRepository
 
+  @Autowired lateinit var externalUserRepository: ExternalUserRepository
+
   @Autowired lateinit var gangRepository: GangRepository
 
   @Autowired lateinit var motiveRepository: MotiveRepository
@@ -84,6 +89,49 @@ class MockDataService {
       SecurityLevelDto(securityLevelType = SecurityLevelType.FG),
       SecurityLevelDto(securityLevelType = SecurityLevelType.HUSFOLK),
       SecurityLevelDto(securityLevelType = SecurityLevelType.ALLE),
+    )
+
+  fun generateExternalUserData(): List<ExternalUserDto> =
+    listOf(
+      ExternalUserDto(
+        externalUserId =
+          ExternalUserId(
+            UUID.fromString("ca89444f-25f6-44d9-8a73-94587d72b839"),
+          ),
+        username = "fg",
+        password = "password",
+        email = "fg@samfundet.no",
+        fullName = "FG Testbruker",
+        securityLevel = SecurityLevelDto(securityLevelType = SecurityLevelType.FG),
+        description = "Seed account with FG security level",
+        isActive = true,
+      ),
+      ExternalUserDto(
+        externalUserId =
+          ExternalUserId(
+            UUID.fromString("da89444f-25f6-44d9-8a73-94587d72b839"),
+          ),
+        username = "husfolk",
+        password = "password",
+        email = "husfolk@samfundet.no",
+        fullName = "Husfolk Testbruker",
+        securityLevel = SecurityLevelDto(securityLevelType = SecurityLevelType.HUSFOLK),
+        description = "Seed account with HUSFOLK security level",
+        isActive = true,
+      ),
+      ExternalUserDto(
+        externalUserId =
+          ExternalUserId(
+            UUID.fromString("ea89444f-25f6-44d9-8a73-94587d72b839"),
+          ),
+        username = "alle",
+        password = "password",
+        email = "alle@samfundet.no",
+        fullName = "Alle Testbruker",
+        securityLevel = SecurityLevelDto(securityLevelType = SecurityLevelType.ALLE),
+        description = "Seed account with ALLE security level",
+        isActive = true,
+      ),
     )
 
   fun generateGangData(): List<GangDto> =
@@ -1015,6 +1063,8 @@ class MockDataService {
     generateEventOwnerData().forEach { eventOwnerRepository.create(it) }
     generatePlaceData().forEach { placeRepository.create(it) }
     generateGangData().forEach { gangRepository.create(it) }
+    generateExternalUserData().forEach { externalUserRepository.create(it) }
+    println("ExternalUsers seeded")
 
     val savedMotives = generateMotiveData().map { motiveRepository.create(it) }
     database.batchInsert(Photos) {

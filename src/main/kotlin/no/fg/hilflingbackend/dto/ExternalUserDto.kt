@@ -39,7 +39,7 @@ fun ExternalUserDto.toEntity(): ExternalUser {
     password = dto.password
     email = dto.email
     fullName = dto.fullName
-    securityLevel = dto.securityLevel?.securityLevelType?.type // This makes it possible to add external users with level FG, which is disallowed by the database. I cant be bothered to fix it.
+    securityLevel = dto.securityLevel?.securityLevelType?.type
     description = dto.description
     isActive = dto.isActive
   }

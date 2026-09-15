@@ -95,7 +95,7 @@ CREATE TABLE EXTERNAL_USER
     password     VARCHAR(255),
     email        VARCHAR(50),
     full_name    VARCHAR(50),
-    security_level VARCHAR(50) CHECK (security_level IN ('HUSFOLK', 'ALLE')), 
+    security_level VARCHAR(50) CHECK (security_level IN ('FG', 'HUSFOLK', 'ALLE')), 
     description  TEXT,
     is_active    BOOLEAN DEFAULT TRUE,
     date_deleted DATE DEFAULT NULL
