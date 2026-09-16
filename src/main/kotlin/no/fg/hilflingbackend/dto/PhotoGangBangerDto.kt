@@ -20,8 +20,8 @@ data class PhotoGangBangerPatchRequestDto(
   val lastName: String?,
   val username: String?,
   val email: String?,
-  val profilePicture: String?,
   val phoneNumber: String?,
+  val profilePictureId: UserUploadId? = null,
 )
 
 data class PhotoGangBangerDto(
@@ -33,9 +33,9 @@ data class PhotoGangBangerDto(
   val lastName: String,
   val username: String,
   val email: String,
-  val profilePicture: String,
   val phoneNumber: String,
   val positions: List<MemberPositionDto> = emptyList(),
+  val profilePicture: UserUploadDto? = null,
 )
 
 fun PhotoGangBangerDto.toEntity(): PhotoGangBanger =
@@ -48,8 +48,8 @@ fun PhotoGangBangerDto.toEntity(): PhotoGangBanger =
     lastName = this@toEntity.lastName
     username = this@toEntity.username
     email = this@toEntity.email
-    profilePicture = this@toEntity.profilePicture
     phoneNumber = this@toEntity.phoneNumber
+    profilePicture = this@toEntity.profilePicture?.toEntity()
   }
 
 @JsonDeserialize(using = PhotoGangBangerIdDeserializer::class)

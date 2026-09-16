@@ -4,6 +4,7 @@ import me.liuwj.ktorm.database.Database
 import me.liuwj.ktorm.entity.Entity
 import me.liuwj.ktorm.entity.sequenceOf
 import me.liuwj.ktorm.schema.boolean
+import me.liuwj.ktorm.schema.uuid
 import me.liuwj.ktorm.schema.varchar
 import no.fg.hilflingbackend.dto.PhotoGangBangerDto
 import no.fg.hilflingbackend.dto.PhotoGangBangerId
@@ -20,23 +21,32 @@ interface PhotoGangBanger : BaseModel<PhotoGangBanger> {
   var lastName: String
   var username: String
   var email: String
-  var profilePicture: String
   var phoneNumber: String
+
+  // Foreign keys
+  var profilePicture: UserUpload?
 }
 
-fun PhotoGangBanger.toDto(): PhotoGangBangerDto =
-  PhotoGangBangerDto(
-    photoGangBangerId = PhotoGangBangerId(this.id),
-    semesterStart = SemesterStart(this.semesterStart),
-    isActive = this.isActive,
-    isPang = this.isPang,
-    firstName = this.firstName,
-    lastName = this.lastName,
-    username = this.username,
-    email = this.email,
-    profilePicture = this.profilePicture,
-    phoneNumber = this.phoneNumber,
+fun PhotoGangBanger.toDto(): PhotoGangBangerDto {
+  val dto =
+    PhotoGangBangerDto(
+      photoGangBangerId = PhotoGangBangerId(this.id),
+      semesterStart = SemesterStart(this.semesterStart),
+      isActive = this.isActive,
+      isPang = this.isPang,
+      firstName = this.firstName,
+      lastName = this.lastName,
+      username = this.username,
+      email = this.email,
+      phoneNumber = this.phoneNumber,
+      profilePicture = null,
+    )
+  val profilePicture = this.profilePicture ?: return dto
+  // Owner is passed explicitly to break the member <-> upload DTO cycle
+  return dto.copy(
+    profilePicture = profilePicture.toDto(owner = dto),
   )
+}
 
 object PhotoGangBangers : BaseTable<PhotoGangBanger>("photo_gang_banger") {
   val semesterStart = varchar("semester_start").bindTo { it.semesterStart }
@@ -47,8 +57,10 @@ object PhotoGangBangers : BaseTable<PhotoGangBanger>("photo_gang_banger") {
   val lastName = varchar("last_name").bindTo { it.lastName }
   val username = varchar("username").bindTo { it.username }
   val email = varchar("email").bindTo { it.email }
-  val profilePicture = varchar("profile_picture").bindTo { it.profilePicture }
   val phoneNumber = varchar("phone_number").bindTo { it.phoneNumber }
+
+  // Foreign keys
+  val profilePictureId = uuid("profile_picture").references(UserUploads) { it.profilePicture }
 }
 
 val Database.photo_gang_bangers

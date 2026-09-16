@@ -58,6 +58,8 @@ class SecurityConfig(
           // read endpoints that are intentionally public
           .requestMatchers(HttpMethod.GET, "/photos/**")
           .permitAll()
+          .requestMatchers(HttpMethod.GET, "/user-uploads/*")
+          .permitAll()
           .requestMatchers(HttpMethod.GET, "/eventcards/**")
           .permitAll()
           .requestMatchers(HttpMethod.GET, "/motives/**")
@@ -78,6 +80,8 @@ class SecurityConfig(
             HttpMethod.GET,
             "/photo_gang_bangers/inactive_pangs",
           ).permitAll()
+          .requestMatchers(HttpMethod.GET, "/photo_gang_bangers/me")
+          .authenticated()
           .requestMatchers(HttpMethod.GET, "/photo_gang_bangers/*")
           .permitAll()
           .requestMatchers(HttpMethod.GET, "/albums/**")

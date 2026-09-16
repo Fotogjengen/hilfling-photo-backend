@@ -113,7 +113,6 @@ CREATE TABLE PHOTO_GANG_BANGER
     email               VARCHAR(50),
     is_active           BOOLEAN DEFAULT TRUE,
     is_pang             BOOLEAN DEFAULT FALSE,
-    profile_picture     VARCHAR(150),
     phone_number        VARCHAR(20),
     date_deleted DATE DEFAULT NULL
 );
@@ -204,6 +203,20 @@ CREATE TABLE PHOTOS_IN_PURCHASE_ORDER
     img_size          VARCHAR(10),
     date_deleted DATE DEFAULT NULL
 );
+
+CREATE TABLE USER_UPLOADS
+(
+    id                   uuid PRIMARY KEY,
+    date_created         TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    security_level       VARCHAR(50) CHECK (security_level IN ('FG', 'ALLE')),
+    link                 VARCHAR(255),
+    photo_gang_banger_id UUID REFERENCES PHOTO_GANG_BANGER (id) NOT NULL,
+    date_deleted         DATE DEFAULT NULL
+);
+
+/* FK needs to be added via ALTER to USER_UPLOADS since it references PHOTO_GANG_BANGER which leads to a circular dependency */
+ALTER TABLE PHOTO_GANG_BANGER
+    ADD COLUMN profile_picture UUID REFERENCES USER_UPLOADS (id);
 
 /* Trigram indexes for cross-entity filter search autocomplete */
 CREATE EXTENSION IF NOT EXISTS pg_trgm;

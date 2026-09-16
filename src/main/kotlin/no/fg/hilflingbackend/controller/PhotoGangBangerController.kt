@@ -1,14 +1,20 @@
 package no.fg.hilflingbackend.controller
 
 import hilfling.backend.hilfling.exceptions.RestExceptionHandler
+import jakarta.persistence.EntityNotFoundException
+import jakarta.servlet.http.HttpServletRequest
 import no.fg.hilflingbackend.configurations.RequirePermission
+import no.fg.hilflingbackend.configurations.RequireSecurityLevel
+import no.fg.hilflingbackend.configurations.hilflingToken
 import no.fg.hilflingbackend.dto.Page
 import no.fg.hilflingbackend.dto.PhotoGangBangerDto
 import no.fg.hilflingbackend.dto.PhotoGangBangerPatchRequestDto
 import no.fg.hilflingbackend.dto.PhotoGangBangerPositionPatchRequestDto
 import no.fg.hilflingbackend.repository.PhotoGangBangerRepository
+import no.fg.hilflingbackend.service.JwtService
 import no.fg.hilflingbackend.utils.ResponseCreated
 import no.fg.hilflingbackend.valueobject.Permission
+import no.fg.hilflingbackend.valueobject.SecurityLevelType
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PatchMapping
@@ -24,7 +30,16 @@ import java.util.UUID
 @RequestMapping("/photo_gang_bangers")
 class PhotoGangBangerController(
   val repository: PhotoGangBangerRepository,
+  val jwtService: JwtService,
 ) : RestExceptionHandler() {
+  @GetMapping("/me")
+  @RequireSecurityLevel(SecurityLevelType.FG)
+  fun getMe(request: HttpServletRequest): PhotoGangBangerDto {
+    val username = jwtService.extractPayload(request.hilflingToken()!!).username
+    return repository.findByUsername(username)
+      ?: throw EntityNotFoundException("Could not find PhotoGangBanger for user '$username'")
+  }
+
   @GetMapping("/{id}")
   fun getById(
     @PathVariable("id") id: UUID,

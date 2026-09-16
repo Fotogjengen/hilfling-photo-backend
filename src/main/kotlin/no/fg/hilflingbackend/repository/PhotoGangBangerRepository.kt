@@ -8,6 +8,7 @@ import me.liuwj.ktorm.dsl.eq
 import me.liuwj.ktorm.dsl.from
 import me.liuwj.ktorm.dsl.innerJoin
 import me.liuwj.ktorm.dsl.insert
+import me.liuwj.ktorm.dsl.isNull
 import me.liuwj.ktorm.dsl.map
 import me.liuwj.ktorm.dsl.orderBy
 import me.liuwj.ktorm.dsl.select
@@ -25,6 +26,7 @@ import no.fg.hilflingbackend.dto.PhotoGangBangerDto
 import no.fg.hilflingbackend.dto.PhotoGangBangerPatchRequestDto
 import no.fg.hilflingbackend.dto.PhotoGangBangerPositionPatchRequestDto
 import no.fg.hilflingbackend.dto.PositionId
+import no.fg.hilflingbackend.dto.UserUploadDto
 import no.fg.hilflingbackend.dto.toEntity
 import no.fg.hilflingbackend.exceptions.EntityExistsException
 import no.fg.hilflingbackend.model.PhotoGangBangerToPositions
@@ -33,6 +35,7 @@ import no.fg.hilflingbackend.model.Positions
 import no.fg.hilflingbackend.model.photo_gang_bangers
 import no.fg.hilflingbackend.model.positions
 import no.fg.hilflingbackend.model.toDto
+import no.fg.hilflingbackend.model.user_uploads
 import no.fg.hilflingbackend.valueobject.Email
 import no.fg.hilflingbackend.valueobject.SemesterStart
 import org.springframework.stereotype.Repository
@@ -140,6 +143,10 @@ class PhotoGangBangerRepository(
     if (existing != null) throw EntityExistsException("PhotoGangBanger already exists")
 
     validatePositionAssignments(dto.positions)
+    dto.profilePicture
+      ?.userUploadId
+      ?.id
+      ?.let { resolveProfilePicture(it, dto.photoGangBangerId.id, dto) }
 
     val created =
       database.insert(PhotoGangBangers) {
@@ -151,8 +158,8 @@ class PhotoGangBangerRepository(
         set(it.lastName, dto.lastName)
         set(it.username, dto.username)
         set(it.email, dto.email)
-        set(it.profilePicture, dto.profilePicture)
         set(it.phoneNumber, dto.phoneNumber)
+        set(it.profilePictureId, dto.profilePicture?.userUploadId?.id)
       }
 
     dto.positions.forEach { position ->
@@ -192,6 +199,21 @@ class PhotoGangBangerRepository(
     }
   }
 
+  private fun resolveProfilePicture(
+    profilePictureId: UUID,
+    ownerId: UUID,
+    owner: PhotoGangBangerDto,
+  ): UserUploadDto {
+    val upload =
+      database.user_uploads
+        .find { (it.id eq profilePictureId) and it.dateDeleted.isNull() }
+        ?: throw IllegalArgumentException("Unknown profilePictureId: $profilePictureId")
+    if (upload.photoGangBangerId != ownerId) {
+      throw IllegalArgumentException("Profile picture must be an upload owned by the photo gang banger")
+    }
+    return upload.toDto(owner)
+  }
+
   fun patch(dto: PhotoGangBangerPatchRequestDto): PhotoGangBangerDto? {
     val fromDb =
       findById(dto.photoGangBangerId.id)
@@ -207,8 +229,11 @@ class PhotoGangBangerRepository(
         lastName = dto.lastName ?: fromDb.lastName,
         username = dto.username ?: fromDb.username,
         email = dto.email ?: fromDb.email,
-        profilePicture = dto.profilePicture ?: fromDb.profilePicture,
         phoneNumber = dto.phoneNumber ?: fromDb.phoneNumber,
+        profilePicture =
+          dto.profilePictureId
+            ?.let { resolveProfilePicture(it.id, dto.photoGangBangerId.id, fromDb) }
+            ?: fromDb.profilePicture,
       )
 
     database.photo_gang_bangers.update(updated.toEntity())

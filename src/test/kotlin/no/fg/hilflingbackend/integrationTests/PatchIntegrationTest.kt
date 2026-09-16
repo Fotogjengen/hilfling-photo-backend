@@ -170,7 +170,6 @@ class PatchIntegrationTest {
       lastName = "Sandsbråten",
       username = "carosa",
       email = "mymail@samfundet.no",
-      profilePicture = "https://static.independent.co.uk/2021/12/07/10/PRI213893584.jpg",
       phoneNumber = "22225555",
     )
   final val photoGangBangerDto2 =
@@ -183,7 +182,6 @@ class PatchIntegrationTest {
       lastName = "Sivertsen",
       username = "sinsiv",
       email = "sindre@samfundet.no",
-      profilePicture = "https://static.independent.co.uk/2021/12/07/10/PRI213893584.jpg",
       phoneNumber = "12345678",
     )
   final val motiveDto1 =
@@ -454,7 +452,6 @@ class PatchIntegrationTest {
       lastName = "Photo",
       username = "pgb$suffix",
       email = "pgb-$suffix@samfundet.no",
-      profilePicture = "",
       phoneNumber = "12345678",
       positions = positions,
     )
