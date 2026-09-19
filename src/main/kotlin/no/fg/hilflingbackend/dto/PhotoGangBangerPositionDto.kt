@@ -2,11 +2,15 @@ package no.fg.hilflingbackend.dto
 
 import no.fg.hilflingbackend.valueobject.SemesterStart
 
-data class PhotoGangBangerPositionPatchRequestDto(
-  val photoGangBangerId: PhotoGangBangerId,
+data class PhotoGangBangerPositionRequestDto(
+  val positionId: PositionId,
   val semesterStart: SemesterStart,
-  val position: PositionDto?,
-  val semesterEnd: SemesterStart?,
+  val semesterEnd: SemesterStart? = null,
+)
+
+data class PhotoGangBangerPositionsPutRequestDto(
+  val photoGangBangerId: PhotoGangBangerId,
+  val positions: List<PhotoGangBangerPositionRequestDto>,
 )
 
 data class PhotoGangBangerPositionDto(

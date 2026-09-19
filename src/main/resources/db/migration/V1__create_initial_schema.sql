@@ -105,10 +105,10 @@ CREATE TABLE PHOTO_GANG_BANGER
 (
     id                  uuid PRIMARY KEY,
     date_created        DATE NOT NULL DEFAULT CURRENT_DATE,
-    relationship_status VARCHAR(15),
+    food_preference     VARCHAR(40),
+    birthday            DATE,
     semester_start      VARCHAR(20),
-    first_name          VARCHAR(20),
-    last_name           VARCHAR(20),
+    name                VARCHAR(50),
     username            VARCHAR(20) UNIQUE,
     email               VARCHAR(50),
     is_active           BOOLEAN DEFAULT TRUE,
