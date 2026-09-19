@@ -86,8 +86,9 @@ class PhotoGangBangerController(
     @RequestBody dto: PhotoGangBangerPatchRequestDto,
   ): PhotoGangBangerDto? {
     val tokenPayload = jwtService.extractPayload(request.hilflingToken()!!)
-    val currentUser = repository.findByUsername(tokenPayload.username)
-      ?: throw EntityNotFoundException("Could not find current PhotoGangBanger for user '${tokenPayload.username}'")
+    val currentUser =
+      repository.findByUsername(tokenPayload.username)
+        ?: throw EntityNotFoundException("Could not find current PhotoGangBanger for user '${tokenPayload.username}'")
 
     val hasUserManage = Permission.USER_MANAGE in tokenPayload.permissions
     val isSelf = currentUser.photoGangBangerId == dto.photoGangBangerId

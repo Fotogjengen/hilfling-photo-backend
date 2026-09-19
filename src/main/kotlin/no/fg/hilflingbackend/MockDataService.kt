@@ -1077,7 +1077,7 @@ class MockDataService {
           email = null,
           phoneNumber = null,
           profilePictureId = profilePicture.userUploadId,
-        )
+        ),
       )
     }
     println("Profile pictures seeded")
