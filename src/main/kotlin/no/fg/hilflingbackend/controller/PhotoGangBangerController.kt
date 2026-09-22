@@ -81,6 +81,7 @@ class PhotoGangBangerController(
   }
 
   @PatchMapping()
+  @RequireSecurityLevel(SecurityLevelType.FG)
   fun patch(
     request: HttpServletRequest,
     @RequestBody dto: PhotoGangBangerPatchRequestDto,
