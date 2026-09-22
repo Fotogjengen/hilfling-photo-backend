@@ -22,6 +22,7 @@ import no.fg.hilflingbackend.dto.MotiveId
 import no.fg.hilflingbackend.dto.PhotoDto
 import no.fg.hilflingbackend.dto.PhotoGangBangerDto
 import no.fg.hilflingbackend.dto.PhotoGangBangerId
+import no.fg.hilflingbackend.dto.PhotoGangBangerPatchRequestDto
 import no.fg.hilflingbackend.dto.PhotoGangBangerPositionDto
 import no.fg.hilflingbackend.dto.PhotoId
 import no.fg.hilflingbackend.dto.PlaceDto
@@ -29,6 +30,8 @@ import no.fg.hilflingbackend.dto.PlaceId
 import no.fg.hilflingbackend.dto.PositionDto
 import no.fg.hilflingbackend.dto.PositionId
 import no.fg.hilflingbackend.dto.SecurityLevelDto
+import no.fg.hilflingbackend.dto.UserUploadDto
+import no.fg.hilflingbackend.dto.UserUploadId
 import no.fg.hilflingbackend.model.PhotoGangBangerToPositions
 import no.fg.hilflingbackend.model.Photos
 import no.fg.hilflingbackend.model.PositionToPermissions
@@ -42,6 +45,7 @@ import no.fg.hilflingbackend.repository.PhotoGangBangerRepository
 import no.fg.hilflingbackend.repository.PhotoRepository
 import no.fg.hilflingbackend.repository.PlaceRepository
 import no.fg.hilflingbackend.repository.PositionRepository
+import no.fg.hilflingbackend.repository.UserUploadRepository
 import no.fg.hilflingbackend.valueobject.Email
 import no.fg.hilflingbackend.valueobject.Permission
 import no.fg.hilflingbackend.valueobject.PhoneNumber
@@ -69,6 +73,8 @@ class MockDataService {
   @Autowired lateinit var albumRepository: AlbumRepository
 
   @Autowired lateinit var photoGangBangerRepository: PhotoGangBangerRepository
+
+  @Autowired lateinit var userUploadRepository: UserUploadRepository
 
   @Autowired lateinit var positionRepository: PositionRepository
 
@@ -865,11 +871,9 @@ class MockDataService {
         isActive = true,
         isPang = false,
         semesterStart = SemesterStart("H2024"),
-        firstName = "Gjengsjef",
-        lastName = "Testbruker",
+        name = "Gjengsjef Testbruker",
         username = "gjengsjef",
         email = "gjengsjef@samfundet.no",
-        profilePicture = "",
         phoneNumber = "40000000",
       ),
       PhotoGangBangerDto(
@@ -880,11 +884,9 @@ class MockDataService {
         isActive = true,
         isPang = false,
         semesterStart = SemesterStart("H2024"),
-        firstName = "Web",
-        lastName = "Testbruker",
+        name = "Web Testbruker",
         username = "web",
         email = "web@samfundet.no",
-        profilePicture = "",
         phoneNumber = "40000000",
       ),
       PhotoGangBangerDto(
@@ -895,11 +897,9 @@ class MockDataService {
         isActive = true,
         isPang = false,
         semesterStart = SemesterStart("H2024"),
-        firstName = "DeNye",
-        lastName = "Testbruker",
+        name = "DeNye Testbruker",
         username = "denye",
         email = "denye@samfundet.no",
-        profilePicture = "",
         phoneNumber = "40000000",
       ),
       // Pang users — former position holders, position ended (semesterEnd != null)
@@ -911,11 +911,9 @@ class MockDataService {
         isActive = true,
         isPang = true,
         semesterStart = SemesterStart("V2022"),
-        firstName = "Pang",
-        lastName = "Gjengsjef",
+        name = "Pang Gjengsjef",
         username = "pang_gjengsjef",
         email = "pang@samfundet.no",
-        profilePicture = "",
         phoneNumber = "40000000",
       ),
       PhotoGangBangerDto(
@@ -926,11 +924,9 @@ class MockDataService {
         isActive = true,
         isPang = true,
         semesterStart = SemesterStart("V2022"),
-        firstName = "Pang",
-        lastName = "Web",
+        name = "Pang Web",
         username = "pang_web",
         email = "pang@samfundet.no",
-        profilePicture = "",
         phoneNumber = "40000000",
       ),
       PhotoGangBangerDto(
@@ -941,11 +937,9 @@ class MockDataService {
         isActive = false,
         isPang = true,
         semesterStart = SemesterStart("V2020"),
-        firstName = "Gammel",
-        lastName = "Pang",
+        name = "Gammel Pang",
         username = "pangpang",
         email = "pang@samfundet.no",
-        profilePicture = "",
         phoneNumber = "90000009",
       ),
     )
@@ -1031,6 +1025,17 @@ class MockDataService {
     return all.map { gjengsjef to it } + all.map { web to it }
   }
 
+  fun generateProfilePictureData(): List<UserUploadDto> =
+    generatePhotoGangBangerData().map { member ->
+      UserUploadDto(
+        userUploadId = UserUploadId(),
+        securityLevel = SecurityLevelDto(SecurityLevelType.FG),
+        link = "https://picsum.photos/seed/${member.username}-profile/400/400",
+        photoGangBangerDto = member,
+        dateUploaded = LocalDate.now(),
+      )
+    }
+
   fun seedMockData() {
     println(">>> seedMockData called at " + java.time.Instant.now())
     generateAlbumData().forEach { albumRepository.create(it) }
@@ -1057,6 +1062,25 @@ class MockDataService {
       }
     }
     println("PhotoGangBangers seeded")
+    generateProfilePictureData().forEach { profilePicture ->
+      userUploadRepository.create(profilePicture)
+      photoGangBangerRepository.patch(
+        PhotoGangBangerPatchRequestDto(
+          photoGangBangerId = profilePicture.photoGangBangerDto.photoGangBangerId,
+          semesterStart = null,
+          isActive = null,
+          isPang = null,
+          name = null,
+          foodPreference = null,
+          birthday = null,
+          username = null,
+          email = null,
+          phoneNumber = null,
+          profilePictureId = profilePicture.userUploadId,
+        ),
+      )
+    }
+    println("Profile pictures seeded")
     generateCategoryData().forEach { categoryRepository.create(it) }
     println("Category seeded")
 

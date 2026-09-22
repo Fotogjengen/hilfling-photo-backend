@@ -9,6 +9,7 @@ import com.fasterxml.jackson.databind.JsonNode
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize
 import no.fg.hilflingbackend.model.PhotoGangBanger
 import no.fg.hilflingbackend.valueobject.SemesterStart
+import java.time.LocalDate
 import java.util.UUID
 
 data class PhotoGangBangerPatchRequestDto(
@@ -16,12 +17,13 @@ data class PhotoGangBangerPatchRequestDto(
   val semesterStart: SemesterStart?,
   val isActive: Boolean?,
   val isPang: Boolean?,
-  val firstName: String?,
-  val lastName: String?,
+  val name: String?,
+  val foodPreference: String?,
+  val birthday: LocalDate?,
   val username: String?,
   val email: String?,
-  val profilePicture: String?,
   val phoneNumber: String?,
+  val profilePictureId: UserUploadId? = null,
 )
 
 data class PhotoGangBangerDto(
@@ -29,13 +31,14 @@ data class PhotoGangBangerDto(
   val semesterStart: SemesterStart,
   val isActive: Boolean,
   val isPang: Boolean,
-  val firstName: String,
-  val lastName: String,
+  val name: String,
+  val foodPreference: String? = null,
+  val birthday: LocalDate? = null,
   val username: String,
   val email: String,
-  val profilePicture: String,
   val phoneNumber: String,
   val positions: List<MemberPositionDto> = emptyList(),
+  val profilePicture: UserUploadDto? = null,
 )
 
 fun PhotoGangBangerDto.toEntity(): PhotoGangBanger =
@@ -44,12 +47,13 @@ fun PhotoGangBangerDto.toEntity(): PhotoGangBanger =
     semesterStart = this@toEntity.semesterStart.value
     isPang = this@toEntity.isPang
     isActive = this@toEntity.isActive
-    firstName = this@toEntity.firstName
-    lastName = this@toEntity.lastName
+    name = this@toEntity.name
+    foodPreference = this@toEntity.foodPreference
+    birthday = this@toEntity.birthday
     username = this@toEntity.username
     email = this@toEntity.email
-    profilePicture = this@toEntity.profilePicture
     phoneNumber = this@toEntity.phoneNumber
+    profilePicture = this@toEntity.profilePicture?.toEntity()
   }
 
 @JsonDeserialize(using = PhotoGangBangerIdDeserializer::class)
