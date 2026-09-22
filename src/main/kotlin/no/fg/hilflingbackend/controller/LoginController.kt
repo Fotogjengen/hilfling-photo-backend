@@ -28,7 +28,8 @@ class LoginController(
   fun login(
     @RequestHeader("X-Samfundet-Remote-User") username: String,
   ): ResponseEntity<LoginResponse> {
-    val token = authService.login(username)
+    val strippedUsername = username.removeSuffix("@AD.SAMFUNDET.NO")
+    val token = authService.login(strippedUsername)
     return ResponseEntity.ok(LoginResponse(token))
   }
 
