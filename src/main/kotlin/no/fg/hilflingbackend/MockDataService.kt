@@ -164,6 +164,126 @@ class MockDataService {
           PlaceId(UUID.fromString("8f4fa5d6-ad7c-419c-be58-1ee73f212675")),
         name = "Storsalen",
       ),
+      PlaceDto(
+        placeId =
+          PlaceId(UUID.fromString("7f4fa5d6-ad7c-419c-be58-1ee73f212675")),
+        name = "Knaus",
+      ),
+      PlaceDto(
+        placeId =
+          PlaceId(UUID.fromString("6f4fa5d6-ad7c-419c-be58-1ee73f212675")),
+        name = "Edgar",
+      ),
+      PlaceDto(
+        placeId =
+          PlaceId(UUID.fromString("5f4fa5d6-ad7c-419c-be58-1ee73f212675")),
+        name = "Bodegaen",
+      ),
+      PlaceDto(
+        placeId =
+          PlaceId(UUID.fromString("4f4fa5d6-ad7c-419c-be58-1ee73f212675")),
+        name = "Utanfor Huset",
+      ),
+      PlaceDto(
+        placeId =
+          PlaceId(UUID.fromString("3f4fa5d6-ad7c-419c-be58-1ee73f212675")),
+        name = "Gjengareal",
+      ),
+      PlaceDto(
+        placeId =
+          PlaceId(UUID.fromString("2f4fa5d6-ad7c-419c-be58-1ee73f212675")),
+        name = "Strossa",
+      ),
+      PlaceDto(
+        placeId =
+          PlaceId(UUID.fromString("1f4fa5d6-ad7c-419c-be58-1ee73f212675")),
+        name = "Selskapssiden",
+      ),
+      PlaceDto(
+        placeId =
+          PlaceId(UUID.fromString("0f4fa5d6-ad7c-419c-be58-1ee73f212675")),
+        name = "Nidarosdomen",
+      ),
+      PlaceDto(
+        placeId =
+          PlaceId(UUID.fromString("194fa5d6-ad7c-419c-be58-1ee73f212675")),
+        name = "Daglighallen",
+      ),
+      PlaceDto(
+        placeId =
+          PlaceId(UUID.fromString("184fa5d6-ad7c-419c-be58-1ee73f212675")),
+        name = "Ryttergangen",
+      ),
+      PlaceDto(
+        placeId =
+          PlaceId(UUID.fromString("174fa5d6-ad7c-419c-be58-1ee73f212675")),
+        name = "Biblioteket",
+      ),
+      PlaceDto(
+        placeId =
+          PlaceId(UUID.fromString("164fa5d6-ad7c-419c-be58-1ee73f212675")),
+        name = "Toalettet",
+      ),
+      PlaceDto(
+        placeId =
+          PlaceId(UUID.fromString("154fa5d6-ad7c-419c-be58-1ee73f212675")),
+        name = "Rotundene",
+      ),
+      PlaceDto(
+        placeId =
+          PlaceId(UUID.fromString("144fa5d6-ad7c-419c-be58-1ee73f212675")),
+        name = "Garderoben",
+      ),
+      PlaceDto(
+        placeId =
+          PlaceId(UUID.fromString("134fa5d6-ad7c-419c-be58-1ee73f212675")),
+        name = "Studio",
+      ),
+      PlaceDto(
+        placeId =
+          PlaceId(UUID.fromString("124fa5d6-ad7c-419c-be58-1ee73f212675")),
+        name = "Lyche",
+      ),
+      PlaceDto(
+        placeId =
+          PlaceId(UUID.fromString("114fa5d6-ad7c-419c-be58-1ee73f212675")),
+        name = "Hele huset",
+      ),
+      PlaceDto(
+        placeId =
+          PlaceId(UUID.fromString("294fa5d6-ad7c-419c-be58-1ee73f212675")),
+        name = "Taket",
+      ),
+      PlaceDto(
+        placeId =
+          PlaceId(UUID.fromString("284fa5d6-ad7c-419c-be58-1ee73f212675")),
+        name = "Kapellet",
+      ),
+      PlaceDto(
+        placeId =
+          PlaceId(UUID.fromString("274fa5d6-ad7c-419c-be58-1ee73f212675")),
+        name = "Rundhallen",
+      ),
+      PlaceDto(
+        placeId =
+          PlaceId(UUID.fromString("264fa5d6-ad7c-419c-be58-1ee73f212675")),
+        name = "Hyblene",
+      ),
+      PlaceDto(
+        placeId =
+          PlaceId(UUID.fromString("254fa5d6-ad7c-419c-be58-1ee73f212675")),
+        name = "Musikerlåfte",
+      ),
+      PlaceDto(
+        placeId =
+          PlaceId(UUID.fromString("244fa5d6-ad7c-419c-be58-1ee73f212675")),
+        name = "Pirumbanken",
+      ),
+      PlaceDto(
+        placeId =
+          PlaceId(UUID.fromString("234fa5d6-ad7c-419c-be58-1ee73f212675")),
+        name = "Puben",
+      ),
     )
 
   fun generateMotiveData(): List<MotiveCreateRequestDto> =
@@ -705,6 +825,118 @@ class MockDataService {
             UUID.fromString("3832ee5e-3f11-4f11-8189-56ca4f70f418"),
           ),
         name = "Konsert",
+      ),
+      CategoryDto(
+        categoryId =
+          CategoryId(
+            UUID.fromString("4832ee5e-3f11-4f11-8189-56ca4f70f418"),
+          ),
+        name = "Debatt",
+      ),
+      CategoryDto(
+        categoryId =
+          CategoryId(
+            UUID.fromString("5832ee5e-3f11-4f11-8189-56ca4f70f418"),
+          ),
+        name = "Onsdagsdebatt",
+      ),
+      CategoryDto(
+        categoryId =
+          CategoryId(
+            UUID.fromString("6832ee5e-3f11-4f11-8189-56ca4f70f418"),
+          ),
+        name = "Torsdagsdebatt",
+      ),
+      CategoryDto(
+        categoryId =
+          CategoryId(
+            UUID.fromString("7832ee5e-3f11-4f11-8189-56ca4f70f418"),
+          ),
+        name = "Studiobilde",
+      ),
+      CategoryDto(
+        categoryId =
+          CategoryId(
+            UUID.fromString("8832ee5e-3f11-4f11-8189-56ca4f70f418"),
+          ),
+        name = "Storsalsfoto",
+      ),
+      CategoryDto(
+        categoryId =
+          CategoryId(
+            UUID.fromString("9832ee5e-3f11-4f11-8189-56ca4f70f418"),
+          ),
+        name = "Portrett",
+      ),
+      CategoryDto(
+        categoryId =
+          CategoryId(
+            UUID.fromString("1032ee5e-3f11-4f11-8189-56ca4f70f418"),
+          ),
+        name = "Samfundsmøte",
+      ),
+      CategoryDto(
+        categoryId =
+          CategoryId(
+            UUID.fromString("1132ee5e-3f11-4f11-8189-56ca4f70f418"),
+          ),
+        name = "Fotostand",
+      ),
+      CategoryDto(
+        categoryId =
+          CategoryId(
+            UUID.fromString("1232ee5e-3f11-4f11-8189-56ca4f70f418"),
+          ),
+        name = "Kalenderbilder",
+      ),
+      CategoryDto(
+        categoryId =
+          CategoryId(
+            UUID.fromString("1332ee5e-3f11-4f11-8189-56ca4f70f418"),
+          ),
+        name = "Stand Up",
+      ),
+      CategoryDto(
+        categoryId =
+          CategoryId(
+            UUID.fromString("1432ee5e-3f11-4f11-8189-56ca4f70f418"),
+          ),
+        name = "Bakscenen",
+      ),
+      CategoryDto(
+        categoryId =
+          CategoryId(
+            UUID.fromString("1532ee5e-3f11-4f11-8189-56ca4f70f418"),
+          ),
+        name = "Kurs",
+      ),
+      CategoryDto(
+        categoryId =
+          CategoryId(
+            UUID.fromString("1632ee5e-3f11-4f11-8189-56ca4f70f418"),
+          ),
+        name = "UKEforberedelser",
+      ),
+      CategoryDto(
+        categoryId =
+          CategoryId(
+            UUID.fromString("1732ee5e-3f11-4f11-8189-56ca4f70f418"),
+          ),
+        name = "Nybygg byggeperiode",
+      ),
+      CategoryDto(
+        categoryId =
+          CategoryId(
+            UUID.fromString("1832ee5e-3f11-4f11-8189-56ca4f70f418"),
+          ),
+        name = "Live podcast",
+      ),
+      CategoryDto(
+        categoryId =
+          CategoryId(
+            UUID.fromString("1932ee5e-3f11-4f11-8189-56ca4f70f418"),
+          ),
+        name = "Eksterne oppdrag",
       ),
     )
 
