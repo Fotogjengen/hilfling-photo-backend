@@ -4,7 +4,6 @@ CREATE TABLE ALBUM
     name         VARCHAR(8) NOT NULL UNIQUE,
     description  VARCHAR(80),
     analog       BOOLEAN NOT NULL DEFAULT FALSE,
-    is_default   BOOLEAN NOT NULL DEFAULT FALSE,
     date_created DATE NOT NULL DEFAULT CURRENT_DATE,
     date_deleted DATE DEFAULT NULL
 );
