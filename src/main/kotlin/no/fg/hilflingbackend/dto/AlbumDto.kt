@@ -8,6 +8,7 @@ data class AlbumPatchRequestDto(
   val name: String,
   val description: String?,
   val analog: Boolean?,
+  val isDefault: Boolean = false,
 )
 
 data class AlbumDto(
