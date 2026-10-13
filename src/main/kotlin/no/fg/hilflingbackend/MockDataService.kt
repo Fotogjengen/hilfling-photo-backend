@@ -972,36 +972,42 @@ class MockDataService {
           AlbumId(UUID.fromString("8a2bb663-1260-4c16-933c-a2af7420f5ff")),
         name = "DIGGA",
         description = "Vår 2017",
+        isDefault = true,
       ),
       AlbumDto(
         albumId =
           AlbumId(UUID.fromString("91fcac35-4e68-400a-a43e-e8d3f81d10f1")),
         name = "DIGGB",
         description = "Høst 2017",
+        isDefault = false,
       ),
       AlbumDto(
         albumId =
           AlbumId(UUID.fromString("91fcac35-4e68-400a-a43e-e8d3f81d10f2")),
         name = "DIGGC",
         description = "Vår 2018",
+        isDefault = false,
       ),
       AlbumDto(
         albumId =
           AlbumId(UUID.fromString("91fcac35-4e68-400a-a43e-e8d3f81d10f3")),
         name = "DIGGD",
         description = "Høst 2018",
+        isDefault = false,
       ),
       AlbumDto(
         albumId =
           AlbumId(UUID.fromString("91fcac35-4e68-400a-a43e-e8d3f81d10f4")),
         name = "DIGGE",
         description = "Vår 2019",
+        isDefault = false,
       ),
       AlbumDto(
         albumId =
           AlbumId(UUID.fromString("91fcac35-4e68-400a-a43e-e8d3f81d10f5")),
         name = "DIGGF",
         description = "Høst 2019",
+        isDefault = false,
       ),
     )
 
@@ -1012,30 +1018,35 @@ class MockDataService {
         name = "ROLL-001",
         description = "Analog Vår 2017",
         analog = true,
+        isDefault = false,
       ),
       AlbumDto(
         albumId = AlbumId(UUID.fromString("a1000000-0000-0000-0000-000000000002")),
         name = "ROLL-002",
         description = "Analog Høst 2017",
         analog = true,
+        isDefault = false,
       ),
       AlbumDto(
         albumId = AlbumId(UUID.fromString("a1000000-0000-0000-0000-000000000003")),
         name = "ROLL-003",
         description = "Analog Vår 2018",
         analog = true,
+        isDefault = false,
       ),
       AlbumDto(
         albumId = AlbumId(UUID.fromString("a1000000-0000-0000-0000-000000000004")),
         name = "ROLL-004",
         description = "Analog Høst 2018",
         analog = true,
+        isDefault = false,
       ),
       AlbumDto(
         albumId = AlbumId(UUID.fromString("a1000000-0000-0000-0000-000000000005")),
         name = "ROLL-005",
         description = "Analog Vår 2019",
         analog = true,
+        isDefault = false,
       ),
     )
 

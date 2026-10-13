@@ -14,6 +14,7 @@ interface Album : BaseModel<Album> {
   var name: String
   var description: String?
   var analog: Boolean
+  var isDefault: Boolean
 }
 
 fun Album.toDto(): AlbumDto =
@@ -22,12 +23,14 @@ fun Album.toDto(): AlbumDto =
     name = this.name,
     description = this.description,
     analog = this.analog,
+    isDefault = this.isDefault
   )
 
 object Albums : BaseTable<Album>("album") {
   val name = varchar("name").bindTo { it.name }
   val description = varchar("description").bindTo { it.description }
   val analog = boolean("analog").bindTo { it.analog }
+  val isDefault = boolean("is_default").bindTo { it.isDefault}
 }
 
 val Database.albums

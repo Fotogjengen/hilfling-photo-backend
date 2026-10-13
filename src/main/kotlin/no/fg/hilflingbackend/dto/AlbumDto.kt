@@ -15,6 +15,7 @@ data class AlbumDto(
   val name: String,
   val description: String? = null,
   val analog: Boolean = false,
+  val isDefault: Boolean = false,
 )
 
 data class AlbumId(
@@ -30,5 +31,6 @@ fun AlbumDto.toEntity(): Album {
     name = dto.name
     description = dto.description
     analog = dto.analog
+    isDefault = dto.isDefault
   }
 }
