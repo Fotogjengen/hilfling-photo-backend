@@ -71,3 +71,6 @@ fun MotiveDto.toEntity(): Motive {
     dateCreated = dto.dateCreated!!
   }
 }
+
+/** The album a photo with the given media belongs to within this motive */
+fun MotiveDto.albumFor(media: MediaDto): AlbumDto? = if (media.analog) analogAlbumDto else albumDto

@@ -5,12 +5,14 @@ import no.fg.hilflingbackend.dto.AlbumDto
 import no.fg.hilflingbackend.dto.AlbumPatchRequestDto
 import no.fg.hilflingbackend.dto.Page
 import no.fg.hilflingbackend.repository.AlbumRepository
+import no.fg.hilflingbackend.repository.PhotoRepository
 import org.springframework.stereotype.Service
 import java.util.UUID
 
 @Service
 class AlbumService(
   val repository: AlbumRepository,
+  val photoRepository: PhotoRepository,
 ) {
   fun findById(id: UUID): AlbumDto = repository.findById(id) ?: throw EntityNotFoundException("Album $id not found")
 
@@ -23,7 +25,15 @@ class AlbumService(
 
   fun delete(id: UUID): Int = repository.delete(id)
 
-  fun patch(dto: AlbumPatchRequestDto): AlbumDto = repository.patch(dto)
+  fun patch(dto: AlbumPatchRequestDto): AlbumDto {
+    val current = findById(dto.albumId.id)
+    val changesLocation = dto.name != current.name || (dto.analog != null && dto.analog != current.analog)
+    // The album name is part of every photo's path, so renaming would require moving all its files
+    if (changesLocation && photoRepository.hasPhotosInAlbum(current.albumId.id)) {
+      throw IllegalArgumentException("Cannot rename or change the type of album '${current.name}': it contains photos")
+    }
+    return repository.patch(dto)
+  }
 
   fun findAllAnalog(
     page: Int,
