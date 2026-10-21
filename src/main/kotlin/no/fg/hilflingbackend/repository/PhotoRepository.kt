@@ -28,6 +28,7 @@ import me.liuwj.ktorm.entity.toList
 import no.fg.hilflingbackend.dto.Page
 import no.fg.hilflingbackend.dto.PhotoDto
 import no.fg.hilflingbackend.dto.PhotoPositionDto
+import no.fg.hilflingbackend.model.Medias
 import no.fg.hilflingbackend.model.Motives
 import no.fg.hilflingbackend.model.Photos
 import no.fg.hilflingbackend.model.photos
@@ -87,6 +88,21 @@ open class PhotoRepository(
       .toList()
       .isNotEmpty()
 
+  /** True when a non-deleted photo is stored in the album, i.e. its motive uses the album for the photo's media kind */
+  fun hasPhotosInAlbum(albumId: UUID): Boolean =
+    database
+      .from(Photos)
+      .innerJoin(Motives, on = Photos.motiveId eq Motives.id)
+      .innerJoin(Medias, on = Photos.mediaId eq Medias.id)
+      .select(Photos.id)
+      .where {
+        Photos.dateDeleted.isNull() and
+          (
+            ((Motives.albumId eq albumId) and (Medias.analog eq false)) or
+              ((Motives.analogAlbumId eq albumId) and (Medias.analog eq true))
+          )
+      }.totalRecords > 0
+
   fun findLastByAlbum(albumId: UUID): Pair<Int, Int>? =
     database
       .from(Photos)
@@ -127,7 +143,7 @@ open class PhotoRepository(
         .filter {
           (it.goodPicture eq true) and
             it.dateDeleted.isNull() and
-            (it.securityLevel inList allowedSecurityLevels)
+            (Motives.securityLevel inList allowedSecurityLevels)
         }
     val photos =
       sequence
@@ -169,7 +185,7 @@ open class PhotoRepository(
           (it.id eq photoId) and
             (it.goodPicture eq true) and
             it.dateDeleted.isNull() and
-            (it.securityLevel inList allowedSecurityLevels)
+            (Motives.securityLevel inList allowedSecurityLevels)
         }.totalRecords > 0
     if (!qualifies) return null
 
@@ -178,7 +194,7 @@ open class PhotoRepository(
         .filter {
           (it.goodPicture eq true) and
             it.dateDeleted.isNull() and
-            (it.securityLevel inList allowedSecurityLevels) and
+            (Motives.securityLevel inList allowedSecurityLevels) and
             (
               (it.dateCreated greater target.dateCreated) or
                 ((it.dateCreated eq target.dateCreated) and (it.id less photoId))
@@ -202,11 +218,26 @@ open class PhotoRepository(
     }
   }
 
+  /** Sets the given fields and leaves the null ones unchanged */
+  fun patch(
+    photoId: UUID,
+    goodPicture: Boolean?,
+    gangId: UUID?,
+    mediaId: UUID?,
+  ) {
+    if (goodPicture == null && gangId == null && mediaId == null) return
+    database.update(Photos) {
+      goodPicture?.let { value -> set(it.goodPicture, value) }
+      gangId?.let { value -> set(it.gangId, value) }
+      mediaId?.let { value -> set(it.mediaId, value) }
+      where { it.id eq photoId }
+    }
+  }
+
   /**
    * Reassigns a photo to a different motive and, when applicable, a new album
-   * slot and a new security level. Called by the move-finalise flow after the
-   * photo-provider has relocated the on-disk files. The security level is set
-   * from the target motive (see PhotoService.moveFinalize).
+   * slot. Called by the move-finalise flow after the photo-provider has
+   * relocated the on-disk files.
    */
   fun move(
     photoId: UUID,
@@ -214,9 +245,8 @@ open class PhotoRepository(
     pageNumber: Int,
     imageNumber: Int,
     imageProd: String?,
-    imageWeb: String,
+    imageWeb: String?,
     imageThumb: String,
-    securityLevel: String,
   ) {
     database.update(Photos) {
       set(it.motiveId, motiveId)
@@ -225,7 +255,20 @@ open class PhotoRepository(
       set(it.imageProd, imageProd)
       set(it.imageWeb, imageWeb)
       set(it.imageThumb, imageThumb)
-      set(it.securityLevel, securityLevel)
+      where { it.id eq photoId }
+    }
+  }
+
+  fun updateImageUrls(
+    photoId: UUID,
+    imageProd: String?,
+    imageWeb: String?,
+    imageThumb: String,
+  ) {
+    database.update(Photos) {
+      set(it.imageProd, imageProd)
+      set(it.imageWeb, imageWeb)
+      set(it.imageThumb, imageThumb)
       where { it.id eq photoId }
     }
   }

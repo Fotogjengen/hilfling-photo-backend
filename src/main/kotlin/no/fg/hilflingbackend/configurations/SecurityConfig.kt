@@ -92,6 +92,8 @@ class SecurityConfig(
           .permitAll()
           .requestMatchers(HttpMethod.GET, "/places/**")
           .permitAll()
+          .requestMatchers(HttpMethod.GET, "/medias/**")
+          .permitAll()
           .requestMatchers(HttpMethod.GET, "/event_owners/**")
           .permitAll()
           .requestMatchers(HttpMethod.GET, "/security_levels/**")

@@ -71,6 +71,10 @@ services:
       AUTH_CORS_ALLOWED_ORIGINS: ${AUTH_CORS_ALLOWED_ORIGINS:-http://localhost:8888}
       JWT_PRIVATE_KEY: ${JWT_PRIVATE_KEY}
       JWT_PUBLIC_KEY: ${JWT_PUBLIC_KEY}
+      # Photo-provider runs outside compose. Dev: on the host. Prod: set PHOTO_PROVIDER_URL in the deployment env file.
+      PHOTO_PROVIDER_URL: ${PHOTO_PROVIDER_URL:-http://host.docker.internal:8888}
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.backend.rule=Host(`arim-fg.samfundet.no`) || Host(`${AZURE_PUBLIC_HOSTNAME}`)"
