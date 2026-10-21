@@ -1,6 +1,7 @@
 package no.fg.hilflingbackend.controller
 
 import jakarta.servlet.http.HttpServletRequest
+import no.fg.hilflingbackend.configurations.RequireSecurityLevel
 import no.fg.hilflingbackend.configurations.hilflingToken
 import no.fg.hilflingbackend.dto.MotiveCreateRequestDto
 import no.fg.hilflingbackend.dto.MotiveDefaultsDto
@@ -9,6 +10,7 @@ import no.fg.hilflingbackend.dto.MotivePatchRequestDto
 import no.fg.hilflingbackend.dto.Page
 import no.fg.hilflingbackend.service.JwtService
 import no.fg.hilflingbackend.service.MotiveService
+import no.fg.hilflingbackend.valueobject.SecurityLevelType
 import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PatchMapping
@@ -57,6 +59,7 @@ class MotiveController(
   }
 
   @PostMapping
+  @RequireSecurityLevel(SecurityLevelType.FG)
   fun create(
     @RequestBody dto: MotiveCreateRequestDto,
     request: HttpServletRequest,
@@ -66,6 +69,7 @@ class MotiveController(
   }
 
   @PatchMapping
+  @RequireSecurityLevel(SecurityLevelType.FG)
   fun patch(
     @RequestBody dto: MotivePatchRequestDto,
     request: HttpServletRequest,
@@ -75,6 +79,7 @@ class MotiveController(
   }
 
   @DeleteMapping("/{id}")
+  @RequireSecurityLevel(SecurityLevelType.FG)
   fun delete(
     @PathVariable("id") id: UUID,
     request: HttpServletRequest,
@@ -84,5 +89,6 @@ class MotiveController(
   }
 
   @GetMapping("/defaults")
+  @RequireSecurityLevel(SecurityLevelType.FG)
   fun getDefaults(): MotiveDefaultsDto = motiveService.getMotiveDefaults()
 }

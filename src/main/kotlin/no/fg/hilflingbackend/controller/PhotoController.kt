@@ -2,17 +2,22 @@ package no.fg.hilflingbackend.controller
 
 import jakarta.servlet.http.HttpServletRequest
 import no.fg.hilflingbackend.configurations.RequirePermission
+import no.fg.hilflingbackend.configurations.RequireSecurityLevel
 import no.fg.hilflingbackend.configurations.hilflingToken
 import no.fg.hilflingbackend.dto.Page
 import no.fg.hilflingbackend.dto.PhotoDto
 import no.fg.hilflingbackend.dto.PhotoFinalizeRequestDto
 import no.fg.hilflingbackend.dto.PhotoGoodPictureToggleRequestDto
+import no.fg.hilflingbackend.dto.PhotoMoveFinalizeRequestDto
+import no.fg.hilflingbackend.dto.PhotoMoveRequestDto
+import no.fg.hilflingbackend.dto.PhotoMoveReserveResponseDto
 import no.fg.hilflingbackend.dto.PhotoPositionDto
 import no.fg.hilflingbackend.dto.PhotoReservationDto
 import no.fg.hilflingbackend.dto.PhotoUploadRequestDto
 import no.fg.hilflingbackend.service.JwtService
 import no.fg.hilflingbackend.service.PhotoService
 import no.fg.hilflingbackend.valueobject.Permission
+import no.fg.hilflingbackend.valueobject.SecurityLevelType
 import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
@@ -78,6 +83,7 @@ class PhotoController(
   }
 
   @PostMapping("/upload/reserve")
+  @RequireSecurityLevel(SecurityLevelType.FG)
   fun reserve(
     @RequestBody dto: PhotoUploadRequestDto,
     request: HttpServletRequest,
@@ -87,6 +93,7 @@ class PhotoController(
   }
 
   @PostMapping("/upload/finalize")
+  @RequireSecurityLevel(SecurityLevelType.FG)
   fun upload(
     @RequestBody dto: PhotoFinalizeRequestDto,
     request: HttpServletRequest,
@@ -96,6 +103,7 @@ class PhotoController(
   }
 
   @DeleteMapping("/{id}")
+  @RequireSecurityLevel(SecurityLevelType.FG)
   fun delete(
     @PathVariable id: UUID,
     request: HttpServletRequest,
@@ -105,6 +113,7 @@ class PhotoController(
   }
 
   @PutMapping("/{id}/good-picture")
+  @RequireSecurityLevel(SecurityLevelType.FG)
   fun markAsGoodPicture(
     @PathVariable id: UUID,
     @RequestBody dto: PhotoGoodPictureToggleRequestDto,
@@ -112,5 +121,27 @@ class PhotoController(
   ) {
     val payload = jwtService.extractPayload(request.hilflingToken()!!)
     return photoService.markAsGoodPicture(id, dto.goodPicture, payload.securityLevel)
+  }
+
+  @PostMapping("/{id}/move/reserve")
+  @RequireSecurityLevel(SecurityLevelType.FG)
+  fun moveReserve(
+    @PathVariable id: UUID,
+    @RequestBody dto: PhotoMoveRequestDto,
+    request: HttpServletRequest,
+  ): PhotoMoveReserveResponseDto {
+    val payload = jwtService.extractPayload(request.hilflingToken()!!)
+    return photoService.moveReserve(id, dto, payload.securityLevel)
+  }
+
+  @PostMapping("/{id}/move/finalize")
+  @RequireSecurityLevel(SecurityLevelType.FG)
+  fun moveFinalize(
+    @PathVariable id: UUID,
+    @RequestBody dto: PhotoMoveFinalizeRequestDto,
+    request: HttpServletRequest,
+  ): PhotoDto {
+    val payload = jwtService.extractPayload(request.hilflingToken()!!)
+    return photoService.moveFinalize(id, dto, payload.securityLevel)
   }
 }

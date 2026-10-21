@@ -7,8 +7,10 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer
 @Configuration
 class WebMvcConfig(
   private val permissionInterceptor: PermissionInterceptor,
+  private val securityLevelInterceptor: SecurityLevelInterceptor,
 ) : WebMvcConfigurer {
   override fun addInterceptors(registry: InterceptorRegistry) {
     registry.addInterceptor(permissionInterceptor)
+    registry.addInterceptor(securityLevelInterceptor)
   }
 }

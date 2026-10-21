@@ -201,4 +201,32 @@ open class PhotoRepository(
       where { it.id eq id }
     }
   }
+
+  /**
+   * Reassigns a photo to a different motive and, when applicable, a new album
+   * slot and a new security level. Called by the move-finalise flow after the
+   * photo-provider has relocated the on-disk files. The security level is set
+   * from the target motive (see PhotoService.moveFinalize).
+   */
+  fun move(
+    photoId: UUID,
+    motiveId: UUID,
+    pageNumber: Int,
+    imageNumber: Int,
+    imageProd: String?,
+    imageWeb: String,
+    imageThumb: String,
+    securityLevel: String,
+  ) {
+    database.update(Photos) {
+      set(it.motiveId, motiveId)
+      set(it.pageNumber, pageNumber)
+      set(it.imageNumber, imageNumber)
+      set(it.imageProd, imageProd)
+      set(it.imageWeb, imageWeb)
+      set(it.imageThumb, imageThumb)
+      set(it.securityLevel, securityLevel)
+      where { it.id eq photoId }
+    }
+  }
 }

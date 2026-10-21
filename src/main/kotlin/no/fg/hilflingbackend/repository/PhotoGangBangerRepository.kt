@@ -3,11 +3,13 @@ package no.fg.hilflingbackend.repository
 import jakarta.persistence.EntityNotFoundException
 import me.liuwj.ktorm.database.Database
 import me.liuwj.ktorm.dsl.and
+import me.liuwj.ktorm.dsl.delete
 import me.liuwj.ktorm.dsl.desc
 import me.liuwj.ktorm.dsl.eq
 import me.liuwj.ktorm.dsl.from
 import me.liuwj.ktorm.dsl.innerJoin
 import me.liuwj.ktorm.dsl.insert
+import me.liuwj.ktorm.dsl.isNull
 import me.liuwj.ktorm.dsl.map
 import me.liuwj.ktorm.dsl.orderBy
 import me.liuwj.ktorm.dsl.select
@@ -23,8 +25,9 @@ import no.fg.hilflingbackend.dto.MemberPositionDto
 import no.fg.hilflingbackend.dto.Page
 import no.fg.hilflingbackend.dto.PhotoGangBangerDto
 import no.fg.hilflingbackend.dto.PhotoGangBangerPatchRequestDto
-import no.fg.hilflingbackend.dto.PhotoGangBangerPositionPatchRequestDto
+import no.fg.hilflingbackend.dto.PhotoGangBangerPositionsPutRequestDto
 import no.fg.hilflingbackend.dto.PositionId
+import no.fg.hilflingbackend.dto.UserUploadDto
 import no.fg.hilflingbackend.dto.toEntity
 import no.fg.hilflingbackend.exceptions.EntityExistsException
 import no.fg.hilflingbackend.model.PhotoGangBangerToPositions
@@ -33,6 +36,7 @@ import no.fg.hilflingbackend.model.Positions
 import no.fg.hilflingbackend.model.photo_gang_bangers
 import no.fg.hilflingbackend.model.positions
 import no.fg.hilflingbackend.model.toDto
+import no.fg.hilflingbackend.model.user_uploads
 import no.fg.hilflingbackend.valueobject.Email
 import no.fg.hilflingbackend.valueobject.SemesterStart
 import org.springframework.stereotype.Repository
@@ -81,6 +85,7 @@ class PhotoGangBangerRepository(
           email = Email(row[Positions.email]!!),
           semesterStart = SemesterStart(row[PhotoGangBangerToPositions.semesterStart]!!),
           isActive = row[PhotoGangBangerToPositions.semesterEnd] == null,
+          semesterEnd = row[PhotoGangBangerToPositions.semesterEnd]?.let { SemesterStart(it) },
         )
       }
 
@@ -139,7 +144,11 @@ class PhotoGangBangerRepository(
     val existing = database.photo_gang_bangers.find { it.username eq dto.username }
     if (existing != null) throw EntityExistsException("PhotoGangBanger already exists")
 
-    validatePositionAssignments(dto.positions)
+    validatePositionAssignments(dto.positions.map { it.positionId to it.semesterStart })
+    dto.profilePicture
+      ?.userUploadId
+      ?.id
+      ?.let { resolveProfilePicture(it, dto.photoGangBangerId.id, dto) }
 
     val created =
       database.insert(PhotoGangBangers) {
@@ -147,12 +156,13 @@ class PhotoGangBangerRepository(
         set(it.isActive, dto.isActive)
         set(it.isPang, dto.isPang)
         set(it.semesterStart, dto.semesterStart.value)
-        set(it.firstName, dto.firstName)
-        set(it.lastName, dto.lastName)
+        set(it.name, dto.name)
+        set(it.foodPreference, dto.foodPreference)
+        set(it.birthday, dto.birthday)
         set(it.username, dto.username)
         set(it.email, dto.email)
-        set(it.profilePicture, dto.profilePicture)
         set(it.phoneNumber, dto.phoneNumber)
+        set(it.profilePictureId, dto.profilePicture?.userUploadId?.id)
       }
 
     dto.positions.forEach { position ->
@@ -166,10 +176,10 @@ class PhotoGangBangerRepository(
     return created
   }
 
-  private fun validatePositionAssignments(positions: List<MemberPositionDto>) {
+  private fun validatePositionAssignments(positions: List<Pair<PositionId, SemesterStart>>) {
     val duplicates =
       positions
-        .groupingBy { it.positionId.id to it.semesterStart.value }
+        .groupingBy { it.first.id to it.second.value }
         .eachCount()
         .filterValues { it > 1 }
 
@@ -183,13 +193,28 @@ class PhotoGangBangerRepository(
 
     val missingPositionIds =
       positions
-        .map { it.positionId.id }
+        .map { it.first.id }
         .distinct()
         .filterNot { positionId -> database.positions.any { it.id eq positionId } }
 
     if (missingPositionIds.isNotEmpty()) {
       throw IllegalArgumentException("Unknown positionId(s): ${missingPositionIds.joinToString(", ")}")
     }
+  }
+
+  private fun resolveProfilePicture(
+    profilePictureId: UUID,
+    ownerId: UUID,
+    owner: PhotoGangBangerDto,
+  ): UserUploadDto {
+    val upload =
+      database.user_uploads
+        .find { (it.id eq profilePictureId) and it.dateDeleted.isNull() }
+        ?: throw IllegalArgumentException("Unknown profilePictureId: $profilePictureId")
+    if (upload.photoGangBangerId != ownerId) {
+      throw IllegalArgumentException("Profile picture must be an upload owned by the photo gang banger")
+    }
+    return upload.toDto(owner)
   }
 
   fun patch(dto: PhotoGangBangerPatchRequestDto): PhotoGangBangerDto? {
@@ -203,33 +228,74 @@ class PhotoGangBangerRepository(
         semesterStart = dto.semesterStart ?: fromDb.semesterStart,
         isActive = dto.isActive ?: fromDb.isActive,
         isPang = dto.isPang ?: fromDb.isPang,
-        firstName = dto.firstName ?: fromDb.firstName,
-        lastName = dto.lastName ?: fromDb.lastName,
+        name = dto.name ?: fromDb.name,
+        foodPreference = dto.foodPreference ?: fromDb.foodPreference,
+        birthday = dto.birthday ?: fromDb.birthday,
         username = dto.username ?: fromDb.username,
         email = dto.email ?: fromDb.email,
-        profilePicture = dto.profilePicture ?: fromDb.profilePicture,
         phoneNumber = dto.phoneNumber ?: fromDb.phoneNumber,
+        profilePicture =
+          dto.profilePictureId
+            ?.let { resolveProfilePicture(it.id, dto.photoGangBangerId.id, fromDb) }
+            ?: fromDb.profilePicture,
       )
 
     database.photo_gang_bangers.update(updated.toEntity())
     return findById(dto.photoGangBangerId.id)
   }
 
-  fun patchPosition(dto: PhotoGangBangerPositionPatchRequestDto): PhotoGangBangerDto? {
-    findById(dto.photoGangBangerId.id)
+  @Transactional
+  fun replacePositions(dto: PhotoGangBangerPositionsPutRequestDto): PhotoGangBangerDto {
+    val memberId = dto.photoGangBangerId.id
+    findById(memberId)
       ?: throw EntityNotFoundException("Could not find PhotoGangBanger")
+    validatePositionAssignments(dto.positions.map { it.positionId to it.semesterStart })
 
-    database.update(PhotoGangBangerToPositions) {
-      if (dto.position != null) {
-        set(it.positionId, dto.position.positionId.id)
+    val currentRows =
+      database
+        .from(PhotoGangBangerToPositions)
+        .select(PhotoGangBangerToPositions.positionId, PhotoGangBangerToPositions.semesterStart)
+        .where { PhotoGangBangerToPositions.photoGangBangerId eq memberId }
+        .map { row ->
+          row[PhotoGangBangerToPositions.positionId]!! to
+            row[PhotoGangBangerToPositions.semesterStart]!!
+        }
+    val currentKeys = currentRows.toSet()
+    val desiredKeys = dto.positions.map { it.positionId.id to it.semesterStart.value }.toSet()
+
+    currentRows
+      .filterNot { it in desiredKeys }
+      .forEach { (positionId, semesterStart) ->
+        database.delete(PhotoGangBangerToPositions) {
+          (it.photoGangBangerId eq memberId) and
+            (it.positionId eq positionId) and
+            (it.semesterStart eq semesterStart)
+        }
       }
-      set(it.semesterEnd, dto.semesterEnd?.value)
-      where {
-        (it.photoGangBangerId eq dto.photoGangBangerId.id) and
-          (it.semesterStart eq dto.semesterStart.value)
+
+    dto.positions.forEach { position ->
+      val key = position.positionId.id to position.semesterStart.value
+      if (key !in currentKeys) {
+        database.insert(PhotoGangBangerToPositions) {
+          set(it.photoGangBangerId, memberId)
+          set(it.positionId, position.positionId.id)
+          set(it.semesterStart, position.semesterStart.value)
+          set(it.semesterEnd, position.semesterEnd?.value)
+        }
+      } else {
+        database.update(PhotoGangBangerToPositions) {
+          set(it.semesterEnd, position.semesterEnd?.value)
+          where {
+            (it.photoGangBangerId eq memberId) and
+              (it.positionId eq position.positionId.id) and
+              (it.semesterStart eq position.semesterStart.value)
+          }
+        }
       }
     }
-    return findById(dto.photoGangBangerId.id)
+
+    return findById(memberId)
+      ?: throw EntityNotFoundException("Could not find PhotoGangBanger")
   }
 
   fun findByUsername(username: String): PhotoGangBangerDto? =

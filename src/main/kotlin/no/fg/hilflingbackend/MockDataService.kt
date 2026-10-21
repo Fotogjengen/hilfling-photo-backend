@@ -12,6 +12,8 @@ import no.fg.hilflingbackend.dto.CategoryId
 import no.fg.hilflingbackend.dto.EventOwnerDto
 import no.fg.hilflingbackend.dto.EventOwnerId
 import no.fg.hilflingbackend.dto.EventOwnerName
+import no.fg.hilflingbackend.dto.ExternalUserDto
+import no.fg.hilflingbackend.dto.ExternalUserId
 import no.fg.hilflingbackend.dto.GangDto
 import no.fg.hilflingbackend.dto.GangId
 import no.fg.hilflingbackend.dto.MotiveCreateRequestDto
@@ -20,6 +22,7 @@ import no.fg.hilflingbackend.dto.MotiveId
 import no.fg.hilflingbackend.dto.PhotoDto
 import no.fg.hilflingbackend.dto.PhotoGangBangerDto
 import no.fg.hilflingbackend.dto.PhotoGangBangerId
+import no.fg.hilflingbackend.dto.PhotoGangBangerPatchRequestDto
 import no.fg.hilflingbackend.dto.PhotoGangBangerPositionDto
 import no.fg.hilflingbackend.dto.PhotoId
 import no.fg.hilflingbackend.dto.PlaceDto
@@ -27,18 +30,22 @@ import no.fg.hilflingbackend.dto.PlaceId
 import no.fg.hilflingbackend.dto.PositionDto
 import no.fg.hilflingbackend.dto.PositionId
 import no.fg.hilflingbackend.dto.SecurityLevelDto
+import no.fg.hilflingbackend.dto.UserUploadDto
+import no.fg.hilflingbackend.dto.UserUploadId
 import no.fg.hilflingbackend.model.PhotoGangBangerToPositions
 import no.fg.hilflingbackend.model.Photos
 import no.fg.hilflingbackend.model.PositionToPermissions
 import no.fg.hilflingbackend.repository.AlbumRepository
 import no.fg.hilflingbackend.repository.CategoryRepository
 import no.fg.hilflingbackend.repository.EventOwnerRepository
+import no.fg.hilflingbackend.repository.ExternalUserRepository
 import no.fg.hilflingbackend.repository.GangRepository
 import no.fg.hilflingbackend.repository.MotiveRepository
 import no.fg.hilflingbackend.repository.PhotoGangBangerRepository
 import no.fg.hilflingbackend.repository.PhotoRepository
 import no.fg.hilflingbackend.repository.PlaceRepository
 import no.fg.hilflingbackend.repository.PositionRepository
+import no.fg.hilflingbackend.repository.UserUploadRepository
 import no.fg.hilflingbackend.valueobject.Email
 import no.fg.hilflingbackend.valueobject.Permission
 import no.fg.hilflingbackend.valueobject.PhoneNumber
@@ -67,11 +74,15 @@ class MockDataService {
 
   @Autowired lateinit var photoGangBangerRepository: PhotoGangBangerRepository
 
+  @Autowired lateinit var userUploadRepository: UserUploadRepository
+
   @Autowired lateinit var positionRepository: PositionRepository
 
   @Autowired lateinit var categoryRepository: CategoryRepository
 
   @Autowired lateinit var eventOwnerRepository: EventOwnerRepository
+
+  @Autowired lateinit var externalUserRepository: ExternalUserRepository
 
   @Autowired lateinit var gangRepository: GangRepository
 
@@ -84,6 +95,49 @@ class MockDataService {
       SecurityLevelDto(securityLevelType = SecurityLevelType.FG),
       SecurityLevelDto(securityLevelType = SecurityLevelType.HUSFOLK),
       SecurityLevelDto(securityLevelType = SecurityLevelType.ALLE),
+    )
+
+  fun generateExternalUserData(): List<ExternalUserDto> =
+    listOf(
+      ExternalUserDto(
+        externalUserId =
+          ExternalUserId(
+            UUID.fromString("ca89444f-25f6-44d9-8a73-94587d72b839"),
+          ),
+        username = "fg",
+        password = "password",
+        email = "fg@samfundet.no",
+        fullName = "FG Testbruker",
+        securityLevel = SecurityLevelDto(securityLevelType = SecurityLevelType.FG),
+        description = "Seed account with FG security level",
+        isActive = true,
+      ),
+      ExternalUserDto(
+        externalUserId =
+          ExternalUserId(
+            UUID.fromString("da89444f-25f6-44d9-8a73-94587d72b839"),
+          ),
+        username = "husfolk",
+        password = "password",
+        email = "husfolk@samfundet.no",
+        fullName = "Husfolk Testbruker",
+        securityLevel = SecurityLevelDto(securityLevelType = SecurityLevelType.HUSFOLK),
+        description = "Seed account with HUSFOLK security level",
+        isActive = true,
+      ),
+      ExternalUserDto(
+        externalUserId =
+          ExternalUserId(
+            UUID.fromString("ea89444f-25f6-44d9-8a73-94587d72b839"),
+          ),
+        username = "alle",
+        password = "password",
+        email = "alle@samfundet.no",
+        fullName = "Alle Testbruker",
+        securityLevel = SecurityLevelDto(securityLevelType = SecurityLevelType.ALLE),
+        description = "Seed account with ALLE security level",
+        isActive = true,
+      ),
     )
 
   fun generateGangData(): List<GangDto> =
@@ -1060,12 +1114,10 @@ class MockDataService {
         isActive = true,
         isPang = false,
         semesterStart = SemesterStart("H2024"),
-        firstName = "Gjengsjef",
-        lastName = "Testbruker",
+        name = "Gjengsjef Testbruker",
         username = "gjengsjef",
         email = "gjengsjef@samfundet.no",
-        profilePicture = "",
-        phoneNumber = "00000000",
+        phoneNumber = "40000000",
       ),
       PhotoGangBangerDto(
         photoGangBangerId =
@@ -1075,12 +1127,10 @@ class MockDataService {
         isActive = true,
         isPang = false,
         semesterStart = SemesterStart("H2024"),
-        firstName = "Web",
-        lastName = "Testbruker",
+        name = "Web Testbruker",
         username = "web",
         email = "web@samfundet.no",
-        profilePicture = "",
-        phoneNumber = "00000000",
+        phoneNumber = "40000000",
       ),
       PhotoGangBangerDto(
         photoGangBangerId =
@@ -1090,12 +1140,10 @@ class MockDataService {
         isActive = true,
         isPang = false,
         semesterStart = SemesterStart("H2024"),
-        firstName = "DeNye",
-        lastName = "Testbruker",
+        name = "DeNye Testbruker",
         username = "denye",
         email = "denye@samfundet.no",
-        profilePicture = "",
-        phoneNumber = "00000000",
+        phoneNumber = "40000000",
       ),
       // Pang users — former position holders, position ended (semesterEnd != null)
       PhotoGangBangerDto(
@@ -1106,12 +1154,10 @@ class MockDataService {
         isActive = true,
         isPang = true,
         semesterStart = SemesterStart("V2022"),
-        firstName = "Pang",
-        lastName = "Gjengsjef",
+        name = "Pang Gjengsjef",
         username = "pang_gjengsjef",
         email = "pang@samfundet.no",
-        profilePicture = "",
-        phoneNumber = "00000000",
+        phoneNumber = "40000000",
       ),
       PhotoGangBangerDto(
         photoGangBangerId =
@@ -1121,12 +1167,23 @@ class MockDataService {
         isActive = true,
         isPang = true,
         semesterStart = SemesterStart("V2022"),
-        firstName = "Pang",
-        lastName = "Web",
+        name = "Pang Web",
         username = "pang_web",
         email = "pang@samfundet.no",
-        profilePicture = "",
-        phoneNumber = "00000000",
+        phoneNumber = "40000000",
+      ),
+      PhotoGangBangerDto(
+        photoGangBangerId =
+          PhotoGangBangerId(
+            UUID.fromString("ba89444f-25f6-44d9-8a73-94587d72b839"),
+          ),
+        isActive = false,
+        isPang = true,
+        semesterStart = SemesterStart("V2020"),
+        name = "Gammel Pang",
+        username = "pangpang",
+        email = "pang@samfundet.no",
+        phoneNumber = "90000009",
       ),
     )
 
@@ -1211,6 +1268,17 @@ class MockDataService {
     return all.map { gjengsjef to it } + all.map { web to it }
   }
 
+  fun generateProfilePictureData(): List<UserUploadDto> =
+    generatePhotoGangBangerData().map { member ->
+      UserUploadDto(
+        userUploadId = UserUploadId(),
+        securityLevel = SecurityLevelDto(SecurityLevelType.FG),
+        link = "https://picsum.photos/seed/${member.username}-profile/400/400",
+        photoGangBangerDto = member,
+        dateUploaded = LocalDate.now(),
+      )
+    }
+
   fun seedMockData() {
     println(">>> seedMockData called at " + java.time.Instant.now())
     generateAlbumData().forEach { albumRepository.create(it) }
@@ -1237,12 +1305,33 @@ class MockDataService {
       }
     }
     println("PhotoGangBangers seeded")
+    generateProfilePictureData().forEach { profilePicture ->
+      userUploadRepository.create(profilePicture)
+      photoGangBangerRepository.patch(
+        PhotoGangBangerPatchRequestDto(
+          photoGangBangerId = profilePicture.photoGangBangerDto.photoGangBangerId,
+          semesterStart = null,
+          isActive = null,
+          isPang = null,
+          name = null,
+          foodPreference = null,
+          birthday = null,
+          username = null,
+          email = null,
+          phoneNumber = null,
+          profilePictureId = profilePicture.userUploadId,
+        ),
+      )
+    }
+    println("Profile pictures seeded")
     generateCategoryData().forEach { categoryRepository.create(it) }
     println("Category seeded")
 
     generateEventOwnerData().forEach { eventOwnerRepository.create(it) }
     generatePlaceData().forEach { placeRepository.create(it) }
     generateGangData().forEach { gangRepository.create(it) }
+    generateExternalUserData().forEach { externalUserRepository.create(it) }
+    println("ExternalUsers seeded")
 
     val savedMotives = generateMotiveData().map { motiveRepository.create(it) }
     database.batchInsert(Photos) {

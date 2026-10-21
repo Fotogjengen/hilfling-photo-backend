@@ -23,6 +23,7 @@ data class MemberPositionDto(
   val email: Email,
   val semesterStart: SemesterStart,
   val isActive: Boolean,
+  val semesterEnd: SemesterStart? = null,
 )
 
 fun PositionDto.toEntity(): Position {

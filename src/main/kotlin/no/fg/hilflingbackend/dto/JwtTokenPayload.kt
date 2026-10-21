@@ -4,6 +4,7 @@ import no.fg.hilflingbackend.valueobject.Permission
 import no.fg.hilflingbackend.valueobject.SecurityLevelType
 
 data class JwtTokenPayload(
+  val isExternalUser: Boolean = false,
   val username: String,
   val positionId: String?,
   val securityLevel: SecurityLevelType,
