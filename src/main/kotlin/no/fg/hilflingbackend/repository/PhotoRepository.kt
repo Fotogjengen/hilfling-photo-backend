@@ -127,6 +127,15 @@ open class PhotoRepository(
       }
   }
 
+  /**
+   * Finds the IDs of motives of some number of security levels
+   */
+  private fun motiveIdsWithSecurityLevel(levels: List<String>) =
+    database
+      .from(Motives)
+      .select(Motives.id)
+      .where { Motives.securityLevel inList levels }
+
   fun findGoodPicturesPage(
     page: Int,
     pageSize: Int,
@@ -143,7 +152,7 @@ open class PhotoRepository(
         .filter {
           (it.goodPicture eq true) and
             it.dateDeleted.isNull() and
-            ((it.motiveId.referenceTable as Motives).securityLevel inList allowedSecurityLevels)
+            (it.motiveId inList motiveIdsWithSecurityLevel(allowedSecurityLevels))
         }
     val photos =
       sequence
@@ -185,7 +194,7 @@ open class PhotoRepository(
           (it.id eq photoId) and
             (it.goodPicture eq true) and
             it.dateDeleted.isNull() and
-            ((it.motiveId.referenceTable as Motives).securityLevel inList allowedSecurityLevels)
+            (it.motiveId inList motiveIdsWithSecurityLevel(allowedSecurityLevels))
         }.totalRecords > 0
     if (!qualifies) return null
 
@@ -194,7 +203,7 @@ open class PhotoRepository(
         .filter {
           (it.goodPicture eq true) and
             it.dateDeleted.isNull() and
-            ((it.motiveId.referenceTable as Motives).securityLevel inList allowedSecurityLevels) and
+            (it.motiveId inList motiveIdsWithSecurityLevel(allowedSecurityLevels)) and
             (
               (it.dateCreated greater target.dateCreated) or
                 ((it.dateCreated eq target.dateCreated) and (it.id less photoId))
