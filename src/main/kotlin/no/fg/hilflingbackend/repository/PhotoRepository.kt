@@ -143,7 +143,7 @@ open class PhotoRepository(
         .filter {
           (it.goodPicture eq true) and
             it.dateDeleted.isNull() and
-            (Motives.securityLevel inList allowedSecurityLevels)
+            ((it.motiveId.referenceTable as Motives).securityLevel inList allowedSecurityLevels)
         }
     val photos =
       sequence
@@ -185,7 +185,7 @@ open class PhotoRepository(
           (it.id eq photoId) and
             (it.goodPicture eq true) and
             it.dateDeleted.isNull() and
-            (Motives.securityLevel inList allowedSecurityLevels)
+            ((it.motiveId.referenceTable as Motives).securityLevel inList allowedSecurityLevels)
         }.totalRecords > 0
     if (!qualifies) return null
 
@@ -194,7 +194,7 @@ open class PhotoRepository(
         .filter {
           (it.goodPicture eq true) and
             it.dateDeleted.isNull() and
-            (Motives.securityLevel inList allowedSecurityLevels) and
+            ((it.motiveId.referenceTable as Motives).securityLevel inList allowedSecurityLevels) and
             (
               (it.dateCreated greater target.dateCreated) or
                 ((it.dateCreated eq target.dateCreated) and (it.id less photoId))
