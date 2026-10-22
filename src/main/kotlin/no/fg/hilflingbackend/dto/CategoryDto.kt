@@ -48,13 +48,21 @@ class CategoryIdDeserializer : JsonDeserializer<CategoryId>() {
         val id = if (idNode == null || idNode.isNull) null else idNode.asText()
         id.toCategoryId()
       }
-      JsonToken.VALUE_STRING -> parser.valueAsString.toCategoryId()
-      JsonToken.VALUE_NULL -> CategoryId()
-      else -> throw JsonMappingException.from(parser, "Expected CategoryId object, string, or null")
+
+      JsonToken.VALUE_STRING -> {
+        parser.valueAsString.toCategoryId()
+      }
+
+      JsonToken.VALUE_NULL -> {
+        CategoryId()
+      }
+
+      else -> {
+        throw JsonMappingException.from(parser, "Expected CategoryId object, string, or null")
+      }
     }
 
-  private fun String?.toCategoryId(): CategoryId =
-    if (isNullOrBlank()) CategoryId() else CategoryId(UUID.fromString(this))
+  private fun String?.toCategoryId(): CategoryId = if (isNullOrBlank()) CategoryId() else CategoryId(UUID.fromString(this))
 }
 // data class CategoryId(
 //   override val id: UUID = UUID.randomUUID(),

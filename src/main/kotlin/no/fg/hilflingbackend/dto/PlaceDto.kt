@@ -47,13 +47,21 @@ class PlaceIdDeserializer : JsonDeserializer<PlaceId>() {
         val id = if (idNode == null || idNode.isNull) null else idNode.asText()
         id.toPlaceId()
       }
-      JsonToken.VALUE_STRING -> parser.valueAsString.toPlaceId()
-      JsonToken.VALUE_NULL -> PlaceId()
-      else -> throw JsonMappingException.from(parser, "Expected PlaceId object, string, or null")
+
+      JsonToken.VALUE_STRING -> {
+        parser.valueAsString.toPlaceId()
+      }
+
+      JsonToken.VALUE_NULL -> {
+        PlaceId()
+      }
+
+      else -> {
+        throw JsonMappingException.from(parser, "Expected PlaceId object, string, or null")
+      }
     }
 
-  private fun String?.toPlaceId(): PlaceId =
-    if (isNullOrBlank()) PlaceId() else PlaceId(UUID.fromString(this))
+  private fun String?.toPlaceId(): PlaceId = if (isNullOrBlank()) PlaceId() else PlaceId(UUID.fromString(this))
 }
 // data class PlaceId(
 //   override val id: UUID = UUID.randomUUID(),

@@ -56,13 +56,21 @@ class AlbumIdDeserializer : JsonDeserializer<AlbumId>() {
         val id = if (idNode == null || idNode.isNull) null else idNode.asText()
         id.toAlbumId()
       }
-      JsonToken.VALUE_STRING -> parser.valueAsString.toAlbumId()
-      JsonToken.VALUE_NULL -> AlbumId()
-      else -> throw JsonMappingException.from(parser, "Expected AlbumId object, string, or null")
+
+      JsonToken.VALUE_STRING -> {
+        parser.valueAsString.toAlbumId()
+      }
+
+      JsonToken.VALUE_NULL -> {
+        AlbumId()
+      }
+
+      else -> {
+        throw JsonMappingException.from(parser, "Expected AlbumId object, string, or null")
+      }
     }
 
-  private fun String?.toAlbumId(): AlbumId =
-    if (isNullOrBlank()) AlbumId() else AlbumId(UUID.fromString(this))
+  private fun String?.toAlbumId(): AlbumId = if (isNullOrBlank()) AlbumId() else AlbumId(UUID.fromString(this))
 }
 // data class AlbumId(
 //   override val id: UUID = UUID.randomUUID(),
