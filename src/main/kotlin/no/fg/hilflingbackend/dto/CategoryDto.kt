@@ -7,7 +7,6 @@ import com.fasterxml.jackson.databind.JsonDeserializer
 import com.fasterxml.jackson.databind.JsonMappingException
 import com.fasterxml.jackson.databind.JsonNode
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize
-
 import no.fg.hilflingbackend.model.Category
 import java.util.UUID
 
@@ -64,8 +63,4 @@ class CategoryIdDeserializer : JsonDeserializer<CategoryId>() {
 
   private fun String?.toCategoryId(): CategoryId = if (isNullOrBlank()) CategoryId() else CategoryId(UUID.fromString(this))
 }
-// data class CategoryId(
-//   override val id: UUID = UUID.randomUUID(),
-// ) : UuidId {
-//   override fun toString(): String = id.toString()
-// }
+

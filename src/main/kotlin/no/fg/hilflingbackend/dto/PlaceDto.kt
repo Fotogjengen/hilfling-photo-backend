@@ -63,8 +63,3 @@ class PlaceIdDeserializer : JsonDeserializer<PlaceId>() {
 
   private fun String?.toPlaceId(): PlaceId = if (isNullOrBlank()) PlaceId() else PlaceId(UUID.fromString(this))
 }
-// data class PlaceId(
-//   override val id: UUID = UUID.randomUUID(),
-// ) : UuidId {
-//   override fun toString(): String = id.toString()
-// }

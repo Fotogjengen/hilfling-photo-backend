@@ -72,8 +72,3 @@ class AlbumIdDeserializer : JsonDeserializer<AlbumId>() {
 
   private fun String?.toAlbumId(): AlbumId = if (isNullOrBlank()) AlbumId() else AlbumId(UUID.fromString(this))
 }
-// data class AlbumId(
-//   override val id: UUID = UUID.randomUUID(),
-// ) : UuidId {
-//   override fun toString(): String = id.toString()
-// }
