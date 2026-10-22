@@ -8,7 +8,7 @@ import java.util.UUID
 
 data class PhotoUploadRequestDto(
   val goodPicture: Boolean = false,
-  val analog: Boolean = false,
+  val mediaId: UUID,
   val motiveId: UUID,
   val gangId: UUID?,
   val dateTaken: LocalDate,
@@ -21,7 +21,8 @@ data class PhotoGoodPictureToggleRequestDto(
 
 data class PhotoFinalizeRequestDto(
   val goodPicture: Boolean = false,
-  val analog: Boolean = false,
+  val mediaId: UUID,
+  val securityLevel: String,
   val pageNumber: Int,
   val imageNumber: Int,
   val imageProd: String?,
@@ -33,75 +34,45 @@ data class PhotoFinalizeRequestDto(
 )
 
 data class PhotoPatchRequestDto(
-  val photoId: PhotoId,
-  val goodPicture: Boolean?,
-  val analog: Boolean?,
-  val motive: MotiveDto?,
-  val gang: GangDto?,
-  val photoGangBangerDto: PhotoGangBangerDto?,
-  val photoTags: List<String>?,
+  val goodPicture: Boolean? = null,
+  val mediaId: UUID? = null,
+  val gangId: UUID? = null,
 )
 
 data class PhotoMoveRequestDto(
   val targetMotiveId: UUID,
 )
 
-/**
- * Response of POST /photos/{id}/move/reserve.
- *
- * When [fileMoveRequired] is true, [albumName]/[pageNumber]/[imageNumber]/
- * [securityLevel] describe the destination path the photo provider must build, and the
- * `currentImage*` fields point at the existing files to move.
- */
-data class PhotoMoveReserveResponseDto(
-  val fileMoveRequired: Boolean,
-  val albumName: String,
-  val pageNumber: Int,
-  val imageNumber: Int,
-  val securityLevel: String,
-  val currentImageProd: String?,
-  val currentImageWeb: String?,
-  val currentImageThumb: String,
-)
-
-data class PhotoMoveFinalizeRequestDto(
-  val targetMotiveId: UUID,
-  val pageNumber: Int,
-  val imageNumber: Int,
-  val imageProd: String?,
-  val imageWeb: String,
-  val imageThumb: String,
-)
-
 data class PhotoDto(
   val photoId: PhotoId = PhotoId(),
   val goodPicture: Boolean = false,
-  val analog: Boolean = false,
   val imageNumber: Int,
   val pageNumber: Int,
   val imageProd: String?,
   val imageWeb: String?,
   val imageThumb: String,
   val motive: MotiveDto,
-  val securityLevel: SecurityLevelDto = motive.securityLevel,
+  val media: MediaDto,
   val gang: GangDto?,
   val photoGangBangerDto: PhotoGangBangerDto,
   val dateUploaded: LocalDate,
 ) {
+  val securityLevel: SecurityLevelDto
+    get() = motive.securityLevel
+
   fun toEntity(): Photo {
     val photo = this
     return Photo {
       this.id = photo.photoId.id
       this.goodPicture = photo.goodPicture
-      this.analog = photo.analog
       this.imageNumber = photo.imageNumber
       this.pageNumber = photo.pageNumber
-      this.securityLevel = photo.securityLevel.securityLevelType.type
       this.imageProd = photo.imageProd
       this.imageWeb = photo.imageWeb
       this.imageThumb = photo.imageThumb
       this.dateCreated = LocalDateTime.now()
       this.motive = photo.motive.toEntity()
+      this.media = photo.media.toEntity()
       this.gang = photo.gang?.toEntity()
       this.photoGangBanger = photo.photoGangBangerDto.toEntity()
     }
