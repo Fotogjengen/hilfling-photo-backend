@@ -1,3 +1,3 @@
--- V2__add_is_default.sql
+
 ALTER TABLE ALBUM
     ADD COLUMN is_default BOOLEAN NOT NULL DEFAULT FALSE;
