@@ -7,7 +7,6 @@ import com.fasterxml.jackson.databind.JsonDeserializer
 import com.fasterxml.jackson.databind.JsonMappingException
 import com.fasterxml.jackson.databind.JsonNode
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize
-
 import no.fg.hilflingbackend.model.Place
 import java.util.UUID
 
@@ -21,12 +20,6 @@ data class PlaceDto(
   val name: String,
 )
 
-// data class PlaceId(
-//   override val id: UUID = UUID.randomUUID(),
-// ) : UuidId {
-//   override fun toString(): String = id.toString()
-// }
-
 fun PlaceDto.toEntity(): Place {
   val dto = this
   return Place {
@@ -34,7 +27,6 @@ fun PlaceDto.toEntity(): Place {
     name = dto.name
   }
 }
-
 
 @JsonDeserialize(using = PlaceIdDeserializer::class)
 data class PlaceId(
@@ -63,3 +55,8 @@ class PlaceIdDeserializer : JsonDeserializer<PlaceId>() {
   private fun String?.toPlaceId(): PlaceId =
     if (isNullOrBlank()) PlaceId() else PlaceId(UUID.fromString(this))
 }
+// data class PlaceId(
+//   override val id: UUID = UUID.randomUUID(),
+// ) : UuidId {
+//   override fun toString(): String = id.toString()
+// }

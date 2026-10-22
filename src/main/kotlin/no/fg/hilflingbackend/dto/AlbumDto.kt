@@ -1,6 +1,5 @@
 package no.fg.hilflingbackend.dto
 
-
 import com.fasterxml.jackson.core.JsonParser
 import com.fasterxml.jackson.core.JsonToken
 import com.fasterxml.jackson.databind.DeserializationContext
@@ -8,7 +7,6 @@ import com.fasterxml.jackson.databind.JsonDeserializer
 import com.fasterxml.jackson.databind.JsonMappingException
 import com.fasterxml.jackson.databind.JsonNode
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize
-
 import no.fg.hilflingbackend.model.Album
 import java.util.UUID
 
@@ -28,12 +26,6 @@ data class AlbumDto(
   val isDefault: Boolean = false,
 )
 
-// data class AlbumId(
-//   override val id: UUID = UUID.randomUUID(),
-// ) : UuidId {
-//   override fun toString(): String = id.toString()
-// }
-
 fun AlbumDto.toEntity(): Album {
   val dto = this
   return Album {
@@ -44,6 +36,7 @@ fun AlbumDto.toEntity(): Album {
     isDefault = dto.isDefault
   }
 }
+
 @JsonDeserialize(using = AlbumIdDeserializer::class)
 data class AlbumId(
   override val id: UUID = UUID.randomUUID(),
@@ -71,3 +64,8 @@ class AlbumIdDeserializer : JsonDeserializer<AlbumId>() {
   private fun String?.toAlbumId(): AlbumId =
     if (isNullOrBlank()) AlbumId() else AlbumId(UUID.fromString(this))
 }
+// data class AlbumId(
+//   override val id: UUID = UUID.randomUUID(),
+// ) : UuidId {
+//   override fun toString(): String = id.toString()
+// }

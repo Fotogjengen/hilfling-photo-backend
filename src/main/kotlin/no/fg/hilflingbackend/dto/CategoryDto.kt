@@ -21,12 +21,6 @@ data class CategoryDto(
   val name: String,
 )
 
-// data class CategoryId(
-//   override val id: UUID = UUID.randomUUID(),
-// ) : UuidId {
-//   override fun toString(): String = id.toString()
-// }
-
 fun CategoryDto.toEntity(): Category {
   val dto = this
   return Category {
@@ -62,3 +56,8 @@ class CategoryIdDeserializer : JsonDeserializer<CategoryId>() {
   private fun String?.toCategoryId(): CategoryId =
     if (isNullOrBlank()) CategoryId() else CategoryId(UUID.fromString(this))
 }
+// data class CategoryId(
+//   override val id: UUID = UUID.randomUUID(),
+// ) : UuidId {
+//   override fun toString(): String = id.toString()
+// }
