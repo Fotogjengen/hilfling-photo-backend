@@ -47,6 +47,10 @@ jwt:
   private-key: ${JWT_PRIVATE_KEY}
   public-key: ${JWT_PUBLIC_KEY}
 
+# The backend calls the photo-provider's internal endpoints (e.g. relocating files)
+photo-provider:
+  url: ${PHOTO_PROVIDER_URL:http://127.0.0.1:8888}
+
 logging:
   level:
     # root: debug

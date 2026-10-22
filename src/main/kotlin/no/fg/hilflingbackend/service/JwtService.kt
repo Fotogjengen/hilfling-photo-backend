@@ -2,6 +2,7 @@ package no.fg.hilflingbackend.service
 
 import io.jsonwebtoken.Claims
 import io.jsonwebtoken.Jwts
+import io.jsonwebtoken.UnsupportedJwtException
 import no.fg.hilflingbackend.dto.JwtTokenPayload
 import no.fg.hilflingbackend.valueobject.Permission
 import no.fg.hilflingbackend.valueobject.SecurityLevelType
@@ -17,6 +18,7 @@ import java.security.spec.PKCS8EncodedKeySpec
 import java.security.spec.X509EncodedKeySpec
 import java.util.Base64
 import java.util.Date
+import java.util.UUID
 import java.util.function.Function
 
 @Service
@@ -58,6 +60,32 @@ class JwtService(
   }
 
   /**
+   * Short-lived token authorising the photo-provider to execute exactly the request body hashed into [planHash].
+   * Carries no user claims, so it can never be used as a user token.
+   */
+  fun generateServiceToken(
+    scope: String,
+    planHash: String,
+  ): String =
+    Jwts
+      .builder()
+      .header()
+      .keyId(keyId)
+      .and()
+      .issuer(SERVICE_ISSUER)
+      .subject(SERVICE_ISSUER)
+      .audience()
+      .add(PHOTO_PROVIDER_AUDIENCE)
+      .and()
+      .id(UUID.randomUUID().toString())
+      .claim("scope", scope)
+      .claim("planHash", planHash)
+      .issuedAt(Date(System.currentTimeMillis()))
+      .expiration(Date(System.currentTimeMillis() + 60 * 1000))
+      .signWith(privateKey, Jwts.SIG.RS256)
+      .compact()
+
+  /**
    * returns the JWKS document containing our public key, so that verifiers can validate our tokens
    */
   fun jwks(): Map<String, Any> =
@@ -86,6 +114,8 @@ class JwtService(
 
   fun extractPayload(token: String): JwtTokenPayload {
     val claims = extractAllClaims(token)
+    // User tokens have no audience; reject service tokens
+    if (!claims.audience.isNullOrEmpty()) throw UnsupportedJwtException("Service tokens cannot be used as user tokens")
     return JwtTokenPayload(
       username = claims.subject,
       positionId = claims.get("positionId", String::class.java),
@@ -146,6 +176,9 @@ class JwtService(
   private fun extractExpiration(token: String): Date = extractClaim(token, Claims::getExpiration)
 
   companion object {
+    const val SERVICE_ISSUER = "hilfling-backend"
+    const val PHOTO_PROVIDER_AUDIENCE = "photo-provider"
+
     private fun decodePem(pem: String): ByteArray {
       val body =
         pem

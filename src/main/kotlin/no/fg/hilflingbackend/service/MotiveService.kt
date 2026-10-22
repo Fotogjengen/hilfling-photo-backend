@@ -1,6 +1,7 @@
 package no.fg.hilflingbackend.service
 
 import jakarta.persistence.EntityNotFoundException
+import no.fg.hilflingbackend.dto.AlbumDto
 import no.fg.hilflingbackend.dto.EventOwnerName
 import no.fg.hilflingbackend.dto.MotiveCreateRequestDto
 import no.fg.hilflingbackend.dto.MotiveDefaultsDto
@@ -25,6 +26,8 @@ class MotiveService(
   val eventOwnerRepository: EventOwnerRepository,
   val motiveRepository: MotiveRepository,
   val photoRepository: PhotoRepository,
+  val photoRelocationService: PhotoRelocationService,
+  val motiveLocks: MotiveLocks,
 ) {
   fun findById(
     id: UUID,
@@ -83,8 +86,37 @@ class MotiveService(
     if (userSecurityLevel != SecurityLevelType.FG) {
       throw AccessDeniedException("Only FG users can update motives")
     }
-    return motiveRepository.patch(dto)
+    val id = dto.motiveId.id
+    return motiveLocks.withLock(id) {
+      val current =
+        motiveRepository.findById(id)
+          ?: throw EntityNotFoundException("Motive $id not found")
+      // Resolve albums from the database: the album name decides the photo folder, so don't trust the request's copy
+      val resolved =
+        dto.copy(
+          albumDto = dto.albumDto?.let { findAlbum(it.albumId.id) },
+          analogAlbumDto = dto.analogAlbumDto?.let { findAlbum(it.albumId.id) },
+        )
+      val target =
+        current.copy(
+          securityLevel = resolved.securityLevel ?: current.securityLevel,
+          albumDto = resolved.albumDto ?: current.albumDto,
+          analogAlbumDto = resolved.analogAlbumDto ?: current.analogAlbumDto,
+        )
+      val locationChanged =
+        target.securityLevel != current.securityLevel ||
+          target.albumDto?.albumId != current.albumDto?.albumId ||
+          target.analogAlbumDto?.albumId != current.analogAlbumDto?.albumId
+
+      if (locationChanged) {
+        photoRelocationService.relocateMotive(target) { motiveRepository.patch(resolved) }
+      } else {
+        motiveRepository.patch(resolved)
+      }
+    }
   }
+
+  private fun findAlbum(id: UUID): AlbumDto = albumRepository.findById(id) ?: throw EntityNotFoundException("Album $id not found")
 
   fun deleteMotive(
     id: UUID,

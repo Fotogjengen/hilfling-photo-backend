@@ -15,6 +15,8 @@ import no.fg.hilflingbackend.dto.ExternalUserDto
 import no.fg.hilflingbackend.dto.ExternalUserId
 import no.fg.hilflingbackend.dto.GangDto
 import no.fg.hilflingbackend.dto.GangId
+import no.fg.hilflingbackend.dto.MediaDto
+import no.fg.hilflingbackend.dto.MediaId
 import no.fg.hilflingbackend.dto.MotiveCreateRequestDto
 import no.fg.hilflingbackend.dto.MotiveDto
 import no.fg.hilflingbackend.dto.MotiveId
@@ -39,6 +41,7 @@ import no.fg.hilflingbackend.repository.CategoryRepository
 import no.fg.hilflingbackend.repository.EventOwnerRepository
 import no.fg.hilflingbackend.repository.ExternalUserRepository
 import no.fg.hilflingbackend.repository.GangRepository
+import no.fg.hilflingbackend.repository.MediaRepository
 import no.fg.hilflingbackend.repository.MotiveRepository
 import no.fg.hilflingbackend.repository.PhotoGangBangerRepository
 import no.fg.hilflingbackend.repository.PhotoRepository
@@ -88,6 +91,8 @@ class MockDataService {
   @Autowired lateinit var motiveRepository: MotiveRepository
 
   @Autowired lateinit var photoRepository: PhotoRepository
+
+  @Autowired lateinit var mediaRepository: MediaRepository
 
   fun generateSecurityLevelData(): List<SecurityLevelDto> =
     listOf(
@@ -156,12 +161,30 @@ class MockDataService {
     return "https://picsum.photos/seed/$seed/1200/800"
   }
 
-  fun generatePhoto(savedMotives: List<MotiveDto>): List<PhotoDto> {
+  fun generateMediaData(): List<MediaDto> =
+    listOf(
+      MediaDto(
+        mediaId = MediaId(UUID.fromString("b1000000-0000-0000-0000-000000000001")),
+        medium = "Digital",
+        analog = false,
+      ),
+      MediaDto(
+        mediaId = MediaId(UUID.fromString("b1000000-0000-0000-0000-000000000002")),
+        medium = "Analog farge",
+        analog = true,
+      ),
+    )
+
+  fun generatePhoto(
+    savedMotives: List<MotiveDto>,
+    savedMedia: List<MediaDto>,
+  ): List<PhotoDto> {
     val list = mutableListOf<PhotoDto>()
     val motives = savedMotives
     val analogMotives = motives.filter { it.analogAlbumDto != null }
     val gangs = generateGangData()
     val photoGangBangers = generatePhotoGangBangerData()
+    val (digitalMedia, analogMedia) = savedMedia.partition { !it.analog }
     for (i in 1..1000) {
       val uuid = UUID.randomUUID()
       val url = getPhotoFromApi()
@@ -169,13 +192,13 @@ class MockDataService {
         PhotoDto(
           photoId = PhotoId(uuid),
           goodPicture = listOf(true, false).random(),
-          analog = false,
           imageNumber = (i - 1) % 99 + 1,
           pageNumber = (i - 1) / 99 + 1,
           imageProd = url,
           imageWeb = url,
           imageThumb = url,
           motive = motives.random(),
+          media = digitalMedia.random(),
           gang = gangs.random(),
           photoGangBangerDto = photoGangBangers.random(),
           dateUploaded = LocalDate.now(),
@@ -189,13 +212,13 @@ class MockDataService {
         PhotoDto(
           photoId = PhotoId(uuid),
           goodPicture = listOf(true, false).random(),
-          analog = true,
           imageNumber = (i - 1) % 99 + 1,
           pageNumber = (i - 1) / 99 + 1,
           imageProd = url,
           imageWeb = url,
           imageThumb = url,
           motive = analogMotives.random(),
+          media = analogMedia.random(),
           gang = gangs.random(),
           photoGangBangerDto = photoGangBangers.random(),
           dateUploaded = LocalDate.now(),
@@ -1090,19 +1113,22 @@ class MockDataService {
     println("ExternalUsers seeded")
 
     val savedMotives = generateMotiveData().map { motiveRepository.create(it) }
+    val savedMedia =
+      generateMediaData().map { media ->
+        mediaRepository.findByMediumOrNull(media.medium) ?: media.also { mediaRepository.create(it) }
+      }
     database.batchInsert(Photos) {
-      generatePhoto(savedMotives).map { photoDto ->
+      generatePhoto(savedMotives, savedMedia).map { photoDto ->
         item {
           set(it.id, photoDto.photoId.id)
           set(it.goodPicture, photoDto.goodPicture)
-          set(it.analog, photoDto.analog)
           set(it.imageNumber, photoDto.imageNumber)
           set(it.pageNumber, photoDto.pageNumber)
           set(it.imageProd, photoDto.imageProd)
           set(it.imageWeb, photoDto.imageWeb)
           set(it.imageThumb, photoDto.imageThumb)
-          set(it.securityLevel, photoDto.securityLevel.securityLevelType.type)
           set(it.motiveId, photoDto.motive.motiveId.id)
+          set(it.mediaId, photoDto.media.mediaId.id)
           set(it.gangId, photoDto.gang?.gangId?.id)
           set(it.photoGangBangerId, photoDto.photoGangBangerDto.photoGangBangerId.id)
         }

@@ -202,7 +202,7 @@ class SearchRepository(
     val canAccessProd = userLevel.ordinal <= SecurityLevelType.HUSFOLK.ordinal
     var sequence: EntitySequence<Photo, Photos> =
       database.photos.filter {
-        it.dateDeleted.isNull() and (it.securityLevel inList allowedSecurityLevels(userLevel))
+        it.dateDeleted.isNull() and (Motives.securityLevel inList allowedSecurityLevels(userLevel))
       }
     sequence = applyPictureFilters(sequence, term, filters)
 
@@ -258,7 +258,7 @@ class SearchRepository(
     if (filters.categoryIds.isNotEmpty()) seq = seq.filter { Motives.categoryId inList filters.categoryIds }
     if (filters.eventOwnerIds.isNotEmpty()) seq = seq.filter { Motives.eventOwnerId inList filters.eventOwnerIds }
     if (filters.albumIds.isNotEmpty()) seq = seq.filter { Motives.albumId inList filters.albumIds }
-    if (filters.securityLevels.isNotEmpty()) seq = seq.filter { it.securityLevel inList filters.securityLevels }
+    if (filters.securityLevels.isNotEmpty()) seq = seq.filter { Motives.securityLevel inList filters.securityLevels }
     filters.dateFrom?.let { from -> seq = seq.filter { Motives.date greaterEq from } }
     filters.dateTo?.let { to -> seq = seq.filter { Motives.date lessEq to } }
     return seq
