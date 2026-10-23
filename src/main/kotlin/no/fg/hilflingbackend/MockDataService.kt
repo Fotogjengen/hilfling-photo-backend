@@ -1,6 +1,5 @@
 package no.fg.hilflingbackend
 
-import com.azure.storage.blob.models.PublicAccessType
 import me.liuwj.ktorm.database.Database
 import me.liuwj.ktorm.dsl.batchInsert
 import me.liuwj.ktorm.dsl.insert
