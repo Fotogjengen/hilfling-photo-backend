@@ -2,7 +2,9 @@ package no.fg.hilflingbackend.repository
 
 import me.liuwj.ktorm.database.Database
 import me.liuwj.ktorm.dsl.QueryRowSet
+import me.liuwj.ktorm.dsl.and
 import me.liuwj.ktorm.dsl.eq
+import me.liuwj.ktorm.dsl.isNull
 import me.liuwj.ktorm.entity.add
 import me.liuwj.ktorm.entity.find
 import me.liuwj.ktorm.entity.update
@@ -31,12 +33,12 @@ open class EventOwnerRepository(
 
   @Deprecated("Will be removed when MockDataService is updated. Use findByEventOwnerName instead.")
   fun findByType(eventOwnerName: EventOwnerName): EventOwnerDto? =
-    database.event_owners.find { it.name eq eventOwnerName.eventOwnerName }?.let {
+    database.event_owners.find { (it.name eq eventOwnerName.eventOwnerName) and it.dateDeleted.isNull() }?.let {
       EventOwnerDto(it)
     }
 
   fun findByEventOwnerName(name: EventOwnerName): EventOwnerDto? =
-    database.event_owners.find { it.name eq name.eventOwnerName }?.let {
+    database.event_owners.find { (it.name eq name.eventOwnerName) and it.dateDeleted.isNull() }?.let {
       EventOwnerDto(it)
     }
 }

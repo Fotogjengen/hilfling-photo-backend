@@ -76,13 +76,13 @@ class PhotoGangBangerRepository(
       .from(PhotoGangBangerToPositions)
       .innerJoin(Positions, on = PhotoGangBangerToPositions.positionId eq Positions.id)
       .select(Positions.id, Positions.title, Positions.email, PhotoGangBangerToPositions.semesterStart, PhotoGangBangerToPositions.semesterEnd)
-      .where { PhotoGangBangerToPositions.photoGangBangerId eq memberId }
+      .where { (PhotoGangBangerToPositions.photoGangBangerId eq memberId) and Positions.dateDeleted.isNull() }
       .orderBy(PhotoGangBangerToPositions.semesterStart.desc())
       .map { row ->
         MemberPositionDto(
           positionId = PositionId(row[Positions.id]!!),
           title = row[Positions.title]!!,
-          email = Email(row[Positions.email]!!),
+          email = row[Positions.email]?.let { Email(it) },
           semesterStart = SemesterStart(row[PhotoGangBangerToPositions.semesterStart]!!),
           isActive = row[PhotoGangBangerToPositions.semesterEnd] == null,
           semesterEnd = row[PhotoGangBangerToPositions.semesterEnd]?.let { SemesterStart(it) },
@@ -195,7 +195,7 @@ class PhotoGangBangerRepository(
       positions
         .map { it.first.id }
         .distinct()
-        .filterNot { positionId -> database.positions.any { it.id eq positionId } }
+        .filterNot { positionId -> database.positions.any { (it.id eq positionId) and it.dateDeleted.isNull() } }
 
     if (missingPositionIds.isNotEmpty()) {
       throw IllegalArgumentException("Unknown positionId(s): ${missingPositionIds.joinToString(", ")}")
