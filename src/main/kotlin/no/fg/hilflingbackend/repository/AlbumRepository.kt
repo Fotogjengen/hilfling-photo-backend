@@ -13,6 +13,7 @@ import me.liuwj.ktorm.dsl.map
 import me.liuwj.ktorm.dsl.orderBy
 import me.liuwj.ktorm.dsl.select
 import me.liuwj.ktorm.dsl.where
+import me.liuwj.ktorm.dsl.update
 import me.liuwj.ktorm.entity.add
 import me.liuwj.ktorm.entity.any
 import me.liuwj.ktorm.entity.find
@@ -27,6 +28,8 @@ import no.fg.hilflingbackend.model.Albums
 import no.fg.hilflingbackend.model.albums
 import no.fg.hilflingbackend.model.toDto
 import org.springframework.stereotype.Repository
+import org.springframework.transaction.annotation.Transactional
+import java.util.UUID
 
 @Repository
 open class AlbumRepository(
@@ -38,6 +41,7 @@ open class AlbumRepository(
       name = qrs[Albums.name]!!,
       description = qrs[Albums.description],
       analog = qrs[Albums.analog]!!,
+      isDefault = qrs[Albums.isDefault]!!,
     )
 
   override fun create(dto: AlbumDto): Int {
@@ -104,4 +108,29 @@ open class AlbumRepository(
 
     return if (updated == 1) newDto else fromDb
   }
+
+  @Transactional
+  fun setDefault(albumId: UUID):  AlbumDto {
+
+      val updateOld =
+        database
+          .update(Albums) {
+          set(it.isDefault, false)
+          where { (it.isDefault eq true)}
+        }
+      val updateNew = 
+        database.update(Albums) {
+          set(it.isDefault, true)
+          where { (it.id eq albumId) and (it.dateDeleted.isNull()) }
+        }
+      if (updateNew != 1) {
+        throw EntityNotFoundException("Could not update album with ${albumId}")
+      }
+      
+      return (findById(albumId)
+        ?: throw EntityNotFoundException("Could not find album with id ${albumId}")
+    )
+  }
 }
+
+

@@ -2,6 +2,7 @@ package no.fg.hilflingbackend.service
 
 import jakarta.persistence.EntityNotFoundException
 import no.fg.hilflingbackend.dto.AlbumDto
+import no.fg.hilflingbackend.dto.AlbumId
 import no.fg.hilflingbackend.dto.AlbumPatchRequestDto
 import no.fg.hilflingbackend.dto.Page
 import no.fg.hilflingbackend.repository.AlbumRepository
@@ -44,4 +45,7 @@ class AlbumService(
     page: Int,
     pageSize: Int,
   ): Page<AlbumDto> = repository.findAllDigital(page, pageSize)
+
+  fun setDefault(albumId: UUID):  AlbumDto = repository.setDefault(albumId) ?: throw EntityNotFoundException("Album not found")
+
 }
