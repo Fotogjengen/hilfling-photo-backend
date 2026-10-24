@@ -1,5 +1,8 @@
 package no.fg.hilflingbackend.valueobject
 
+import io.swagger.v3.oas.annotations.media.Schema
+
+@Schema(enumAsRef = true)
 enum class Permission {
   PHOTO_DELETE_OLD, // delete photos older than 30 days
   ALBUM_MANAGE, // create, update, delete albums

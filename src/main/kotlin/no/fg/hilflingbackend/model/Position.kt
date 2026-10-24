@@ -15,7 +15,7 @@ interface Position : BaseModel<Position> {
   companion object : Entity.Factory<Position>()
 
   var title: String
-  var email: String
+  var email: String?
 }
 
 object Positions : BaseTable<Position>("position") {
@@ -27,7 +27,7 @@ fun Position.toDto() =
   PositionDto(
     positionId = PositionId(this.id),
     title = this.title,
-    email = Email(this.email),
+    email = this.email?.let { Email(it) },
   )
 
 val Database.positions get() = this.sequenceOf(Positions)

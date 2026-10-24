@@ -14,13 +14,13 @@ data class PositionPatchRequestDto(
 data class PositionDto(
   val positionId: PositionId = PositionId(),
   val title: String,
-  val email: Email,
+  val email: Email? = null,
 )
 
 data class MemberPositionDto(
   val positionId: PositionId,
   val title: String,
-  val email: Email,
+  val email: Email? = null,
   val semesterStart: SemesterStart,
   val isActive: Boolean,
   val semesterEnd: SemesterStart? = null,
@@ -31,7 +31,7 @@ fun PositionDto.toEntity(): Position {
   return Position {
     id = dto.positionId.id
     title = dto.title
-    email = dto.email.value
+    email = dto.email?.value
   }
 }
 
