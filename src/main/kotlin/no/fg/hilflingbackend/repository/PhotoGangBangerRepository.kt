@@ -41,6 +41,7 @@ import no.fg.hilflingbackend.valueobject.Email
 import no.fg.hilflingbackend.valueobject.SemesterStart
 import org.springframework.stereotype.Repository
 import org.springframework.transaction.annotation.Transactional
+import java.time.LocalDate
 import java.util.UUID
 
 interface IPhotoGangBangerRepository {
@@ -93,7 +94,7 @@ class PhotoGangBangerRepository(
 
   override fun findById(id: UUID): PhotoGangBangerDto? =
     database.photo_gang_bangers
-      .find { it.id eq id }
+      .find { (it.id eq id) and it.dateDeleted.isNull() }
       ?.toDto()
       ?.let { withPositions(it) }
 
@@ -101,7 +102,7 @@ class PhotoGangBangerRepository(
     page: Int,
     pageSize: Int,
   ): Page<PhotoGangBangerDto> {
-    val photoGangBangers = database.photo_gang_bangers
+    val photoGangBangers = database.photo_gang_bangers.filter { it.dateDeleted.isNull() }
     val dtos = photoGangBangers.toList().map { withPositions(it.toDto()) }
     return Page(page = page, pageSize = pageSize, totalRecords = photoGangBangers.totalRecords, currentList = dtos)
   }
@@ -112,7 +113,7 @@ class PhotoGangBangerRepository(
   ): Page<PhotoGangBangerDto> {
     val photoGangBangers =
       database.photo_gang_bangers.filter {
-        (it.isActive eq true).and(it.isPang eq false)
+        (it.isActive eq true).and(it.isPang eq false).and(it.dateDeleted.isNull())
       }
     return Page(page = page, pageSize = pageSize, totalRecords = photoGangBangers.totalRecords, currentList = photoGangBangers.toList().map { withPositions(it.toDto()) })
   }
@@ -123,7 +124,7 @@ class PhotoGangBangerRepository(
   ): Page<PhotoGangBangerDto> {
     val photoGangBangers =
       database.photo_gang_bangers.filter {
-        (it.isActive eq true).and(it.isPang eq true)
+        (it.isActive eq true).and(it.isPang eq true).and(it.dateDeleted.isNull())
       }
     return Page(page = page, pageSize = pageSize, totalRecords = photoGangBangers.totalRecords, currentList = photoGangBangers.toList().map { withPositions(it.toDto()) })
   }
@@ -134,7 +135,7 @@ class PhotoGangBangerRepository(
   ): Page<PhotoGangBangerDto> {
     val photoGangBangers =
       database.photo_gang_bangers.filter {
-        (it.isActive eq false).and(it.isPang eq true)
+        (it.isActive eq false).and(it.isPang eq true).and(it.dateDeleted.isNull())
       }
     return Page(page = page, pageSize = pageSize, totalRecords = photoGangBangers.totalRecords, currentList = photoGangBangers.toList().map { withPositions(it.toDto()) })
   }
@@ -300,7 +301,16 @@ class PhotoGangBangerRepository(
 
   fun findByUsername(username: String): PhotoGangBangerDto? =
     database.photo_gang_bangers
-      .find { it.username eq username }
+      .find { (it.username eq username) and it.dateDeleted.isNull() }
       ?.toDto()
       ?.let { withPositions(it) }
+
+  fun delete(id: UUID): Int {
+    findById(id) ?: throw EntityNotFoundException("Could not find PhotoGangBanger")
+    return database.update(PhotoGangBangers) {
+      set(it.dateDeleted, LocalDate.now())
+      set(it.isActive, false)
+      where { it.id eq id }
+    }
+  }
 }
