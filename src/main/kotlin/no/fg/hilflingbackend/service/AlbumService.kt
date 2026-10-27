@@ -46,7 +46,11 @@ class AlbumService(
     pageSize: Int,
   ): Page<AlbumDto> = repository.findAllDigital(page, pageSize)
 
-  fun setDefault(albumId: UUID):  AlbumDto = repository.setDefault(albumId) ?: throw EntityNotFoundException("Album not found")
+  fun setDefault(albumId: UUID): AlbumDto =
+      repository.setDefault(albumId)
+          ?: throw EntityNotFoundException("Album not found")
 
-  fun findDefault(): AlbumDto = repository.findDefault() ?: throw EntityNotFoundException("Could not find default album")
+  fun findDefault(): AlbumDto =
+      repository.findDefault()
+          ?: throw EntityNotFoundException("Could not find default album")
 }

@@ -71,5 +71,5 @@ class AlbumController(
   ): AlbumDto = albumService.setDefault(id)
 
   @GetMapping("/default")
-  fun setDefault() : AlbumDto = albumService.findDefault()
+  fun setDefault(): AlbumDto = albumService.findDefault()
 }
