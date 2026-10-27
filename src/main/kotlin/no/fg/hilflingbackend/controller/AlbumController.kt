@@ -69,4 +69,7 @@ class AlbumController(
   fun setDefault(
     @PathVariable("id") id: UUID,
   ): AlbumDto = albumService.setDefault(id)
+
+  @GetMapping("/default")
+  fun setDefault() : AlbumDto = albumService.findDefault()
 }

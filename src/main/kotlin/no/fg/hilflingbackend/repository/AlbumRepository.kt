@@ -132,6 +132,8 @@ open class AlbumRepository(
       ?: throw EntityNotFoundException("Could not find album with id ${albumId}")
     )
   }
+
+  fun findDefault(): AlbumDto? = database.albums.find { it.isDefault eq true }?.toDto()
 }
 
 
