@@ -109,33 +109,32 @@ open class AlbumRepository(
     return if (updated == 1) newDto else fromDb
   }
 
-@Transactional
-fun setDefault(albumId: UUID): AlbumDto {
-    val updateOld =
-        database
-            .update(Albums) {
-                set(it.isDefault, false)
-                where { it.isDefault eq true }
-            }
 
-    val updateNew =
-        database.update(Albums) {
-            set(it.isDefault, true)
-            where { (it.id eq albumId) and (it.dateDeleted.isNull()) }
+  @Transactional
+  fun setDefault(albumId: UUID): AlbumDto {
+    val updateOld =
+      database
+        .update(Albums) {
+          set(it.isDefault, false)
+          where { it.isDefault eq true }
         }
 
+    val updateNew =
+      database.update(Albums) {
+        set(it.isDefault, true)
+        where { (it.id eq albumId) and (it.dateDeleted.isNull()) }
+      }
+
     if (updateNew != 1) {
-        throw EntityNotFoundException("Could not update album with $albumId")
+      throw EntityNotFoundException("Could not update album with $albumId")
     }
 
-    return (
-        findById(albumId)
-            ?: throw EntityNotFoundException("Could not find album with id $albumId")
-    )
+    return findById(albumId)
+      ?: throw EntityNotFoundException("Could not find album with id $albumId")
+  }
+
+  fun findDefault(): AlbumDto? = database.albums.find { it.isDefault eq true }?.toDto()
 }
 
-fun findDefault(): AlbumDto? =
-    database.albums.find { it.isDefault eq true }?.toDto()
-}
 
 
