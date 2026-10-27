@@ -109,7 +109,6 @@ open class AlbumRepository(
     return if (updated == 1) newDto else fromDb
   }
 
-
   @Transactional
   fun setDefault(albumId: UUID): AlbumDto {
     val updateOld =
@@ -135,6 +134,3 @@ open class AlbumRepository(
 
   fun findDefault(): AlbumDto? = database.albums.find { it.isDefault eq true }?.toDto()
 }
-
-
-
