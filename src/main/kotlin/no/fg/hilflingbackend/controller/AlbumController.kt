@@ -2,6 +2,7 @@ package no.fg.hilflingbackend.controller
 
 import no.fg.hilflingbackend.configurations.RequirePermission
 import no.fg.hilflingbackend.dto.AlbumDto
+import no.fg.hilflingbackend.dto.AlbumId
 import no.fg.hilflingbackend.dto.AlbumPatchRequestDto
 import no.fg.hilflingbackend.dto.Page
 import no.fg.hilflingbackend.service.AlbumService
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestParam
+import org.springframework.web.bind.annotation.PutMapping
 import org.springframework.web.bind.annotation.RestController
 import java.util.UUID
 
@@ -62,4 +64,15 @@ class AlbumController(
     @RequestParam("page", required = false) page: Int?,
     @RequestParam("pageSize", required = false) pageSize: Int?,
   ): Page<AlbumDto> = albumService.findAllDigital(page ?: 0, pageSize ?: 100)
+
+  @PutMapping("/{id}/default")
+  fun setDefault(
+    @PathVariable("id") id: UUID,
+  ): AlbumDto = albumService.setDefault(id)
+
+  @GetMapping("/default/digital")
+  fun findDigitalDefault(): AlbumDto = albumService.findDigitalDefault()
+
+  @GetMapping("/default/analog")
+  fun findAnalogDefault(): AlbumDto = albumService.findAnalogDefault()
 }
