@@ -111,9 +111,9 @@ open class AlbumRepository(
 
   @Transactional
   fun setDefault(albumId: UUID): AlbumDto {
-    val album = database.albums.find { it.id eq albumId }?.toDto()
-        ?: throw EntityNotFoundException("Could not find album with id $albumId")
 
+    val album = database.albums.find { it.id eq albumId }?.toDto()
+      ?: throw EntityNotFoundException("Could not find album with id $albumId")
     val compValue = album.analog
     
     val updateOld =
