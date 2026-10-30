@@ -117,6 +117,7 @@ open class AlbumRepository(
 
     val compValue = album.analog
 
+    val updateOld =
       database.update(Albums) {
         set(it.isDefault, false)
         where { (it.isDefault eq true) and (it.analog eq compValue) }

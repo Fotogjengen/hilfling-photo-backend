@@ -49,7 +49,7 @@ class AlbumService(
   fun setDefault(albumId: UUID): AlbumDto =
     repository.setDefault(albumId)
       ?: throw EntityNotFoundException("Album not found")
-  
+
   fun findDigitalDefault(): AlbumDto =
     repository.findDigitalDefault()
       ?: throw EntityNotFoundException("Could not find default digital album")
