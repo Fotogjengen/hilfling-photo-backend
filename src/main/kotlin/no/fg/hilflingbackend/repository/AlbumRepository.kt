@@ -111,17 +111,22 @@ open class AlbumRepository(
 
   @Transactional
   fun setDefault(albumId: UUID): AlbumDto {
+    val album = database.albums.find { it.id eq albumId }?.toDto()
+        ?: throw EntityNotFoundException("Could not find album with id $albumId")
+
+    val compValue = album.analog
+    
     val updateOld =
       database
         .update(Albums) {
           set(it.isDefault, false)
-          where { it.isDefault eq true }
+          where { (it.isDefault eq true) and (it.analog eq compValue) }
         }
 
     val updateNew =
       database.update(Albums) {
         set(it.isDefault, true)
-        where { (it.id eq albumId) and (it.dateDeleted.isNull()) }
+        where { (it.id eq albumId) and (it.dateDeleted.isNull()) and (it.analog eq compValue) }
       }
 
     if (updateNew != 1) {
@@ -132,5 +137,8 @@ open class AlbumRepository(
       ?: throw EntityNotFoundException("Could not find album with id $albumId")
   }
 
-  fun findDefault(): AlbumDto? = database.albums.find { it.isDefault eq true }?.toDto()
+  // fun findDefault(): AlbumDto? = database.albums.find { it.isDefault eq true }?.toDto()
+  fun findDigitalDefault(): AlbumDto? = database.albums.find { (it.isDefault eq true) and (it.analog eq false) }?.toDto()
+
+  fun findAnalogDefault(): AlbumDto? = database.albums.find { (it.isDefault eq true) and (it.analog eq true) }?.toDto()
 }

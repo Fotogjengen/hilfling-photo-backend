@@ -50,7 +50,15 @@ class AlbumService(
     repository.setDefault(albumId)
       ?: throw EntityNotFoundException("Album not found")
 
-  fun findDefault(): AlbumDto =
-    repository.findDefault()
-      ?: throw EntityNotFoundException("Could not find default album")
+  // fun findDefault(): AlbumDto =
+  //   repository.findDefault()
+  //     ?: throw EntityNotFoundException("Could not find default album")
+  
+  fun findDigitalDefault(): AlbumDto =
+    repository.findDigitalDefault()
+      ?: throw EntityNotFoundException("Could not find default digital album")
+
+  fun findAnalogDefault(): AlbumDto =
+    repository.findAnalogDefault()
+      ?: throw EntityNotFoundException("Could not find default analog album")
 }
