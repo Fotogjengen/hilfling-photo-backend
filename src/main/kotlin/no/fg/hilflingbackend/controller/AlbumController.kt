@@ -70,8 +70,6 @@ class AlbumController(
     @PathVariable("id") id: UUID,
   ): AlbumDto = albumService.setDefault(id)
 
-  // @GetMapping("/default")
-  // fun findDefault(): AlbumDto = albumService.findDefault()
   @GetMapping("/default/digital")
   fun findDigitalDefault(): AlbumDto = albumService.findDigitalDefault()
 

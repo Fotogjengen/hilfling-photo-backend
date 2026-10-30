@@ -111,33 +111,35 @@ open class AlbumRepository(
 
   @Transactional
   fun setDefault(albumId: UUID): AlbumDto {
+    val album =
+      database.albums.find { it.id eq albumId }?.toDto()
+        ?: throw EntityNotFoundException("Could not find album with id $albumId")
 
-    val album = database.albums.find { it.id eq albumId }?.toDto()
-      ?: throw EntityNotFoundException("Could not find album with id $albumId")
-    val compValue = album.analog
-    
-    val updateOld =
-      database
-        .update(Albums) {
-          set(it.isDefault, false)
-          where { (it.isDefault eq true) and (it.analog eq compValue) }
-        }
+      val compValue = album.analog
 
-    val updateNew =
       database.update(Albums) {
-        set(it.isDefault, true)
-        where { (it.id eq albumId) and (it.dateDeleted.isNull()) and (it.analog eq compValue) }
+        set(it.isDefault, false)
+        where { (it.isDefault eq true) and (it.analog eq compValue) }
       }
 
-    if (updateNew != 1) {
-      throw EntityNotFoundException("Could not update album with $albumId")
-    }
+      val updateNew =
+        database.update(Albums) {
+          set(it.isDefault, true)
+          where {
+            (it.id eq albumId) and
+              (it.dateDeleted.isNull()) and
+              (it.analog eq compValue)
+          }
+        }
 
-    return findById(albumId)
-      ?: throw EntityNotFoundException("Could not find album with id $albumId")
+      if (updateNew != 1) {
+        throw EntityNotFoundException("Could not update album with $albumId")
+      }
+
+      return findById(albumId)
+        ?: throw EntityNotFoundException("Could not find album with id $albumId")
   }
 
-  // fun findDefault(): AlbumDto? = database.albums.find { it.isDefault eq true }?.toDto()
   fun findDigitalDefault(): AlbumDto? = database.albums.find { (it.isDefault eq true) and (it.analog eq false) }?.toDto()
 
   fun findAnalogDefault(): AlbumDto? = database.albums.find { (it.isDefault eq true) and (it.analog eq true) }?.toDto()
