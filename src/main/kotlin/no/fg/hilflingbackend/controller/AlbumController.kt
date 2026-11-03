@@ -65,6 +65,7 @@ class AlbumController(
     @RequestParam("pageSize", required = false) pageSize: Int?,
   ): Page<AlbumDto> = albumService.findAllDigital(page ?: 0, pageSize ?: 100)
 
+  @RequirePermission(Permission.ALBUM_MANAGE)
   @PutMapping("/{id}/default")
   fun setDefault(
     @PathVariable("id") id: UUID,
