@@ -73,6 +73,8 @@ services:
       JWT_PUBLIC_KEY: ${JWT_PUBLIC_KEY}
       # Photo-provider runs outside compose. Dev: on the host. Prod: set PHOTO_PROVIDER_URL in the deployment env file.
       PHOTO_PROVIDER_URL: ${PHOTO_PROVIDER_URL:-http://host.docker.internal:8888}
+      # Set SEED_ENABLED=true in your local .env to expose /seed. Never set it in prod.
+      SEED_ENABLED: ${SEED_ENABLED:-false}
     extra_hosts:
       - "host.docker.internal:host-gateway"
     labels:

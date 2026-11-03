@@ -50,11 +50,12 @@ data class PhotoDto(
   val pageNumber: Int,
   val imageProd: String?,
   val imageWeb: String?,
-  val imageThumb: String,
+  val imageThumb: String?,
   val motive: MotiveDto,
   val media: MediaDto,
   val gang: GangDto?,
-  val photoGangBangerDto: PhotoGangBangerDto,
+  // null for photos imported from the old site, which never recorded the photographer
+  val photoGangBangerDto: PhotoGangBangerDto?,
   val dateUploaded: LocalDate,
 ) {
   val securityLevel: SecurityLevelDto
@@ -74,7 +75,7 @@ data class PhotoDto(
       this.motive = photo.motive.toEntity()
       this.media = photo.media.toEntity()
       this.gang = photo.gang?.toEntity()
-      this.photoGangBanger = photo.photoGangBangerDto.toEntity()
+      this.photoGangBanger = photo.photoGangBangerDto?.toEntity()
     }
   }
 }

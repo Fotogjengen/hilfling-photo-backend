@@ -14,7 +14,7 @@ open class KtormConfiguration {
   lateinit var dataSource: DataSource
 
   @Bean
-  open fun database(): Database = Database.connectWithSpringSupport(dataSource)
+  open fun database(): Database = Database.connectWithSpringSupport(dataSource, dialect = TrigramPostgreSqlDialect())
 
   @Bean
   open fun ktormModule(): Module = KtormModule()

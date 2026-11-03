@@ -74,3 +74,13 @@ fun MotiveDto.toEntity(): Motive {
 
 /** The album a photo with the given media belongs to within this motive */
 fun MotiveDto.albumFor(media: MediaDto): AlbumDto? = if (media.analog) analogAlbumDto else albumDto
+
+/**
+ * The album an existing photo with the given media lives in within this motive. Same as [albumFor], except that
+ * photos imported from the old site can have a media of the other kind than their album (PHOTO_MEDIA_MISMATCH in
+ * legacy-migration/README.md); those live in the motive's only album, so they can still be moved or have their
+ * media fixed.
+ *
+ * TODO: Remove, and use [albumFor] again, once no imported photo has a mismatched media.
+ */
+fun MotiveDto.currentAlbumFor(media: MediaDto): AlbumDto? = albumFor(media) ?: listOfNotNull(albumDto, analogAlbumDto).singleOrNull()

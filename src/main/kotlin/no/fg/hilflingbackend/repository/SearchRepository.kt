@@ -7,7 +7,6 @@ import me.liuwj.ktorm.dsl.count
 import me.liuwj.ktorm.dsl.desc
 import me.liuwj.ktorm.dsl.eq
 import me.liuwj.ktorm.dsl.from
-import me.liuwj.ktorm.dsl.greater
 import me.liuwj.ktorm.dsl.greaterEq
 import me.liuwj.ktorm.dsl.inList
 import me.liuwj.ktorm.dsl.isNull
@@ -30,6 +29,7 @@ import me.liuwj.ktorm.expression.OrderByExpression
 import me.liuwj.ktorm.schema.ColumnDeclaring
 import me.liuwj.ktorm.schema.DoubleSqlType
 import me.liuwj.ktorm.schema.VarcharSqlType
+import no.fg.hilflingbackend.configurations.WordSimilarExpression
 import no.fg.hilflingbackend.dto.ActiveFilters
 import no.fg.hilflingbackend.dto.MotiveDto
 import no.fg.hilflingbackend.dto.Page
@@ -37,24 +37,17 @@ import no.fg.hilflingbackend.dto.PhotoDto
 import no.fg.hilflingbackend.model.Categories
 import no.fg.hilflingbackend.model.Motives
 import no.fg.hilflingbackend.model.Photo
+import no.fg.hilflingbackend.model.PhotoTable
 import no.fg.hilflingbackend.model.Photos
 import no.fg.hilflingbackend.model.Places
 import no.fg.hilflingbackend.model.motives
-import no.fg.hilflingbackend.model.photos
+import no.fg.hilflingbackend.model.photosFor
 import no.fg.hilflingbackend.model.toDto
 import no.fg.hilflingbackend.valueobject.SearchSortField
 import no.fg.hilflingbackend.valueobject.SecurityLevelType
 import no.fg.hilflingbackend.valueobject.SortDirection
 import org.springframework.stereotype.Repository
 import java.util.UUID
-
-/**
- * Minimum pg_trgm word-similarity for a row to count as a fuzzy match.
- * pg_trgm's own default (word_similarity_threshold) is 0.6; we loosen it so
- * partial words and small typos still match. Ordering by score keeps the best
- * matches on top, so a permissive threshold only adds weak matches at the tail.
- */
-const val SEARCH_SIMILARITY_THRESHOLD: Double = 0.3
 
 @Repository
 class SearchRepository(
@@ -75,8 +68,7 @@ class SearchRepository(
    * PostgreSQL `word_similarity(query, target)`: how well [query] matches the
    * best-matching continuous substring of [target] (0.0–1.0). Preferred over
    * plain `similarity()` for search, where the query is usually much shorter
-   * than the title. Backed by the pg_trgm extension + GIN index on the title
-   * (both created in V1).
+   * than the title. Used to rank matches; filtering goes through [titleMatches].
    */
   private fun wordSimilarity(
     query: String,
@@ -88,8 +80,14 @@ class SearchRepository(
       sqlType = DoubleSqlType,
     )
 
-  /** Fuzzy title match: keep rows whose word-similarity to [term] clears the threshold. */
-  private fun titleMatches(term: String): ColumnDeclaring<Boolean> = wordSimilarity(term, Motives.title) greater SEARCH_SIMILARITY_THRESHOLD
+  /**
+   * Fuzzy title match: keep rows whose word-similarity to [term] clears
+   * pg_trgm.word_similarity_threshold (set per connection in application.yml).
+   * Uses the `<%` operator rather than comparing [wordSimilarity] so the title's
+   * trigram index is used instead of scoring every motive. Ordering by score keeps
+   * the best matches on top, so a permissive threshold only adds weak matches at the tail.
+   */
+  private fun titleMatches(term: String): ColumnDeclaring<Boolean> = WordSimilarExpression(ArgumentExpression(term, VarcharSqlType), Motives.title.asExpression())
 
   /**
    * Relevance is only meaningful when there is a term to score against, so an
@@ -200,8 +198,8 @@ class SearchRepository(
     pageSize: Int,
   ): Page<PhotoDto> {
     val canAccessProd = userLevel.ordinal <= SecurityLevelType.HUSFOLK.ordinal
-    var sequence: EntitySequence<Photo, Photos> =
-      database.photos.filter {
+    var sequence: EntitySequence<Photo, PhotoTable> =
+      database.photosFor(userLevel).filter {
         it.dateDeleted.isNull() and (Motives.securityLevel inList allowedSecurityLevels(userLevel))
       }
     sequence = applyPictureFilters(sequence, term, filters)
@@ -248,10 +246,10 @@ class SearchRepository(
   }
 
   private fun applyPictureFilters(
-    sequence: EntitySequence<Photo, Photos>,
+    sequence: EntitySequence<Photo, PhotoTable>,
     term: String,
     filters: ActiveFilters,
-  ): EntitySequence<Photo, Photos> {
+  ): EntitySequence<Photo, PhotoTable> {
     var seq = sequence
     if (term.isNotBlank()) seq = seq.filter { titleMatches(term) }
     if (filters.placeIds.isNotEmpty()) seq = seq.filter { Motives.placeId inList filters.placeIds }

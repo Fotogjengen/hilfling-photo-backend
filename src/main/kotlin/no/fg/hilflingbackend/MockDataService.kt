@@ -1373,7 +1373,7 @@ class MockDataService {
           set(it.motiveId, photoDto.motive.motiveId.id)
           set(it.mediaId, photoDto.media.mediaId.id)
           set(it.gangId, photoDto.gang?.gangId?.id)
-          set(it.photoGangBangerId, photoDto.photoGangBangerDto.photoGangBangerId.id)
+          set(it.photoGangBangerId, photoDto.photoGangBangerDto?.photoGangBangerId?.id)
         }
       }
     }
