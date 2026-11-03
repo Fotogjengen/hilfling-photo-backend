@@ -14,6 +14,7 @@ import no.fg.hilflingbackend.dto.PhotoPositionDto
 import no.fg.hilflingbackend.dto.PhotoReservationDto
 import no.fg.hilflingbackend.dto.PhotoUploadRequestDto
 import no.fg.hilflingbackend.dto.albumFor
+import no.fg.hilflingbackend.dto.currentAlbumFor
 import no.fg.hilflingbackend.repository.GangRepository
 import no.fg.hilflingbackend.repository.MediaRepository
 import no.fg.hilflingbackend.repository.MotiveRepository
@@ -355,7 +356,7 @@ class PhotoService(
     targetAlbum: AlbumDto,
   ): PhotoPlacement {
     val currentAlbum =
-      photo.motive.albumFor(photo.media)
+      photo.motive.currentAlbumFor(photo.media)
         ?: throw EntityNotFoundException("Photo ${photo.photoId} has no ${kind(photo.media)} album")
     val sameAlbum = currentAlbum.albumId.id == targetAlbum.albumId.id
     val sameSecurity = photo.motive.securityLevel == targetMotive.securityLevel
@@ -413,7 +414,7 @@ class PhotoService(
     val imageNumber: Int,
     val imageProd: String?,
     val imageWeb: String?,
-    val imageThumb: String,
+    val imageThumb: String?,
   )
 
   private fun reserveSlot(request: PhotoUploadRequestDto): PhotoReservationDto {
