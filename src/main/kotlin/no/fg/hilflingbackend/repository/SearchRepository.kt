@@ -87,8 +87,7 @@ class SearchRepository(
    * trigram index is used instead of scoring every motive. Ordering by score keeps
    * the best matches on top, so a permissive threshold only adds weak matches at the tail.
    */
-  private fun titleMatches(term: String): ColumnDeclaring<Boolean> =
-    WordSimilarExpression(ArgumentExpression(term, VarcharSqlType), Motives.title.asExpression())
+  private fun titleMatches(term: String): ColumnDeclaring<Boolean> = WordSimilarExpression(ArgumentExpression(term, VarcharSqlType), Motives.title.asExpression())
 
   /**
    * Relevance is only meaningful when there is a term to score against, so an

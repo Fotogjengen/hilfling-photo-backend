@@ -60,8 +60,7 @@ val Database.photos
   get() = this.sequenceOf(Photos)
 
 /** Photos as the user may see them: only FG users get the photographer, for the others it is not queried at all */
-fun Database.photosFor(userSecurityLevel: SecurityLevelType): EntitySequence<Photo, PhotoTable> =
-  this.sequenceOf(if (userSecurityLevel == SecurityLevelType.FG) Photos else PhotosWithoutPhotographer)
+fun Database.photosFor(userSecurityLevel: SecurityLevelType): EntitySequence<Photo, PhotoTable> = this.sequenceOf(if (userSecurityLevel == SecurityLevelType.FG) Photos else PhotosWithoutPhotographer)
 
 fun Photo.toDto(): PhotoDto =
   PhotoDto(
