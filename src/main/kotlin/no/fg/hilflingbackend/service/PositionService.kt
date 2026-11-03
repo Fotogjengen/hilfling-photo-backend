@@ -46,4 +46,9 @@ class PositionService(
     )
 
   fun findPermissionsByPositionId(positionId: PositionId): List<Permission> = repository.findPermissionsByPositionId(positionId)
+
+  fun replacePermissions(
+    positionId: PositionId,
+    permissions: Set<Permission>,
+  ): List<Permission> = repository.replacePermissions(positionId, permissions)
 }

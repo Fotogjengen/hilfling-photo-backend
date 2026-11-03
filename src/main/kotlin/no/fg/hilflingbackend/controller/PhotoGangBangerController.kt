@@ -17,6 +17,7 @@ import no.fg.hilflingbackend.valueobject.Permission
 import no.fg.hilflingbackend.valueobject.SecurityLevelType
 import org.springframework.http.ResponseEntity
 import org.springframework.security.access.AccessDeniedException
+import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PatchMapping
 import org.springframework.web.bind.annotation.PathVariable
@@ -111,4 +112,10 @@ class PhotoGangBangerController(
   fun putPositions(
     @RequestBody dto: PhotoGangBangerPositionsPutRequestDto,
   ): PhotoGangBangerDto? = repository.replacePositions(dto)
+
+  @DeleteMapping("/{id}")
+  @RequirePermission(Permission.USER_MANAGE)
+  fun delete(
+    @PathVariable("id") id: UUID,
+  ): Int = repository.delete(id)
 }
