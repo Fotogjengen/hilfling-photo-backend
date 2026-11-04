@@ -87,6 +87,12 @@ open class PhotoRepository(
       .filter { (it.motiveId eq motiveId) and it.dateDeleted.isNull() }
       .toList()
       .isNotEmpty()
+  
+  fun hasMediabyId(mediaId: UUID): Boolean =
+  database.photos
+    .filter { (it.mediaId eq mediaId) and it.dateDeleted.isNull() }
+    .toList()
+    .isNotEmpty()
 
   /** True when a non-deleted photo is stored in the album, i.e. its motive uses the album for the photo's media kind */
   fun hasPhotosInAlbum(albumId: UUID): Boolean =

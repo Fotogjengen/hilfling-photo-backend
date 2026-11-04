@@ -10,6 +10,7 @@ import me.liuwj.ktorm.entity.add
 import me.liuwj.ktorm.entity.any
 import me.liuwj.ktorm.entity.find
 import me.liuwj.ktorm.entity.update
+import me.liuwj.ktorm.dsl.update
 import no.fg.hilflingbackend.dto.MediaDto
 import no.fg.hilflingbackend.dto.MediaId
 import no.fg.hilflingbackend.dto.MediaPatchRequestDto
@@ -19,12 +20,15 @@ import no.fg.hilflingbackend.model.Medias
 import no.fg.hilflingbackend.model.medias
 import no.fg.hilflingbackend.model.photos
 import no.fg.hilflingbackend.model.toDto
+import no.fg.hilflingbackend.repository.PhotoRepository
 import org.springframework.stereotype.Repository
 import java.util.UUID
+import java.time.LocalDate
 
 @Repository
 open class MediaRepository(
   database: Database,
+  private val photoRepository: PhotoRepository
 ) : BaseRepository<Media, MediaDto, MediaPatchRequestDto>(table = Medias, database = database) {
   override fun convertToClass(qrs: QueryRowSet): MediaDto =
     MediaDto(
@@ -45,6 +49,15 @@ open class MediaRepository(
     val fromDb =
       findOrNull(dto.mediaId.id)
         ?: throw EntityNotFoundException("Could not find Media")
+
+    val photoReferencesMedia = photoRepository.hasMediabyId(dto.mediaId.id)
+
+    if ( (photoReferencesMedia) and (dto.analog != fromDb.analog) ) {
+    throw IllegalStateException(
+      "Cannot change analog status for media that is referenced in photo(s)"
+    )
+    }   
+  
     val newDto =
       MediaDto(
         mediaId = fromDb.mediaId,
@@ -54,5 +67,21 @@ open class MediaRepository(
     val updated = database.medias.update(newDto.toEntity())
 
     return if (updated == 1) newDto else fromDb
+  }
+
+  override fun delete(id: UUID): Int {
+    val photoReferencesMedia = photoRepository.hasMediabyId(id)
+    if (photoReferencesMedia) {
+      throw IllegalStateException(
+        "Cannot delete media that is referenced in photo(s)"
+      )
+    }
+
+    return database.update(table) {
+      set(table.dateDeleted, LocalDate.now())
+      where {
+          table.id eq id
+        }
+    }
   }
 }
