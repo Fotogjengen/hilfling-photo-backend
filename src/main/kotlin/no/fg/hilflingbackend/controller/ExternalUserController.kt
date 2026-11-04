@@ -3,6 +3,7 @@ package no.fg.hilflingbackend.controller
 import no.fg.hilflingbackend.configurations.RequirePermission
 import no.fg.hilflingbackend.configurations.RequireSecurityLevel
 import no.fg.hilflingbackend.dto.ExternalUserDto
+import no.fg.hilflingbackend.dto.ExternalUserPasswordResetRequestDto
 import no.fg.hilflingbackend.dto.ExternalUserPatchRequestDto
 import no.fg.hilflingbackend.dto.Page
 import no.fg.hilflingbackend.service.ExternalUserService
@@ -54,4 +55,11 @@ class ExternalUserController(
   fun patch(
     @RequestBody dto: ExternalUserPatchRequestDto,
   ): ExternalUserDto = externalUserService.patch(dto)
+
+  @PostMapping("/{id}/reset-password")
+  @RequirePermission(Permission.USER_MANAGE)
+  fun resetPassword(
+    @PathVariable("id") id: UUID,
+    @RequestBody dto: ExternalUserPasswordResetRequestDto,
+  ) = externalUserService.resetPassword(id, dto.password)
 }
