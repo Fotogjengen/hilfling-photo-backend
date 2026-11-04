@@ -3,7 +3,6 @@ package no.fg.hilflingbackend.controller
 import no.fg.hilflingbackend.configurations.RequirePermission
 import no.fg.hilflingbackend.dto.AlbumDto
 import no.fg.hilflingbackend.dto.AlbumPatchRequestDto
-import no.fg.hilflingbackend.dto.Page
 import no.fg.hilflingbackend.service.AlbumService
 import no.fg.hilflingbackend.valueobject.Permission
 import org.springframework.web.bind.annotation.DeleteMapping
@@ -13,7 +12,6 @@ import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
 import java.util.UUID
 
@@ -28,10 +26,7 @@ class AlbumController(
   ): AlbumDto = albumService.findById(id)
 
   @GetMapping
-  fun getAll(
-    @RequestParam("page", required = false) page: Int?,
-    @RequestParam("pageSize", required = false) pageSize: Int?,
-  ): Page<AlbumDto> = albumService.findAll(page ?: 0, pageSize ?: 100)
+  fun getAll(): List<AlbumDto> = albumService.findAll()
 
   @PostMapping
   @RequirePermission(Permission.ALBUM_MANAGE)
@@ -52,14 +47,8 @@ class AlbumController(
   ): AlbumDto = albumService.patch(dto)
 
   @GetMapping("/analog")
-  fun getAnalog(
-    @RequestParam("page", required = false) page: Int?,
-    @RequestParam("pageSize", required = false) pageSize: Int?,
-  ): Page<AlbumDto> = albumService.findAllAnalog(page ?: 0, pageSize ?: 100)
+  fun getAnalog(): List<AlbumDto> = albumService.findAllAnalog()
 
   @GetMapping("/digital")
-  fun getDigital(
-    @RequestParam("page", required = false) page: Int?,
-    @RequestParam("pageSize", required = false) pageSize: Int?,
-  ): Page<AlbumDto> = albumService.findAllDigital(page ?: 0, pageSize ?: 100)
+  fun getDigital(): List<AlbumDto> = albumService.findAllDigital()
 }

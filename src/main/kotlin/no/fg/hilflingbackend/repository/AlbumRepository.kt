@@ -8,7 +8,6 @@ import me.liuwj.ktorm.dsl.desc
 import me.liuwj.ktorm.dsl.eq
 import me.liuwj.ktorm.dsl.from
 import me.liuwj.ktorm.dsl.isNull
-import me.liuwj.ktorm.dsl.limit
 import me.liuwj.ktorm.dsl.map
 import me.liuwj.ktorm.dsl.orderBy
 import me.liuwj.ktorm.dsl.select
@@ -20,7 +19,6 @@ import me.liuwj.ktorm.entity.update
 import no.fg.hilflingbackend.dto.AlbumDto
 import no.fg.hilflingbackend.dto.AlbumId
 import no.fg.hilflingbackend.dto.AlbumPatchRequestDto
-import no.fg.hilflingbackend.dto.Page
 import no.fg.hilflingbackend.dto.toEntity
 import no.fg.hilflingbackend.model.Album
 import no.fg.hilflingbackend.model.Albums
@@ -49,45 +47,29 @@ open class AlbumRepository(
 
   fun findByName(name: String): AlbumDto? = database.albums.find { it.name eq name }?.toDto()
 
-  fun findAllAnalog(
-    page: Int,
-    pageSize: Int,
-  ): Page<AlbumDto> {
-    val offset = page * pageSize
-    val resultSet =
-      database
-        .from(Albums)
-        .select()
-        .where { (Albums.analog eq true) and (Albums.dateDeleted.isNull()) }
-        .orderBy(Albums.dateCreated.desc())
-        .limit(offset, pageSize)
-    return Page(
-      page = page,
-      pageSize = pageSize,
-      totalRecords = resultSet.totalRecords,
-      currentList = resultSet.map { row -> convertToClass(row) },
-    )
-  }
+  fun findAllAlbums(): List<AlbumDto> =
+    database
+      .from(Albums)
+      .select()
+      .where { Albums.dateDeleted.isNull() }
+      .orderBy(Albums.dateCreated.desc())
+      .map { row -> convertToClass(row) }
 
-  fun findAllDigital(
-    page: Int,
-    pageSize: Int,
-  ): Page<AlbumDto> {
-    val offset = page * pageSize
-    val resultSet =
-      database
-        .from(Albums)
-        .select()
-        .where { (Albums.analog eq false) and (Albums.dateDeleted.isNull()) }
-        .orderBy(Albums.dateCreated.desc())
-        .limit(offset, pageSize)
-    return Page(
-      page = page,
-      pageSize = pageSize,
-      totalRecords = resultSet.totalRecords,
-      currentList = resultSet.map { row -> convertToClass(row) },
-    )
-  }
+  fun findAllAnalog(): List<AlbumDto> =
+    database
+      .from(Albums)
+      .select()
+      .where { (Albums.analog eq true) and (Albums.dateDeleted.isNull()) }
+      .orderBy(Albums.dateCreated.desc())
+      .map { row -> convertToClass(row) }
+
+  fun findAllDigital(): List<AlbumDto> =
+    database
+      .from(Albums)
+      .select()
+      .where { (Albums.analog eq false) and (Albums.dateDeleted.isNull()) }
+      .orderBy(Albums.dateCreated.desc())
+      .map { row -> convertToClass(row) }
 
   override fun patch(dto: AlbumPatchRequestDto): AlbumDto {
     val fromDb =
