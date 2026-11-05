@@ -4,6 +4,16 @@ CREATE TABLE ALBUM
     name         VARCHAR(8) NOT NULL UNIQUE,
     description  VARCHAR(80),
     analog       BOOLEAN NOT NULL DEFAULT FALSE,
+    is_default   BOOLEAN NOT NULL DEFAULT FALSE,
+    date_created DATE NOT NULL DEFAULT CURRENT_DATE,
+    date_deleted DATE DEFAULT NULL
+);
+
+CREATE TABLE MEDIA
+(
+    id           uuid PRIMARY KEY,
+    medium       VARCHAR(80) NOT NULL UNIQUE,
+    analog       BOOLEAN NOT NULL,
     date_created DATE NOT NULL DEFAULT CURRENT_DATE,
     date_deleted DATE DEFAULT NULL
 );
@@ -67,7 +77,7 @@ CREATE TABLE CATEGORY
 (
     id           uuid PRIMARY KEY,
     date_created DATE NOT NULL DEFAULT CURRENT_DATE,
-    name         VARCHAR(20),
+    name         VARCHAR(80),
     date_deleted DATE DEFAULT NULL
 );
 
@@ -91,7 +101,7 @@ CREATE TABLE EXTERNAL_USER
 (
     id           uuid PRIMARY KEY,
     date_created DATE NOT NULL DEFAULT CURRENT_DATE,
-    username     VARCHAR(20) UNIQUE,
+    username     VARCHAR(20),
     password     VARCHAR(255),
     email        VARCHAR(50),
     full_name    VARCHAR(50),
@@ -100,6 +110,10 @@ CREATE TABLE EXTERNAL_USER
     is_active    BOOLEAN DEFAULT TRUE,
     date_deleted DATE DEFAULT NULL
 );
+
+/* Soft-deleted external users should not block reuse of their username */
+CREATE UNIQUE INDEX uq_external_user_username_active ON EXTERNAL_USER (username)
+    WHERE date_deleted IS NULL;
 
 CREATE TABLE PHOTO_GANG_BANGER
 (
@@ -130,7 +144,7 @@ CREATE TABLE PHOTO_GANG_BANGER_TO_POSITION
 CREATE TABLE MOTIVE
 (
     id              uuid PRIMARY KEY,
-    title           VARCHAR(100),
+    title           VARCHAR(900),
     date            DATE NOT NULL DEFAULT CURRENT_DATE,
     date_created    TIMESTAMPTZ NOT NULL DEFAULT NOW(),
     category_id     UUID REFERENCES CATEGORY (id),
@@ -141,6 +155,10 @@ CREATE TABLE MOTIVE
     security_level  VARCHAR(50) CHECK (security_level IN ('FG', 'HUSFOLK', 'ALLE')),
     date_deleted    DATE DEFAULT NULL
 );
+
+/* Finding the photos stored in an album */
+CREATE INDEX idx_motive_album_id ON MOTIVE (album_id);
+CREATE INDEX idx_motive_analog_album_id ON MOTIVE (analog_album_id);
 
 /* Ensures that a motive has the correct album types */
 CREATE OR REPLACE FUNCTION check_motive_albums()
@@ -168,18 +186,44 @@ CREATE TABLE PHOTO
     date_created         TIMESTAMPTZ NOT NULL DEFAULT NOW(),
     image_number         INTEGER NOT NULL,
     page_number          INTEGER NOT NULL,
-    security_level       VARCHAR(50) CHECK (security_level IN ('FG', 'HUSFOLK', 'ALLE')),
     image_prod           VARCHAR(255), 
     image_web            VARCHAR(255),
-    image_thumb          VARCHAR(255) NOT NULL,
+    image_thumb          VARCHAR(255),
     good_picture         BOOLEAN,
-    analog               BOOLEAN NOT NULL DEFAULT FALSE,
+    media_id             UUID NOT NULL REFERENCES MEDIA (id),
     motive_id            UUID REFERENCES MOTIVE (id),
     photo_gang_banger_id UUID REFERENCES PHOTO_GANG_BANGER (id),
     other_meta_data      JSONB,
     date_deleted         DATE DEFAULT NULL,
     gang_id              UUID REFERENCES GANG (id)
 );
+
+CREATE INDEX idx_photo_media_id ON PHOTO (media_id);
+
+/* Foreign keys are not indexed automatically; every motive page and album check looks photos up by motive */
+CREATE INDEX idx_photo_motive_id ON PHOTO (motive_id);
+
+/* Good pictures feed: paged newest first, tie-broken by id */
+CREATE INDEX idx_photo_good_feed ON PHOTO (date_created DESC, id)
+    WHERE good_picture AND date_deleted IS NULL;
+
+/* Flipping analog would move photos between albums */
+CREATE OR REPLACE FUNCTION check_media_analog_immutable()
+RETURNS TRIGGER AS $$
+BEGIN
+    IF NEW.analog IS DISTINCT FROM OLD.analog AND EXISTS (
+        SELECT 1 FROM PHOTO WHERE media_id = OLD.id
+    ) THEN
+        RAISE EXCEPTION 'Cannot change analog on a media that is referenced by photos';
+    END IF;
+
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER enforce_media_analog_immutable
+    BEFORE UPDATE ON MEDIA
+    FOR EACH ROW EXECUTE FUNCTION check_media_analog_immutable();
 
 /* Reserved image/page number. After an upload finishes, this should be empty*/
 CREATE TABLE PHOTO_RESERVATION
