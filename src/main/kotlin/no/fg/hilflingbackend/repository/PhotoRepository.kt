@@ -32,6 +32,7 @@ import no.fg.hilflingbackend.model.Medias
 import no.fg.hilflingbackend.model.Motives
 import no.fg.hilflingbackend.model.Photos
 import no.fg.hilflingbackend.model.photos
+import no.fg.hilflingbackend.model.photosFor
 import no.fg.hilflingbackend.model.toDto
 import no.fg.hilflingbackend.valueobject.SecurityLevelType
 import org.springframework.stereotype.Repository
@@ -51,7 +52,8 @@ open class PhotoRepository(
     id: UUID,
     userSecurityLevel: SecurityLevelType,
   ): PhotoDto? {
-    val photo = database.photos.find { (it.id eq id) and it.dateDeleted.isNull() }?.toDto() ?: return null
+    val photo =
+      database.photosFor(userSecurityLevel).find { (it.id eq id) and it.dateDeleted.isNull() }?.toDto() ?: return null
     val canAccessProd = userSecurityLevel.ordinal <= SecurityLevelType.HUSFOLK.ordinal
     return if (canAccessProd) photo else photo.copy(imageProd = null)
   }
@@ -72,7 +74,8 @@ open class PhotoRepository(
     userSecurityLevel: SecurityLevelType,
   ): List<PhotoDto> {
     val canAccessProd = userSecurityLevel.ordinal <= SecurityLevelType.HUSFOLK.ordinal
-    return database.photos
+    return database
+      .photosFor(userSecurityLevel)
       .filter { (it.motiveId eq motiveId) and it.dateDeleted.isNull() }
       .sortedByDescending { it.dateCreated }
       .toList()
@@ -123,7 +126,8 @@ open class PhotoRepository(
     userSecurityLevel: SecurityLevelType,
   ): List<PhotoDto> {
     val canAccessProd = userSecurityLevel.ordinal <= SecurityLevelType.HUSFOLK.ordinal
-    return database.photos
+    return database
+      .photosFor(userSecurityLevel)
       .filter { (it.motiveId eq motiveId) and (it.goodPicture eq true) and it.dateDeleted.isNull() }
       .sortedByDescending { it.dateCreated }
       .toList()
@@ -154,7 +158,8 @@ open class PhotoRepository(
         .filter { it.ordinal >= userSecurityLevel.ordinal }
         .map { it.name }
     val sequence =
-      database.photos
+      database
+        .photosFor(userSecurityLevel)
         .filter {
           (it.goodPicture eq true) and
             it.dateDeleted.isNull() and
@@ -192,10 +197,11 @@ open class PhotoRepository(
         .filter { it.ordinal >= userSecurityLevel.ordinal }
         .map { it.name }
 
-    val target = database.photos.find { it.id eq photoId } ?: return null
+    val photos = database.photosFor(userSecurityLevel)
+    val target = photos.find { it.id eq photoId } ?: return null
 
     val qualifies =
-      database.photos
+      photos
         .filter {
           (it.id eq photoId) and
             (it.goodPicture eq true) and
@@ -205,7 +211,7 @@ open class PhotoRepository(
     if (!qualifies) return null
 
     val index =
-      database.photos
+      photos
         .filter {
           (it.goodPicture eq true) and
             it.dateDeleted.isNull() and
@@ -261,7 +267,7 @@ open class PhotoRepository(
     imageNumber: Int,
     imageProd: String?,
     imageWeb: String?,
-    imageThumb: String,
+    imageThumb: String?,
   ) {
     database.update(Photos) {
       set(it.motiveId, motiveId)
@@ -278,7 +284,7 @@ open class PhotoRepository(
     photoId: UUID,
     imageProd: String?,
     imageWeb: String?,
-    imageThumb: String,
+    imageThumb: String?,
   ) {
     database.update(Photos) {
       set(it.imageProd, imageProd)

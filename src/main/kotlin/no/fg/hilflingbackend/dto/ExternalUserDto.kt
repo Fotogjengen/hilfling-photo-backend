@@ -6,12 +6,15 @@ import java.util.UUID
 data class ExternalUserPatchRequestDto(
   val externalUserId: ExternalUserId,
   val username: String?,
-  val password: String?,
   val email: String?,
   val fullName: String?,
   val securityLevel: SecurityLevelDto?,
   val description: String?,
   val isActive: Boolean?,
+)
+
+data class ExternalUserPasswordResetRequestDto(
+  val password: String,
 )
 
 data class ExternalUserDto(

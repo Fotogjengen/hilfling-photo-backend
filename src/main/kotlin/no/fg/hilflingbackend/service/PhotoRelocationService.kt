@@ -2,7 +2,7 @@ package no.fg.hilflingbackend.service
 
 import no.fg.hilflingbackend.dto.MotiveDto
 import no.fg.hilflingbackend.dto.PhotoDto
-import no.fg.hilflingbackend.dto.albumFor
+import no.fg.hilflingbackend.dto.currentAlbumFor
 import no.fg.hilflingbackend.repository.PhotoRepository
 import no.fg.hilflingbackend.valueobject.SecurityLevelType
 import org.springframework.stereotype.Service
@@ -52,7 +52,7 @@ class PhotoRelocationService(
     photo: PhotoDto,
     target: MotiveDto,
   ): PhotoLocation {
-    val album = target.albumFor(photo.media) ?: error("Motive ${target.motiveId} has no album for photo ${photo.photoId}")
+    val album = target.currentAlbumFor(photo.media) ?: error("Motive ${target.motiveId} has no album for photo ${photo.photoId}")
     return PhotoLocation(
       photoId = photo.photoId.id.toString(),
       current = ImageUrls(prod = photo.imageProd, web = photo.imageWeb, thumb = photo.imageThumb),
