@@ -4,7 +4,6 @@ import jakarta.persistence.EntityNotFoundException
 import no.fg.hilflingbackend.dto.AlbumDto
 import no.fg.hilflingbackend.dto.AlbumId
 import no.fg.hilflingbackend.dto.AlbumPatchRequestDto
-import no.fg.hilflingbackend.dto.Page
 import no.fg.hilflingbackend.repository.AlbumRepository
 import no.fg.hilflingbackend.repository.PhotoRepository
 import org.springframework.stereotype.Service
@@ -17,10 +16,7 @@ class AlbumService(
 ) {
   fun findById(id: UUID): AlbumDto = repository.findById(id) ?: throw EntityNotFoundException("Album $id not found")
 
-  fun findAll(
-    page: Int,
-    pageSize: Int,
-  ): Page<AlbumDto> = repository.findAll(page, pageSize)
+  fun findAll(): List<AlbumDto> = repository.findAllAlbums()
 
   fun create(dto: AlbumDto): Int = repository.create(dto)
 
@@ -36,15 +32,9 @@ class AlbumService(
     return repository.patch(dto)
   }
 
-  fun findAllAnalog(
-    page: Int,
-    pageSize: Int,
-  ): Page<AlbumDto> = repository.findAllAnalog(page, pageSize)
+  fun findAllAnalog(): List<AlbumDto> = repository.findAllAnalog()
 
-  fun findAllDigital(
-    page: Int,
-    pageSize: Int,
-  ): Page<AlbumDto> = repository.findAllDigital(page, pageSize)
+  fun findAllDigital(): List<AlbumDto> = repository.findAllDigital()
 
   fun setDefault(albumId: UUID): AlbumDto =
     repository.setDefault(albumId)
