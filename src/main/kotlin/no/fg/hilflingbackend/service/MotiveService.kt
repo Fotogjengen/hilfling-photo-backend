@@ -135,8 +135,8 @@ class MotiveService(
     val samfundet =
       eventOwnerRepository.findByEventOwnerName(EventOwnerName.Samfundet)
         ?: error("EventOwner 'Samfundet' not found in database")
-    val digitalAlbum = albumRepository.findAllDigital().firstOrNull()
-    val analogAlbum = albumRepository.findAllAnalog().firstOrNull()
+    val digitalAlbum = albumRepository.findDigitalDefault()
+    val analogAlbum = albumRepository.findAnalogDefault()
 
     return MotiveDefaultsDto(
       eventOwnerDto = samfundet,

@@ -14,6 +14,7 @@ import me.liuwj.ktorm.dsl.leftJoin
 import me.liuwj.ktorm.dsl.lessEq
 import me.liuwj.ktorm.dsl.limit
 import me.liuwj.ktorm.dsl.map
+import me.liuwj.ktorm.dsl.or
 import me.liuwj.ktorm.dsl.orderBy
 import me.liuwj.ktorm.dsl.select
 import me.liuwj.ktorm.dsl.whereWithConditions
@@ -35,6 +36,7 @@ import no.fg.hilflingbackend.dto.MotiveDto
 import no.fg.hilflingbackend.dto.Page
 import no.fg.hilflingbackend.dto.PhotoDto
 import no.fg.hilflingbackend.model.Categories
+import no.fg.hilflingbackend.model.Medias
 import no.fg.hilflingbackend.model.Motives
 import no.fg.hilflingbackend.model.Photo
 import no.fg.hilflingbackend.model.PhotoTable
@@ -238,7 +240,7 @@ class SearchRepository(
     if (filters.placeIds.isNotEmpty()) conditions += Motives.placeId inList filters.placeIds
     if (filters.categoryIds.isNotEmpty()) conditions += Motives.categoryId inList filters.categoryIds
     if (filters.eventOwnerIds.isNotEmpty()) conditions += Motives.eventOwnerId inList filters.eventOwnerIds
-    if (filters.albumIds.isNotEmpty()) conditions += Motives.albumId inList filters.albumIds
+    if (filters.albumIds.isNotEmpty()) conditions += (Motives.albumId inList filters.albumIds) or (Motives.analogAlbumId inList filters.albumIds)
     if (filters.securityLevels.isNotEmpty()) conditions += Motives.securityLevel inList filters.securityLevels
     filters.dateFrom?.let { from -> conditions += Motives.date greaterEq from }
     filters.dateTo?.let { to -> conditions += Motives.date lessEq to }
@@ -255,7 +257,14 @@ class SearchRepository(
     if (filters.placeIds.isNotEmpty()) seq = seq.filter { Motives.placeId inList filters.placeIds }
     if (filters.categoryIds.isNotEmpty()) seq = seq.filter { Motives.categoryId inList filters.categoryIds }
     if (filters.eventOwnerIds.isNotEmpty()) seq = seq.filter { Motives.eventOwnerId inList filters.eventOwnerIds }
-    if (filters.albumIds.isNotEmpty()) seq = seq.filter { Motives.albumId inList filters.albumIds }
+    // A photo lives in the motive's digital or analog album depending on its media
+    if (filters.albumIds.isNotEmpty()) {
+      seq =
+        seq.filter {
+          ((Motives.albumId inList filters.albumIds) and (Medias.analog eq false)) or
+            ((Motives.analogAlbumId inList filters.albumIds) and (Medias.analog eq true))
+        }
+    }
     if (filters.securityLevels.isNotEmpty()) seq = seq.filter { Motives.securityLevel inList filters.securityLevels }
     filters.dateFrom?.let { from -> seq = seq.filter { Motives.date greaterEq from } }
     filters.dateTo?.let { to -> seq = seq.filter { Motives.date lessEq to } }
