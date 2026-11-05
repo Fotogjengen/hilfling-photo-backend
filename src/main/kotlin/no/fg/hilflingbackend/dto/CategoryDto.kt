@@ -63,4 +63,3 @@ class CategoryIdDeserializer : JsonDeserializer<CategoryId>() {
 
   private fun String?.toCategoryId(): CategoryId = if (isNullOrBlank()) CategoryId() else CategoryId(UUID.fromString(this))
 }
-
