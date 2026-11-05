@@ -90,7 +90,7 @@ open class PhotoRepository(
       .filter { (it.motiveId eq motiveId) and it.dateDeleted.isNull() }
       .toList()
       .isNotEmpty()
-  
+
   fun hasMediabyId(mediaId: UUID): Boolean =
     database.photos
       .filter { (it.mediaId eq mediaId) and it.dateDeleted.isNull() }
