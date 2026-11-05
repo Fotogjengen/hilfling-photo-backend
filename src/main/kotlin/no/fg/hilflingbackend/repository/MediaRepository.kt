@@ -28,7 +28,7 @@ import java.time.LocalDate
 @Repository
 open class MediaRepository(
   database: Database,
-  private val photoRepository: PhotoRepository
+  private val photoRepository: PhotoRepository,
 ) : BaseRepository<Media, MediaDto, MediaPatchRequestDto>(table = Medias, database = database) {
   override fun convertToClass(qrs: QueryRowSet): MediaDto =
     MediaDto(
@@ -52,12 +52,12 @@ open class MediaRepository(
 
     val photoReferencesMedia = photoRepository.hasMediabyId(dto.mediaId.id)
 
-    if ( (photoReferencesMedia) and (dto.analog != fromDb.analog) ) {
-    throw IllegalStateException(
-      "Cannot change analog status for media that is referenced in photo(s)"
-    )
-    }   
-  
+    if ((photoReferencesMedia) and (dto.analog != fromDb.analog)) {
+      throw IllegalStateException(
+        "Cannot change analog status for media that is referenced in photo(s)"
+      )
+    } 
+
     val newDto =
       MediaDto(
         mediaId = fromDb.mediaId,
@@ -80,8 +80,8 @@ open class MediaRepository(
     return database.update(table) {
       set(table.dateDeleted, LocalDate.now())
       where {
-          table.id eq id
-        }
+        table.id eq id
+      }
     }
   }
 }
