@@ -2,6 +2,7 @@ package no.fg.hilflingbackend.service
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.module.kotlin.readValue
+import no.fg.hilflingbackend.valueobject.SecurityLevelType
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.http.MediaType
 import org.springframework.http.client.JdkClientHttpRequestFactory
@@ -42,6 +43,11 @@ private data class RelocateResponse(
   val photos: List<RelocatedPhoto>,
 )
 
+private data class SecurityLevelResponse(
+  val username: String,
+  val securityLevel: SecurityLevelType,
+)
+
 /**
  * Calls the photo-provider's internal endpoints. Each request is authorised by a service token bound to the
  * SHA-256 of the exact body bytes sent, so a captured token cannot be reused for a different plan.
@@ -74,15 +80,24 @@ class PhotoProviderClient(
     post("delete", mapOf("photos" to photos))
   }
 
+  /** The security level ITK's ACLs give this username */
+  fun securityLevel(username: String): SecurityLevelType {
+    val response =
+      post("security-level", mapOf("username" to username), resource = "auth")
+        ?: error("Empty security level response from photo-provider")
+    return objectMapper.readValue<SecurityLevelResponse>(response).securityLevel
+  }
+
   private fun post(
     action: String,
     payload: Any,
+    resource: String = "photos",
   ): ByteArray? {
     val body = objectMapper.writeValueAsBytes(payload)
     val token = jwtService.generateServiceToken(scope = action, planHash = sha256Hex(body))
     return restClient
       .post()
-      .uri("/api/provider-internal/photos/$action")
+      .uri("/api/provider-internal/$resource/$action")
       .header("Authorization", "Bearer $token")
       .contentType(MediaType.APPLICATION_JSON)
       .body(body)
