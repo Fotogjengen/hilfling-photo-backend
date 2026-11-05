@@ -273,6 +273,11 @@ class SearchSuggestionsRepository(
     run {
       val score = scoreExpr("m.title", params, term)
       val conditions = mutableListOf("m.date_deleted IS NULL", "m.security_level $allowedLevelsClause")
+      // Narrows to motives the search would find (or containing the term) via the title's trigram index,
+      // instead of scoring every motive; weaker matches would not make the top suggestions anyway
+      conditions.add("(? <% m.title OR m.title ILIKE '%' || ? || '%')")
+      params.add(Str(term))
+      params.add(Str(term))
       if (filters.placeIds.isNotEmpty()) {
         conditions.add("m.place_id = ANY(?)")
         params.add(UuidArr(filters.placeIds))
@@ -307,7 +312,7 @@ class SearchSuggestionsRepository(
       LIMIT 5
       """.trimIndent()
 
-    // Hidden motive count: motives matching the search term that fail at least one active filter
+    // Hidden motive count: motives the search would return for the term that fail at least one active filter
     val hasActiveFilters =
       filters.placeIds.isNotEmpty() || filters.categoryIds.isNotEmpty() ||
         filters.eventOwnerIds.isNotEmpty() || filters.albumIds.isNotEmpty() || filters.securityLevels.isNotEmpty() ||
@@ -316,7 +321,6 @@ class SearchSuggestionsRepository(
     val countParams = mutableListOf<Param>()
     val countSql =
       if (hasActiveFilters) {
-        countParams.add(Str(term))
         countParams.add(Str(term))
         val filterChecks = mutableListOf<String>()
         if (filters.placeIds.isNotEmpty()) {
@@ -351,7 +355,7 @@ class SearchSuggestionsRepository(
         SELECT COUNT(*) FROM motive
         WHERE date_deleted IS NULL
           AND security_level $allowedLevelsClause
-          AND (similarity(title, ?) > 0.05 OR title ILIKE '%' || ? || '%')
+          AND ? <% title
           AND NOT (${filterChecks.joinToString(" AND ")})
         """.trimIndent()
       } else {

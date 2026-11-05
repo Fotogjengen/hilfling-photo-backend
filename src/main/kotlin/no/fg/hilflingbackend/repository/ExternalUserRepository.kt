@@ -6,6 +6,8 @@ import me.liuwj.ktorm.dsl.QueryRowSet
 import me.liuwj.ktorm.dsl.and
 import me.liuwj.ktorm.dsl.eq
 import me.liuwj.ktorm.dsl.isNull
+import me.liuwj.ktorm.dsl.notEq
+import me.liuwj.ktorm.dsl.update
 import me.liuwj.ktorm.entity.add
 import me.liuwj.ktorm.entity.find
 import me.liuwj.ktorm.entity.update
@@ -21,6 +23,7 @@ import no.fg.hilflingbackend.model.toDto
 import no.fg.hilflingbackend.valueobject.SecurityLevelType
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Repository
+import java.util.UUID
 
 @Repository
 open class ExternalUserRepository(
@@ -54,6 +57,26 @@ open class ExternalUserRepository(
         (it.username eq username) and it.dateDeleted.isNull()
       }?.toDto()
 
+  fun isUsernameTaken(
+    username: String,
+    excludeId: UUID? = null,
+  ): Boolean =
+    database
+      .external_users
+      .find {
+        val active = (it.username eq username) and it.dateDeleted.isNull()
+        if (excludeId == null) active else active and (it.id notEq excludeId)
+      } != null
+
+  fun updatePassword(
+    id: UUID,
+    password: String,
+  ): Int =
+    database.update(ExternalUsers) {
+      set(it.password, passwordEncoder.encode(password))
+      where { (it.id eq id) and it.dateDeleted.isNull() }
+    }
+
   override fun patch(dto: ExternalUserPatchRequestDto): ExternalUserDto {
     val fromDb =
       findById(dto.externalUserId.id)
@@ -62,7 +85,7 @@ open class ExternalUserRepository(
       ExternalUserDto(
         externalUserId = fromDb.externalUserId,
         username = dto.username ?: fromDb.username,
-        password = dto.password?.let { passwordEncoder.encode(it) } ?: fromDb.password,
+        password = fromDb.password,
         email = dto.email ?: fromDb.email,
         fullName = dto.fullName ?: fromDb.fullName,
         securityLevel = dto.securityLevel ?: fromDb.securityLevel,

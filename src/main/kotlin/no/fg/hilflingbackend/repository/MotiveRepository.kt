@@ -3,6 +3,7 @@ package no.fg.hilflingbackend.repository
 import jakarta.persistence.EntityNotFoundException
 import me.liuwj.ktorm.database.Database
 import me.liuwj.ktorm.dsl.and
+import me.liuwj.ktorm.dsl.desc
 import me.liuwj.ktorm.dsl.eq
 import me.liuwj.ktorm.dsl.isNull
 import me.liuwj.ktorm.dsl.update
@@ -10,7 +11,7 @@ import me.liuwj.ktorm.entity.add
 import me.liuwj.ktorm.entity.drop
 import me.liuwj.ktorm.entity.filter
 import me.liuwj.ktorm.entity.find
-import me.liuwj.ktorm.entity.sortedByDescending
+import me.liuwj.ktorm.entity.sorted
 import me.liuwj.ktorm.entity.take
 import me.liuwj.ktorm.entity.toList
 import me.liuwj.ktorm.entity.update
@@ -54,7 +55,7 @@ open class MotiveRepository {
     val sequence = database.motives.filter { it.dateDeleted.isNull() }
     val motiveDtos =
       sequence
-        .sortedByDescending { it.dateCreated }
+        .sorted { listOf(it.dateCreated.desc(), it.id.desc()) }
         .drop(page * pageSize)
         .take(pageSize)
         .toList()
@@ -76,7 +77,7 @@ open class MotiveRepository {
     val sequence = database.motives.filter { (it.title ilike "%$searchTerm%") and it.dateDeleted.isNull() }
     val motiveDtos =
       sequence
-        .sortedByDescending { it.dateCreated }
+        .sorted { listOf(it.dateCreated.desc(), it.id.desc()) }
         .drop(page * pageSize)
         .take(pageSize)
         .toList()

@@ -1,6 +1,7 @@
 package no.fg.hilflingbackend.configurations
 
 import no.fg.hilflingbackend.repository.PhotoGangBangerRepository
+import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.http.HttpMethod
@@ -22,6 +23,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @EnableWebSecurity
 class SecurityConfig(
   private val photoGangBangerRepository: PhotoGangBangerRepository,
+  @Value("\${seed.enabled:false}") private val seedEnabled: Boolean,
 ) {
   private val swaggerWhitelist =
     arrayOf(
@@ -102,10 +104,10 @@ class SecurityConfig(
           .permitAll()
           .requestMatchers(HttpMethod.GET, "/gangs/**")
           .permitAll()
-          // TODO: DETTE MÅ FJERNES!!!
-          .requestMatchers("/seed", "/seed/**")
-          .permitAll()
-          .anyRequest()
+          .also {
+            // Remove seed endpoints from production
+            if (seedEnabled) it.requestMatchers("/seed", "/seed/**").permitAll()
+          }.anyRequest()
           .authenticated()
       }.addFilterBefore(
         jwtAuthFilter,

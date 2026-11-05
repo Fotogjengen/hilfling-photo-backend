@@ -14,7 +14,7 @@ import java.time.Duration
 data class ImageUrls(
   val prod: String?,
   val web: String?,
-  val thumb: String,
+  val thumb: String?,
 )
 
 /** Where a photo's files should live */
@@ -31,7 +31,7 @@ data class RelocatedPhoto(
   val photoId: String,
   val imageProd: String?,
   val imageWeb: String?,
-  val imageThumb: String,
+  val imageThumb: String?,
 )
 
 data class PhotoFiles(

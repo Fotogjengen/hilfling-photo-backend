@@ -17,6 +17,9 @@ spring:
     hikari:
       connection-timeout: 20000
       maximum-pool-size: 5
+      # Fuzzy motive search (the <% operator) keeps rows whose pg_trgm word-similarity exceeds this.
+      # pg_trgm's default is 0.6; 0.3 lets partial words and small typos match too.
+      connection-init-sql: SET pg_trgm.word_similarity_threshold = 0.3
     username: ${DATABASE_USERNAME:hilfling}
     url: ${DATABASE_URL:jdbc:postgresql://postgres:5432/hilflingdb}
     password: ${DATABASE_PASSWORD:password}
@@ -41,6 +44,10 @@ spring:
   #     container:
   #     blob-storage:
   #       connection-string: ${AZURE_STORAGE_CONNECTION_STRING:DefaultEndpointsProtocol=http;AccountName=devstoreaccount1;AccountKey=Eby8vdM02xNOcqFlqUwJPLlmEtlCDXJ1OUzFT50uSRZ6IFsuFq2UVErCz4I6tq/K1SZFPTOtr/KBHBeksoGMGw==;BlobEndpoint=http://127.0.0.1:10000/devstoreaccount1;QueueEndpoint=http://127.0.0.1:10001/devstoreaccount1;TableEndpoint=http://127.0.0.1:10002/devstoreaccount1;}
+
+# Exposes GET /seed (mock data). Never enable in prod.
+seed:
+  enabled: ${SEED_ENABLED:false}
 
 # RSA keypair for signing/verifying JWTs
 jwt:
