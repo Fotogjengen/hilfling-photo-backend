@@ -54,9 +54,9 @@ open class MediaRepository(
 
     if ((photoReferencesMedia) and (dto.analog != fromDb.analog)) {
       throw IllegalStateException(
-        "Cannot change analog status for media that is referenced in photo(s)"
+        "Cannot change analog status for media that is referenced in photo(s)",
       )
-    } 
+    }
 
     val newDto =
       MediaDto(
@@ -73,7 +73,7 @@ open class MediaRepository(
     val photoReferencesMedia = photoRepository.hasMediabyId(id)
     if (photoReferencesMedia) {
       throw IllegalStateException(
-        "Cannot delete media that is referenced in photo(s)"
+        "Cannot delete media that is referenced in photo(s)",
       )
     }
 
