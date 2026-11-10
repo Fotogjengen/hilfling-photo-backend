@@ -174,7 +174,7 @@ class PhotoGangBangerRepository(
 
     return created
   }
-  
+
   private fun samfundetEmail(username: String): String = "$username@samfundet.no"
 
   private fun validatePositionAssignments(positions: List<Pair<PositionId, SemesterStart>>) {
