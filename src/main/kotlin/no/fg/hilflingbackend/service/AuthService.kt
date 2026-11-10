@@ -54,6 +54,7 @@ class AuthService(
         semesterStart = SemesterStart.current(),
         isActive = true,
         isPang = false,
+        isOnboarded = false,
         name = username,
         username = username,
         email = "",

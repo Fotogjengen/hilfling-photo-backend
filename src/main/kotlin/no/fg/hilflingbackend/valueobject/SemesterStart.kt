@@ -4,7 +4,16 @@ import java.time.LocalDate
 
 data class SemesterStart private constructor(
   val value: String,
-) {
+) : Comparable<SemesterStart> {
+  override fun compareTo(other: SemesterStart): Int = sortValue().compareTo(other.sortValue())
+
+  private fun sortValue(): Int {
+    // Two-digit years up to next year are 20xx, older ones 19xx
+    val twoDigit = value.substring(1).toInt()
+    val year = if (twoDigit <= (LocalDate.now().year + 1) % 100) 2000 + twoDigit else 1900 + twoDigit
+    return year * 2 + if (value.startsWith("H")) 1 else 0
+  }
+
   companion object {
     private val SEMESTER_PATTERN = Regex("^[VH]\\d{2}$")
 

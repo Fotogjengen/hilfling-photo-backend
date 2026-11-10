@@ -4,14 +4,12 @@ import jakarta.persistence.EntityNotFoundException
 import me.liuwj.ktorm.database.Database
 import me.liuwj.ktorm.dsl.and
 import me.liuwj.ktorm.dsl.delete
-import me.liuwj.ktorm.dsl.desc
 import me.liuwj.ktorm.dsl.eq
 import me.liuwj.ktorm.dsl.from
 import me.liuwj.ktorm.dsl.innerJoin
 import me.liuwj.ktorm.dsl.insert
 import me.liuwj.ktorm.dsl.isNull
 import me.liuwj.ktorm.dsl.map
-import me.liuwj.ktorm.dsl.orderBy
 import me.liuwj.ktorm.dsl.select
 import me.liuwj.ktorm.dsl.update
 import me.liuwj.ktorm.dsl.where
@@ -78,7 +76,6 @@ class PhotoGangBangerRepository(
       .innerJoin(Positions, on = PhotoGangBangerToPositions.positionId eq Positions.id)
       .select(Positions.id, Positions.title, Positions.email, PhotoGangBangerToPositions.semesterStart, PhotoGangBangerToPositions.semesterEnd)
       .where { (PhotoGangBangerToPositions.photoGangBangerId eq memberId) and Positions.dateDeleted.isNull() }
-      .orderBy(PhotoGangBangerToPositions.semesterStart.desc())
       .map { row ->
         MemberPositionDto(
           positionId = PositionId(row[Positions.id]!!),
@@ -88,7 +85,7 @@ class PhotoGangBangerRepository(
           isActive = row[PhotoGangBangerToPositions.semesterEnd] == null,
           semesterEnd = row[PhotoGangBangerToPositions.semesterEnd]?.let { SemesterStart(it) },
         )
-      }
+      }.sortedByDescending { it.semesterStart }
 
   private fun withPositions(dto: PhotoGangBangerDto): PhotoGangBangerDto = dto.copy(positions = findPositionsForMember(dto.photoGangBangerId.id))
 
@@ -156,6 +153,7 @@ class PhotoGangBangerRepository(
         set(it.id, dto.photoGangBangerId.id)
         set(it.isActive, dto.isActive)
         set(it.isPang, dto.isPang)
+        set(it.isOnboarded, dto.isOnboarded)
         set(it.semesterStart, dto.semesterStart.value)
         set(it.name, dto.name)
         set(it.foodPreference, dto.foodPreference)
@@ -231,6 +229,7 @@ class PhotoGangBangerRepository(
         semesterStart = dto.semesterStart ?: fromDb.semesterStart,
         isActive = dto.isActive ?: fromDb.isActive,
         isPang = dto.isPang ?: fromDb.isPang,
+        isOnboarded = dto.isOnboarded ?: fromDb.isOnboarded,
         name = dto.name ?: fromDb.name,
         foodPreference = dto.foodPreference ?: fromDb.foodPreference,
         birthday = dto.birthday ?: fromDb.birthday,

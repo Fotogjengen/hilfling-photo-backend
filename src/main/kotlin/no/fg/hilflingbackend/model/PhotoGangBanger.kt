@@ -18,6 +18,7 @@ interface PhotoGangBanger : BaseModel<PhotoGangBanger> {
   var semesterStart: String
   var isActive: Boolean
   var isPang: Boolean
+  var isOnboarded: Boolean
 
   var name: String
   var foodPreference: String?
@@ -37,6 +38,7 @@ fun PhotoGangBanger.toDto(): PhotoGangBangerDto {
       semesterStart = SemesterStart(this.semesterStart),
       isActive = this.isActive,
       isPang = this.isPang,
+      isOnboarded = this.isOnboarded,
       name = this.name,
       foodPreference = this.foodPreference,
       birthday = this.birthday,
@@ -56,6 +58,7 @@ object PhotoGangBangers : BaseTable<PhotoGangBanger>("photo_gang_banger") {
   val semesterStart = varchar("semester_start").bindTo { it.semesterStart }
   val isActive = boolean("is_active").bindTo { it.isActive }
   val isPang = boolean("is_pang").bindTo { it.isPang }
+  val isOnboarded = boolean("is_onboarded").bindTo { it.isOnboarded }
 
   val name = varchar("name").bindTo { it.name }
   val foodPreference = varchar("food_preference").bindTo { it.foodPreference }
