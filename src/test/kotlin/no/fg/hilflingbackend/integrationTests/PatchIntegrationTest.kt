@@ -163,7 +163,7 @@ class PatchIntegrationTest {
   final val photoGangBangerDto1 =
     PhotoGangBangerDto(
       photoGangBangerId = photoGangBangerId1,
-      semesterStart = SemesterStart.invoke("H2019"),
+      semesterStart = SemesterStart.invoke("H19"),
       isActive = true,
       isPang = true,
       name = "Caroline Sandsbråten",
@@ -174,7 +174,7 @@ class PatchIntegrationTest {
   final val photoGangBangerDto2 =
     PhotoGangBangerDto(
       photoGangBangerId = photoGangBangerId2,
-      semesterStart = SemesterStart.invoke("H2018"),
+      semesterStart = SemesterStart.invoke("H18"),
       isActive = true,
       isPang = true,
       name = "Sindre Sivertsen",
@@ -347,7 +347,7 @@ class PatchIntegrationTest {
 
   @Test
   fun shouldCreatePhotoGangBangerWithOnePosition() {
-    val position = createMemberPosition(positionDto1, "H2030")
+    val position = createMemberPosition(positionDto1, "H30")
     val dto = createPhotoGangBangerDto(positions = listOf(position))
 
     val created = photoGangBangerRepository.create(dto)
@@ -365,8 +365,8 @@ class PatchIntegrationTest {
   fun shouldCreatePhotoGangBangerWithMultiplePositions() {
     val positions =
       listOf(
-        createMemberPosition(positionDto1, "H2031"),
-        createMemberPosition(positionDto2, "V2032"),
+        createMemberPosition(positionDto1, "H31"),
+        createMemberPosition(positionDto2, "V32"),
       )
     val dto = createPhotoGangBangerDto(positions = positions)
 
@@ -391,7 +391,7 @@ class PatchIntegrationTest {
               positionId = PositionId(),
               title = "missing position",
               email = Email("missing-position@email.com"),
-              semesterStart = SemesterStart("H2033"),
+              semesterStart = SemesterStart("H33"),
               isActive = true,
             ),
           ),
@@ -406,7 +406,7 @@ class PatchIntegrationTest {
 
   @Test
   fun shouldRejectDuplicatePositionsWhenCreatingPhotoGangBanger() {
-    val position = createMemberPosition(positionDto1, "H2034")
+    val position = createMemberPosition(positionDto1, "H34")
     val dto = createPhotoGangBangerDto(positions = listOf(position, position))
 
     assertFailsWith<IllegalArgumentException> {
@@ -418,7 +418,7 @@ class PatchIntegrationTest {
 
   @Test
   fun shouldRollbackPhotoGangBangerWhenPositionInsertFails() {
-    val semesterStart = "H2035"
+    val semesterStart = "H35"
     val existingPositionHolder =
       createPhotoGangBangerDto(
         positions = listOf(createMemberPosition(positionDto1, semesterStart)),
@@ -443,7 +443,7 @@ class PatchIntegrationTest {
     val suffix = UUID.randomUUID().toString().take(8)
     return PhotoGangBangerDto(
       photoGangBangerId = PhotoGangBangerId(),
-      semesterStart = SemesterStart("H2029"),
+      semesterStart = SemesterStart("H29"),
       isActive = true,
       isPang = true,
       name = "Test Photo",

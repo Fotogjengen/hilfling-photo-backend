@@ -161,7 +161,7 @@ class PhotoGangBangerRepository(
         set(it.foodPreference, dto.foodPreference)
         set(it.birthday, dto.birthday)
         set(it.username, dto.username)
-        set(it.email, dto.email)
+        set(it.email, samfundetEmail(dto.username))
         set(it.phoneNumber, dto.phoneNumber)
         set(it.profilePictureId, dto.profilePicture?.userUploadId?.id)
       }
@@ -176,6 +176,8 @@ class PhotoGangBangerRepository(
 
     return created
   }
+  
+  private fun samfundetEmail(username: String): String = "$username@samfundet.no"
 
   private fun validatePositionAssignments(positions: List<Pair<PositionId, SemesterStart>>) {
     val duplicates =
