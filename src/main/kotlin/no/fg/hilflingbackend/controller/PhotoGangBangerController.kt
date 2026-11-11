@@ -8,6 +8,7 @@ import no.fg.hilflingbackend.configurations.RequireSecurityLevel
 import no.fg.hilflingbackend.configurations.hilflingToken
 import no.fg.hilflingbackend.dto.Page
 import no.fg.hilflingbackend.dto.PhotoGangBangerDto
+import no.fg.hilflingbackend.dto.PhotoGangBangerOnboardingRequestDto
 import no.fg.hilflingbackend.dto.PhotoGangBangerPatchRequestDto
 import no.fg.hilflingbackend.dto.PhotoGangBangerPositionsPutRequestDto
 import no.fg.hilflingbackend.repository.PhotoGangBangerRepository
@@ -41,6 +42,40 @@ class PhotoGangBangerController(
     val username = jwtService.extractPayload(request.hilflingToken()!!).username
     return repository.findByUsername(username)
       ?: throw EntityNotFoundException("Could not find PhotoGangBanger for user '$username'")
+  }
+
+  @PutMapping("/me/onboarding")
+  @RequireSecurityLevel(SecurityLevelType.FG)
+  fun completeOnboarding(
+    request: HttpServletRequest,
+    @RequestBody dto: PhotoGangBangerOnboardingRequestDto,
+  ): PhotoGangBangerDto? {
+    val username = jwtService.extractPayload(request.hilflingToken()!!).username
+    val currentUser =
+      repository.findByUsername(username)
+        ?: throw EntityNotFoundException("Could not find PhotoGangBanger for user '$username'")
+    if (currentUser.isOnboarded) {
+      throw AccessDeniedException("User '$username' is already onboarded")
+    }
+    if (dto.name.isBlank()) {
+      throw IllegalArgumentException("Name cannot be blank")
+    }
+
+    return repository.patch(
+      PhotoGangBangerPatchRequestDto(
+        photoGangBangerId = currentUser.photoGangBangerId,
+        semesterStart = dto.semesterStart,
+        isActive = dto.isActive,
+        isPang = dto.isPang,
+        name = dto.name.trim(),
+        foodPreference = dto.foodPreference,
+        birthday = dto.birthday,
+        username = null,
+        email = null,
+        phoneNumber = dto.phoneNumber,
+        isOnboarded = true,
+      ),
+    )
   }
 
   @GetMapping("/{id}")
@@ -99,8 +134,8 @@ class PhotoGangBangerController(
       if (!isSelf) {
         throw AccessDeniedException("You do not have permission to edit other users")
       }
-      if (dto.isPang != null || dto.isActive != null || dto.semesterStart != null) {
-        throw AccessDeniedException("You cannot modify isPang, isActive or semesterStart on your own profile")
+      if (dto.isPang != null || dto.isActive != null || dto.semesterStart != null || dto.isOnboarded != null) {
+        throw AccessDeniedException("You cannot modify isPang, isActive, semesterStart or isOnboarded on your own profile")
       }
     }
 

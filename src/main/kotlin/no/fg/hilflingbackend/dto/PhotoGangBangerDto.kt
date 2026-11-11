@@ -24,6 +24,17 @@ data class PhotoGangBangerPatchRequestDto(
   val email: String?,
   val phoneNumber: String?,
   val profilePictureId: UserUploadId? = null,
+  val isOnboarded: Boolean? = null,
+)
+
+data class PhotoGangBangerOnboardingRequestDto(
+  val name: String,
+  val phoneNumber: String,
+  val birthday: LocalDate? = null,
+  val semesterStart: SemesterStart,
+  val foodPreference: String? = null,
+  val isActive: Boolean,
+  val isPang: Boolean,
 )
 
 data class PhotoGangBangerDto(
@@ -39,6 +50,7 @@ data class PhotoGangBangerDto(
   val phoneNumber: String,
   val positions: List<MemberPositionDto> = emptyList(),
   val profilePicture: UserUploadDto? = null,
+  val isOnboarded: Boolean = false,
 )
 
 fun PhotoGangBangerDto.toEntity(): PhotoGangBanger =
@@ -46,6 +58,7 @@ fun PhotoGangBangerDto.toEntity(): PhotoGangBanger =
     id = photoGangBangerId.id
     semesterStart = this@toEntity.semesterStart.value
     isPang = this@toEntity.isPang
+    isOnboarded = this@toEntity.isOnboarded
     isActive = this@toEntity.isActive
     name = this@toEntity.name
     foodPreference = this@toEntity.foodPreference
