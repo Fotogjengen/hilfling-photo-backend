@@ -5,6 +5,7 @@ import me.liuwj.ktorm.database.Database
 import me.liuwj.ktorm.dsl.and
 import me.liuwj.ktorm.dsl.desc
 import me.liuwj.ktorm.dsl.eq
+import me.liuwj.ktorm.dsl.inList
 import me.liuwj.ktorm.dsl.isNull
 import me.liuwj.ktorm.dsl.update
 import me.liuwj.ktorm.entity.add
@@ -27,6 +28,7 @@ import no.fg.hilflingbackend.model.Motives
 import no.fg.hilflingbackend.model.motives
 import no.fg.hilflingbackend.model.photos
 import no.fg.hilflingbackend.model.toDto
+import no.fg.hilflingbackend.valueobject.SecurityLevelType
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Repository
 import java.time.LocalDate
@@ -51,8 +53,12 @@ open class MotiveRepository {
   fun findAll(
     page: Int,
     pageSize: Int,
+    userLevel: SecurityLevelType,
   ): Page<MotiveDto> {
-    val sequence = database.motives.filter { it.dateDeleted.isNull() }
+    val sequence =
+      database.motives.filter {
+        it.dateDeleted.isNull() and (it.securityLevel inList allowedSecurityLevels(userLevel))
+      }
     val motiveDtos =
       sequence
         .sorted { listOf(it.dateCreated.desc(), it.id.desc()) }
@@ -73,8 +79,14 @@ open class MotiveRepository {
     searchTerm: String,
     page: Int,
     pageSize: Int,
+    userLevel: SecurityLevelType,
   ): Page<MotiveDto> {
-    val sequence = database.motives.filter { (it.title ilike "%$searchTerm%") and it.dateDeleted.isNull() }
+    val sequence =
+      database.motives.filter {
+        (it.title ilike "%$searchTerm%") and
+          it.dateDeleted.isNull() and
+          (it.securityLevel inList allowedSecurityLevels(userLevel))
+      }
     val motiveDtos =
       sequence
         .sorted { listOf(it.dateCreated.desc(), it.id.desc()) }
@@ -90,6 +102,8 @@ open class MotiveRepository {
       currentList = motiveDtos,
     )
   }
+
+  private fun allowedSecurityLevels(userLevel: SecurityLevelType): List<String> = SecurityLevelType.values().filter { it.ordinal >= userLevel.ordinal }.map { it.name }
 
   fun create(
     motive: MotiveCreateRequestDto,
