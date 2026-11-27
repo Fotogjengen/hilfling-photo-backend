@@ -46,28 +46,14 @@ class MotiveService(
     page: Int,
     pageSize: Int,
     userSecurityLevel: SecurityLevelType,
-  ): Page<MotiveDto> {
-    val result = motiveRepository.findAll(page, pageSize)
-    val filtered =
-      result.currentList.filter {
-        it.securityLevel.securityLevelType.ordinal >= userSecurityLevel.ordinal
-      }
-    return result.copy(currentList = filtered)
-  }
+  ): Page<MotiveDto> = motiveRepository.findAll(page, pageSize, userSecurityLevel)
 
   fun search(
     searchTerm: String,
     page: Int,
     pageSize: Int,
     userSecurityLevel: SecurityLevelType,
-  ): Page<MotiveDto> {
-    val result = motiveRepository.search(searchTerm, page, pageSize)
-    val filtered =
-      result.currentList.filter {
-        it.securityLevel.securityLevelType.ordinal >= userSecurityLevel.ordinal
-      }
-    return result.copy(currentList = filtered)
-  }
+  ): Page<MotiveDto> = motiveRepository.search(searchTerm, page, pageSize, userSecurityLevel)
 
   fun create(
     dto: MotiveCreateRequestDto,
