@@ -11,8 +11,8 @@ import me.liuwj.ktorm.dsl.isNull
 import me.liuwj.ktorm.dsl.map
 import me.liuwj.ktorm.dsl.orderBy
 import me.liuwj.ktorm.dsl.select
-import me.liuwj.ktorm.dsl.where
 import me.liuwj.ktorm.dsl.update
+import me.liuwj.ktorm.dsl.where
 import me.liuwj.ktorm.entity.add
 import me.liuwj.ktorm.entity.any
 import me.liuwj.ktorm.entity.find
